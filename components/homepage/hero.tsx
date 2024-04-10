@@ -6,7 +6,7 @@ import rowellbanner from '@/assets/images/rowellbanner.png';
 
 export function Hero() {
     return (
-        <div className="w-full rounded-md bg-primary relative flex flex-col items-center justify-center antialiased hero">
+        <div className="w-full rounded-md bg-primary relative flex flex-col items-center justify-center antialiased hero pt-20">
             <div className="hero__container flex items-center justify-center relative z-50 w-full h-full">
                 <div className="hero__image flex-shrink-0 w-[38%]">
                     <Image src={rowellbanner} alt="rowell mark blanca" />
