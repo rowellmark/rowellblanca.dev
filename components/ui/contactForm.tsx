@@ -37,7 +37,7 @@ export default async function Contact() {
                 </div>
                 <div>
                     <label htmlFor="message">Message</label>
-                    <textarea name="message" required rows="3" placeholder="Enter Message"></textarea>
+                    <textarea name="message" required placeholder="Enter Message"></textarea>
                 </div>
                 <button type="submit">Submit Form</button>
             </form>
