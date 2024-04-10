@@ -43,6 +43,7 @@ export default function Header() {
                             <Image
                                 src={logo}
                                 className="mx-auto w-full h-auto"
+                                alt="Rowell Mark Blanca"
                             ></Image>
                         </Link>
                     </div>
