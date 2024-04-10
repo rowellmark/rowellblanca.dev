@@ -29,7 +29,7 @@ export default function Header() {
         };
     }, []);
 
-    const nav = [
+    const navs = [
         { name: 'Home', link: '/' },
         { name: 'About', link: '/about' }
     ];
@@ -49,12 +49,14 @@ export default function Header() {
                     </div>
                     <div className="nav">
                         <ul className="flex items-center">
-                            <li>
-                                <Link href="/about">About Me</Link>
-                            </li>
-                            <li>
-                                <Link href="/about">My Works</Link>
-                            </li>
+
+                            {navs.map((nav, index) => (
+                                <li key={index}>
+                                    <Link href={nav.link}>{nav.name}</Link>
+                                </li>
+                            ))}
+                        
+                        
                             <li>
                                 <Link href="/about">Hire Me!</Link>
                             </li>
