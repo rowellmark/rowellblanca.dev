@@ -10,16 +10,16 @@ export function FeaturedProject() {
                 titleComponent={
                     <>
                         <h1 className="text-4xl font-semibold text-black dark:text-white">
-                            Unleash the power of <br />
+                           Work in progress <br />
                             <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
-                                Scroll Animations
+                                mycv.com
                             </span>
                         </h1>
                     </>
                 }
             >
                 <Image
-                    src={`/linear.webp`}
+                    src={`/my-cv-screenshot.jpg`}
                     alt="hero"
                     height={720}
                     width={1400}
