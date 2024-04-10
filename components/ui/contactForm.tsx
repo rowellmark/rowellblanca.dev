@@ -1,8 +1,8 @@
 'use client';
 
 export default async function Contact() {
-    async function handleSubmit(e) {
-        e.preventDefault();
+    async function handleSubmit(event) {
+        event.preventDefault();
         const response = await fetch("https://api.web3forms.com/submit", {
             method: "POST",
             headers: {
@@ -11,9 +11,9 @@ export default async function Contact() {
             },
             body: JSON.stringify({
                 access_key: "b9fe178c-c566-40f8-bec2-39bb41fb27a7",
-                name: e.target.name.value,
-                email: e.target.email.value,
-                message: e.target.message.value,
+                name: event.target.name.value,
+                email: event.target.email.value,
+                message: event.target.message.value,
             }),
         });
         const result = await response.json();
