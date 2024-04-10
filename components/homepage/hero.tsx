@@ -4,6 +4,7 @@ import { Boxes } from "../ui/background-boxes";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 
+
 import rowellbanner from '@/assets/images/rowellbanner.png';
 
 export function Hero() {
@@ -19,7 +20,7 @@ export function Hero() {
                     <Image src={rowellbanner} alt="rowell mark blanca"/>
                 </div>
                 <div className="hero__content w-full px-[8%]">
-                    <h5>Introduction</h5>
+                    <h5 className="text-text-accent font-medium text-lg">Introduction</h5>
                     <h1 className="md:text-4xl text-xl text-white relative z-20">
                         Software Engineer,<br />
                         based in Philippines
