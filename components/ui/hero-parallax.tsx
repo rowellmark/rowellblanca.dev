@@ -142,11 +142,13 @@ export const ProductCard = ({
                 href={product.link}
                 className="block group-hover/product:shadow-2xl "
             >
+                <canvas height="480"
+                    width="600" className="block w-full h-full"></canvas>
                 <Image
                     src={product.thumbnail}
                     height="600"
                     width="600"
-                    className="object-cover object-left-top absolute h-full w-full inset-0"
+                    className="object-cover object-left-top absolute h-full w-full inset-0 top-0 left-0"
                     alt={product.title}
                 />
             </Link>
@@ -154,6 +156,7 @@ export const ProductCard = ({
             <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
                 {product.title}
             </h2>
+            <h3>saasdasd</h3>
         </motion.div>
     );
 };
