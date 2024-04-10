@@ -2,7 +2,7 @@
 import React from "react";
 
 export default async function Contact() {
-    async function handleSubmit(event) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const response = await fetch("https://api.web3forms.com/submit", {
             method: "POST",
