@@ -1,5 +1,4 @@
-import Footer from "@/components/footer/footer";
-import Header from "@/components/header/header";
+
 import { FeaturedProject } from "@/components/homepage/featured-project";
 import { Hero } from "@/components/homepage/hero";
 import { WelcomeLoading } from "@/components/homepage/loading-screen";
@@ -11,11 +10,9 @@ export default function Home() {
   
   return (
     <>
-      <Header /> 
-        <Hero />
-        <ShowCasePortfolios />
-        <FeaturedProject />
-      <Footer/>
+      <Hero />
+      <ShowCasePortfolios />
+      <FeaturedProject />
     </>
   );
 }

@@ -17,13 +17,13 @@ export function Hero() {
                 <div className="hero__content w-full pl-[5%] px-[8%] pb-11">
                     <h5 className="text-text-accent font-medium text-lg uppercase">Introduction</h5>
                     <h1 className="text-white relative z-20 font-bold text-7xl">
-                        Software Engineer,<br />
+                        full-stack Engineer<br />
                         based in Philippines
                     </h1>
                     <p className="mt-2 text-neutral-300 relative z-20 leading-6 pt-6">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                        As a seasoned Full-stack Engineer with over a decade of experience, I've had the privilege of working with clients across diverse industries and countries. My passion lies in crafting robust and scalable frontend products that prioritize exceptional user experiences. With a keen eye for detail and a commitment to excellence, I strive to deliver solutions that not only meet but exceed client expectations.
                     </p>
-                    <PrimaryButton link="/" label="More about Me" className="mt-20" />
+                    <PrimaryButton link="/about" label="More about Me" className="mt-20" />
                     
                 </div>
 
