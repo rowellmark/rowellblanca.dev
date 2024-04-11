@@ -9,7 +9,7 @@ import logo from "@/assets/images/logo.png";
 export default function Header() {
 
     const [scrollPosition, setScrollPosition] = useState(0);
-    const [scrollClass, setScrollClass] = useState('');
+    const [scrollClass, setHeaderScrollClass] = useState('');
     useEffect(() => {
         const handleScroll = () => {
             const position = window.pageYOffset;
@@ -17,9 +17,9 @@ export default function Header() {
 
             // Add your condition here to determine when to apply the class
             if (position > 100) {
-                setScrollClass('bg-primary'); // Apply the class from CSS module
+                setHeaderScrollClass('header__sticky'); // Apply the class from CSS module
             } else {
-                setScrollClass('');
+                setHeaderScrollClass('');
             }
         };
         window.addEventListener('scroll', handleScroll, { passive: true });

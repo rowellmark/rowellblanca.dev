@@ -51,13 +51,13 @@ export const HeroParallax = ({
         springConfig
     );
     const translateY = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+        useTransform(scrollYProgress, [0, 0.2], [-700, 0]),
         springConfig
     );
     return (
         <div
             ref={ref}
-            className="h-[300vh] py-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d] bg-primary-accent"
+            className="h-[234vh] py-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d] bg-primary-accent"
         >
             <Header />
             <motion.div
@@ -105,12 +105,10 @@ export const Header = () => {
     return (
         <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
             <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
-                The Ultimate <br /> development studio
+                I build things <br />for the web.
             </h1>
             <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-                We build beautiful products with the latest technologies and frameworks.
-                We are a team of passionate developers and designers that love to build
-                amazing products.
+                I specialize in crafting innovative digital experiences on the web, leveraging cutting-edge technologies and creative design to build engaging and user-friendly websites and applications.
             </p>
         </div>
     );
@@ -156,7 +154,7 @@ export const ProductCard = ({
             <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
                 {product.title}
             </h2>
-            <h3>saasdasd</h3>
+            <h3 className="py-3  group-hover/product:opacity-0">{product.title}</h3>
         </motion.div>
     );
 };

@@ -2,21 +2,21 @@
 import React from "react";
 import { HeroParallax } from "../ui/hero-parallax";
 
-export function Portfolios() {
+export function ShowCasePortfolios() {
     return <HeroParallax products={products} />;
 }
 export const products = [
     {
-        title: "Moonbeam",
-        link: "https://gomoonbeam.com",
+        title: "Smooties and Juice Landing Page",
+        link: "#",
         thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/smoot-fruit-cake(blob-animate).jpg",
     },
     {
-        title: "Cursor",
-        link: "https://cursor.so",
+        title: "MyCv.com",
+        link: "#",
         thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/my-cv-screenshot.jpg",
     },
     {
         title: "Rogue",
