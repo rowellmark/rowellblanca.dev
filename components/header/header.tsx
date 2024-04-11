@@ -30,8 +30,9 @@ export default function Header() {
     }, []);
 
     const navs = [
-        { name: 'Home', link: '/' },
-        { name: 'About', link: '/about' }
+        { name: 'WorkMy', link: '/' },
+        { name: 'About', link: '/about' },
+        { name: 'My Work', link: '/about' }
     ];
 
     return (
