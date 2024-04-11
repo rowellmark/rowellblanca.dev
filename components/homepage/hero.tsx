@@ -17,7 +17,7 @@ export function Hero() {
                 <div className="hero__content w-full pl-[5%] px-[8%] pb-11">
                     <h5 className="text-text-accent font-medium text-lg uppercase">Introduction</h5>
                     <h1 className="text-white relative z-20 font-bold text-7xl">
-                        full-stack Engineer<br />
+                        Full-Stack Engineer<br />
                         based in Philippines
                     </h1>
                     <p className="mt-2 text-neutral-300 relative z-20 leading-6 pt-6">
