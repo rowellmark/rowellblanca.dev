@@ -3,7 +3,7 @@ import React from "react";
 import { BackgroundBeams } from "../ui/background-beams";
 import Image from "next/image";
 import rowellbanner from '@/assets/images/rowellbanner.png';
-import PrimaryButton from "../ui/primaryButton";
+import PrimaryButton from "../buttons/primaryButton";
 
 export function Hero() {
     return (
@@ -23,7 +23,8 @@ export function Hero() {
                     <p className="mt-2 text-neutral-300 relative z-20 leading-6 pt-6">
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                     </p>
-                    <PrimaryButton link="/" label="More about Me" className="mt-20"/>
+                    <PrimaryButton link="/" label="More about Me" className="mt-20" />
+                    
                 </div>
 
             </div>

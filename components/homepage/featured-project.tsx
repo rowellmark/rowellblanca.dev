@@ -9,7 +9,7 @@ export function FeaturedProject() {
             <ContainerScroll
                 titleComponent={
                     <>
-                        <h1 className="text-4xl font-semibold text-black dark:text-white">
+                        <h1 className="text-4xl font-semibold text-white dark:text-white">
                            Work in progress <br />
                             <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
                                 mycv.com

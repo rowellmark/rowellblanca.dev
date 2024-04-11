@@ -13,90 +13,90 @@ export const products = [
             "/smoot-fruit-cake(blob-animate).jpg",
     },
     {
+        title: "Mnmlst",
+        link: "#",
+        thumbnail:
+            "/minimalist-studio-slider.jpg",
+    },
+   
+    {
+        title: "Burger House",
+        link: "#",
+        thumbnail:
+            "/burger-house.jpg",
+    },
+    {
+        title: "Yoga",
+        link: "#",
+        thumbnail:
+            "/yogo-site.jpg",
+    },
+
+    {
+        title: "Walk Alone",
+        link: "#",
+        thumbnail:
+            "/community-scheduler.jpg",
+    },
+    {
+        title: "Chef Norman Plan",
+        link: "#",
+        thumbnail:
+            "/meal-plan.jpg",
+    },
+
+    {
+        title: "Walk Alone",
+        link: "#",
+        thumbnail:
+            "/community-scheduler.jpg",
+    },
+    {
+        title: "Indonesian Cusine",
+        link: "https://smartbridgetech.com",
+        thumbnail:
+            "/indonesian-cusine.jpg",
+    },
+    {
+        title: "Yoga",
+        link: "#",
+        thumbnail:
+            "/yogo-site.jpg",
+    },
+    {
         title: "MyCv.com",
         link: "#",
         thumbnail:
             "/my-cv-screenshot.jpg",
     },
     {
-        title: "Rogue",
-        link: "https://userogue.com",
+        title: "Chef Norman Plan",
+        link: "#",
         thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-
-    {
-        title: "Editorially",
-        link: "https://editorially.org",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/meal-plan.jpg",
     },
     {
-        title: "Editrix AI",
-        link: "https://editrix.ai",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-    {
-        title: "Pixel Perfect",
-        link: "https://app.pixelperfect.quest",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-
-    {
-        title: "Algochurn",
-        link: "https://algochurn.com",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-    {
-        title: "Aceternity UI",
-        link: "https://ui.aceternity.com",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-    {
-        title: "Tailwind Master Kit",
-        link: "https://tailwindmasterkit.com",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-    {
-        title: "SmartBridge",
-        link: "https://smartbridgetech.com",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-    {
-        title: "Renderwork Studio",
-        link: "https://renderwork.studio",
-        thumbnail:
-            "/placeholder-portfolio.jpg",
-    },
-
-    {
-        title: "Creme Digital",
+        title: "Healthy Food",
         link: "https://cremedigital.com",
         thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/healthy-food.jpg",
     },
     {
-        title: "Golden Bells Academy",
-        link: "https://goldenbellsacademy.com",
+        title: "Yoga",
+        link: "#",
         thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/yogo-site.jpg",
     },
     {
-        title: "Invoker Labs",
-        link: "https://invoker.lol",
+        title: "Mnmlst",
+        link: "#",
         thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/minimalist-studio-slider2.jpg",
     },
     {
-        title: "E Free Invoice",
-        link: "https://efreeinvoice.com",
+        title: "Burger House",
+        link: "#",
         thumbnail:
-            "/placeholder-portfolio.jpg",
+            "/burger-house.jpg",
     },
 ];

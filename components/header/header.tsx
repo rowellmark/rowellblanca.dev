@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/logo.png";
+import { AnimatedButton } from '../buttons/animated-button';
 
 
 export default function Header() {
@@ -30,9 +31,9 @@ export default function Header() {
     }, []);
 
     const navs = [
-        { name: 'WorkMy', link: '/' },
-        { name: 'About', link: '/about' },
-        { name: 'My Work', link: '/about' }
+        { name: 'My Work', link: '/about' },
+        { name: 'PlayGround', link: '/about' },
+
     ];
 
     return (
@@ -52,15 +53,14 @@ export default function Header() {
                         <ul className="flex items-center">
 
                             {navs.map((nav, index) => (
-                                <li key={index}>
-                                    <Link href={nav.link}>{nav.name}</Link>
+                                <li key={index} className='px-4'>
+                                    <Link href={nav.link} className="uppercase">{nav.name}</Link>
                                 </li>
                             ))}
+
                         
-                        
-                            <li>
-                                <Link href="/about">Hire Me!</Link>
-                            </li>
+
+                            <AnimatedButton label="HireMe" link="/about" className="ml-7"></AnimatedButton>
                         </ul>
                     </div>
                 </div>

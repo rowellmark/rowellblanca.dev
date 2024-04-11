@@ -134,14 +134,13 @@ export const ProductCard = ({
                 y: -20,
             }}
             key={product.title}
-            className="group/product h-96 w-[30rem] relative flex-shrink-0"
+            className="group/product h-96 w-1/3 relative flex-shrink-0"
         >
             <Link
                 href={product.link}
                 className="block group-hover/product:shadow-2xl "
             >
-                <canvas height="480"
-                    width="600" className="block w-full h-full"></canvas>
+
                 <Image
                     src={product.thumbnail}
                     height="600"
@@ -154,7 +153,6 @@ export const ProductCard = ({
             <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
                 {product.title}
             </h2>
-            <h3 className="py-3  group-hover/product:opacity-0">{product.title}</h3>
         </motion.div>
     );
 };
