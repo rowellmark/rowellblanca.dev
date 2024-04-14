@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function FeaturedProject() {
     return (
-        <div className="flex flex-col overflow-hidden">
+        <div className="flex flex-col overflow-hidden bg-primary-accent">
             <ContainerScroll
                 titleComponent={
                     <>

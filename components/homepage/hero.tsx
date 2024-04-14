@@ -9,10 +9,12 @@ export function Hero() {
     return (
         <div className="w-full rounded-md bg-primary relative flex flex-col items-center justify-center antialiased hero pt-32  ">
             <div className="hero__container flex items-center justify-center relative z-50 w-full h-full">
-                <div className="hero__image flex-shrink-0 w-[30%] ml-[8%] self-end">
+                <div className="hero__image flex-shrink-0 w-[30%] ml-[8%] self-end relative">
                     <Image src={rowellbanner} alt="rowell mark blanca" />
 
-                    <div className="absolute"></div>
+                    <div className="absolute left-0 bottom-0 w-full text-center py-5">
+                        <h2 className="font-semibold text-2xl">Rowell Mark  M. Blanca</h2>
+                    </div>
                 </div>
                 <div className="hero__content w-full pl-[5%] px-[8%] pb-11">
                     <h5 className="text-text-accent font-medium text-lg uppercase">Introduction</h5>
@@ -24,9 +26,7 @@ export function Hero() {
                         As a seasoned Full-stack Engineer with over a decade of experience, I've had the privilege of working with clients across diverse industries and countries. My passion lies in crafting robust and scalable frontend products that prioritize exceptional user experiences. With a keen eye for detail and a commitment to excellence, I strive to deliver solutions that not only meet but exceed client expectations.
                     </p>
                     <PrimaryButton link="/about" label="More about Me" className="mt-20" />
-                    
                 </div>
-
             </div>
             <BackgroundBeams />
         </div>
