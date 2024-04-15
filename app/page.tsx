@@ -15,9 +15,10 @@ export default function Home() {
     <>
       <Hero />
       <ShowCasePortfolios />
-      <ContactSection/>
+      <ContactSection />
+      <MyExpertise />
+
       <FeaturedProject />
-      <MyExpertise/>
       <MyWork/>
     </>
   );
