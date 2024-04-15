@@ -52,14 +52,14 @@ export default function ContactSection() {
                                     className="px-1"
                                 >
                                     <a href={social.url} className="block relative w-7">
-                                        <Image src={social.icon} alt={social.title} priority />
+                                        <Image src={social.icon} alt={social.title} priority alt="social.title"/>
                                         <span className="hidden">{social.title}</span>
                                     </a>
                                 </li>
                             ))}
                         </ul>
                         <div className="bg-img relative w-36 pt-8">
-                            <Image src={searchImage} priority />
+                            <Image src={searchImage} priority alt="search"/>
                         </div>
                     </div>
 
