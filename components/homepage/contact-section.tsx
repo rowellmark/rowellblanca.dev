@@ -38,7 +38,6 @@ export default function ContactSection() {
                 <div className="contactSection__container container flex mx-auto">
 
                     <div className="contactSection__col w-1/2">
-
                         <h2 className="text-white relative z-20 font-bold text-6xl">
                             <span className="block text-text-accent font-medium text-lg uppercase">Contact</span>
                             Any Type of Query <br/>
