@@ -7,9 +7,9 @@ import PrimaryButton from "../buttons/primaryButton";
 
 export function Hero() {
     return (
-        <div className="w-full rounded-md bg-primary relative flex flex-col items-center justify-center antialiased hero pt-32  ">
-            <div className="hero__container flex items-center justify-center relative z-50 w-full h-full">
-                <div className="hero__image flex-shrink-0 w-[30%] ml-[8%] self-end relative">
+        <div className="w-full rounded-md bg-primary relative flex flex-col items-center justify-center antialiased hero pt-32 h-[100vh]">
+            <div className="hero__container flex items-center justify-center relative z-50 w-full h-full container mx-auto">
+                <div className="hero__image flex-shrink-0 w-[38%] self-end relative">
                     <Image src={rowellbanner} alt="rowell mark blanca" />
 
                     <div className="absolute left-0 bottom-0 w-full text-center py-5">

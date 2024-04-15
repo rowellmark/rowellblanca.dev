@@ -3,6 +3,7 @@ import ContactSection from "@/components/homepage/contact-section";
 import { FeaturedProject } from "@/components/homepage/featured-project";
 import { Hero } from "@/components/homepage/hero";
 import { WelcomeLoading } from "@/components/homepage/loading-screen";
+import MyExpertise from "@/components/homepage/my-expertise";
 import { MyWork } from "@/components/homepage/my-work";
 import { ShowCasePortfolios } from "@/components/homepage/showcase-portfolios";
 import Contact from "@/components/ui/contactForm";
@@ -16,6 +17,7 @@ export default function Home() {
       <ShowCasePortfolios />
       <ContactSection/>
       <FeaturedProject />
+      <MyExpertise/>
       <MyWork/>
     </>
   );
