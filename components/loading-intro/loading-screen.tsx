@@ -42,7 +42,7 @@ export function WelcomeLoading() {
                     <div className="introLoading__logoText--text2">Mark</div>
                 </div>
             </div>
-            <div className="font-normal text-2xl introLoading__logoSlogan">
+            <div className="font-normal text-2xl introLoading__logoSlogan uppercase">
                 Build Things for the Web
             </div>
         </div>
