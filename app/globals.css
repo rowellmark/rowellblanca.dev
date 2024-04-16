@@ -80,21 +80,22 @@ body {
   transition: all 0.4s ease-in-out;
 }
     .introLoading__logoIcon img{
+        transition: all 0.4s ease-in-out;
         opacity: 0;
         display: block;
     }
     .introLoading.loaded .introLoading__logoIcon img {
       opacity: 1;
-      animation: myAnim 2s ease 0s 1 normal forwards;
+      animation: myAnim 1s ease 0s 1 normal forwards;
     }
 
 .introLoading__logoText--text1{
   margin-left: -100%;
-  transition: all 1s ease-in-out;
+  transition: all 1.8s ease-in-out;
 }
 .introLoading__logoText--text2 {
   margin-left: -100%;
-  transition: all 1.2s ease-in-out;
+  transition: all 2s ease-in-out;
 }
 
   .introLoading.loaded .introLoading__logoText--text1,
