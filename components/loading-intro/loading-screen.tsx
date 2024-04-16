@@ -12,12 +12,12 @@ export function WelcomeLoading() {
         // Set loadingComplete to true after a delay of 2500 milliseconds
         const loadingTimeout = setTimeout(() => {
             setLoadingComplete(true);
-        }, 1000);
+        }, 100);
 
         // Hide the loading component after 3 seconds (3000 milliseconds)
         const hideTimeout = setTimeout(() => {
             setExitAnimation(true);
-        }, 5000);
+        }, 3000);
 
         // Clear the timeouts to avoid memory leaks
         return () => {
