@@ -17,7 +17,7 @@ export function WelcomeLoading() {
         // Hide the loading component after 3 seconds (3000 milliseconds)
         const hideTimeout = setTimeout(() => {
             setExitAnimation(true);
-        }, 3300);
+        }, 5000);
 
         // Clear the timeouts to avoid memory leaks
         return () => {
