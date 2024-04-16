@@ -22,7 +22,7 @@ export function Tab({ tabs }: TabProps) {
                         key={index}
                         className={`${index === activeTab
                                 ? 'border-b-2 border-blue-500 text-blue-500'
-                                : 'text-gray-500'
+                                : 'text-base text-white'
                             } focus:outline-none`}
                         onClick={() => setActiveTab(index)}
                     >

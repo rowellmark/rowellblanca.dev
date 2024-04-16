@@ -31,3 +31,52 @@ body {
     text-wrap: balance;
   }
 }
+
+
+.introLoading{
+  transition: all 1s ease-in-out;
+}
+
+.introLoading.hideSlogan{
+  opacity: 0;
+  visibility: hidden;
+}
+.introLoading__container{
+  
+}
+
+.introLoading__logoIcon{
+  transition: all 0.5s ease-in-out;
+}
+.introLoading__logoIcon img{
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+  transform: scale(0);
+}
+.show-logo.introLoading__logoIcon img{
+  transform: scale(1);
+  opacity: 1;
+}
+
+.introLoading__logoText--text1{
+  margin-left: -100%;
+  transition: all 0.8s ease-in-out;
+}
+.introLoading__logoText--text2 {
+  margin-left: -100%;
+  transition: all 0.8s ease-in-out;
+}
+
+.introLoading__logoText--text1.show-text,
+.introLoading__logoText--text2.show-text{
+  margin-left: 0;
+}
+.introLoading__logoSlogan{
+  opacity: 0;
+  transition: all 0.8s ease-in-out;
+  margin-top: 60px;
+}
+.introLoading__logoSlogan.show-text{
+  opacity: 1;
+  margin-top: 0;
+}
