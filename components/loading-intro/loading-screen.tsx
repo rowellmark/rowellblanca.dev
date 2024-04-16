@@ -18,11 +18,11 @@ export function WelcomeLoading() {
 
         const text1Timeout = setTimeout(() => {
             setText1(true);
-        }, 700);
+        }, 600);
 
         const text2Timeout = setTimeout(() => {
             setText2(true);
-        }, 800);
+        }, 700);
 
         const sloganTimeout = setTimeout(() => {
             setSlogan(true);
@@ -31,7 +31,7 @@ export function WelcomeLoading() {
 
         const loadingTimeout = setTimeout(() => {
             setLoading(true);
-        }, 2000);
+        }, 2500);
 
         // Clear the timeouts to avoid memory leaks
         return () => {

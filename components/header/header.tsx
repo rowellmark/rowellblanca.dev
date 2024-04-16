@@ -32,7 +32,7 @@ export default function Header() {
 
     const navs = [
         { name: 'My Work', link: '/about' },
-        { name: 'PlayGround', link: '/about' },
+        { name: 'About', link: '/about' },
 
     ];
 
