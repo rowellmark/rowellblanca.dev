@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 interface TabItem {
     label: string;
-    content: React.ReactNode[]; // Update to accept an array of React nodes
+    content: { key: number; text: string; }[] | React.ReactNode[];
 }
 
 interface TabProps {
