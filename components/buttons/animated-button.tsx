@@ -10,6 +10,11 @@ interface AnimatedButtonProps {
 }
 
 export function AnimatedButton({ label, link, className }: AnimatedButtonProps) {
+
+    // Check if link is provided
+    if (!link) {
+        return;
+    }
     return (
         <div>
             <Button
