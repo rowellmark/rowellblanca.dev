@@ -32,15 +32,18 @@ export function Tab({ tabs }: TabProps) {
             </div>
             <div>
                 {tabs[activeTab].content.map((item, index) => (
-                    // Type assertion to let TypeScript know that item is not null or undefined
                     <div className="tabCol w-1/3 p-4" key={index}>
-                        {item && (
+                        {typeof item === 'object' && 'text' in item ? (
+                            // If item is an object with a 'text' property
                             <>
                                 <a href="#">
                                     <canvas width="300" height="200" className="bg-slate-400 block w-full h-auto"></canvas>
                                     {item.text}
                                 </a>
                             </>
+                        ) : (
+                            // If item is not an object with a 'text' property, assume it's a JSX element
+                            item
                         )}
                     </div>
                 ))}
