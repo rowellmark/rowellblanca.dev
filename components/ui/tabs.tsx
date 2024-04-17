@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 interface TabItem {
@@ -35,11 +36,11 @@ export function Tab({ tabs }: TabProps) {
                     </button>
                 ))}
             </div>
-            <div>
+            <div className='flex'>
                 {tabs[activeTab].content.map((item, index) => (
                     <div className="tabCol w-1/3 p-4" key={index}>
                         <a href={item.url}>
-                            <img src={item.image} alt={item.sitename} className="w-full h-auto mb-2" />
+                            <Image src={item.image} alt="item.sitename" className="w-full h-auto mb-2" width="640" height="461"></Image>
                             <h3 className="text-lg font-semibold">{item.sitename}</h3>
                             <ul dangerouslySetInnerHTML={{ __html: item.stacks }}></ul>
                         </a>

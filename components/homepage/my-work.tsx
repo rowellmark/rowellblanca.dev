@@ -8,7 +8,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: "/",
+                    image: "/placeholder-portfolio.jpg",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -20,14 +20,14 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: "/",
+                    image: "/placeholder-portfolio.jpg",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 },
                 {
                     key: 1,
                     url: "#",
-                    image: "/",
+                    image: "/placeholder-portfolio.jpg",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -39,7 +39,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: "/",
+                    image: "/placeholder-portfolio.jpg",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -51,7 +51,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: "/",
+                    image: "/placeholder-portfolio.jpg",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -63,7 +63,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: "/",
+                    image: "/placeholder-portfolio.jpg",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
