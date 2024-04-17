@@ -1,5 +1,5 @@
 import { Tab } from "../ui/tabs";
-import placeholderImage from "@/assets/images/placeholder-portfolio.jpg";
+import "/" from "@/assets/images/placeholder-portfolio.jpg";
 
 export function MyWork() {
     const tabs = [
@@ -9,7 +9,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: placeholderImage,
+                    image: "/",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -21,14 +21,14 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: placeholderImage,
+                    image: "/",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 },
                 {
                     key: 1,
                     url: "#",
-                    image: placeholderImage,
+                    image: "/",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -40,7 +40,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: placeholderImage,
+                    image: "/",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -52,7 +52,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: placeholderImage,
+                    image: "/",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
@@ -64,7 +64,7 @@ export function MyWork() {
                 {
                     key: 1,
                     url: "#",
-                    image: placeholderImage,
+                    image: "/",
                     sitename: "Test Site",
                     stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
