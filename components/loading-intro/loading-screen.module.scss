@@ -2,6 +2,11 @@
     transition: all 2s ease-in-out;
     $self: &;
 
+    &.exitAnimation{
+        opacity: 0;
+        visibility: hidden;
+    }
+
     &__container{
     }
 

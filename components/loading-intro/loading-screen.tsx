@@ -6,8 +6,6 @@ import classes from "./loading-screen.module.scss";
 
 export function WelcomeLoading() {
 
-
-    console.log(classes);
     const [loadingComplete, setLoadingComplete] = useState(false);
     const [exitAnimation, setExitAnimation] = useState(false);
 
@@ -31,7 +29,12 @@ export function WelcomeLoading() {
 
 
     return (
-        <div className={`${classes.introloading} fixed z-[10001] w-full h-full bg-primary-accent flex flex-col justify-center items-center  ${loadingComplete ? classes.loaded : ''} ${exitAnimation ? 'exitAnimation' : ''}`}>
+        <div className={
+            `${classes.introloading} 
+            fixed z-[10001] w-full h-full bg-primary-accent flex flex-col justify-center items-center 
+            ${loadingComplete ? classes.loaded : ''} 
+            ${exitAnimation ? classes.exitAnimation : ''}`}
+        >
             <div className={`${classes.introloading__container} flex`}>
                 <div className={`${classes.introloading__logoIcon} w-32`}>
                     <Image
