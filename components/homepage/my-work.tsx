@@ -1,79 +1,12 @@
 import { Tab } from "../ui/tabs";
+import projects from "@/json/projects.json";
 
 export function MyWork() {
-    const tabs = [
-        {
-            label: 'All',
-            content: [
-                {
-                    key: 1,
-                    url: "#",
-                    image: "/placeholder-portfolio.jpg",
-                    sitename: "Test Site",
-                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
-                }
-            ]
-        },
-        {
-            label: 'Wordpress',
-            content: [
-                {
-                    key: 1,
-                    url: "#",
-                    image: "/placeholder-portfolio.jpg",
-                    sitename: "Test Site",
-                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
-                },
-                {
-                    key: 1,
-                    url: "#",
-                    image: "/placeholder-portfolio.jpg",
-                    sitename: "Test Site",
-                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
-                }
-            ]
-        },
-        {
-            label: 'React, NextJs',
-            content: [
-                {
-                    key: 1,
-                    url: "#",
-                    image: "/placeholder-portfolio.jpg",
-                    sitename: "Test Site",
-                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
-                }
-            ]
-        },
-        {
-            label: 'Shopify',
-            content: [
-                {
-                    key: 1,
-                    url: "#",
-                    image: "/placeholder-portfolio.jpg",
-                    sitename: "Test Site",
-                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
-                }
-            ]
-        },
-        {
-            label: 'Work in Progress',
-            content: [
-                {
-                    key: 1,
-                    url: "#",
-                    image: "/placeholder-portfolio.jpg",
-                    sitename: "Test Site",
-                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
-                }
-            ]
-        },
-    ];
+    
 
     return (
         <div className="container mx-auto w-full">
-            <Tab tabs={tabs} />
+            <Tab tabs={projects} />
         </div>
     );
 }

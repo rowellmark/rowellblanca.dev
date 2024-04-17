@@ -96,8 +96,8 @@ export default function AboutPage() {
                                 ))}
                             </ul>
                             <div className="aboutPage__buttons flex pt-4">
-                                <Link href="#" className="text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">Say Hello!</Link>
-                                <Link href="#" className="flex items-center ml-3 text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">Download CV <IconDownload className="ml-1"></IconDownload></Link>
+                                <Link href="#" className="text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 rounded-3xl">Say Hello!</Link>
+                                <Link href="#" className="flex items-center ml-3 text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 rounded-3xl">Download CV <IconDownload className="ml-1"></IconDownload></Link>
                             </div>
                         </div>
 
