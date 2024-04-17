@@ -2,9 +2,12 @@
 import React, { useState, useEffect } from "react";
 import logo from "@/assets/images/logo.png";
 import Image from "next/image";
+import classes from "./loading-screen.module.scss";
 
 export function WelcomeLoading() {
 
+
+    console.log(classes);
     const [loadingComplete, setLoadingComplete] = useState(false);
     const [exitAnimation, setExitAnimation] = useState(false);
 
@@ -28,21 +31,21 @@ export function WelcomeLoading() {
 
 
     return (
-        <div className={`introLoading fixed z-[10001] w-full h-full bg-primary-accent flex flex-col justify-center items-center  ${loadingComplete ? 'loaded' : ''} ${exitAnimation ? 'exitAnimation' : ''}`}>
-            <div className="introLoading__container flex">
-                <div className="introLoading__logoIcon w-32">
+        <div className={`${classes.introloading} fixed z-[10001] w-full h-full bg-primary-accent flex flex-col justify-center items-center  ${loadingComplete ? classes.loaded : ''} ${exitAnimation ? 'exitAnimation' : ''}`}>
+            <div className={`${classes.introloading__container} flex`}>
+                <div className={`${classes.introloading__logoIcon} w-32`}>
                     <Image
                         src={logo}
                         className="mx-auto w-full h-auto"
                         alt="Rowell Mark Blanca"
                     />
                 </div>
-                <div className="introLoading__logoText font-semibold uppercase overflow-hidden text-7xl ml-4">
-                    <div className="introLoading__logoText--text1 -mt-2">Rowell</div>
-                    <div className="introLoading__logoText--text2">Mark</div>
+                <div className={`${classes.introloading__logoText} font-semibold uppercase overflow-hidden text-7xl ml-4`}>
+                    <div className={`${classes.introloading__logoTextwords } -mt-2`}>Rowell</div>
+                    <div className={`${classes.introloading__logoTextwords}`}>Mark</div>
                 </div>
             </div>
-            <div className="font-normal text-2xl introLoading__logoSlogan uppercase">
+            <div className={`${classes.introloading__logoSlogan} font-normal text-2xl uppercase`}>
                 Build Things for the Web
             </div>
         </div>
