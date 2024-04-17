@@ -3,15 +3,59 @@ import { Tab } from "../ui/tabs";
 
 export function MyWork() {
     const tabs = [
-        { label: 'All', content: <p>Content of Tab 1</p> },
-        { label: 'Wordpress', content: <p>Content of Tab 2</p> },
-        { label: 'React, NextJs', content: <p>Content of Tab 2</p> },
-        { label: 'Shopify', content: <p>Content of Tab 3</p> },
-        { label: 'Work in Progress', content: <p>Content of Tab 4</p> },
+        {
+            label: 'All',
+            content: [
+                {
+                    key: 1,
+                    text: 'Content of Tab 1'
+                }
+            ]
+        },
+        {
+            label: 'Wordpress',
+            content: [
+                {
+                    key: 2,
+                    text: 'Content 1 of Tab 2'
+                },
+                {
+                    key: 3,
+                    text: 'Content 2 of Tab 2'
+                }
+            ]
+        },
+        {
+            label: 'React, NextJs',
+            content: [
+                {
+                    key: 4,
+                    text: 'Content of Tab 3'
+                }
+            ]
+        },
+        {
+            label: 'Shopify',
+            content: [
+                {
+                    key: 5,
+                    text: 'Content of Tab 4'
+                }
+            ]
+        },
+        {
+            label: 'Work in Progress',
+            content: [
+                {
+                    key: 6,
+                    text: 'Content of Tab 5'
+                }
+            ]
+        },
     ];
 
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto w-full">
             <Tab tabs={tabs} />
         </div>
     );

@@ -31,7 +31,7 @@ export default function Header() {
     }, []);
 
     const navs = [
-        { name: 'My Work', link: '/about' },
+        { name: 'My Work', link: '/mywork' },
         { name: 'About', link: '/about' },
 
     ];
@@ -57,10 +57,7 @@ export default function Header() {
                                     <Link href={nav.link} className="uppercase">{nav.name}</Link>
                                 </li>
                             ))}
-
-                        
-
-                            <AnimatedButton label="HireMe" link="/about" className="ml-7"></AnimatedButton>
+                            <AnimatedButton label="Say Hello!" link="/contact" className="ml-7"></AnimatedButton>
                         </ul>
                     </div>
                 </div>

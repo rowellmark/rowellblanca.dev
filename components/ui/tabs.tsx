@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 interface TabItem {
     label: string;
-    content: React.ReactNode;
+    content: React.ReactNode[]; // Update to accept an array of React nodes
 }
 
 interface TabProps {
@@ -21,8 +21,8 @@ export function Tab({ tabs }: TabProps) {
                     <button
                         key={index}
                         className={`${index === activeTab
-                                ? 'border-b-2 border-blue-500 text-blue-500'
-                                : 'text-base text-white'
+                            ? 'border-b-2 border-blue-500 text-blue-500'
+                            : 'text-base text-white'
                             } focus:outline-none`}
                         onClick={() => setActiveTab(index)}
                     >
@@ -30,7 +30,15 @@ export function Tab({ tabs }: TabProps) {
                     </button>
                 ))}
             </div>
-            <div>{tabs[activeTab].content}</div>
+            <div className="tabContainer">
+                {tabs[activeTab].content.map(item => (
+                    
+                    <div className="tabCol" key={item.key}>
+                        {item.text}
+                    </div>
+                   
+                ))}
+            </div>
         </div>
     );
 }

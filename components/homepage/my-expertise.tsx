@@ -31,7 +31,7 @@ export default function MyExpertise() {
                             </h2>
                             <div className="myExpertise__box--content">
                                 <span className="block text-base text-slate-400">&lt;h3&gt;</span>
-                                <p className="border-l-2 border-slate-400 px-5 py-2 ml-5 text-base">Passionate about UI/UX. Over 13 years of development experience in HTML, CSS, JavaScript, Sass, React, NextJS Less frameworks.</p>
+                                <p className="border-l-2 border-slate-400 px-5 py-2 ml-5 text-base">Passionate about UI/UX. Over 13 years of development experience in HTML, CSS, JavaScript, Sass, Less, React, NextJS, Figma, Photoshop.</p>
                                 <span className="block text-base text-slate-400">&lt;&#47;h3&gt;</span>
                             </div>
 

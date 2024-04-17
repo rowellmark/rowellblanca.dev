@@ -1,34 +1,117 @@
 import PrimaryButton from "@/components/buttons/primaryButton";
+import rowellPic from "@/assets/images/mypicture.jpg";
+import Image from "next/image";
+import facebook from "@/assets/images/facebook.png";
+import instagram from "@/assets/images/instagram.png";
+import linkedin from "@/assets/images/linkedin.png";
+import git from "@/assets/images/git.png";
+import Link from "next/link";
+
+import {
+    IconDownload,
+    IconCornerUpLeft
+} from "@tabler/icons-react";
 
 export default function AboutPage() {
+
+
+    const socialMedia = [
+        {
+            'title': 'facebook',
+            'icon': facebook,
+            'url': '#',
+        },
+        {
+            'title': 'instagram',
+            'icon': instagram,
+            'url': '#',
+        },
+        {
+            'title': 'linkedin',
+            'icon': linkedin,
+            'url': '#',
+        },
+        {
+            'title': 'git',
+            'icon': git,
+            'url': '#',
+        }
+    ];
+
+
     return (
         <>
-            <div className="container mx-auto py-48">
-                <div className="max-w-3xl mx-auto  overflow-hidden">
+            
+            <div className="w-full py-48 aboutPage bg-primary-accent">
+                <div className="aboutPage__container container mx-auto">
+                    
+                    <div className="back-button flex items-start pb-6">
+                        <Link href="/" className="flex items-center px-4 py-2 uppercase font-semibold rounded-md border border-neutral-300 bg-neutral-100 text-primary text-sm hover:-translate-y-1 transform transition duration-200 hover:shadow-md">
+                            <IconCornerUpLeft></IconCornerUpLeft> Back
+                        </Link>
+                    </div>
+                  
+                    <h1 className="text-5xl font-semibold text-white-800 uppercase text-center pb-24">Who is me?..</h1>
+                    <div className="aboutPage__header flex items-center">
+                        
+                        <div className="aboutPage_info w-full text-base leading-7">
+                            <h2 className="text-7xl font-semibold pb-9">
+                                I'm <span className="text-accent-color">Rowell</span> <br />
+                                <span>Software Engineer</span>
+                            </h2>
+                            <ul>
+                                <li>
+                                    <strong className="text-accent-color">Address: </strong>
+                                    <span>Ynares 2 Street Calumpang Binangonan Rizal</span>
+                                </li>
+                                <li>
+                                    <strong className="text-accent-color">Email: </strong>
+                                    <span>rowellblanca94@gmail.com</span>
+                                </li>
+                                <li>
+                                    <strong className="text-accent-color">Phone: </strong>
+                                    <span>+639688900418</span>
+                                </li>
+                            </ul>
 
-                    <div className="p-6">
-                        <h1 className="text-3xl font-semibold text-white-800 mb-4">Who is me?..</h1>
-
-                        <div className="blog-content text-base">
-
-                            <p>As a seasoned Full-stack Engineer with over a decade of experience, I've had the privilege of working with clients across diverse industries and countries. My passion lies in crafting robust and scalable frontend products that prioritize exceptional user experiences. With a keen eye for detail and a commitment to excellence, I strive to deliver solutions that not only meet but exceed client expectations.</p>
-
-                            <h2>Key Technologies</h2>
-
-                            <ul className="pt-16">
+                            <h2 className="mt-5 text-xl font-semibold text-accent-color">Key Technologies</h2>
+                            <ul className="mt-2 list-disc ml-4">
                                 <li> Frontend: HTML5, CSS3, JavaScript (ES6+), React.js, Next.js</li>
                                 <li> Backend: Node.js, PHP.</li>
                                 <li>Database: MySQL</li >
-                                <li>Tools & Platforms: Git, Docker, Composer</li >
+                                <li>Tools & Platforms: Git, Photoshop, Figma, Composer</li >
                             </ul>
 
-
-                            <PrimaryButton label="< Back" link="/" className="mt-10"></PrimaryButton>
+                            <ul className="flex -mx-1 pt-5 pb-7">
+                                {socialMedia.map((social, index) => (
+                                    <li
+                                        key={index}
+                                        className="px-1"
+                                    >
+                                        <Link href={social.url} className="block relative w-7">
+                                            <Image src={social.icon} alt={social.title} priority />
+                                            <span className="hidden">{social.title}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className="aboutPage__buttons flex pt-4">
+                                <Link href="#" className="text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">Say Hello!</Link>
+                                <Link href="#" className="flex items-center ml-3 text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">Download CV <IconDownload className="ml-1"></IconDownload></Link>
+                            </div>
                         </div>
+
+                        <div className="aboutPage_image w-[40%] relative shrink-0">
+                            <canvas width="480" height="480" className="block w-full"></canvas>
+                            <Image src={rowellPic} alt="Rowell Mark M Blanca" className="w-full block h-full absolute left-0 top-0 object-cover object-center"/>
+                        </div>
+                    </div>
+                    <div className="blog-content text-base leading-7 py-7">
+                        <p>As a seasoned Full-stack Engineer with over a decade of experience, I've had the privilege of collaborating with clients across diverse industries and countries. With a solid foundation in WordPress spanning 13 years, I've honed my skills in architecting robust and scalable frontend solutions that prioritize exceptional user experiences. My passion lies in crafting digital experiences that seamlessly blend creativity with functionality. With a meticulous attention to detail and an unwavering commitment to excellence, I endeavor to deliver solutions that not only meet but surpass client expectations.</p>
                     </div>
                 </div>
             </div>
-        
         </>
     )
-}
+} 
+
