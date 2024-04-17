@@ -4,9 +4,14 @@ import React, { useState } from 'react';
 
 interface TabItem {
     label: string;
-    content: { key: number; text: string; }[] | React.ReactNode[];
+    content: {
+        key: number;
+        url: string;
+        image: string;
+        sitename: string;
+        stacks: string;
+    }[];
 }
-
 interface TabProps {
     tabs: TabItem[];
 }
