@@ -33,18 +33,11 @@ export function Tab({ tabs }: TabProps) {
             <div>
                 {tabs[activeTab].content.map((item, index) => (
                     <div className="tabCol w-1/3 p-4" key={index}>
-                        {typeof item === 'object' && 'text' in item ? (
-                            // If item is an object with a 'text' property
-                            <>
-                                <a href="#">
-                                    <canvas width="300" height="200" className="bg-slate-400 block w-full h-auto"></canvas>
-                                    {item.text}
-                                </a>
-                            </>
-                        ) : (
-                            // If item is not an object with a 'text' property, assume it's a JSX element
-                            item
-                        )}
+                        <a href={item.url}>
+                            <img src={item.image} alt={item.sitename} className="w-full h-auto mb-2" />
+                            <h3 className="text-lg font-semibold">{item.sitename}</h3>
+                            <ul dangerouslySetInnerHTML={{ __html: item.stacks }}></ul>
+                        </a>
                     </div>
                 ))}
             </div>

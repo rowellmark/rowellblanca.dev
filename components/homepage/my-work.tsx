@@ -1,5 +1,5 @@
 import { Tab } from "../ui/tabs";
-
+import placeholderImage from "@/assets/images/placeholder-portfolio.jpg";
 
 export function MyWork() {
     const tabs = [
@@ -8,7 +8,10 @@ export function MyWork() {
             content: [
                 {
                     key: 1,
-                    text: 'Content of Tab 1'
+                    url: "#",
+                    image: placeholderImage,
+                    sitename: "Test Site",
+                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
             ]
         },
@@ -16,12 +19,18 @@ export function MyWork() {
             label: 'Wordpress',
             content: [
                 {
-                    key: 2,
-                    text: 'Content 1 of Tab 2'
+                    key: 1,
+                    url: "#",
+                    image: placeholderImage,
+                    sitename: "Test Site",
+                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 },
                 {
-                    key: 3,
-                    text: 'Content 2 of Tab 2'
+                    key: 1,
+                    url: "#",
+                    image: placeholderImage,
+                    sitename: "Test Site",
+                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
             ]
         },
@@ -29,8 +38,11 @@ export function MyWork() {
             label: 'React, NextJs',
             content: [
                 {
-                    key: 4,
-                    text: 'Content of Tab 3'
+                    key: 1,
+                    url: "#",
+                    image: placeholderImage,
+                    sitename: "Test Site",
+                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
             ]
         },
@@ -38,8 +50,11 @@ export function MyWork() {
             label: 'Shopify',
             content: [
                 {
-                    key: 5,
-                    text: 'Content of Tab 4'
+                    key: 1,
+                    url: "#",
+                    image: placeholderImage,
+                    sitename: "Test Site",
+                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
             ]
         },
@@ -47,8 +62,11 @@ export function MyWork() {
             label: 'Work in Progress',
             content: [
                 {
-                    key: 6,
-                    text: 'Content of Tab 5'
+                    key: 1,
+                    url: "#",
+                    image: placeholderImage,
+                    sitename: "Test Site",
+                    stacks: "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
                 }
             ]
         },
