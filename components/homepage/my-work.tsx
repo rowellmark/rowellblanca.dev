@@ -1,5 +1,4 @@
 import { Tab } from "../ui/tabs";
-import "/" from "@/assets/images/placeholder-portfolio.jpg";
 
 export function MyWork() {
     const tabs = [
