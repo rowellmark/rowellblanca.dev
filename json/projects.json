@@ -7,7 +7,7 @@
                 "url": "#",
                 "image": "/placeholder-portfolio.jpg",
                 "sitename": "Test Site",
-                "stacks": "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
+                "stacks": ["Wordpress", "Javascript", "Test", "Wordpress"]
             }
         ]
     },
@@ -19,14 +19,28 @@
                 "url": "#",
                 "image": "/placeholder-portfolio.jpg",
                 "sitename": "Test Site",
-                "stacks": "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
             },
             {
                 "key": 1,
                 "url": "#",
                 "image": "/placeholder-portfolio.jpg",
                 "sitename": "Test Site",
-                "stacks": "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/placeholder-portfolio.jpg",
+                "sitename": "Test Site",
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/placeholder-portfolio.jpg",
+                "sitename": "Test Site",
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
             }
         ]
     },
@@ -38,7 +52,7 @@
                 "url": "#",
                 "image": "/placeholder-portfolio.jpg",
                 "sitename": "Test Site",
-                "stacks": "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
             }
         ]
     },
@@ -50,7 +64,7 @@
                 "url": "#",
                 "image": "/placeholder-portfolio.jpg",
                 "sitename": "Test Site",
-                "stacks": "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
             }
         ]
     },
@@ -62,7 +76,7 @@
                 "url": "#",
                 "image": "/placeholder-portfolio.jpg",
                 "sitename": "Test Site",
-                "stacks": "<li>Wordpress</li><li>Wordpress</li><li>Wordpress</li><li>Wordpress</li>"
+                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
             }
         ]
     }
