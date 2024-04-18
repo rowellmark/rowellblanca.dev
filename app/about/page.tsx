@@ -41,7 +41,6 @@ export default function AboutPage() {
 
     return (
         <>
-            
             <div className="w-full py-48 aboutPage bg-primary-accent">
                 <div className="aboutPage__container container mx-auto">
                     

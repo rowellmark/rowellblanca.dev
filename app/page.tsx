@@ -8,6 +8,7 @@ import { MyWork } from "@/components/homepage/my-work";
 import { ShowCasePortfolios } from "@/components/homepage/showcase-portfolios";
 import Contact from "@/components/ui/contactForm";
 import Image from "next/image";
+import WorkHistory from "@/components/homepage/work-history";
 
 export default function Home() {
 
@@ -20,7 +21,8 @@ export default function Home() {
       <ContactSection />
       <MyExpertise />
       <FeaturedProject />
-      <MyWork/>
+      <MyWork />
+      <WorkHistory/>
     </>
   );
 }
