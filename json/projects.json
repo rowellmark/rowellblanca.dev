@@ -5,9 +5,65 @@
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Javascript", "Test", "Wordpress"]
+                "image": "/smoot-fruit-cake(blob-animate).jpg",
+                "sitename": "Smooties and Juice Landing Page",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/minimalist-studio-slider.jpg",
+                "sitename": "Mnmlst",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/lateeze.jpg",
+                "sitename": "lateezelingerie.com",
+                "stacks": ["Shopify", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/burger-house.jpg",
+                "sitename": "Burger House",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "https://bellemerenewyork.com/",
+                "image": "/bellemere.jpg",
+                "sitename": "bellemerenewyork.com",
+                "stacks": ["Shopify", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/yogo-site.jpg",
+                "sitename": "Yoga",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "https://juliettehohnen.com/",
+                "image": "/joy-homes.jpg",
+                "sitename": "Joy Home",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "https://juliettehohnen.com/",
+                "image": "/juliettehohnen.jpg",
+                "sitename": "juliettehohnen.com",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/community-scheduler.jpg",
+                "sitename": "Walk Alone (Future Project)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
             }
         ]
     },
@@ -17,42 +73,84 @@
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/minimalist-studio-slider.jpg",
+                "sitename": "Mnmlst",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
             },
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/burger-house.jpg",
+                "sitename": "Burger House",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
             },
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/yogo-site.jpg",
+                "sitename": "Yoga",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "https://juliettehohnen.com/",
+                "image": "/joy-homes.jpg",
+                "sitename": "Joy Home",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "https://juliettehohnen.com/",
+                "image": "/juliettehohnen.jpg",
+                "sitename": "juliettehohnen.com",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
             },
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/community-scheduler.jpg",
+                "sitename": "Walk Alone (Future Project)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/indonesian-cusine.jpg",
+                "sitename": "Indonesian Cusine (Future Project)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/meal-plan.jpg",
+                "sitename": "Chef Norman Plan (Future Project)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
             }
         ]
     },
     {
-        "label": "React, NextJs",
+        "label": "React, Nextjs",
         "content": [
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/smoot-fruit-cake(blob-animate).jpg",
+                "sitename": "Smooties and Juice Landing Page",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/community-scheduler.jpg",
+                "sitename": "Walk Alone (Future Project)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/my-cv-screenshot.jpg",
+                "sitename": "MyCv.com (Work in progress)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
             }
         ]
     },
@@ -62,9 +160,16 @@
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/lateeze.jpg",
+                "sitename": "lateezelingerie.com",
+                "stacks": ["Shopify", "Javascript", "jQuery", "CSS"]
+            },
+            {
+                "key": 1,
+                "url": "https://bellemerenewyork.com/",
+                "image": "/bellemere.jpg",
+                "sitename": "bellemerenewyork.com",
+                "stacks": ["Shopify", "Javascript", "jQuery", "CSS"]
             }
         ]
     },
@@ -74,9 +179,9 @@
             {
                 "key": 1,
                 "url": "#",
-                "image": "/placeholder-portfolio.jpg",
-                "sitename": "Test Site",
-                "stacks": ["Wordpress", "Wordpress", "Wordpress", "Wordpress"]
+                "image": "/my-cv-screenshot.jpg",
+                "sitename": "MyCv.com",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
             }
         ]
     }

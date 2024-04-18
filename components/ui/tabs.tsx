@@ -3,6 +3,10 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 
+import {
+    IconLink
+} from "@tabler/icons-react";
+
 interface TabItem {
     label: string;
     content: {
@@ -39,9 +43,14 @@ export function Tab({ tabs }: TabProps) {
             <div className='tabContainer py-10 flex -mx-4 flex-wrap'>
                 {tabs[activeTab].content.map((item, index) => (
                     <div className="tabCol w-1/3 p-4 text-base text-primary" key={index}>
-                        <a href={item.url} className='block w-full bg-white p-4 rounded-lg'>
-                            <Image src={item.image} alt={item.sitename} className="w-full h-auto mb-2" width="640" height="461"></Image>
-                            <h3 className="text-lg font-semibold">{item.sitename}</h3>
+                        <a href="#" className='block w-full bg-white p-4 rounded-lg'>
+                            <div className="projectImage relative overflow-hidden">
+                                <canvas width="640" height="380" className="w-full h-auto"></canvas>
+                                <Image src={item.image} alt={item.sitename} className="w-full h-full mb-2 absolute top-0 left-0 object-cover object-left-top z-10" width="640" height="461"></Image>
+                                <div className="viewWebsite absolute z-30 bottom-0 right-0 flex items-center text-base text-white p-3">Show Project <IconLink className='ml-2'/></div>
+                            </div>
+                          
+                            <h3 className="text-lg font-semibold pt-3">{item.sitename}</h3>
                             <ul className="flex items-center -mx-1 py-3">
                                 {item.stacks.map((stack, stackIndex) => (
                                     <li key={stackIndex} className="bg-accent-color px-3 py-1 rounded-3xl mx-1 text-sm text-black">{stack}</li>

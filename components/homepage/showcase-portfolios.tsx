@@ -53,7 +53,7 @@ export const products = [
     },
     {
         title: "Indonesian Cusine",
-        link: "https://smartbridgetech.com",
+        link: "#",
         thumbnail:
             "/indonesian-cusine.jpg",
     },

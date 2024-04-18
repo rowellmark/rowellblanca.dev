@@ -76,8 +76,8 @@ export default function AboutPage() {
 
                             <h2 className="mt-5 text-xl font-semibold text-accent-color">Key Technologies</h2>
                             <ul className="mt-2 list-disc ml-4">
-                                <li> Frontend: HTML5, CSS3, JavaScript (ES6+), React.js, Next.js</li>
-                                <li> Backend: Node.js, PHP.</li>
+                                <li>Frontend: HTML5, CSS3, JavaScript (ES6+), React.js, Next.js</li>
+                                <li>Backend: Node.js, PHP, Wordpress.</li>
                                 <li>Database: MySQL</li >
                                 <li>Tools & Platforms: Git, Photoshop, Figma, Composer</li >
                             </ul>
