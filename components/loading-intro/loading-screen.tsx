@@ -49,7 +49,7 @@ export function WelcomeLoading() {
                 </div>
             </div>
             <div className={`${classes.introloading__logoSlogan} font-normal text-2xl uppercase max-sm:text-xl`}>
-                Build Things for the Web
+                I Build Things for the Web
             </div>
         </div>
     );

@@ -50,18 +50,18 @@ export default function AboutPage() {
                         </Link>
                     </div>
                   
-                    <h1 className="text-5xl font-semibold text-white-800 uppercase text-center pb-24 max-sm:text-left max-sm:pb-12">This is me?..</h1>
+                    <h1 className="text-5xl font-semibold text-white-800 uppercase text-center pb-24 max-sm:text-left max-sm:pb-12 max-sm:text-4xl">This is me..</h1>
                     <div className="aboutPage__header flex items-center max-sm:flex-col">
                         
                         <div className="aboutPage_info w-full text-base leading-7">
-                            <h2 className="text-7xl font-semibold pb-9">
+                            <h2 className="text-7xl font-semibold pb-9 max-sm:text-6xl">
                                 I'm <span className="text-accent-color">Rowell</span> <br />
                                 <span>Software Engineer</span>
                             </h2>
                             <ul>
                                 <li>
                                     <strong className="text-accent-color">Address: </strong>
-                                    <span>Ynares 2 Street Calumpang Binangonan Rizal</span>
+                                    <span className="max-sm:text-sm">Ynares 2 Street Calumpang Binangonan Rizal</span>
                                 </li>
                                 <li>
                                     <strong className="text-accent-color">Email: </strong>
