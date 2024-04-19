@@ -35,20 +35,20 @@ export function WelcomeLoading() {
             ${loadingComplete ? classes.loaded : ''} 
             ${exitAnimation ? classes.exitAnimation : ''}`}
         >
-            <div className={`${classes.introloading__container} flex`}>
-                <div className={`${classes.introloading__logoIcon} w-32`}>
+            <div className={`${classes.introloading__container} flex px-8`}>
+                <div className={`${classes.introloading__logoIcon} w-32 max-sm:w-24`}>
                     <Image
                         src={logo}
                         className="mx-auto w-full h-auto"
                         alt="Rowell Mark Blanca"
                     />
                 </div>
-                <div className={`${classes.introloading__logoText} font-semibold uppercase overflow-hidden text-7xl ml-4`}>
-                    <div className={`${classes.introloading__logoTextwords } -mt-2`}>Rowell</div>
+                <div className={`${classes.introloading__logoText} font-semibold uppercase overflow-hidden text-7xl ml-4 max-sm:text-5xl`}>
+                    <div className={`${classes.introloading__logoTextwords } -mt-2 max-sm:mt-0`}>Rowell</div>
                     <div className={`${classes.introloading__logoTextwords}`}>Mark</div>
                 </div>
             </div>
-            <div className={`${classes.introloading__logoSlogan} font-normal text-2xl uppercase`}>
+            <div className={`${classes.introloading__logoSlogan} font-normal text-2xl uppercase max-sm:text-xl`}>
                 Build Things for the Web
             </div>
         </div>
