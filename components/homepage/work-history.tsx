@@ -64,7 +64,7 @@ export default function WorkHistory() {
 
     return (
         <>
-            <div className="workHistory w-full bg-primary-accent py-28">
+            <div className="workHistory w-full bg-primary-accent py-28 max-sm:px-6">
 
                 <div className="workHistory__container container mx-auto">
                     <h2 className="text-white relative z-20 font-bold text-7xl text-center w-full pb-6">
@@ -72,7 +72,7 @@ export default function WorkHistory() {
                         Experience
                     </h2>
 
-                    <div className="workHistory__wrap  w-2/4 mx-auto">
+                    <div className="workHistory__wrap w-2/4 mx-auto max-sm:w-full">
 
                         {jobHistory.map((history, index) => (
                             <Accordion
@@ -84,7 +84,7 @@ export default function WorkHistory() {
                                 workyear={history.year}
 
                             >
-                                <ul className="flex items-center">
+                                <ul className="flex items-center max-sm:flex-col max-sm:items-start">
                                     <li className='flex items-center px-5 pl-0'>
                                         <IconMap2 color="#F8C15F" className="mr-2" />
                                         <span>{history.location}</span>
@@ -96,18 +96,18 @@ export default function WorkHistory() {
                                         </span>
                                     </li>
                                 </ul>
-                                <div className="flex">
+                                <div className="flex max-sm:flex-col-reverse">
                                     <div className="accordConent w-full pr-9">
                                         <p className="py-5">
                                             {history.desciption}
                                         </p>
-                                        <div className="stackbubbles flex py-6">
+                                        <div className="stackbubbles flex py-6 max-sm:flex-wrap">
                                             {history.stacks.map((stack, key) => (
-                                                <span key={key} className="bg-accent-color px-3 py-1 rounded-3xl mx-1 text-sm text-black">{stack}</span>
+                                                <span key={key} className="bg-accent-color px-3 py-1 rounded-3xl m-1 text-sm text-black">{stack}</span>
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="accordLogo w-1/6 shrink-0">
+                                    <div className="accordLogo w-1/6 shrink-0 max-sm:py-3">
                                         <Image src={history.logo} className="w-full block" alt="a99" />
                                     </div>
                                 </div>

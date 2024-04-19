@@ -26,12 +26,12 @@ const Accordion: React.FC<AccordionProps> = ({
     return (
         <div className="border border-gray-200 rounded-md bg-white text-primary-accent accordionHead my-3">
             <div
-                className="flex justify-between items-center p-4  font-semibold cursor-pointer relative"
+                className="flex justify-between items-center p-4 font-semibold cursor-pointer relative max-sm:flex-col max-sm:items-start max-sm:px-4"
                 onClick={handleClick}
             >
                 <h2 className="text-lg font-semibold">{title}</h2>
 
-                <div className="workyear px-10">
+                <div className="workyear px-10 max-sm:px-0 max-sm:text-sm max-sm:text-accent-color">
                     {workyear}
                 </div>
                 <div className="arrows absolute right-0 top-0 h-full flex items-center px-4">

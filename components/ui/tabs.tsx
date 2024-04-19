@@ -26,14 +26,14 @@ export function Tab({ tabs }: TabProps) {
 
     return (
         <div>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 justify-center max-sm:flex-col">
                 {tabs.map((tab, index) => (
                     <button
                         key={index}
                         className={`${index === activeTab
                             ? 'border-b-2 border-accent-color text-accent-color'
                             : 'text-base text-white'
-                            } focus:outline-none uppercase`}
+                            } focus:outline-none uppercase max-sm:py-5`}
                         onClick={() => setActiveTab(index)}
                     >
                         {tab.label}
@@ -42,7 +42,7 @@ export function Tab({ tabs }: TabProps) {
             </div>
             <div className='tabContainer py-10 flex -mx-4 flex-wrap'>
                 {tabs[activeTab].content.map((item, index) => (
-                    <div className="tabCol w-1/3 p-4 text-base text-primary" key={index}>
+                    <div className="tabCol w-1/3 p-4 text-base text-primary max-sm:w-full" key={index}>
                         <a href="#" className='block w-full bg-white p-4 rounded-lg group'>
                             <div className="projectImage relative overflow-hidden">
                                 <canvas width="640" height="380" className="w-full h-auto bg-black"></canvas>

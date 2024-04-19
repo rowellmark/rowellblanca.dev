@@ -39,8 +39,8 @@ export default function Header() {
     return (
         <>
             <header className={`${scrollClass} header fixed w-full z-[9999] transition-all duration-500 ease-in-out top-0 left-0`}>
-                <div className="header__container flex justify-between items-center w-full px-8 py-5">
-                    <div className="logo w-16">
+                <div className="header__container flex justify-between items-center w-full px-8 py-5 max-sm:px-3">
+                    <div className="logo w-16 max-sm:w-12">
                         <Link href="/">
                             <Image
                                 src={logo}
@@ -53,7 +53,7 @@ export default function Header() {
                         <ul className="flex items-center">
 
                             {navs.map((nav, index) => (
-                                <li key={index} className='px-4'>
+                                <li key={index} className='px-4 max-sm:hidden'>
                                     <Link href={nav.link} className="uppercase">{nav.name}</Link>
                                 </li>
                             ))}

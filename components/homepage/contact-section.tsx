@@ -34,11 +34,11 @@ export default function ContactSection() {
 
     return (
         <>
-            <div className="contactSection py-32 px-52">
-                <div className="contactSection__container container flex mx-auto">
+            <div className="contactSection py-32 px-52 max-sm:px-8">
+                <div className="contactSection__container container flex mx-auto max-sm:flex-col">
 
-                    <div className="contactSection__col w-1/2">
-                        <h2 className="text-white relative z-20 font-bold text-6xl">
+                    <div className="contactSection__col w-1/2 max-sm:w-full">
+                        <h2 className="text-white relative z-20 font-bold text-6xl max-sm:text-4xl">
                             <span className="block text-text-accent font-medium text-lg uppercase">Contact</span>
                             Any Type of Query <br/>
                             & Discussion.
@@ -62,8 +62,8 @@ export default function ContactSection() {
                         </div>
                     </div>
 
-                    <div className="contactSection__col w-1/2">
-                        <h2 className="text-white relative z-20 font-bold text-6xl">
+                    <div className="contactSection__col w-1/2 max-sm:w-full max-sm:pt-5">
+                        <h2 className="text-white relative z-20 font-bold text-6xl max-sm:text-4xl">
                             Tailored to meet <br />
                             specific needs.
                         </h2>

@@ -104,7 +104,7 @@ export const HeroParallax = ({
 export const Header = () => {
     return (
         <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-            <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
+            <h1 className="text-5xl md:text-7xl font-bold dark:text-white">
                 I build things <br />for the web.
             </h1>
             <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
@@ -134,7 +134,7 @@ export const ProductCard = ({
                 y: -20,
             }}
             key={product.title}
-            className="group/product h-96 w-1/3 relative flex-shrink-0"
+            className="group/product h-96 w-1/3 relative flex-shrink-0 max-sm:w-full"
         >
             <Link
                 href={product.link}
