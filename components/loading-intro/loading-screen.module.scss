@@ -17,6 +17,7 @@
             transition: all 0.4s ease-in-out;
             opacity: 0;
             display: block;
+            transform: scale(0);
         }
     }
 
@@ -38,13 +39,14 @@
         #{$self}__logoIcon {
             img {
                 opacity: 1;
-                animation: myAnim 1s ease 0s 1 normal forwards;
+                transform: scale(1);
+                
             }
         }
         #{$self}__logoText{
             &words {
                 margin-left: 0;
-                animation: myAnim 1s ease 0s 1 normal forwards;
+                
             }
         }
         #{$self}__logoSlogan{
