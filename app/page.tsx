@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       
-      {/* <WelcomeLoading /> */}
+      <WelcomeLoading />
       <Hero />
       <ShowCasePortfolios />
       <ContactSection />
