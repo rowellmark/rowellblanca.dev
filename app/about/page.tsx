@@ -50,7 +50,7 @@ export default function AboutPage() {
                         </Link>
                     </div>
                   
-                    <h1 className="text-5xl font-semibold text-white-800 uppercase text-center pb-24 max-sm:text-left max-sm:pb-12">Who is me?..</h1>
+                    <h1 className="text-5xl font-semibold text-white-800 uppercase text-center pb-24 max-sm:text-left max-sm:pb-12">This is me?..</h1>
                     <div className="aboutPage__header flex items-center max-sm:flex-col">
                         
                         <div className="aboutPage_info w-full text-base leading-7">

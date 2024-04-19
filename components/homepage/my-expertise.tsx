@@ -2,7 +2,7 @@
 export default function MyExpertise() {
     return (
         <>
-            <div className="myExpertise py-48 px-52 bg-primary-accent relative max-sm:px-8">
+            <div className="myExpertise py-48 px-52 bg-primary-accent relative max-sm:px-8 max-sm:py-32">
                 <div className="myExpertise__container container mx-auto relative z-50">
                     <h2 className="text-white relative z-20 font-bold text-7xl text-center w-full">
                         <span className="block text-text-accent font-medium text-lg uppercase">My</span>
