@@ -13,22 +13,22 @@ export default function ContactSection() {
         {
             'title' : 'facebook',
             'icon': facebook,
-            'url'   : '#',
+            'url': 'https://www.facebook.com/itsmrrowrow',
         },
         {
             'title': 'instagram',
             'icon': instagram,
-            'url': '#',
+            'url': 'https://www.instagram.com/its.mr.row/',
         },
         {
             'title': 'linkedin',
             'icon': linkedin,
-            'url': '#',
+            'url': 'https://www.linkedin.com/in/rowell-blanca/',
         },
         {
             'title': 'git',
             'icon': git,
-            'url': '#',
+            'url': 'https://github.com/rowellmark',
         }
     ];
 
@@ -50,7 +50,7 @@ export default function ContactSection() {
                                     key={index}
                                     className="px-1"
                                 >
-                                    <a href={social.url} className="block relative w-7">
+                                    <a href={social.url} className="block relative w-7" target="_blank">
                                         <Image src={social.icon} alt={social.title} priority />
                                         <span className="hidden">{social.title}</span>
                                     </a>
@@ -69,7 +69,6 @@ export default function ContactSection() {
                         </h2>
                         
                         <p className="mt-2 text-neutral-300 relative z-20 leading-8 pt-6">A Full-Stack Engineer is a versatile architect, adept at blending frontend elegance with backend robustness to craft tailored digital solutions. Proficient in HTML, CSS, JavaScript, React, Nextjs for frontend design, and PHP with WordPress, Shopify, they design captivating interfaces and build resilient server-side logic. Leveraging version control systems like Git and embracing agile methodologies, they ensure efficient collaboration and seamless project delivery. With technical prowess and creative problem-solving, they meet specific project needs with agility and precision.</p>
-
                         <PrimaryButton link="/about" label="Say Hello!" className=" mt-7" />
 
                     </div>

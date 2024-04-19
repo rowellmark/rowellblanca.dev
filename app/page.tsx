@@ -6,9 +6,9 @@ import { WelcomeLoading } from "@/components/loading-intro/loading-screen";
 import MyExpertise from "@/components/homepage/my-expertise";
 import { MyWork } from "@/components/homepage/my-work";
 import { ShowCasePortfolios } from "@/components/homepage/showcase-portfolios";
-import Contact from "@/components/ui/contactForm";
 import Image from "next/image";
 import WorkHistory from "@/components/homepage/work-history";
+import { ContactFormSection } from "@/components/footer/contact-form-section";
 
 export default function Home() {
 
@@ -22,7 +22,8 @@ export default function Home() {
       <MyExpertise />
       <FeaturedProject />
       <MyWork />
-      <WorkHistory/>
+      <WorkHistory />
+      <ContactFormSection />
     </>
   );
 }

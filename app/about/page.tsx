@@ -19,29 +19,29 @@ export default function AboutPage() {
         {
             'title': 'facebook',
             'icon': facebook,
-            'url': '#',
+            'url': 'https://www.facebook.com/itsmrrowrow',
         },
         {
             'title': 'instagram',
             'icon': instagram,
-            'url': '#',
+            'url': 'https://www.instagram.com/its.mr.row/',
         },
         {
             'title': 'linkedin',
             'icon': linkedin,
-            'url': '#',
+            'url': 'https://www.linkedin.com/in/rowell-blanca/',
         },
         {
             'title': 'git',
             'icon': git,
-            'url': '#',
+            'url': 'https://github.com/rowellmark',
         }
     ];
 
 
     return (
         <>
-            <div className="w-full py-48 aboutPage bg-primary-accent">
+            <div className="w-full py-48 aboutPag">
                 <div className="aboutPage__container container mx-auto">
                     
                     <div className="back-button flex items-start pb-6">
@@ -87,10 +87,10 @@ export default function AboutPage() {
                                         key={index}
                                         className="px-1"
                                     >
-                                        <Link href={social.url} className="block relative w-7">
+                                        <a href={social.url} className="block relative w-7" target="_blank">
                                             <Image src={social.icon} alt={social.title} priority />
                                             <span className="hidden">{social.title}</span>
-                                        </Link>
+                                        </a>
                                     </li>
                                 ))}
                             </ul>
