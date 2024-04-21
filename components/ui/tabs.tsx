@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import {
     IconLink
 } from "@tabler/icons-react";
+import { func } from 'three/examples/jsm/nodes/Nodes.js';
 
 interface TabItem {
     label: string;
@@ -23,6 +24,15 @@ interface TabProps {
 
 export function Tab({ tabs }: TabProps) {
     const [activeTab, setActiveTab] = useState(0);
+
+
+    function handleClick(item: any) {
+        // Clear previous data
+        localStorage.removeItem('clickedItems');
+        // Save the clicked item data to local storage
+        localStorage.setItem('clickedItem', JSON.stringify(item));
+    }
+
 
     return (
         <div>
@@ -43,7 +53,7 @@ export function Tab({ tabs }: TabProps) {
             <div className='tabContainer py-10 flex -mx-4 flex-wrap'>
                 {tabs[activeTab].content.map((item, index) => (
                     <div className="tabCol w-1/3 p-4 text-base text-primary max-sm:w-full" key={index}>
-                        <a href="#" className='block w-full bg-white p-4 rounded-lg group'>
+                        <a href="#" className='block w-full bg-white p-4 rounded-lg group' onClick={() => handleClick(item)}>
                             <div className="projectImage relative overflow-hidden">
                                 <canvas width="640" height="380" className="w-full h-auto bg-black"></canvas>
                                 <Image src={item.image} alt={item.sitename} className="w-full h-full mb-2 absolute top-0 left-0 object-cover object-left-top z-10 transition-all duration-500 group-hover:scale-110 group-hover:opacity-40" width="640" height="461"></Image>
@@ -51,9 +61,9 @@ export function Tab({ tabs }: TabProps) {
                             </div>
                           
                             <h3 className="text-lg font-semibold pt-3">{item.sitename}</h3>
-                            <ul className="flex items-center -mx-1 py-3">
+                            <ul className="flex items-center -mx-1 py-3 flex-wrap">
                                 {item.stacks.map((stack, stackIndex) => (
-                                    <li key={stackIndex} className="bg-accent-color px-3 py-1 rounded-3xl mx-1 text-sm text-black">{stack}</li>
+                                    <li key={stackIndex} className="bg-accent-color px-3 py-1 rounded-3xl m-1 text-sm text-black">{stack}</li>
                                 ))}
                             </ul>
                         </a>

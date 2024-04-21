@@ -67,7 +67,7 @@ export default function WorkHistory() {
             <div className="workHistory w-full bg-primary-accent py-28 max-sm:px-6">
 
                 <div className="workHistory__container container mx-auto">
-                    <h2 className="text-white relative z-20 font-bold text-7xl text-center w-full pb-6">
+                    <h2 className="text-white relative z-20 font-bold text-7xl text-center w-full pb-6 max-sm:text-6xl">
                         <span className="block text-text-accent font-medium text-lg uppercase">Professional</span>
                         Experience
                     </h2>

@@ -8,94 +8,94 @@ export function ShowCasePortfolios() {
 export const products = [
     {
         title: "Smooties and Juice Landing Page",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/smoot-fruit-cake(blob-animate).jpg",
     },
     {
         title: "Mnmlst",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/minimalist-studio-slider.jpg",
     },
    
     {
         title: "Burger House",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/burger-house.jpg",
     },
     {
         title: "Yoga",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/yogo-site.jpg",
     },
 
     {
         title: "Walk Alone",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/community-scheduler.jpg",
     },
     {
         title: "Chef Norman Plan",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/meal-plan.jpg",
     },
 
     {
         title: "Walk Alone",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/community-scheduler.jpg",
     },
     {
         title: "Indonesian Cusine",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/indonesian-cusine.jpg",
     },
     {
         title: "Yoga",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/yogo-site.jpg",
     },
     {
         title: "MyCv.com",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/my-cv-screenshot.jpg",
     },
     {
         title: "Chef Norman Plan",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/meal-plan.jpg",
     },
     {
         title: "Healthy Food",
-        link: "https://cremedigital.com",
+        link: "/mywork",
         thumbnail:
             "/healthy-food.jpg",
     },
     {
         title: "Yoga",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/yogo-site.jpg",
     },
     {
         title: "Mnmlst",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/minimalist-studio-slider2.jpg",
     },
     {
         title: "Burger House",
-        link: "#",
+        link: "/mywork",
         thumbnail:
             "/burger-house.jpg",
     },

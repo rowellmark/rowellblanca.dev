@@ -108,24 +108,11 @@
             {
                 "key": 1,
                 "url": "#",
-                "image": "/community-scheduler.jpg",
-                "sitename": "Walk Alone (Future Project)",
-                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
-            },
-            {
-                "key": 1,
-                "url": "#",
-                "image": "/indonesian-cusine.jpg",
-                "sitename": "Indonesian Cusine (Future Project)",
-                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
-            },
-            {
-                "key": 1,
-                "url": "#",
-                "image": "/meal-plan.jpg",
-                "sitename": "Chef Norman Plan (Future Project)",
-                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+                "image": "/healthy-food.jpg",
+                "sitename": "Healthy Food (Future Project)",
+                "stacks": ["Wordpress", "Javascript", "jQuery", "CSS"]
             }
+           
         ]
     },
     {
@@ -150,6 +137,13 @@
                 "url": "#",
                 "image": "/my-cv-screenshot.jpg",
                 "sitename": "MyCv.com (Work in progress)",
+                "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
+            },
+            {
+                "key": 1,
+                "url": "#",
+                "image": "/meal-plan.jpg",
+                "sitename": "Meal Planner (Work in progress)",
                 "stacks": ["React", "Nextjs", "tailwind", "SCSS"]
             }
         ]
