@@ -74,11 +74,6 @@
     }
 
 
-    .nav{
-        position: relative;
-        background: #252734;
-    }
-
 }
 
 
@@ -101,6 +96,7 @@
             width: 100%;
             height: 100%;
             left: 0;
+            background: #252734;
 
             &.nav_open {
                 top: 68px;
