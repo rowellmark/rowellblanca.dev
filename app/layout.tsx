@@ -6,10 +6,10 @@ import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 
 
-export const metadata: Metadata & { image: string } = {
+export const metadata: Metadata & { metadataBase: URL } = {
   title: "Rowell Mark Blanca - I build things for the web.",
   description: "I specialize in crafting innovative digital experiences on the web, leveraging cutting-edge technologies and creative design to build engaging and user-friendly websites and applications.",
-  image: "/mypicture.jpg",
+  metadataBase: new URL("https://www.rowellblanca.dev")
 };
 
 interface RootLayoutProps {
@@ -29,9 +29,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta property="og:image:type" content="<generated>" />
         <meta property="og:image:width" content="<generated>" />
         <meta property="og:image:height" content="<generated>" />
-        <meta name="twitter:title" content={metadata.title as string} />
-        <meta name="twitter:description" content={metadata.description as string} />
-        <meta name="twitter:image" content={metadata.image as string} />
+        <meta name="twitter:image" content="<generated>" />
+        <meta name="twitter:image:type" content="<generated>" />
+        <meta name="twitter:image:width" content="<generated>" />
+        <meta name="twitter:image:height" content="<generated>" />
       </Head>
       <body>
         <Header />
