@@ -8,15 +8,15 @@ import PrimaryButton from "../buttons/primaryButton";
 export function Hero() {
     return (
         <div className="w-full rounded-md bg-primary relative flex flex-col items-center justify-center antialiased hero pt-32 h-[100vh] z-10 max-sm:h-auto">
-            <div className="hero__container flex items-center justify-center relative z-50 w-full h-full container mx-auto max-sm:flex-col-reverse">
-                <div className="hero__image flex-shrink-0 w-[38%] self-end relative max-sm:w-full">
+            <div className="hero__container flex items-center justify-center relative z-50 w-full h-full container mx-auto max-lg:flex-col-reverse">
+                <div className="hero__image flex-shrink-0 w-[38%] self-end relative max-sm:w-full max-lg:mx-auto">
                     <Image src={rowellbanner} alt="rowell mark blanca" />
 
                     <div className="absolute left-0 bottom-0 w-full text-center py-5">
                         <h2 className="font-semibold text-2xl">Rowell Mark  M. Blanca</h2>
                     </div>
                 </div>
-                <div className="hero__content w-full pl-[5%] px-[8%] pb-11 max-sm:w-full">
+                <div className="hero__content w-full pl-[5%] px-[8%] pb-11 max-sm:w-full max-lg:m-auto">
                     <h5 className="text-text-accent font-medium text-lg uppercase">Introduction</h5>
                     <h1 className="text-white relative z-20 font-bold text-7xl max-sm:text-6xl">
                         Software Engineer<br />

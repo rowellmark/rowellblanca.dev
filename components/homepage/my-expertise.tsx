@@ -2,7 +2,7 @@
 export default function MyExpertise() {
     return (
         <>
-            <div className="myExpertise py-48 px-52 bg-primary-accent relative max-sm:px-8 max-sm:py-32">
+            <div className="myExpertise py-48 px-48 bg-primary-accent relative  max-sm:px-8 max-sm:py-32 max-xl:px-12">
                 <div className="myExpertise__container container mx-auto relative z-50">
                     <h2 className="text-white relative z-20 font-bold text-7xl text-center w-full">
                         <span className="block text-text-accent font-medium text-lg uppercase">My</span>
@@ -10,9 +10,9 @@ export default function MyExpertise() {
                     </h2>
 
 
-                    <div className="myExpertise__boxes flex px-12 mt-16 max-sm:flex-col max-sm:px-0">
-                        <div className="myExpertise__box w-1/3 border-2 p-9 max-sm:w-full">
-                            <h2 className="text-4xl font-semibold pb-5">
+                    <div className="myExpertise__boxes flex px-9 mt-16 max-lg:flex-col max-lg:px-0">
+                        <div className="myExpertise__box w-1/3 border-2 p-9 max-lg:w-full">
+                            <h2 className="text-4xl font-semibold pb-5 max-xl:text-3xl">
                                 <strong className="block relative font-semibold">Software</strong>
                                 Development
                             </h2>
@@ -24,8 +24,8 @@ export default function MyExpertise() {
                             </div>
 
                         </div>
-                        <div className="myExpertise__box w-1/3 border-2 p-9 border-l-0 max-sm:w-full max-sm:border-l-2 max-sm:border-t-0">
-                            <h2 className="text-4xl font-semibold pb-5">
+                        <div className="myExpertise__box w-1/3 border-2 p-9 border-l-0 max-lg:w-full max-lg:border-l-2 max-lg:border-t-0">
+                            <h2 className="text-4xl font-semibold pb-5 max-xl:text-3xl">
                                 <strong className="block relative font-semibold">Front-end</strong>
                                 Devevelopment
                             </h2>
@@ -36,8 +36,8 @@ export default function MyExpertise() {
                             </div>
 
                         </div>
-                        <div className="myExpertise__box w-1/3 border-2 p-9 border-l-0 max-sm:w-full max-sm:border-l-2 max-sm:border-t-0">
-                            <h2 className="text-4xl font-semibold pb-5">
+                        <div className="myExpertise__box w-1/3 border-2 p-9 border-l-0 max-lg:w-full max-lg:border-l-2 max-lg:border-t-0">
+                            <h2 className="text-4xl font-semibold pb-5 max-xl:text-3xl">
                                 <strong className="block relative font-semibold">WordPress</strong>
                                 Development
                             </h2>

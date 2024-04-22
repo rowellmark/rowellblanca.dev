@@ -37,10 +37,10 @@ export function ContactFormSection() {
         <>
             
 
-            <div className="contactformContainer py-28">
-                <div className="container mx-auto flex px-48 max-sm:flex-col max-sm:px-8">
+            <div className="contactformContainer py-28 max-lg:w-full max-lg:px-8">
+                <div className="container mx-auto flex px-48 max-sm:flex-col max-xl:px-20 max-lg:px-0">
 
-                    <div className="contact_info w-1/2 max-sm:w-full">
+                    <div className="contact_info w-1/2 pr-4 max-sm:w-full">
                         <h2 className="text-white relative z-20 font-bold text-3xl w-full pb-6">
                             Available for select <br /> freelance opportunities
                         </h2>

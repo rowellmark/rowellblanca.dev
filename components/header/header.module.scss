@@ -1,0 +1,126 @@
+.header{
+    overflow: hidden;
+    $self: &;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    .header__logo{
+        width: 5rem;
+    }
+
+    &.headerOpen{
+        height: 68px;
+        background: #252734;
+    }
+
+    &__sticky {
+        background-color: rgba(37, 39, 52, 0.749);
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        #{$self}__logo{
+            width: 3rem;
+        }
+    }
+
+    .mobile_menu{
+        position: relative;
+    }
+
+    .menu_toggle {
+        position: relative;
+        height: 26px;
+        width: 29px;
+        cursor: pointer;
+
+        span{
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -1px;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+            &:first-child {
+                transform: translate(0, -8px);
+            }
+
+            &:nth-child(2) {
+                position: relative;
+            }
+
+            &:nth-child(3) {
+                transform: translate(0, 8px);
+            }
+        }
+
+        &.nav_open {
+            span{
+                &:first-child {
+                    transform: translate(0, 0) rotate(45deg);
+                }
+
+                &:nth-child(2) {
+                    opacity: 0;
+                }
+
+                &:nth-child(3) {
+                    transform: translate(0, 0) rotate(-45deg);
+                }
+            }
+        }
+        
+    }
+
+
+    .nav{
+        position: relative;
+        background: #252734;
+    }
+
+}
+
+
+@media screen and (max-width: 1024px) {
+    .header {
+        $self: &;
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .header__logo {
+            width: 3rem;
+        }
+
+        .nav{
+            top: -100%;
+            position: fixed;
+            transition: all 0.5s ease;
+            padding-top: 80px;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            left: 0;
+
+            &.nav_open {
+                top: 68px;
+               
+                visibility: visible;
+                opacity: 1;
+               
+            }
+        }
+        button {
+            height: 3rem !important;
+        }
+
+        &__sticky {
+
+            #{$self}__logo {
+                width: 3rem;
+            }
+
+
+        }
+    }
+}

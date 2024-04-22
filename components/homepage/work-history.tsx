@@ -72,7 +72,7 @@ export default function WorkHistory() {
                         Experience
                     </h2>
 
-                    <div className="workHistory__wrap w-2/4 mx-auto max-sm:w-full">
+                    <div className="workHistory__wrap w-3/4 mx-auto max-lg:w-full max-lg:px-8 max-md:p-0">
 
                         {jobHistory.map((history, index) => (
                             <Accordion
@@ -96,7 +96,7 @@ export default function WorkHistory() {
                                         </span>
                                     </li>
                                 </ul>
-                                <div className="flex max-sm:flex-col-reverse">
+                                <div className="flex max-lg:flex-col-reverse">
                                     <div className="accordConent w-full pr-9">
                                         <p className="py-5">
                                             {history.desciption}
@@ -107,7 +107,7 @@ export default function WorkHistory() {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="accordLogo w-1/6 shrink-0 max-sm:py-3">
+                                    <div className="accordLogo w-28 shrink-0 max-sm:py-3">
                                         <Image src={history.logo} className="w-full block" alt="a99" />
                                     </div>
                                 </div>

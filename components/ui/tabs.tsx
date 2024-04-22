@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import {
     IconLink
 } from "@tabler/icons-react";
-import { func } from 'three/examples/jsm/nodes/Nodes.js';
+
 
 interface TabItem {
     label: string;
@@ -52,8 +52,8 @@ export function Tab({ tabs }: TabProps) {
             </div>
             <div className='tabContainer py-10 flex -mx-4 flex-wrap'>
                 {tabs[activeTab].content.map((item, index) => (
-                    <div className="tabCol w-1/3 p-4 text-base text-primary max-sm:w-full" key={index}>
-                        <a href="#" className='block w-full bg-white p-4 rounded-lg group' onClick={() => handleClick(item)}>
+                    <div className="tabCol w-1/3 p-4 text-base text-primary max-sm:w-full max-xl:w-2/4" key={index}>
+                        <a href="#" className='block w-full bg-white p-4 rounded-lg group h-full' onClick={() => handleClick(item)}>
                             <div className="projectImage relative overflow-hidden">
                                 <canvas width="640" height="380" className="w-full h-auto bg-black"></canvas>
                                 <Image src={item.image} alt={item.sitename} className="w-full h-full mb-2 absolute top-0 left-0 object-cover object-left-top z-10 transition-all duration-500 group-hover:scale-110 group-hover:opacity-40" width="640" height="461"></Image>

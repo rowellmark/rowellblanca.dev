@@ -11,6 +11,7 @@ import {
     IconDownload,
     IconCornerUpLeft
 } from "@tabler/icons-react";
+import Banner from "@/components/banner/banner";
 
 export default function AboutPage() {
 
@@ -41,7 +42,8 @@ export default function AboutPage() {
 
     return (
         <>
-            <div className="w-full py-48 aboutPage max-sm:px-8">
+            <Banner title="About Me"/>
+            <div className="w-full pb-48 pt-6 aboutPage max-sm:px-8">
                 <div className="aboutPage__container container mx-auto">
                     
                     <div className="back-button flex items-start pb-6">
@@ -50,11 +52,10 @@ export default function AboutPage() {
                         </Link>
                     </div>
                   
-                    <h1 className="text-5xl font-semibold text-white-800 uppercase text-center pb-24 max-sm:text-left max-sm:pb-12 max-sm:text-4xl">This is me..</h1>
-                    <div className="aboutPage__header flex items-center max-sm:flex-col">
+                    <div className="aboutPage__header flex items-center max-lg:flex-col-reverse">
                         
                         <div className="aboutPage_info w-full text-base leading-7">
-                            <h2 className="text-7xl font-semibold pb-9 max-sm:text-6xl">
+                            <h2 className="text-7xl font-semibold pb-9 max-lg:text-6xl">
                                 I'm <span className="text-accent-color">Rowell</span> <br />
                                 <span>Software Engineer</span>
                             </h2>
@@ -100,7 +101,7 @@ export default function AboutPage() {
                             </div>
                         </div>
 
-                        <div className="aboutPage_image w-[40%] relative shrink-0 max-sm:w-full max-sm:mt-5">
+                        <div className="aboutPage_image w-[40%] relative shrink-0 max-lg:w-full max-lg:mb-5">
                             <canvas width="480" height="480" className="block w-full"></canvas>
                             <Image src={rowellPic} alt="Rowell Mark M Blanca" className="w-full block h-full absolute left-0 top-0 object-cover object-center"/>
                         </div>
