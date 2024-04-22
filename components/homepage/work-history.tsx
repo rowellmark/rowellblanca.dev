@@ -97,7 +97,7 @@ export default function WorkHistory() {
                                     </li>
                                 </ul>
                                 <div className="flex max-lg:flex-col-reverse">
-                                    <div className="accordConent w-full pr-9">
+                                    <div className="accordConent w-full pr-9 max-lg:pr-0">
                                         <p className="py-5">
                                             {history.desciption}
                                         </p>
