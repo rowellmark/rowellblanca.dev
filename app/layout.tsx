@@ -5,6 +5,7 @@ import "./globals.css";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 
+
 export const metadata: Metadata & { image: string } = {
   title: "Rowell Mark Blanca - I build things for the web.",
   description: "I specialize in crafting innovative digital experiences on the web, leveraging cutting-edge technologies and creative design to build engaging and user-friendly websites and applications.",
@@ -24,8 +25,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta name="description" content={metadata.description as string} />
         <meta property="og:title" content={metadata.title as string} />
         <meta property="og:description" content={metadata.description as string} />
-        <meta property="og:image" content={metadata.image as string} />
-        <meta property="og:image:url" content={metadata.image as string} />
+        <meta property="og:image" content="<generated>" />
+        <meta property="og:image:type" content="<generated>" />
+        <meta property="og:image:width" content="<generated>" />
+        <meta property="og:image:height" content="<generated>" />
         <meta name="twitter:title" content={metadata.title as string} />
         <meta name="twitter:description" content={metadata.description as string} />
         <meta name="twitter:image" content={metadata.image as string} />
