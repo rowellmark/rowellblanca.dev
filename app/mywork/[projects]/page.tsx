@@ -24,7 +24,7 @@ interface Project {
 }
 
 
-export default function projects({ params }: ProjectProps) {
+export default function Projects({ params }: ProjectProps) {
     const [project, setProject] = useState<Project | null>(null);
     const router = useRouter();
     
