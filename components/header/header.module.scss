@@ -9,11 +9,11 @@
 
     &.headerOpen{
         height: 68px;
-        background: #252734;
+        background: #0e0e0e;
     }
 
     &__sticky {
-        background-color: rgba(37, 39, 52, 0.749);
+        background-color: rgba(14, 14, 14, 0.651);
         padding-top: 1rem;
         padding-bottom: 1rem;
         #{$self}__logo{
