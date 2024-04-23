@@ -42,7 +42,7 @@ export default function AboutPage() {
 
     return (
         <>
-            <Banner title="About Me"/>
+            <Banner title="About Me" subtitle=""/>
             <div className="w-full pb-48 pt-6 aboutPage max-sm:px-8">
                 <div className="aboutPage__container container mx-auto">
                     
