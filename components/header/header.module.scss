@@ -23,6 +23,7 @@
 
     .mobile_menu{
         position: relative;
+        z-index: 1000;
     }
 
     .menu_toggle {
@@ -85,7 +86,10 @@
 
         .header__logo {
             width: 3rem;
+            position: relative;
+            z-index: 1000;
         }
+
 
         .nav{
             top: -100%;
@@ -94,13 +98,14 @@
             padding-top: 80px;
             opacity: 0;
             width: 100%;
-            height: 100%;
+            height: 0;
             left: 0;
-            background: #252734;
+            background: #0e0e0e;
+            padding-top: 120px;
 
             &.nav_open {
-                top: 68px;
-               
+                top: 0;
+                height: 100%;
                 visibility: visible;
                 opacity: 1;
                
