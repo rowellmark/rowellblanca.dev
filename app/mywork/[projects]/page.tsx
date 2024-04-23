@@ -56,7 +56,7 @@ export default function Projects({ params }: ProjectProps) {
                         {project && (
                             <>
                                 <div className="projectTitle">
-                                    <h1 className="text-7xl font-semibold  max-lg:text-6xl">{project.sitename}</h1>
+                                    <h1 className="text-7xl font-semibold  max-lg:text-3xl">{project.sitename}</h1>
                             
                                 </div>
 
