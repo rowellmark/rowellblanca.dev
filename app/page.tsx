@@ -21,7 +21,7 @@ export default function Home() {
       <ContactSection />
       <MyExpertise />
       <FeaturedProject />
-      <MyWork />
+      <MyWork notitle=""/>
       <WorkHistory />
       <ContactFormSection />
     </>
