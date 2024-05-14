@@ -34,10 +34,10 @@ export default function ContactSection() {
 
     return (
         <>
-            <div className="contactSection py-32 px-52 max-xl:px-8">
-                <div className="contactSection__container container flex mx-auto max-lg:flex-col">
+            <div className="contactSection py-32 px-52 max-xl:px-8 max-sm:py-12">
+                <div className="contactSection__container container flex mx-auto max-lg:flex-col max-sm:flex-col-reverse">
 
-                    <div className="contactSection__col w-1/2 max-lg:w-full">
+                    <div className="contactSection__col w-1/2 max-lg:w-full max-sm:pt-10">
                         <h2 className="text-white relative z-20 font-bold text-6xl max-xl:text-4xl">
                             <span className="block text-text-accent font-medium text-lg uppercase">Contact</span>
                             Any Type of Query <br/>
