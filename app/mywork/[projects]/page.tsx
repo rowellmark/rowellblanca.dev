@@ -142,7 +142,7 @@ export default function Projects({ params }: ProjectProps) {
                                         </div>
                                     </div>
                                     <div className="projectDescriptionRight flex max-lg:flex-col">
-                                        <div className="projectClient border-t border-slate-200 px-5 max-lg:py-8 mt-10">
+                                        <div className="projectClient border-t border-slate-200 px-5 max-lg:py-8 max-lg:mt-10">
                                             <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Client</h3>
                                             <p>Personal Project</p>
                                         </div>
