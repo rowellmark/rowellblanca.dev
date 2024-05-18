@@ -1,5 +1,4 @@
 import { Tab } from "../ui/tabs";
-import projects from "@/json/projects.json";
 
 
 interface props {
@@ -19,7 +18,7 @@ export function MyWork({ notitle }: props ) {
                     Work
                 </h2>
             )}
-            <Tab tabs={projects} nav={projects_tab}/>
+            <Tab nav={projects_tab}/>
         </div>
     );
 }
