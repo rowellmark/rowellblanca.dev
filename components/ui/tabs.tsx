@@ -18,7 +18,6 @@ interface Project {
 }
 
 interface TabProps {
-    content: Project[];
     nav: string[];
 }
 
