@@ -142,11 +142,11 @@ export default function Projects({ params }: ProjectProps) {
                                         </div>
                                     </div>
                                     <div className="projectDescriptionRight flex max-lg:flex-col">
-                                        <div className="projectClient border-t border-slate-200 px-5 max-lg:py-8 max-lg:mt-10">
+                                        <div className="projectClient border-t border-slate-200 px-3 max-lg:py-8 max-lg:mt-10">
                                             <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Client</h3>
                                             <p>Personal Project</p>
                                         </div>
-                                        <div className="projectTechonologies border-t border-slate-200 ml-20 px-5 max-lg:ml-0 max-lg:py-8">
+                                        <div className="projectTechonologies border-t border-slate-200 ml-20 px-3 max-lg:ml-0 max-lg:py-8">
                                             <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Technologies</h3>
                                             <ul className="list-disc px-4">
                                                 {project[0].technologies.map((technology, index) => (
