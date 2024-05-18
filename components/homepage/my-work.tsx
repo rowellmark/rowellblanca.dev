@@ -6,6 +6,10 @@ interface props {
     notitle: string;
 }
 
+
+const projects_tab: string[] = ["All", "Wordpress", "ReactJS", "NextJS", "Shopify"];
+
+
 export function MyWork({ notitle }: props ) {
     return (
         <div className="container mx-auto w-full px-8 max-lg:max-w-full">
@@ -15,7 +19,7 @@ export function MyWork({ notitle }: props ) {
                     Work
                 </h2>
             )}
-            <Tab tabs={projects} />
+            <Tab tabs={projects} nav={projects_tab}/>
         </div>
     );
 }

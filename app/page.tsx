@@ -10,8 +10,7 @@ import Image from "next/image";
 import WorkHistory from "@/components/homepage/work-history";
 import { ContactFormSection } from "@/components/footer/contact-form-section";
 
-export default function Home() {
-
+export default function Home() {  
   return (
     <>
       <WelcomeLoading />

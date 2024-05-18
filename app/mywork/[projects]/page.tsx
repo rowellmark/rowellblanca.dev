@@ -5,7 +5,15 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import PrimaryButton from '@/components/buttons/primaryButton';
+import facebook from "@/assets/images/facebook.png";
+import instagram from "@/assets/images/instagram.png";
+import linkedin from "@/assets/images/linkedin.png";
+import git from "@/assets/images/git.png";
 import { useEffect, useState } from 'react';
+import { db } from '@/utils/firebaseconfig';
+import { collection, query, where, getDocs, orderBy} from "firebase/firestore";
+
 
 import {
     IconArrowLeft
@@ -24,21 +32,73 @@ interface Project {
 }
 
 
+interface ProjectDetails {
+    key: number;
+    url: string;
+    image: string;
+    permalink: string;
+    sitename: string;
+    technologies: string[];
+}
+
+
 export default function Projects({ params }: ProjectProps) {
-    const [project, setProject] = useState<Project | null>(null);
+    const [project, setProject] = useState<ProjectDetails[]>([]);
     const router = useRouter();
     
     useEffect(() => {
-        const item = localStorage.getItem(params.projects);
-        if (item) {
-            setProject(JSON.parse(item));
-        } else {
-            router.push('/404'); // Redirect to 404 if project item is not found in localStorage
+
+
+        const fetchProjects = async () => {
+            try {
+                const q = query(collection(db, 'projects'), where('permalink', '==', params.projects));
+                const querySnapshot = await getDocs(q);
+                
+                const projectsData: ProjectDetails[] = [];
+                    querySnapshot.forEach((doc) => {
+                    projectsData.push(doc.data() as ProjectDetails);
+                });
+
+                if (projectsData.length > 0) {
+                    setProject(projectsData);
+                } else {
+                    router.push('/404'); // Redirect to 404 if no project data is found
+                }
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                router.push('/404'); // Redirect to 404 in case of an error
+            }
+        };
+
+
+        fetchProjects();
+
+
+    }, [params.projects, router]);
+
+
+    const socialMedia = [
+        {
+            'title' : 'facebook',
+            'icon': facebook,
+            'url': 'https://www.facebook.com/itsmrrowrow',
+        },
+        {
+            'title': 'instagram',
+            'icon': instagram,
+            'url': 'https://www.instagram.com/its.mr.row/',
+        },
+        {
+            'title': 'linkedin',
+            'icon': linkedin,
+            'url': 'https://www.linkedin.com/in/rowell-blanca/',
+        },
+        {
+            'title': 'git',
+            'icon': git,
+            'url': 'https://github.com/rowellmark',
         }
-    }, []);
-
-
-    
+    ];
 
     return (
         <>
@@ -52,20 +112,53 @@ export default function Projects({ params }: ProjectProps) {
                     </div>
 
                     <div className="projectHeader">
-
-                        {project && (
+                        {project[0] && (
                             <>
                                 <div className="projectTitle">
-                                    <h1 className="text-7xl font-semibold  max-lg:text-3xl">{project.sitename}</h1>
+                                    <h1 className="text-7xl font-semibold  max-lg:text-3xl">{project[0]['sitename'] }</h1>
                             
                                 </div>
 
-                                <div className="projectDetails py-3">
-                                    <p className="text-accent-color">Tech Staks: {project.stacks.join(', ')}</p>
+                                <div className="projectDetails pt-20 flex justify-between">
+
+                                    <div className="projectDescriptionLeft">
+                                        <div className="projectDescription text-lg">
+                                            <p>Have an exciting project you need help with?</p>
+                                            <p>Send me an email <a href="mailto:rowellblanca94@gmail.com" className="text-accent-color">rowellblanca94@gmail.com</a> or hit say hello!</p>
+                                            <ul className="flex -mx-1 pt-5 pb-7">
+                                                {socialMedia.map( (social, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="px-1"
+                                                    >
+                                                        <a href={social.url} className="block relative w-7" target="_blank">
+                                                            <Image src={social.icon} alt={social.title} priority />
+                                                            <span className="hidden">{social.title}</span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <PrimaryButton link="/about" label="Say Hello!" className=" mt-7" />
+                                        </div>
+                                    </div>
+                                    <div className="projectDescriptionRight flex">
+                                        <div className="projectClient border-t border-slate-200 px-5">
+                                            <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Client</h3>
+                                            <p>Personal Project</p>
+                                        </div>
+                                        <div className="projectTechonologies border-t border-slate-200 ml-20 px-5">
+                                            <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Technologies</h3>
+                                            <ul className="list-disc px-4">
+                                                {project[0].technologies.map((technology, index) => (
+                                                    <li key={index} className="py-2">{technology}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="projectImage pt-11">
-                                    <Image src={project.image} alt={project.sitename} width="1600" height="600" className='w-full h-auto'/>
+                                    <Image src={`/${project[0]['image']}`} alt={project[0]['sitename']} width="1600" height="600" className='w-full h-auto'/>
                                 </div>
                             </>
                         )}
