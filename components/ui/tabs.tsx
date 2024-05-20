@@ -84,7 +84,9 @@ export function Tab({ nav }: TabProps) {
                                 } focus:outline-none uppercase max-sm:py-5`}
                             onClick={() => setActiveTab(tab)}
                         >
-                            {tab}
+                            {
+                                tab != 'Firebase' ? tab : 'Build with Firebase'
+                            }
                         </button>
                     ))}
                 </div>

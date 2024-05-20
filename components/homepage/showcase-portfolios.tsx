@@ -1,102 +1,42 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HeroParallax } from "../ui/hero-parallax";
+import { db } from '@/utils/firebaseconfig';
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+
+interface Project {
+    key: number;
+    url: string;
+    image: string;
+    permalink: string;
+    sitename: string;
+    technologies: string[];
+}
+
 
 export function ShowCasePortfolios() {
-    return <HeroParallax products={products} />;
+
+    const [projects, setProjects] = useState<Project[]>([]);
+    useEffect(() => {
+    const fetchProjects = async () => {
+        try {
+            let q = query(collection(db, "projects"), orderBy("technologies", "desc"));
+            const querySnapshot = await getDocs(q);
+            const projects: Project[] = [];
+            querySnapshot.forEach((doc) => {
+                projects.push(doc.data() as Project);
+            });
+            setProjects(projects);
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+        } finally {
+        }
+    };
+
+    fetchProjects();
+    }, []);
+
+    
+    
+    return <HeroParallax products={projects} />;
 }
-export const products = [
-    {
-        title: "Smooties and Juice Landing Page",
-        link: "/mywork",
-        thumbnail:
-            "/smoot-fruit-cake(blob-animate).jpg",
-    },
-    {
-        title: "Mnmlst",
-        link: "/mywork",
-        thumbnail:
-            "/minimalist-studio-slider.jpg",
-    },
-   
-    {
-        title: "Burger House",
-        link: "/mywork",
-        thumbnail:
-            "/burger-house.jpg",
-    },
-    {
-        title: "Yoga",
-        link: "/mywork",
-        thumbnail:
-            "/yogo-site.jpg",
-    },
-
-    {
-        title: "Walk Alone",
-        link: "/mywork",
-        thumbnail:
-            "/community-scheduler.jpg",
-    },
-    {
-        title: "Chef Norman Plan",
-        link: "/mywork",
-        thumbnail:
-            "/meal-plan.jpg",
-    },
-
-    {
-        title: "Walk Alone",
-        link: "/mywork",
-        thumbnail:
-            "/community-scheduler.jpg",
-    },
-    {
-        title: "Indonesian Cusine",
-        link: "/mywork",
-        thumbnail:
-            "/indonesian-cusine.jpg",
-    },
-    {
-        title: "Yoga",
-        link: "/mywork",
-        thumbnail:
-            "/yogo-site.jpg",
-    },
-    {
-        title: "MyCv.com",
-        link: "/mywork",
-        thumbnail:
-            "/my-cv-screenshot.jpg",
-    },
-    {
-        title: "Chef Norman Plan",
-        link: "/mywork",
-        thumbnail:
-            "/meal-plan.jpg",
-    },
-    {
-        title: "Healthy Food",
-        link: "/mywork",
-        thumbnail:
-            "/healthy-food.jpg",
-    },
-    {
-        title: "Yoga",
-        link: "/mywork",
-        thumbnail:
-            "/yogo-site.jpg",
-    },
-    {
-        title: "Mnmlst",
-        link: "/mywork",
-        thumbnail:
-            "/minimalist-studio-slider2.jpg",
-    },
-    {
-        title: "Burger House",
-        link: "/mywork",
-        thumbnail:
-            "/burger-house.jpg",
-    },
-];

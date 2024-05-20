@@ -14,9 +14,12 @@ export const HeroParallax = ({
     products,
 }: {
     products: {
-        title: string;
-        link: string;
-        thumbnail: string;
+        key: number;
+        url: string;
+        image: string;
+        permalink: string;
+        sitename: string;
+        technologies: string[];
     }[];
 }) => {
     const firstRow = products.slice(0, 5);
@@ -119,9 +122,12 @@ export const ProductCard = ({
     translate,
 }: {
     product: {
-        title: string;
-        link: string;
-        thumbnail: string;
+        key: number;
+        url: string;
+        image: string;
+        permalink: string;
+        sitename: string;
+        technologies: string[];
     };
     translate: MotionValue<number>;
 }) => {
@@ -133,25 +139,25 @@ export const ProductCard = ({
             whileHover={{
                 y: -20,
             }}
-            key={product.title}
+            key={product.sitename}
             className="group/product h-96 w-1/3 relative flex-shrink-0 max-lg:w-full"
         >
             <Link
-                href={product.link}
+                href={`/mywork/${product.permalink}`}
                 className="block group-hover/product:shadow-2xl "
             >
 
                 <Image
-                    src={product.thumbnail}
+                    src={`/${product.image}`}
                     height="600"
                     width="600"
                     className="object-cover object-left-top absolute h-full w-full inset-0 top-0 left-0"
-                    alt={product.title}
+                    alt={product.sitename}
                 />
             </Link>
             <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
             <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
-                {product.title}
+                {product.sitename}
             </h2>
         </motion.div>
     );

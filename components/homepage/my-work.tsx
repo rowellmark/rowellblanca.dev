@@ -6,7 +6,7 @@ interface props {
 }
 
 
-const projects_tab: string[] = ["All", "Wordpress", "ReactJS", "NextJS", "Shopify"];
+const projects_tab: string[] = ["All", "Wordpress", "ReactJS", "NextJS", "Shopify", "Firebase"];
 
 
 export function MyWork({ notitle }: props ) {
