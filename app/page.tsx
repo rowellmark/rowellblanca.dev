@@ -16,9 +16,9 @@ export default function Home() {
       <WelcomeLoading />
       <Hero />
       <ShowCasePortfolios />
+      <FeaturedProject />
       <ContactSection />
       <MyExpertise />
-      <FeaturedProject />
       <MyWork notitle=""/>
       <WorkHistory />
       <ContactFormSection />

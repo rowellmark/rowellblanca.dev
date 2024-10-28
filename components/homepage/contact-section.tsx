@@ -34,7 +34,7 @@ export default function ContactSection() {
 
     return (
         <>
-            <div className="contactSection py-32 px-52 max-xl:px-8 max-sm:py-12">
+            <div className="contactSection py-32 px-52 max-xl:px-8 max-sm:py-12 bg-primary-accent">
                 <div className="contactSection__container container flex mx-auto max-lg:flex-col max-sm:flex-col-reverse">
 
                     <div className="contactSection__col w-1/2 max-lg:w-full max-sm:pt-10">

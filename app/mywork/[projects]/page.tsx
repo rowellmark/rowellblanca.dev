@@ -38,6 +38,7 @@ interface ProjectDetails {
     image: string;
     permalink: string;
     sitename: string;
+    description: string;
     technologies: string[];
 }
 
@@ -119,11 +120,15 @@ export default function Projects({ params }: ProjectProps) {
                             
                                 </div>
 
+
                                 <div className="projectDetails pt-20 flex justify-between max-lg:flex-col">
 
                                     <div className="projectDescriptionLeft">
-                                        <div className="projectDescription text-lg">
-                                            <p>Have an exciting project you need help with?</p>
+                                        <div className="projectDescription text-lg w-full pr-16">
+                                            
+                                            <p className="leading-6">{project[0]['description']}</p>
+
+                                            <p className='mt-9'>Have an exciting project you need help with?</p>
                                             <p>Send me an email <a href="mailto:rowellblanca94@gmail.com" className="text-accent-color">rowellblanca94@gmail.com</a> or hit say hello!</p>
                                             <ul className="flex -mx-1 pt-5 pb-7">
                                                 {socialMedia.map( (social, index) => (
@@ -141,7 +146,7 @@ export default function Projects({ params }: ProjectProps) {
                                             <PrimaryButton link="/about" label="Say Hello!" className=" mt-7" />
                                         </div>
                                     </div>
-                                    <div className="projectDescriptionRight flex max-lg:flex-col">
+                                    <div className="projectDescriptionRight flex max-lg:flex-col shrink-0 w-1/4">
                                         <div className="projectClient border-t border-slate-200 px-3 max-lg:py-8 max-lg:mt-10">
                                             <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Client</h3>
                                             <p>Personal Project</p>
