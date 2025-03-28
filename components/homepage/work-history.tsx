@@ -25,7 +25,7 @@ export default function WorkHistory() {
             "companyurl": "https://august99.com/", 
             "company": "august99.com",
             "logo": a99logo,
-            "stacks": ["Wordpress", "Javascript", "PHP", "jQuery", "Figma", "Photoshop"]
+            "stacks": ["Wordpress", "Javascript", "PHP", "jQuery", "Bedrock", "Reactjs", "Nextjs", "Figma", "Photoshop"]
         },
         {
             "key": 1,
