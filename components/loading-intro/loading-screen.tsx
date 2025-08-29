@@ -35,6 +35,8 @@ export function WelcomeLoading() {
             ${loadingComplete ? classes.loaded : ''} 
             ${exitAnimation ? classes.exitAnimation : ''}`}
         >
+            <div className={`${classes.loader}`}></div>
+
             <div className={`${classes.introloading__container} flex px-8`}>
                 <div className={`${classes.introloading__logoIcon} w-32 max-sm:w-24`}>
                     <Image

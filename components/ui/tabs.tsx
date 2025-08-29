@@ -8,6 +8,8 @@ import { IconLink } from "@tabler/icons-react";
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import classes from "../loading-intro/loading-screen.module.scss";
+
 interface Project {
     key: number;
     url: string;
@@ -98,7 +100,7 @@ export function Tab({ nav }: TabProps) {
                             variants={loadingVariants}
                             animate="animationOne"
                         >
-                            Loading...
+                            <div className={`${classes.loader2}`}></div>
                         </motion.div>
                     </div>
                 ) : (
