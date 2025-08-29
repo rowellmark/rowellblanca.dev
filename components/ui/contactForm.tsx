@@ -13,7 +13,7 @@ const Contact: React.FC = () => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const data = {
-            access_key: "b9fe178c-c566-40f8-bec2-39bb41fb27a7",
+            access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
             name: formData.get("name"),
             email: formData.get("email"),
             message: formData.get("message"),
