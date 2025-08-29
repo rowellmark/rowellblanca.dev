@@ -1,5 +1,5 @@
 import PrimaryButton from "@/components/buttons/primaryButton";
-import rowellPic from "@/assets/images/mypicture.jpg";
+import rowellPic from "@/assets/images/ROWELL-6.jpg";
 import Image from "next/image";
 import facebook from "@/assets/images/facebook.png";
 import instagram from "@/assets/images/instagram.png";
@@ -76,10 +76,17 @@ export default function AboutPage() {
 
                             <h2 className="mt-5 text-xl font-semibold text-accent-color">Key Technologies</h2>
                             <ul className="mt-2 list-disc ml-4">
-                                <li>Frontend: HTML5, CSS3, JavaScript (ES6+), React.js, Next.js</li>
-                                <li>Backend: Node.js, PHP, Wordpress.</li>
-                                <li>Database: MySQL</li >
-                                <li>Tools & Platforms: Git, Photoshop, Figma, Composer</li >
+                                <li>Frontend: HTML5, CSS3, JavaScript (ES6+), TypeScript, React.js, Next.js, Tailwind CSS, Vue.js, SASS/SCSS – building responsive and interactive UIs.</li>
+                                <li>Backend: Node.js (Express.js), PHP (Laravel), WordPress – developing RESTful APIs, custom plugins, and server-side logic.</li>
+                                <li>Database: MySQL, PostgreSQL, MongoDB, Redis – schema design, optimization, and data management.</li>
+                                <li>Tools & Platforms: Git (version control), Photoshop & Figma (UI/UX design), Composer (PHP dependency management), Docker, CI/CD (GitHub Actions), Cloud (AWS, Azure, Vercel).</li>
+                                <li>Automation: N8N, Dify – workflow automation and integration.</li>
+                                <li>Testing: Cypress, Playwright – end-to-end and unit testing.</li>
+                                <li>Methodologies: Agile – collaborative and iterative development experience.</li>
+                                <li>Mobile: React Native, Flutter.</li>
+                                <li>Security: OWASP, JWT, OAuth.</li>
+                                <li>Other: API integration (REST, GraphQL), WebSockets, SEO tools, Analytics (Google Analytics, Mixpanel).</li>
+                                <li>AI: ChatGPT, Gemini, Llama – leveraging AI for content generation and automation.</li>
                             </ul>
 
                             <ul className="flex -mx-1 pt-5 pb-7">

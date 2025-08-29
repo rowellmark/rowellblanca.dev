@@ -16,9 +16,11 @@ export default function Home() {
       <WelcomeLoading />
       <Hero />
       <ShowCasePortfolios />
-      <FeaturedProject />
-      <ContactSection />
+
       <MyExpertise />
+
+      <ContactSection />
+      <FeaturedProject />
       <MyWork notitle=""/>
       <WorkHistory />
       <ContactFormSection />
