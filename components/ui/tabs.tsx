@@ -1,137 +1,111 @@
 "use client";
 
-import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-import { db } from '@/utils/firebaseconfig';
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
-import { IconLink } from "@tabler/icons-react";
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-
-import classes from "../loading-intro/loading-screen.module.scss";
-
-interface Project {
-    key: number;
-    url: string;
-    image: string;
-    permalink: string;
-    sitename: string;
-    technologies: string[];
-}
+import { PortfolioCard, PortfolioProject } from '@/components/ui/portfolio-card';
 
 interface TabProps {
     nav: string[];
 }
 
-const loadingVariants = {
-    animationOne: {
-        x: [-20, 20],
-        y: [0, -30],
-        transition: {
-            x: {
-                yoyo: Infinity,
-                duration: 0.5,
-            },
-            y: {
-                yoyo: Infinity,
-                duration: 0.25,
-                ease: 'easeOut',
-            },
-        },
-    },
-};
-
 export function Tab({ nav }: TabProps) {
     const [activeTab, setActiveTab] = useState(nav[0]);
-    const [projectsData, setProjectsData] = useState<Project[]>([]);
+    const [allProjects, setAllProjects] = useState<PortfolioProject[]>([]);
+    const [filteredProjects, setFilteredProjects] = useState<PortfolioProject[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProjects = async () => {
             setLoading(true);
             try {
-                let q;
-                if (activeTab === 'All') {
-                    q = query(collection(db, "projects"), orderBy("technologies", "desc"));
-                } else {
-                    q = query(collection(db, "projects"), where("technologies", "array-contains", activeTab));
+                const res = await fetch('/api/projects');
+                const data = await res.json();
+                if (data.success && Array.isArray(data.projects)) {
+                    setAllProjects(data.projects);
                 }
-
-                const querySnapshot = await getDocs(q);
-                const projects: Project[] = [];
-                querySnapshot.forEach((doc) => {
-                    projects.push(doc.data() as Project);
-                });
-                setProjectsData(projects);
             } catch (error) {
-                console.error("Error fetching projects:", error);
+                console.error("Error fetching projects from API:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProjects();
-    }, [activeTab]);
+    }, []);
+
+    useEffect(() => {
+        if (activeTab === 'All') {
+            setFilteredProjects(allProjects);
+        } else {
+            const lowerTab = activeTab.toLowerCase();
+            const filtered = allProjects.filter((p: any) => {
+                const catMatch = Array.isArray(p.categories)
+                    ? p.categories.some((c: string) => c.toLowerCase() === lowerTab || c.toLowerCase().includes(lowerTab))
+                    : p.category && p.category.toLowerCase() === lowerTab;
+                const techMatch = p.technologies?.some((tech: string) => tech.toLowerCase().includes(lowerTab));
+                return catMatch || techMatch;
+            });
+            setFilteredProjects(filtered);
+        }
+    }, [activeTab, allProjects]);
 
     return (
         <>
-            <div>
-                <div className="flex space-x-4 justify-center max-sm:flex-col">
-                    {nav.map((tab, index) => (
-                        <button
-                            key={index}
-                            className={`${activeTab === tab
-                                ? 'border-b-2 border-accent-color text-accent-color'
-                                : 'text-base text-white'
-                                } focus:outline-none uppercase max-sm:py-5`}
-                            onClick={() => setActiveTab(tab)}
-                        >
-                            {
-                                tab != 'Firebase' ? tab : 'Build with Firebase'
-                            }
-                        </button>
-                    ))}
-                </div>
+            {/* Tab nav */}
+            <div className="flex space-x-4 justify-center flex-wrap gap-y-3 max-sm:flex-col max-sm:items-center">
+                {nav.map((tab, index) => (
+                    <button
+                        key={index}
+                        className={`relative px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 focus:outline-none ${
+                            activeTab === tab
+                                ? 'text-brand-navy font-extrabold'
+                                : 'text-slate-500 hover:text-brand-navy'
+                        }`}
+                        onClick={() => setActiveTab(tab)}
+                    >
+                        {tab}
+                        {activeTab === tab && (
+                            <motion.div
+                                layoutId="tab-underline"
+                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-amber rounded-full"
+                            />
+                        )}
+                    </button>
+                ))}
+            </div>
 
-                {loading ? (
-                    <div className="flex justify-center items-center py-10">
-                        <motion.div
-                            className="loader"
-                            variants={loadingVariants}
-                            animate="animationOne"
-                        >
-                            <div className={`${classes.loader2}`}></div>
-                        </motion.div>
-                    </div>
-                ) : (
-                    <div className='tabContainer py-10 flex -mx-4 flex-wrap'>
-                        {projectsData.map((data, i) => (
-                            <motion.div 
-                                className="tabCol w-1/3 p-4 text-base text-primary max-sm:w-full max-xl:w-2/4" 
+            {/* Content */}
+            {loading ? (
+                <div className="flex justify-center items-center py-16">
+                    <div className="flex gap-1.5">
+                        {[0, 1, 2].map((i) => (
+                            <motion.div
                                 key={i}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <Link href={`/mywork/${data.permalink}`} className='block w-full bg-white p-4 rounded-lg group h-full'>
-                                    <div className="projectImage relative overflow-hidden">
-                                        <canvas width="640" height="380" className="w-full h-auto bg-black"></canvas>
-                                        <Image src={`/${data.image}`} alt={data.sitename} className="w-full h-full mb-2 absolute top-0 left-0 object-cover object-left-top z-10 transition-all duration-500 group-hover:scale-110 group-hover:opacity-40" width="640" height="461"></Image>
-                                        <div className="viewWebsite absolute z-30 -bottom-20 right-0 flex items-center text-base text-white p-3 transition-all duration-500 group-hover:bottom-0">Show Project <IconLink className='ml-2' /></div>
-                                    </div>
-
-                                    <h3 className="text-lg font-semibold pt-3">{data.sitename}</h3>
-                                    <ul className="flex items-center -mx-1 py-3 flex-wrap">
-                                        {data.technologies.map((tech, i) => (
-                                            <li key={i} className="bg-accent-color px-3 py-1 rounded-3xl m-1 text-sm text-black">{tech}</li>
-                                        ))}
-                                    </ul>
-                                </Link>
-                            </motion.div>
+                                className="h-2 w-2 rounded-full bg-[#F8C15F]"
+                                animate={{ y: [0, -8, 0] }}
+                                transition={{ duration: 0.6, delay: i * 0.15, repeat: Infinity }}
+                            />
                         ))}
                     </div>
-                )}
-            </div>
+                </div>
+            ) : filteredProjects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+                    <p className="text-sm font-medium">No projects found in this category.</p>
+                </div>
+            ) : (
+                <div className="py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProjects.map((project, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.35, delay: i * 0.06 }}
+                        >
+                            <PortfolioCard project={project} />
+                        </motion.div>
+                    ))}
+                </div>
+            )}
         </>
     );
 }

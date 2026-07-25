@@ -1,44 +1,104 @@
 import type { Metadata } from "next";
-import Head from "next/head"; // Import Head component from next/head
-import { ReactNode } from "react"; // Import ReactNode type
+import { ReactNode } from "react";
 import "./globals.css";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
+import LayoutShell from "@/components/layout/layout-shell";
 
+export const metadata: Metadata = {
+  metadataBase: new URL("https://www.rowellblanca.dev"),
+  title: {
+    default: "Creative Software Engineer | Rowell Mark Blanca",
+    template: "%s | Rowell Mark Blanca",
+  },
+  description:
+    "Rowell Mark Blanca is a creative software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
+  keywords: [
+    "Rowell Mark Blanca",
+    "Creative Software Engineer",
+    "Software Engineer Philippines",
+    "React Developer",
+    "Next.js Developer",
+    "WordPress Architect",
+    "Frontend Engineer",
+    "Node.js Developer",
+  ],
+  authors: [{ name: "Rowell Mark Blanca", url: "https://www.rowellblanca.dev" }],
+  creator: "Rowell Mark Blanca",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://www.rowellblanca.dev",
+    title: "Creative Software Engineer | Rowell Mark Blanca",
+    description:
+      "Rowell Mark Blanca is a creative software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
+    siteName: "Rowell Mark Blanca Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Creative Software Engineer | Rowell Mark Blanca",
+    description:
+      "Rowell Mark Blanca is a creative software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
+    creator: "@itsmrrowrow",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://www.rowellblanca.dev",
+  },
+};
 
-export const metadata: Metadata & { metadataBase: URL } = {
-  title: "Rowell Mark Blanca - I build things for the web.",
-  description: "I specialize in crafting innovative digital experiences on the web, leveraging cutting-edge technologies and creative design to build engaging and user-friendly websites and applications.",
-  metadataBase: new URL("https://www.rowellblanca.dev")
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Rowell Mark Blanca",
+  url: "https://www.rowellblanca.dev",
+  jobTitle: "Creative Software Engineer",
+  sameAs: [
+    "https://github.com/rowellmark",
+    "https://www.linkedin.com/in/rowell-blanca/",
+    "https://www.facebook.com/itsmrrowrow",
+    "https://www.instagram.com/its.mr.row/",
+  ],
+  knowsAbout: [
+    "Software Engineering",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "PHP",
+    "WordPress",
+    "Tailwind CSS",
+    "AI Integrations",
+  ],
 };
 
 interface RootLayoutProps {
-  children: ReactNode; // Specify children prop as ReactNode type
+  children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <Head>
-        {/* Set the meta tags for title, description, and image */}
-        <title>{metadata.title as string}</title>
-        <meta name="description" content={metadata.description as string} />
-        <meta property="og:title" content={metadata.title as string} />
-        <meta property="og:description" content={metadata.description as string} />
-        <meta property="og:image" content="<generated>" />
-        <meta property="og:image:type" content="<generated>" />
-        <meta property="og:image:width" content="<generated>" />
-        <meta property="og:image:height" content="<generated>" />
-        <meta name="twitter:image" content="<generated>" />
-        <meta name="twitter:image:type" content="<generated>" />
-        <meta name="twitter:image:width" content="<generated>" />
-        <meta name="twitter:image:height" content="<generated>" />
-      </Head>
-      <body>
-        <Header />
-        {children}
-        <Footer />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="bg-brand-bg text-brand-navy antialiased">
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );
 }
+

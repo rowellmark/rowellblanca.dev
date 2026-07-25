@@ -5,10 +5,11 @@ import {
     useScroll,
     useTransform,
     useSpring,
-    MotionValue,
+    type MotionValue,
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export const HeroParallax = ({
     products,
@@ -34,11 +35,11 @@ export const HeroParallax = ({
     const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
     const translateX = useSpring(
-        useTransform(scrollYProgress, [0, 1], [0, 1000]),
+        useTransform(scrollYProgress, [0, 1], [0, 800]),
         springConfig
     );
     const translateXReverse = useSpring(
-        useTransform(scrollYProgress, [0, 1], [0, -1000]),
+        useTransform(scrollYProgress, [0, 1], [0, -800]),
         springConfig
     );
     const rotateX = useSpring(
@@ -46,74 +47,86 @@ export const HeroParallax = ({
         springConfig
     );
     const opacity = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
+        useTransform(scrollYProgress, [0, 0.2], [0.3, 0.85]),
         springConfig
     );
     const rotateZ = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [20, 0]),
+        useTransform(scrollYProgress, [0, 0.2], [15, 0]),
         springConfig
     );
     const translateY = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [-700, 0]),
+        useTransform(scrollYProgress, [0, 0.2], [-300, 0]),
         springConfig
     );
-    return (
-        <div
-            ref={ref}
-            className="py-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d] bg-primary-accent"
-        >
-            <Header />
-            <motion.div
-                style={{
-                    rotateX,
-                    rotateZ,
-                    translateY,
-                    opacity,
-                }}
-                className=""
-            >
-                <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
-                    {firstRow.map((product) => (
-                        <ProductCard
-                            product={product}
-                            translate={translateX}
-                            key={product.sitename}
-                        />
-                    ))}
-                </motion.div>
-                <motion.div className="flex flex-row  mb-20 space-x-20 ">
-                    {secondRow.map((product) => (
-                        <ProductCard
-                            product={product}
-                            translate={translateXReverse}
-                            key={product.sitename}
-                        />
-                    ))}
-                </motion.div>
-                <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
-                    {thirdRow.map((product) => (
-                        <ProductCard
-                            product={product}
-                            translate={translateX}
-                            key={product.sitename}
-                        />
-                    ))}
-                </motion.div>
-            </motion.div>
-        </div>
-    );
-};
 
-export const Header = () => {
     return (
-        <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-            <h1 className="text-5xl md:text-7xl font-bold dark:text-white">
-                I build things <br />for the web.
-            </h1>
-            <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-                I specialize in crafting innovative digital experiences on the web, leveraging cutting-edge technologies and creative design to build engaging and user-friendly websites and applications.
-            </p>
-        </div>
+        <section
+            ref={ref}
+            className="py-28 overflow-hidden antialiased relative min-h-[85vh] flex flex-col items-center justify-center [perspective:1000px] [transform-style:preserve-3d] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border-y border-slate-800 text-white"
+        >
+            {/* Background Dynamic Parallax Scrolling Rows */}
+            <div className="absolute inset-0 flex flex-col justify-center opacity-60 pointer-events-auto">
+                <motion.div
+                    style={{
+                        rotateX,
+                        rotateZ,
+                        translateY,
+                        opacity,
+                    }}
+                >
+                    <motion.div className="flex flex-row-reverse space-x-reverse space-x-8 mb-8">
+                        {firstRow.map((product) => (
+                            <ProductCard
+                                product={product}
+                                translate={translateX}
+                                key={product.sitename}
+                            />
+                        ))}
+                    </motion.div>
+                    <motion.div className="flex flex-row mb-8 space-x-8">
+                        {secondRow.map((product) => (
+                            <ProductCard
+                                product={product}
+                                translate={translateXReverse}
+                                key={product.sitename}
+                            />
+                        ))}
+                    </motion.div>
+                    <motion.div className="flex flex-row-reverse space-x-reverse space-x-8">
+                        {thirdRow.map((product) => (
+                            <ProductCard
+                                product={product}
+                                translate={translateX}
+                                key={product.sitename}
+                            />
+                        ))}
+                    </motion.div>
+                </motion.div>
+            </div>
+
+            {/* Foreground Floating Header Overlay */}
+            <div className="relative z-20 max-w-3xl mx-auto px-6">
+                <div className="p-8 sm:p-12 rounded-3xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/80 shadow-2xl text-center space-y-5">
+                    <span className="text-xs font-extrabold uppercase tracking-widest text-brand-amber bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/30 inline-block shadow-xs">
+                        Interactive Showcase
+                    </span>
+                    <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                        Featured Work & Applications
+                    </h2>
+                    <p className="text-slate-300 text-sm sm:text-base font-medium max-w-xl mx-auto leading-relaxed">
+                        Explore custom web builds, React applications, and WordPress solutions designed for high performance and user engagement.
+                    </p>
+                    <div className="pt-2 flex justify-center">
+                        <Link
+                            href="/mywork"
+                            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-brand-amber hover:bg-brand-amber-h text-brand-navy font-extrabold text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                        >
+                            <Sparkles className="h-4 w-4" /> Explore All Projects
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 
@@ -137,28 +150,37 @@ export const ProductCard = ({
                 x: translate,
             }}
             whileHover={{
-                y: -20,
+                y: -10,
+                scale: 1.03,
             }}
             key={product.sitename}
-            className="group/product h-96 w-1/3 relative flex-shrink-0 max-lg:w-full"
+            className="group/product h-64 w-[20rem] relative shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-800"
         >
             <Link
                 href={`/mywork/${product.permalink}`}
-                className="block group-hover/product:shadow-2xl "
+                className="block opacity-80 group-hover/product:opacity-100 h-full w-full"
             >
-
                 <Image
                     src={`/${product.image}`}
-                    height="600"
-                    width="600"
-                    className="object-cover object-left-top absolute h-full w-full inset-0 top-0 left-0"
+                    height="400"
+                    width="400"
+                    className="object-cover object-left-top absolute inset-0 h-full w-full"
                     alt={product.sitename}
                 />
             </Link>
-            <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-            <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
-                {product.sitename}
-            </h2>
+            <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none transition-opacity duration-300" />
+            <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 z-20">
+                <h3 className="font-extrabold text-white text-sm leading-snug">
+                    {product.sitename}
+                </h3>
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                    {product.technologies?.slice(0, 3).map((tech, idx) => (
+                        <span key={idx} className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-amber text-brand-navy">
+                            {tech}
+                        </span>
+                    ))}
+                </div>
+            </div>
         </motion.div>
     );
 };

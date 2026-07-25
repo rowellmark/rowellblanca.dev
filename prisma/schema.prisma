@@ -1,0 +1,97 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/client"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  WON
+  LOST
+  SPAM
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(ADMIN)
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Lead {
+  id              Int        @id @default(autoincrement())
+  contactName     String
+  companyName     String?
+  email           String
+  phone           String?
+  serviceInterest String?
+  budget          String?
+  enquiryDetails  String     @db.Text
+  status          LeadStatus @default(NEW)
+  sourceUrl       String?
+  notes           LeadNote[]
+  submittedAt     DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model LeadNote {
+  id        Int      @id @default(autoincrement())
+  leadId    Int
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id               Int      @id @default(autoincrement())
+  sitename         String
+  permalink        String   @unique
+  url              String?
+  image            String
+  mobileImage      String?
+  fullDesktopImage String?
+  fullMobileImage  String?
+  description      String?  @db.Text
+  technologies     String[]
+  featured         Boolean  @default(false)
+  spotlight        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  company   String
+  quote     String   @db.Text
+  avatarUrl String?
+  rating    Int      @default(5)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  sentAt    DateTime @default(now())
+}
