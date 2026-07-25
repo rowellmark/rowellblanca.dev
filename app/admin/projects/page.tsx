@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FolderKanban, Plus, Trash2, Edit, ExternalLink, Check, Upload, Smartphone, Monitor, Loader2, Image as ImageIcon, Star, X } from 'lucide-react';
+import { FolderKanban, Plus, Trash2, Edit, ExternalLink, Check, Upload, Smartphone, Monitor, Loader2, Image as ImageIcon, Star, X, Images } from 'lucide-react';
 import { resolveValidImageSrc } from '@/lib/image-utils';
+import MediaPickerModal from '@/components/admin/media-picker-modal';
+
+type ImageSlot = 'desktop' | 'mobile' | 'fullDesktop' | 'fullMobile';
 
 interface Project {
   id: number;
@@ -48,6 +51,7 @@ export default function ProjectsManagerPage() {
   const [uploadingFullDesktop, setUploadingFullDesktop] = useState(false);
   const [uploadingFullMobile, setUploadingFullMobile] = useState(false);
   const [updatingSpotlightId, setUpdatingSpotlightId] = useState<number | null>(null);
+  const [galleryTarget, setGalleryTarget] = useState<ImageSlot | null>(null);
 
   const [form, setForm] = useState({
     sitename: '',
@@ -124,7 +128,7 @@ export default function ProjectsManagerPage() {
 
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: 'desktop' | 'mobile' | 'fullDesktop' | 'fullMobile'
+    type: ImageSlot
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -162,11 +166,19 @@ export default function ProjectsManagerPage() {
     }
   };
 
-  const handleRemoveImage = (type: 'desktop' | 'mobile' | 'fullDesktop' | 'fullMobile') => {
+  const handleRemoveImage = (type: ImageSlot) => {
     if (type === 'desktop') setForm((prev) => ({ ...prev, image: '' }));
     else if (type === 'mobile') setForm((prev) => ({ ...prev, mobileImage: '' }));
     else if (type === 'fullDesktop') setForm((prev) => ({ ...prev, fullDesktopImage: '' }));
     else if (type === 'fullMobile') setForm((prev) => ({ ...prev, fullMobileImage: '' }));
+  };
+
+  const handleGallerySelect = (url: string) => {
+    const type = galleryTarget;
+    if (type === 'desktop') setForm((prev) => ({ ...prev, image: url }));
+    else if (type === 'mobile') setForm((prev) => ({ ...prev, mobileImage: url }));
+    else if (type === 'fullDesktop') setForm((prev) => ({ ...prev, fullDesktopImage: url }));
+    else if (type === 'fullMobile') setForm((prev) => ({ ...prev, fullMobileImage: url }));
   };
 
   const toggleTechnology = (tech: string) => {
@@ -494,11 +506,21 @@ export default function ProjectsManagerPage() {
                       </div>
                     )}
 
-                    <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
-                      {uploadingDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
-                      <span>{form.image ? 'Replace Card Desktop' : 'Upload Card Desktop'}</span>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'desktop')} disabled={uploadingDesktop} className="hidden" />
-                    </label>
+                    <div className="flex gap-2">
+                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
+                        {uploadingDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
+                        <span>{form.image ? 'Replace' : 'Upload'}</span>
+                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'desktop')} disabled={uploadingDesktop} className="hidden" />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setGalleryTarget('desktop')}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
+                        title="Choose from uploaded photos"
+                      >
+                        <Images className="w-3.5 h-3.5 text-[#1d63ed]" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Card Mobile */}
@@ -527,11 +549,21 @@ export default function ProjectsManagerPage() {
                       </div>
                     )}
 
-                    <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 cursor-pointer text-amber-900 font-bold">
-                      {uploadingMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" /> : <Upload className="w-3.5 h-3.5 text-amber-600" />}
-                      <span>{form.mobileImage ? 'Replace Card Mobile' : 'Upload Card Mobile'}</span>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'mobile')} disabled={uploadingMobile} className="hidden" />
-                    </label>
+                    <div className="flex gap-2">
+                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 cursor-pointer text-amber-900 font-bold">
+                        {uploadingMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" /> : <Upload className="w-3.5 h-3.5 text-amber-600" />}
+                        <span>{form.mobileImage ? 'Replace' : 'Upload'}</span>
+                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'mobile')} disabled={uploadingMobile} className="hidden" />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setGalleryTarget('mobile')}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 text-amber-900 font-bold"
+                        title="Choose from uploaded photos"
+                      >
+                        <Images className="w-3.5 h-3.5 text-amber-600" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -570,11 +602,21 @@ export default function ProjectsManagerPage() {
                       </div>
                     )}
 
-                    <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer text-blue-900 font-bold">
-                      {uploadingFullDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" /> : <Upload className="w-3.5 h-3.5 text-blue-600" />}
-                      <span>{form.fullDesktopImage ? 'Replace Full Desktop Page' : 'Upload Full Desktop Page'}</span>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullDesktop')} disabled={uploadingFullDesktop} className="hidden" />
-                    </label>
+                    <div className="flex gap-2">
+                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer text-blue-900 font-bold">
+                        {uploadingFullDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" /> : <Upload className="w-3.5 h-3.5 text-blue-600" />}
+                        <span>{form.fullDesktopImage ? 'Replace' : 'Upload'}</span>
+                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullDesktop')} disabled={uploadingFullDesktop} className="hidden" />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setGalleryTarget('fullDesktop')}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-100/50 text-blue-900 font-bold"
+                        title="Choose from uploaded photos"
+                      >
+                        <Images className="w-3.5 h-3.5 text-blue-600" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Full Mobile Screenshot */}
@@ -605,11 +647,21 @@ export default function ProjectsManagerPage() {
                     )}
 
 
-                    <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 cursor-pointer text-purple-900 font-bold">
-                      {uploadingFullMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-600" /> : <Upload className="w-3.5 h-3.5 text-purple-600" />}
-                      <span>{form.fullMobileImage ? 'Replace Full Mobile Page' : 'Upload Full Mobile Page'}</span>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullMobile')} disabled={uploadingFullMobile} className="hidden" />
-                    </label>
+                    <div className="flex gap-2">
+                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 cursor-pointer text-purple-900 font-bold">
+                        {uploadingFullMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-600" /> : <Upload className="w-3.5 h-3.5 text-purple-600" />}
+                        <span>{form.fullMobileImage ? 'Replace' : 'Upload'}</span>
+                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullMobile')} disabled={uploadingFullMobile} className="hidden" />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setGalleryTarget('fullMobile')}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 text-purple-900 font-bold"
+                        title="Choose from uploaded photos"
+                      >
+                        <Images className="w-3.5 h-3.5 text-purple-600" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -724,6 +776,12 @@ export default function ProjectsManagerPage() {
           </div>
         </div>
       )}
+
+      <MediaPickerModal
+        open={galleryTarget !== null}
+        onClose={() => setGalleryTarget(null)}
+        onSelect={handleGallerySelect}
+      />
     </div>
   );
 }
