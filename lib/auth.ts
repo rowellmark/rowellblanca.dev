@@ -52,7 +52,6 @@ export async function authenticateAdminUser(emailInput: string, passwordInput: s
 
 export function setAdminSessionCookie(userPayload: any): void {
   const cookieStore = cookies();
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
   cookieStore.set(ADMIN_COOKIE_NAME, JSON.stringify({
     id: userPayload.id,
@@ -64,7 +63,6 @@ export function setAdminSessionCookie(userPayload: any): void {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    expires: expiresAt,
     path: '/',
   });
 }
