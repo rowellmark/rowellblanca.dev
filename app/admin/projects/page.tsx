@@ -415,7 +415,7 @@ export default function ProjectsManagerPage() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-6 overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative my-8">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative">
             <h3 className="text-lg font-black text-[#0b1a30]">
               {editingProject ? 'Edit Project Record' : 'Add New Project'}
             </h3>
