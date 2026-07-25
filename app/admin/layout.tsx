@@ -41,11 +41,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const res = await fetch('/api/crm/leads');
       if (res.status === 401) {
         setIsAuthenticated(false);
+        router.push('/admin/login');
       } else {
         setIsAuthenticated(true);
       }
     } catch {
       setIsAuthenticated(false);
+      router.push('/admin/login');
     }
   };
 
@@ -57,6 +59,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isLoginPage) {
     return <>{children}</>;
+  }
+
+  if (isAuthenticated !== true) {
+    return null;
   }
 
   const navSections = [

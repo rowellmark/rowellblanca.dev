@@ -143,16 +143,30 @@ const SEED_PROJECTS = [
 
 
 
-async function main() {
-  const isReset = process.argv.includes('--reset');
-  console.log(`⚡ Starting NeonDB (PostgreSQL) Production Database Reset & Seed Script ${isReset ? '(RESET MODE)' : ''}...`);
+const RESET_TABLES = {
+  projects: () => prisma.project.deleteMany({}),
+  testimonials: () => prisma.testimonial.deleteMany({}),
+  leads: () => prisma.lead.deleteMany({}),
+  messages: () => prisma.contactMessage.deleteMany({}),
+};
 
-  if (isReset) {
-    console.log('🧹 Purging existing test records across Projects, Testimonials, Leads, and Messages...');
-    await prisma.project.deleteMany({});
-    await prisma.testimonial.deleteMany({});
-    await prisma.lead.deleteMany({});
-    await prisma.contactMessage.deleteMany({});
+function getResetTargets() {
+  const resetArg = process.argv.find((arg) => arg === '--reset' || arg.startsWith('--reset='));
+  if (!resetArg) return [];
+  const value = resetArg.includes('=') ? resetArg.split('=')[1] : 'all';
+  if (value === 'all') return Object.keys(RESET_TABLES);
+  return value.split(',').filter((table) => RESET_TABLES[table]);
+}
+
+async function main() {
+  const resetTargets = getResetTargets();
+  console.log(`⚡ Starting NeonDB (PostgreSQL) Production Database Reset & Seed Script ${resetTargets.length ? `(RESET: ${resetTargets.join(', ')})` : ''}...`);
+
+  if (resetTargets.length) {
+    console.log(`🧹 Purging existing records: ${resetTargets.join(', ')}...`);
+    for (const table of resetTargets) {
+      await RESET_TABLES[table]();
+    }
     console.log('✓ Purged test database tables successfully.');
   }
 
@@ -197,26 +211,50 @@ async function main() {
   // Seed Client Testimonials
   const SEED_TESTIMONIALS = [
     {
-      name: 'Giles McManus',
-      role: 'Managing Director',
-      company: 'MacManus Asset Finance',
-      quote: 'Rowell engineered our entire broker, partner, supplier, and accountant portals with exceptional speed and precision. His expertise in full-stack web architecture transformed our operational workflow.',
+      name: 'Sofia',
+      role: 'CEO',
+      company: 'Elativ',
+      quote: 'Perfectly executed experience with Rowell. He is very professional and on time. I will continue working with him.',
       rating: 5,
       active: true,
     },
     {
-      name: 'Tower Fire Solutions',
-      role: 'Operations Team',
-      company: 'Tower Fire UK',
-      quote: 'The bespoke WordPress Gutenberg block engine Rowell built for our site allows us to publish clean, custom pages effortlessly without relying on slow page builders.',
+      name: 'Daniel Reyes',
+      role: 'Founder',
+      company: 'Northbound Studio',
+      quote: 'Rowell took our idea from a rough sketch to a fully working product in weeks. Communication was clear the entire way through.',
       rating: 5,
       active: true,
     },
     {
-      name: 'Juliette Hohnen',
-      role: 'Principal Partner',
-      company: 'Juliette Hohnen Real Estate',
-      quote: 'Rowell created a sleek, high-performing luxury real estate portal that showcases Beverly Hills properties with high visual excellence.',
+      name: 'Amara Okafor',
+      role: 'Product Manager',
+      company: 'Voxel Labs',
+      quote: 'Clean code, fast turnaround, and he actually explains tradeoffs instead of just saying yes to everything. Would hire again.',
+      rating: 5,
+      active: true,
+    },
+    {
+      name: 'Marcus Lindqvist',
+      role: 'Co-Founder',
+      company: 'Fjord Analytics',
+      quote: 'We needed a dashboard rebuilt under a tight deadline. Rowell delivered on time with none of the usual back-and-forth.',
+      rating: 5,
+      active: true,
+    },
+    {
+      name: 'Priya Nair',
+      role: 'Operations Lead',
+      company: 'Cursive Goods',
+      quote: 'Very responsive and detail-oriented. He caught issues in our spec before they became expensive problems.',
+      rating: 5,
+      active: true,
+    },
+    {
+      name: 'Ethan Cole',
+      role: 'CTO',
+      company: 'Loopline',
+      quote: 'Solid engineering instincts. Rowell built exactly what we asked for and suggested improvements we hadn\'t thought of.',
       rating: 5,
       active: true,
     },

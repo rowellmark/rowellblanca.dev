@@ -12,7 +12,11 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "node scripts/seed.js",
-    "seed:reset": "node scripts/seed.js --reset"
+    "seed:reset": "node scripts/seed.js --reset",
+    "seed:reset:projects": "node scripts/seed.js --reset=projects",
+    "seed:reset:testimonials": "node scripts/seed.js --reset=testimonials",
+    "seed:reset:leads": "node scripts/seed.js --reset=leads",
+    "seed:reset:messages": "node scripts/seed.js --reset=messages"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
