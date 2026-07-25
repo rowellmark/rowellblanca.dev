@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FolderKanban, Plus, Trash2, Edit, ExternalLink, Check, Upload, Smartphone, Monitor, Loader2, Image as ImageIcon, Star } from 'lucide-react';
+import { FolderKanban, Plus, Trash2, Edit, ExternalLink, Check, Upload, Smartphone, Monitor, Loader2, Image as ImageIcon, Star, X } from 'lucide-react';
 import { resolveValidImageSrc } from '@/lib/image-utils';
 
 interface Project {
@@ -160,6 +160,13 @@ export default function ProjectsManagerPage() {
       else if (type === 'fullDesktop') setUploadingFullDesktop(false);
       else if (type === 'fullMobile') setUploadingFullMobile(false);
     }
+  };
+
+  const handleRemoveImage = (type: 'desktop' | 'mobile' | 'fullDesktop' | 'fullMobile') => {
+    if (type === 'desktop') setForm((prev) => ({ ...prev, image: '' }));
+    else if (type === 'mobile') setForm((prev) => ({ ...prev, mobileImage: '' }));
+    else if (type === 'fullDesktop') setForm((prev) => ({ ...prev, fullDesktopImage: '' }));
+    else if (type === 'fullMobile') setForm((prev) => ({ ...prev, fullMobileImage: '' }));
   };
 
   const toggleTechnology = (tech: string) => {
@@ -476,12 +483,20 @@ export default function ProjectsManagerPage() {
                           className="object-cover"
                           unoptimized
                         />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('desktop')}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                          title="Remove image"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     )}
 
                     <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
                       {uploadingDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
-                      <span>Upload Card Desktop</span>
+                      <span>{form.image ? 'Replace Card Desktop' : 'Upload Card Desktop'}</span>
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'desktop')} disabled={uploadingDesktop} className="hidden" />
                     </label>
                   </div>
@@ -501,12 +516,20 @@ export default function ProjectsManagerPage() {
                           className="object-contain"
                           unoptimized
                         />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('mobile')}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                          title="Remove image"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     )}
 
                     <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 cursor-pointer text-amber-900 font-bold">
                       {uploadingMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" /> : <Upload className="w-3.5 h-3.5 text-amber-600" />}
-                      <span>Upload Card Mobile</span>
+                      <span>{form.mobileImage ? 'Replace Card Mobile' : 'Upload Card Mobile'}</span>
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'mobile')} disabled={uploadingMobile} className="hidden" />
                     </label>
                   </div>
@@ -536,12 +559,20 @@ export default function ProjectsManagerPage() {
                           className="w-full h-auto object-top block"
                           unoptimized
                         />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('fullDesktop')}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                          title="Remove image"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     )}
 
                     <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer text-blue-900 font-bold">
                       {uploadingFullDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" /> : <Upload className="w-3.5 h-3.5 text-blue-600" />}
-                      <span>Upload Full Desktop Page</span>
+                      <span>{form.fullDesktopImage ? 'Replace Full Desktop Page' : 'Upload Full Desktop Page'}</span>
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullDesktop')} disabled={uploadingFullDesktop} className="hidden" />
                     </label>
                   </div>
@@ -562,13 +593,21 @@ export default function ProjectsManagerPage() {
                           className="w-full h-auto object-top block"
                           unoptimized
                         />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('fullMobile')}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                          title="Remove image"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     )}
 
 
                     <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 cursor-pointer text-purple-900 font-bold">
                       {uploadingFullMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-600" /> : <Upload className="w-3.5 h-3.5 text-purple-600" />}
-                      <span>Upload Full Mobile Page</span>
+                      <span>{form.fullMobileImage ? 'Replace Full Mobile Page' : 'Upload Full Mobile Page'}</span>
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullMobile')} disabled={uploadingFullMobile} className="hidden" />
                     </label>
                   </div>
