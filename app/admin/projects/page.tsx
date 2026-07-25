@@ -263,6 +263,8 @@ export default function ProjectsManagerPage() {
     }
   };
 
+  const isPlugin = form.technologies.includes('Wordpress Plugins');
+
   return (
     <div className="max-w-7xl mx-auto space-y-6 font-sans">
       <div className="flex items-center justify-between">
@@ -473,6 +475,50 @@ export default function ProjectsManagerPage() {
                 </div>
               </div>
 
+              {isPlugin ? (
+                <div className="space-y-2 pt-2 border-t border-slate-200">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
+                    Plugin Screenshot
+                  </span>
+
+                  {form.image && (
+                    <div className="relative w-full h-40 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
+                      <Image
+                        src={resolveImgSrc(form.image)}
+                        alt="Plugin Screenshot"
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage('desktop')}
+                        className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                        title="Remove image"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
+                      {uploadingDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
+                      <span>{form.image ? 'Replace Screenshot' : 'Upload Screenshot'}</span>
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'desktop')} disabled={uploadingDesktop} className="hidden" />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setGalleryTarget('desktop')}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
+                      title="Choose from uploaded photos"
+                    >
+                      <Images className="w-3.5 h-3.5 text-[#1d63ed]" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+              <>
               {/* 1. Featured Homepage Card Thumbnails (Lightweight) */}
               <div className="space-y-2 pt-2 border-t border-slate-200">
                 <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
@@ -665,6 +711,8 @@ export default function ProjectsManagerPage() {
                   </div>
                 </div>
               </div>
+              </>
+              )}
 
               {/* Selectable Technologies Chips (WordPress, Wordpress Plugins, React/Nextjs, etc.) */}
               <div className="space-y-2 pt-2 border-t border-slate-200">
