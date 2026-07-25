@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/auth';
-import { LeadStatus } from '@/lib/generated/client';
+import { LeadStatus } from '@/lib/generated/client/index';
 
 export async function GET(request: Request) {
   if (!isAdminAuthenticated()) {
