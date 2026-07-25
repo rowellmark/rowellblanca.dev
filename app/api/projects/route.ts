@@ -225,7 +225,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, description, technologies, featured, spotlight, active } = body;
+    const { sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, screenshots, description, technologies, featured, spotlight, active } = body;
 
     if (!sitename || !permalink) {
       return NextResponse.json({ success: false, message: 'Sitename and permalink are required' }, { status: 400 });
@@ -253,6 +253,7 @@ export async function POST(request: Request) {
         mobileImage: cleanImg(mobileImage),
         fullDesktopImage: cleanImg(fullDesktopImage),
         fullMobileImage: cleanImg(fullMobileImage),
+        screenshots: Array.isArray(screenshots) ? screenshots.map((s: string) => cleanImg(s)).filter((s): s is string => Boolean(s)) : [],
         description: description || '',
         technologies: techArray,
         featured: Boolean(featured),
@@ -274,7 +275,7 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const { id, sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, description, technologies, featured, spotlight, active } = body;
+    const { id, sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, screenshots, description, technologies, featured, spotlight, active } = body;
 
     if (!id) {
       return NextResponse.json({ success: false, message: 'Project ID is required for updates' }, { status: 400 });
@@ -302,6 +303,11 @@ export async function PUT(request: Request) {
     if (mobileImage !== undefined) updateData.mobileImage = cleanImg(mobileImage);
     if (fullDesktopImage !== undefined) updateData.fullDesktopImage = cleanImg(fullDesktopImage);
     if (fullMobileImage !== undefined) updateData.fullMobileImage = cleanImg(fullMobileImage);
+    if (screenshots !== undefined) {
+      updateData.screenshots = Array.isArray(screenshots)
+        ? screenshots.map((s: string) => cleanImg(s)).filter((s): s is string => Boolean(s))
+        : [];
+    }
     if (description !== undefined) updateData.description = description || '';
     if (technologies !== undefined) updateData.technologies = techArray;
     if (featured !== undefined) updateData.featured = Boolean(featured);

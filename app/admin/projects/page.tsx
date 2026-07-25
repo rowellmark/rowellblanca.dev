@@ -7,6 +7,7 @@ import { resolveValidImageSrc } from '@/lib/image-utils';
 import MediaPickerModal from '@/components/admin/media-picker-modal';
 
 type ImageSlot = 'desktop' | 'mobile' | 'fullDesktop' | 'fullMobile';
+type GalleryTarget = ImageSlot | 'screenshots';
 
 interface Project {
   id: number;
@@ -17,6 +18,7 @@ interface Project {
   mobileImage?: string;
   fullDesktopImage?: string;
   fullMobileImage?: string;
+  screenshots?: string[];
   description?: string;
   technologies: string[];
   featured: boolean;
@@ -51,7 +53,8 @@ export default function ProjectsManagerPage() {
   const [uploadingFullDesktop, setUploadingFullDesktop] = useState(false);
   const [uploadingFullMobile, setUploadingFullMobile] = useState(false);
   const [updatingSpotlightId, setUpdatingSpotlightId] = useState<number | null>(null);
-  const [galleryTarget, setGalleryTarget] = useState<ImageSlot | null>(null);
+  const [galleryTarget, setGalleryTarget] = useState<GalleryTarget | null>(null);
+  const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
 
   const [form, setForm] = useState({
     sitename: '',
@@ -61,6 +64,7 @@ export default function ProjectsManagerPage() {
     mobileImage: '',
     fullDesktopImage: '',
     fullMobileImage: '',
+    screenshots: [] as string[],
     description: '',
     technologies: [] as string[],
     customTech: '',
@@ -179,6 +183,39 @@ export default function ProjectsManagerPage() {
     else if (type === 'mobile') setForm((prev) => ({ ...prev, mobileImage: url }));
     else if (type === 'fullDesktop') setForm((prev) => ({ ...prev, fullDesktopImage: url }));
     else if (type === 'fullMobile') setForm((prev) => ({ ...prev, fullMobileImage: url }));
+    else if (type === 'screenshots') setForm((prev) => ({ ...prev, screenshots: [...prev.screenshots, url] }));
+  };
+
+  const handleScreenshotUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingScreenshot(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success && data.url) {
+        setForm((prev) => ({ ...prev, screenshots: [...prev.screenshots, data.url] }));
+      } else {
+        alert(data.message || 'Image upload failed');
+      }
+    } catch (error) {
+      alert('Error uploading file');
+    } finally {
+      setUploadingScreenshot(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveScreenshot = (index: number) => {
+    setForm((prev) => ({ ...prev, screenshots: prev.screenshots.filter((_, i) => i !== index) }));
   };
 
   const toggleTechnology = (tech: string) => {
@@ -214,7 +251,7 @@ export default function ProjectsManagerPage() {
     const method = editingProject ? 'PUT' : 'POST';
     const payload = {
       ...form,
-      image: form.image || 'placeholder-portfolio.jpg',
+      image: (isPlugin ? form.screenshots[0] : form.image) || form.image || 'placeholder-portfolio.jpg',
       id: editingProject ? editingProject.id : undefined,
     };
 
@@ -236,6 +273,7 @@ export default function ProjectsManagerPage() {
           mobileImage: '',
           fullDesktopImage: '',
           fullMobileImage: '',
+          screenshots: [],
           description: '',
           technologies: [],
           customTech: '',
@@ -287,6 +325,7 @@ export default function ProjectsManagerPage() {
               mobileImage: '',
               fullDesktopImage: '',
               fullMobileImage: '',
+              screenshots: [],
               description: '',
               technologies: ['React/Nextjs', 'Prisma', 'NeonDB'],
               customTech: '',
@@ -405,6 +444,7 @@ export default function ProjectsManagerPage() {
                           mobileImage: proj.mobileImage || '',
                           fullDesktopImage: proj.fullDesktopImage || '',
                           fullMobileImage: proj.fullMobileImage || '',
+                          screenshots: proj.screenshots || [],
                           description: proj.description || '',
                           technologies: proj.technologies || [],
                           customTech: '',
@@ -478,38 +518,45 @@ export default function ProjectsManagerPage() {
               {isPlugin ? (
                 <div className="space-y-2 pt-2 border-t border-slate-200">
                   <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
-                    Plugin Screenshot
+                    Plugin Screenshots ({form.screenshots.length})
                   </span>
 
-                  {form.image && (
-                    <div className="relative w-full h-40 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
-                      <Image
-                        src={resolveImgSrc(form.image)}
-                        alt="Plugin Screenshot"
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage('desktop')}
-                        className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                        title="Remove image"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
+                  {form.screenshots.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {form.screenshots.map((src, index) => (
+                        <div
+                          key={`${src}-${index}`}
+                          className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group"
+                        >
+                          <Image
+                            src={resolveImgSrc(src)}
+                            alt={`Plugin Screenshot ${index + 1}`}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveScreenshot(index)}
+                            className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                            title="Remove screenshot"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
 
                   <div className="flex gap-2">
                     <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
-                      {uploadingDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
-                      <span>{form.image ? 'Replace Screenshot' : 'Upload Screenshot'}</span>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'desktop')} disabled={uploadingDesktop} className="hidden" />
+                      {uploadingScreenshot ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
+                      <span>Add Screenshot</span>
+                      <input type="file" accept="image/*" onChange={handleScreenshotUpload} disabled={uploadingScreenshot} className="hidden" />
                     </label>
                     <button
                       type="button"
-                      onClick={() => setGalleryTarget('desktop')}
+                      onClick={() => setGalleryTarget('screenshots')}
                       className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
                       title="Choose from uploaded photos"
                     >

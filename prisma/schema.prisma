@@ -68,6 +68,7 @@ model Project {
   mobileImage      String?
   fullDesktopImage String?
   fullMobileImage  String?
+  screenshots      String[] @default([])
   description      String?  @db.Text
   technologies     String[]
   featured         Boolean  @default(false)
