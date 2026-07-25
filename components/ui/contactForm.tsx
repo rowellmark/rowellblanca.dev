@@ -8,6 +8,7 @@ const Contact: React.FC = () => {
     const router = useRouter();
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const web3AccessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -43,22 +44,28 @@ const Contact: React.FC = () => {
         }
 
         try {
-            // Post to our API route (NeonDB DB record + Mailtrap Email)
+            // Post to our API route (NeonDB DB record + Web3Forms delivery)
             const response = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, message }),
             });
+            const data = await response.json().catch(() => null);
 
-            if (response.ok) {
+            if (response.ok && data?.success) {
                 router.push("/thank-you");
             } else {
-                // Fallback to Web3Forms if API route encounters unexpected error
+                // Fallback to Web3Forms only when a public access key exists.
+                if (!web3AccessKey) {
+                    setErrors({ general: data?.error || "Unable to send message right now. Please email directly." });
+                    return;
+                }
+
                 const web3Res = await fetch("https://api.web3forms.com/submit", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+                        access_key: web3AccessKey,
                         name,
                         email,
                         message,
@@ -67,7 +74,7 @@ const Contact: React.FC = () => {
                 if (web3Res.ok) {
                     router.push("/thank-you");
                 } else {
-                    setErrors({ general: "Unable to send message right now. Please email directly." });
+                    setErrors({ general: data?.error || "Unable to send message right now. Please email directly." });
                 }
             }
         } catch (err) {
@@ -136,7 +143,7 @@ const Contact: React.FC = () => {
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-6 rounded-xl bg-brand-amber hover:bg-brand-amber-h text-brand-navy font-extrabold text-sm uppercase tracking-wider shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 px-6 rounded-xl bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-sm uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
             >
                 {isSubmitting ? (
                     <>

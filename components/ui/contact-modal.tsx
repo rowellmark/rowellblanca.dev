@@ -17,16 +17,19 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
     phone: '',
     company: '',
     service: defaultService || 'Full-Stack Web App Development',
-    budget: '$5,000 - $10,000',
+    budget: 'Below $1,500',
     message: '',
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const web3AccessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setError('');
 
     try {
       const res = await fetch('/api/contact', {
@@ -45,13 +48,31 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
       });
 
       const data = await res.json();
-      if (data.success) {
+      if (res.ok && data.success) {
         setSuccess(true);
+      } else if (web3AccessKey) {
+        const fallbackRes = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_key: web3AccessKey,
+            name: form.name,
+            email: form.email,
+            subject: `Inquiry: ${form.service}`,
+            message: form.message,
+          }),
+        });
+
+        if (fallbackRes.ok) {
+          setSuccess(true);
+        } else {
+          setError(data.error || 'Failed to submit message.');
+        }
       } else {
-        alert(data.error || 'Failed to submit message.');
+        setError(data.error || 'Failed to submit message.');
       }
     } catch (e) {
-      alert('Error sending message. Please try again.');
+      setError('Error sending message. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -65,7 +86,7 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
       phone: '',
       company: '',
       service: 'Full-Stack Web App Development',
-      budget: '$5,000 - $10,000',
+      budget: 'Below $1,500',
       message: '',
     });
     onClose();
@@ -121,6 +142,12 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
                     Fill out your project details below to request a call or fast proposal.
                   </p>
                 </div>
+
+                {error ? (
+                  <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-700">
+                    {error}
+                  </div>
+                ) : null}
 
                 <form onSubmit={handleSubmit} className="space-y-3.5 text-xs font-sans">
                   <div>
@@ -182,7 +209,8 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
                         onChange={(e) => setForm({ ...form, budget: e.target.value })}
                         className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
                       >
-                        <option value="Under $3,000">Under $3,000</option>
+                        <option value="Below $1,500">Below $1,500</option>
+                        <option value="$1,500 - $3,000">$1,500 - $3,000</option>
                         <option value="$3,000 - $5,000">$3,000 - $5,000</option>
                         <option value="$5,000 - $10,000">$5,000 - $10,000</option>
                         <option value="$10,000+">$10,000+</option>

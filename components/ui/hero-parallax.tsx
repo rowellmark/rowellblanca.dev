@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
     motion,
     useScroll,
@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { resolveValidImageSrc } from "@/lib/image-utils";
 
 export const HeroParallax = ({
     products,
@@ -119,9 +120,10 @@ export const HeroParallax = ({
                     <div className="pt-2 flex justify-center">
                         <Link
                             href="/mywork"
-                            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-brand-amber hover:bg-brand-amber-h text-brand-navy font-extrabold text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-sm shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
                         >
-                            <Sparkles className="h-4 w-4" /> Explore All Projects
+                            <Sparkles className="h-4 w-4 text-slate-950 group-hover:text-amber-400 transition-colors" />
+                            <span>Explore All Projects</span>
                         </Link>
                     </div>
                 </div>
@@ -129,6 +131,10 @@ export const HeroParallax = ({
         </section>
     );
 };
+
+function resolveImgSrc(src?: string | null) {
+    return resolveValidImageSrc(src);
+}
 
 export const ProductCard = ({
     product,
@@ -144,6 +150,8 @@ export const ProductCard = ({
     };
     translate: MotionValue<number>;
 }) => {
+    const [imgSrc, setImgSrc] = useState(resolveImgSrc(product.image));
+
     return (
         <motion.div
             style={{
@@ -161,13 +169,16 @@ export const ProductCard = ({
                 className="block opacity-80 group-hover/product:opacity-100 h-full w-full"
             >
                 <Image
-                    src={`/${product.image}`}
+                    src={imgSrc}
                     height="400"
                     width="400"
                     className="object-cover object-left-top absolute inset-0 h-full w-full"
                     alt={product.sitename}
+                    onError={() => setImgSrc('/no-image-placeholder.svg')}
+                    unoptimized
                 />
             </Link>
+
             <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none transition-opacity duration-300" />
             <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 z-20">
                 <h3 className="font-extrabold text-white text-sm leading-snug">

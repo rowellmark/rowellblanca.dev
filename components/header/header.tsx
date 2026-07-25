@@ -103,7 +103,7 @@ export default function Header() {
                                 handleMobileMenuClick();
                                 setIsContactModalOpen(true);
                             }}
-                            className="px-6 py-2.5 rounded-full bg-brand-amber hover:bg-brand-amber-h text-brand-navy font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all max-lg:w-full max-lg:text-center cursor-pointer"
+                            className="px-6 py-2.5 rounded-full bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 max-lg:w-full max-lg:text-center cursor-pointer"
                         >
                             Say Hello!
                         </button>

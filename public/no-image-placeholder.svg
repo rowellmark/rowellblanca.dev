@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1728"/>
+      <stop offset="50%" stop-color="#09101e"/>
+      <stop offset="100%" stop-color="#040810"/>
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d63ed"/>
+      <stop offset="100%" stop-color="#0f2b68"/>
+    </linearGradient>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.8" opacity="0.4"/>
+    </pattern>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bgGrad)"/>
+
+  <!-- Grid overlay -->
+  <rect width="800" height="500" fill="url(#gridPattern)"/>
+
+  <!-- Center Glow -->
+  <circle cx="400" cy="250" r="220" fill="url(#glowGrad)"/>
+
+  <!-- Outer Border Frame -->
+  <rect x="20" y="20" width="760" height="460" rx="16" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"/>
+
+  <!-- Center Card Badge -->
+  <g transform="translate(400, 220)">
+    <!-- Circle Icon Container -->
+    <circle cx="0" cy="-25" r="42" fill="url(#badgeGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+    
+    <!-- Camera/Image Icon -->
+    <g transform="translate(-18, -43) scale(1.5)" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <polyline points="21 15 16 10 5 21"/>
+    </g>
+
+    <!-- Main Title -->
+    <text x="0" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="1.5">
+      NO SCREENSHOT AVAILABLE
+    </text>
+
+    <!-- Subtitle -->
+    <text x="0" y="80" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle" letter-spacing="0.5">
+      Rowell Mark Blanca &bull; Full-Stack Web Development
+    </text>
+  </g>
+
+  <!-- Bottom Terminal Tag -->
+  <rect x="290" y="420" width="220" height="28" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="438" font-family="monospace" font-size="11" font-weight="700" fill="#38bdf8" text-anchor="middle">
+    status: image_pending
+  </text>
+</svg>

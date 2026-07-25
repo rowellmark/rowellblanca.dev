@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
 import { WelcomeLoading } from '@/components/loading-intro/loading-screen';
+import ChatBubble from '@/components/ui/chat-bubble';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,6 +23,8 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       <Header />
       <main>{children}</main>
       <Footer />
+      <ChatBubble />
     </>
   );
 }
+

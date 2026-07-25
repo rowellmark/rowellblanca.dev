@@ -18,6 +18,8 @@ import {
   Sparkles,
   ExternalLink
 } from 'lucide-react';
+import NotificationBell from '@/components/admin/notification-bell';
+
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -95,8 +97,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
               <div className="flex flex-col">
                 <span className="font-black text-white text-sm tracking-tight leading-none">Rowell Blanca</span>
-                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider mt-0.5">Admin CRM Portal</span>
               </div>
+
             </Link>
 
             {/* Mobile Close */}
@@ -200,6 +202,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className="flex items-center gap-3">
+            <NotificationBell />
+
             <Link
               href="/"
               target="_blank"
@@ -217,6 +221,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </button>
           </div>
         </header>
+
+
 
         {/* Page Children Container */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-[#f8fafc]">

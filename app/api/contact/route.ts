@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { sendContactEmail } from '@/lib/mailer';
+import { sendAcknowledgmentReceipt, sendContactEmail } from '@/lib/mailer';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { name, email, message, subject, phone, company, service, budget } = body;
+    let savedToCrm = false;
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
           data: {
             name,
             email,
-            subject: subject || null,
+            subject: subject || service || null,
             message,
           },
         });
@@ -38,22 +39,64 @@ export async function POST(req: NextRequest) {
             status: 'NEW',
           },
         });
+
+        savedToCrm = true;
       }
     } catch (dbError) {
       console.error('[API/contact] Database CRM lead save warning:', dbError);
     }
 
-    // 2. Send email via Mailtrap
+    // 2. Send Admin Notification
     let mailResult: { success: boolean; reason?: string; messageId?: string } = { success: false, reason: 'Skipped' };
     try {
-      mailResult = await sendContactEmail({ name, email, subject, message });
+      mailResult = await sendContactEmail({
+        name,
+        email,
+        message,
+        subject: subject || service,
+        phone,
+        company,
+        service,
+        budget,
+      });
     } catch (mailError: any) {
-      console.error('[API/contact] Mailtrap email error:', mailError);
+      console.error('[API/contact] Admin notification email error:', mailError);
+    }
+
+    if (!mailResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: savedToCrm
+            ? 'Your message was saved, but email delivery is not configured correctly yet.'
+            : 'Email delivery is not configured correctly yet.',
+          reason: mailResult.reason,
+          savedToCrm,
+          mailSent: false,
+        },
+        { status: 502 }
+      );
+    }
+
+    try {
+      await sendAcknowledgmentReceipt({
+        name,
+        email,
+        subject,
+        service,
+        budget,
+        company,
+        phone,
+        message,
+      });
+    } catch (receiptError: any) {
+      console.error('[API/contact] Acknowledgment receipt email error:', receiptError);
     }
 
     return NextResponse.json({
       success: true,
       message: 'Thank you! Your message has been received.',
+      savedToCrm,
       mailSent: mailResult.success,
     });
   } catch (error: any) {

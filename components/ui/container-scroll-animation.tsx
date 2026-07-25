@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
 import Image from "next/image";
 
@@ -77,7 +77,18 @@ export const Header = ({ translate, titleComponent }: any) => {
 };
 
 function MobilePhoneSvgMockup({ imgSrc }: { imgSrc: string }) {
-    const resolvedSrc = imgSrc.startsWith('http') || imgSrc.startsWith('/') ? imgSrc : `/${imgSrc}`;
+    const getInitialSrc = (src: string) => {
+        if (!src || !src.trim() || src === 'null' || src === 'undefined' || src === 'placeholder-portfolio.jpg') {
+            return '/no-image-placeholder.svg';
+        }
+        return src.startsWith('http') || src.startsWith('/') ? src : `/${src}`;
+    };
+
+    const [resolvedSrc, setResolvedSrc] = useState(getInitialSrc(imgSrc));
+
+    useEffect(() => {
+        setResolvedSrc(getInitialSrc(imgSrc));
+    }, [imgSrc]);
 
     return (
         <div className="relative w-48 md:w-56 h-[380px] md:h-[440px] drop-shadow-[0_25px_25px_rgba(0,0,0,0.75)] transition-transform hover:scale-105 duration-300">
@@ -87,29 +98,34 @@ function MobilePhoneSvgMockup({ imgSrc }: { imgSrc: string }) {
                 <div className="relative w-full h-full rounded-[35px] bg-[#111] p-1.5 overflow-hidden flex flex-col justify-between">
                     
                     {/* Screen Viewport */}
-                    <div className="relative w-full h-full rounded-[28px] overflow-hidden bg-black overflow-y-auto scrollbar-none">
+                    <div className="relative w-full h-full rounded-[28px] overflow-hidden bg-[#0a0a0a] flex flex-col">
                         {/* Status Bar */}
-                        <div className="sticky top-0 z-20 w-full px-4 pt-1.5 pb-1 flex items-center justify-between bg-black/40 backdrop-blur-xs text-white text-[9px] font-mono pointer-events-none">
-                            <span>9:41</span>
+                        <div className="w-full px-5 pt-2.5 pb-1.5 flex items-center justify-between bg-[#141414] text-white text-[9px] font-mono pointer-events-none z-20 shrink-0 border-b border-white/10">
+                            <span className="font-bold text-slate-200">9:41</span>
                             <div className="flex items-center gap-1">
                                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                                <div className="w-3.5 h-2 rounded-[2px] border border-white/60 p-[0.5px]">
+                                <div className="w-3.5 h-2 rounded-[2px] border border-white/70 p-[0.5px]">
                                     <div className="h-full w-2 bg-white rounded-[1px]" />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Mobile Screenshot */}
-                        <img
-                            src={resolvedSrc}
-                            alt="Mobile Preview"
-                            className="w-full h-auto block object-top"
-                            draggable={false}
-                        />
+                        {/* Mobile Screenshot Container */}
+                        <div className="relative flex-1 w-full overflow-hidden bg-[#0d0d0d] flex items-start justify-center">
+                            <Image
+                                src={resolvedSrc}
+                                alt="Mobile Preview"
+                                fill
+                                className="object-contain object-top"
+                                onError={() => setResolvedSrc('/no-image-placeholder.svg')}
+                                draggable={false}
+                                unoptimized
+                            />
+                        </div>
                     </div>
 
                     {/* Top Notch & Camera Island */}
-                    <div className="absolute top-3 left-1/2 -translate-x-1/2 h-3.5 w-20 rounded-full bg-black z-30 flex items-center justify-between px-2 pointer-events-none shadow-md border border-white/10">
+                    <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-3.5 w-20 rounded-full bg-black z-30 flex items-center justify-between px-2 pointer-events-none shadow-md border border-white/10">
                         <div className="h-1.5 w-1.5 rounded-full bg-[#1a1a1a] border border-slate-700" />
                         <div className="h-1 w-6 rounded-full bg-[#1a1a1a]" />
                     </div>
@@ -161,8 +177,23 @@ export const Card = ({
             }}
             className="max-w-5xl -mt-12 mx-auto h-[30rem] md:h-[40rem] w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl relative"
         >
-            <div className=" h-full w-full  overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 md:rounded-2xl">
-                {children}
+            <div className="h-full w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 md:rounded-2xl flex flex-col">
+                {/* Browser Address Bar Header */}
+                <div className="w-full bg-[#1e1e1e] px-4 py-2.5 flex items-center gap-3 border-b border-white/10 shrink-0">
+                    <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+                    </div>
+                    <div className="flex-1 max-w-xs sm:max-w-sm mx-auto bg-[#121212] border border-white/10 rounded-md px-3 py-1 text-[11px] text-slate-300 font-mono truncate text-center shadow-inner">
+                        rowellblanca.dev/spotlight
+                    </div>
+                </div>
+
+                {/* Main Viewport Container */}
+                <div className="relative flex-1 w-full overflow-hidden bg-[#0d0d0d]">
+                    {children}
+                </div>
             </div>
 
             {/* Floating Mobile Phone Mockup */}

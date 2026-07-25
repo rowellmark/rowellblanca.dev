@@ -27,8 +27,9 @@ export function TestimonialsSection() {
         const res = await fetch('/api/testimonials');
         if (res.ok) {
           const data = await res.json();
-          const list = Array.isArray(data.testimonials) ? data.testimonials : (Array.isArray(data) ? data : []);
-          setTestimonials(list);
+          const rawList = Array.isArray(data.testimonials) ? data.testimonials : (Array.isArray(data) ? data : []);
+          const activeList = rawList.filter((t: any) => t.active !== false);
+          setTestimonials(activeList);
         }
       } catch (e) {
         console.error('Failed to load testimonials:', e);

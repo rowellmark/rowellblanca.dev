@@ -72,6 +72,7 @@ model Project {
   technologies     String[]
   featured         Boolean  @default(false)
   spotlight        Boolean  @default(false)
+  active           Boolean  @default(true)
   createdAt        DateTime @default(now())
 }
 
@@ -88,10 +89,25 @@ model Testimonial {
 }
 
 model ContactMessage {
-  id        Int      @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
+  sessionId String?
   name      String
   email     String
   subject   String?
-  message   String   @db.Text
-  sentAt    DateTime @default(now())
+  message   String         @db.Text
+  status    String         @default("UNREAD")
+  sentAt    DateTime       @default(now())
+  updatedAt DateTime       @updatedAt @default(now())
+  replies   MessageReply[]
 }
+
+model MessageReply {
+  id               Int            @id @default(autoincrement())
+  contactMessageId Int
+  contactMessage   ContactMessage @relation(fields: [contactMessageId], references: [id], onDelete: Cascade)
+  sender           String         // "user" or "admin"
+  senderName       String
+  message          String         @db.Text
+  createdAt        DateTime       @default(now())
+}
+

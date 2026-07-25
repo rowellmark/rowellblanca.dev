@@ -25,7 +25,6 @@ export default function Home() {
       <WorkHistory />
       <TestimonialsSection />
       <ContactSection />
-      <ContactFormSection />
     </>
   );
 }

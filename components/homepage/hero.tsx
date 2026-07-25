@@ -140,18 +140,18 @@ export function Hero() {
                         >
                             <button
                                 onClick={() => setIsContactModalOpen(true)}
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-amber hover:bg-brand-amber-h text-brand-navy font-extrabold text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-amber hover:bg-slate-900 text-brand-navy hover:text-white font-extrabold text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
                             >
-                                <Sparkles className="h-4 w-4" />
-                                Let's Build Your Project
+                                <Sparkles className="h-4 w-4 text-brand-navy group-hover:text-amber-400 transition-colors" />
+                                <span>Let's Build Your Project</span>
                             </button>
 
                             <Link
                                 href="/mywork"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 text-brand-navy font-bold text-sm shadow-xs hover:shadow-sm hover:bg-slate-50 transition-all"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white border border-slate-200 hover:border-slate-800 hover:bg-slate-900 text-brand-navy hover:text-white font-bold text-sm shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
                             >
-                                View My Work
-                                <ArrowRight className="h-4 w-4 text-brand-amber" />
+                                <span>View My Work</span>
+                                <ArrowRight className="h-4 w-4 text-brand-amber group-hover:text-amber-400 transition-colors" />
                             </Link>
                         </motion.div>
                     </div>

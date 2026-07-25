@@ -1,8 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ContainerScroll, useIsMobile } from "../ui/container-scroll-animation";
+import { ContainerScroll } from "../ui/container-scroll-animation";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, MessageSquare } from "lucide-react";
+import { ContactModal } from "../ui/contact-modal";
+import { resolveValidImageSrc } from "@/lib/image-utils";
 
 interface Project {
     id: number;
@@ -11,12 +14,14 @@ interface Project {
     url?: string;
     image: string;
     mobileImage?: string;
+    description?: string;
     spotlight?: boolean;
     featured?: boolean;
 }
 
 export function FeaturedProject() {
     const [spotlightProject, setSpotlightProject] = useState<Project | null>(null);
+    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchSpotlight = async () => {
@@ -24,8 +29,8 @@ export function FeaturedProject() {
                 const res = await fetch('/api/projects');
                 const data = await res.json();
                 if (data.success && Array.isArray(data.projects)) {
-                    // Find project flagged as spotlight or default to first project
-                    const spotlightMatch = data.projects.find((p: Project) => p.spotlight) || data.projects[0];
+                    const activeProjects = data.projects.filter((p: any) => p.active !== false);
+                    const spotlightMatch = activeProjects.find((p: Project) => p.spotlight) || activeProjects[0];
                     if (spotlightMatch) {
                         setSpotlightProject(spotlightMatch);
                     }
@@ -40,15 +45,20 @@ export function FeaturedProject() {
 
     const projectTitle = spotlightProject?.sitename || "MacManus Asset Finance Portal";
     const projectLink = spotlightProject ? `/mywork/${spotlightProject.permalink}` : "/mywork/macmanus-portal";
-    
-    const projectImgSrc = spotlightProject?.image
-        ? (spotlightProject.image.startsWith('http') || spotlightProject.image.startsWith('/') ? spotlightProject.image : `/${spotlightProject.image}`)
-        : "/macmanusfd.jpg";
+    const projectDescription = spotlightProject?.description ||
+        "A closer look at one of my recent full-stack builds — engineered end-to-end with React, Next.js, and a custom content architecture, designed for speed, scalability, and measurable business results.";
 
-    // Use mobileImage if uploaded, otherwise fallback to projectImgSrc (never static macmanus-mobile)
-    const mobileImgSrc = (spotlightProject?.mobileImage && spotlightProject.mobileImage.trim() !== "")
-        ? (spotlightProject.mobileImage.startsWith('http') || spotlightProject.mobileImage.startsWith('/') ? spotlightProject.mobileImage : `/${spotlightProject.mobileImage}`)
-        : projectImgSrc;
+    const resolveImageSrc = (src?: string | null) => {
+        return resolveValidImageSrc(src);
+    };
+
+    const initialImgSrc = resolveImageSrc(spotlightProject?.image);
+    const [projectImgSrc, setProjectImgSrc] = useState(initialImgSrc);
+    const mobileImgSrc = resolveImageSrc(spotlightProject?.mobileImage || spotlightProject?.image);
+
+    useEffect(() => {
+        setProjectImgSrc(resolveImageSrc(spotlightProject?.image));
+    }, [spotlightProject]);
 
     return (
         <div className="flex flex-col overflow-hidden px-8 max-sm:px-0 relative">
@@ -66,8 +76,26 @@ export function FeaturedProject() {
                             </span>
                         </h2>
                         <p className="mt-4 max-w-2xl mx-auto text-sm sm:text-base text-brand-slate leading-relaxed">
-                            A closer look at one of my recent full-stack builds — engineered end-to-end with React, Next.js, and a custom content architecture, designed for speed, scalability, and measurable business results.
+                            {projectDescription}
                         </p>
+
+                        {/* CTA Buttons */}
+                        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 relative z-30">
+                            <button
+                                onClick={() => setIsContactModalOpen(true)}
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-sm shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer group duration-300"
+                            >
+                                <MessageSquare className="w-4 h-4 text-slate-950 group-hover:text-amber-400 transition-colors" />
+                                <span>Start a Similar Project</span>
+                            </button>
+                            <Link
+                                href={projectLink}
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-slate-900 border border-slate-200 hover:border-slate-800 text-slate-800 hover:text-white font-extrabold text-sm shadow-xs hover:shadow-md transition-all hover:scale-105 active:scale-95 group duration-300"
+                            >
+                                <span>View Case Study</span>
+                                <ArrowRight className="w-4 h-4 text-amber-500 group-hover:text-amber-400 transition-colors" />
+                            </Link>
+                        </div>
                     </>
                 }
             >
@@ -75,14 +103,21 @@ export function FeaturedProject() {
                     <Image
                         src={projectImgSrc}
                         alt={projectTitle}
-                        height={720}
-                        width={1400}
-                        className="mx-auto rounded-2xl object-cover h-full object-top"
+                        fill
+                        className="object-contain object-top"
+                        onError={() => setProjectImgSrc('/no-image-placeholder.svg')}
                         draggable={false}
                         unoptimized
                     />
                 </Link>
             </ContainerScroll>
+
+            {/* Project Inquiry Modal */}
+            <ContactModal
+                isOpen={isContactModalOpen}
+                onClose={() => setIsContactModalOpen(false)}
+                defaultService={`Custom Web App based on ${projectTitle}`}
+            />
         </div>
     );
 }

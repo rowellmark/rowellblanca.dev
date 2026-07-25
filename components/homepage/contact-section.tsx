@@ -120,9 +120,9 @@ export default function ContactSection() {
                         <div className="pt-2">
                             <button
                                 onClick={() => setIsContactModalOpen(true)}
-                                className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 rounded-2xl bg-brand-navy hover:bg-slate-800 text-white font-extrabold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+                                className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 rounded-2xl bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-sm shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group"
                             >
-                                <MessageSquare className="h-4 w-4 text-brand-amber" />
+                                <MessageSquare className="h-4 w-4 text-slate-950 group-hover:text-amber-400 transition-colors" />
                                 Send a Message or Request a Quote
                             </button>
                         </div>

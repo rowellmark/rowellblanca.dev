@@ -95,25 +95,26 @@ export default function Projects({ params }: ProjectProps) {
                         {project.sitename}
                     </h1>
 
-                    {project.description && (
-                        <p className="text-base sm:text-lg text-slate-300 font-medium max-w-3xl leading-relaxed">
-                            {project.description}
-                        </p>
-                    )}
-
                     {project.url && project.url !== '#' && (
                         <div className="flex items-center gap-2 text-sm text-slate-400 pt-2">
                             <ExternalLink className="h-4 w-4 text-brand-amber" />
-                            <a
-                                href={project.url.startsWith('http') ? project.url : `https://${project.url}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-mono text-amber-400 hover:underline font-bold"
-                            >
-                                {project.url}
-                            </a>
+                            {project.url.startsWith('wp-content') ? (
+                                <span className="font-mono text-amber-400 font-bold">
+                                    Plugin Source: {project.url}
+                                </span>
+                            ) : (
+                                <a
+                                    href={project.url.startsWith('http') ? project.url : `https://${project.url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-mono text-amber-400 hover:underline font-bold"
+                                >
+                                    {project.url}
+                                </a>
+                            )}
                         </div>
                     )}
+
                 </div>
             </div>
 
@@ -126,17 +127,13 @@ export default function Projects({ params }: ProjectProps) {
             <div className="max-w-6xl mx-auto px-6 pt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                 {/* Left Column — Detailed Project Description */}
-                <div className="lg:col-span-7 space-y-6">
+                <div className="lg:col-span-8 space-y-6">
                     {project.description && (
                         <div className="space-y-4 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-md">
                             <h2 className="text-2xl font-black text-[#0b1a30]">About This Project</h2>
                             <p className="text-base text-slate-700 leading-relaxed">{project.description}</p>
                         </div>
                     )}
-                </div>
-
-                {/* Right Column — Technologies & Direct CTA */}
-                <div className="lg:col-span-5 space-y-6">
 
                     {project.technologies && project.technologies.length > 0 && (
                         <div className="p-6 sm:p-8 rounded-3xl border border-slate-200/80 bg-white shadow-md space-y-4">
@@ -153,21 +150,10 @@ export default function Projects({ params }: ProjectProps) {
                             </div>
                         </div>
                     )}
+                </div>
 
-                    {project.url && project.url !== '#' && (
-                        <div className="p-6 sm:p-8 rounded-3xl border border-slate-200/80 bg-white shadow-md space-y-3">
-                            <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Live Website URL</h3>
-                            <a
-                                href={project.url.startsWith('http') ? project.url : `https://${project.url}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-sm text-brand-amber font-black hover:underline"
-                            >
-                                <ExternalLink className="h-4 w-4" />
-                                {project.url}
-                            </a>
-                        </div>
-                    )}
+                {/* Right Column — Direct CTA */}
+                <div className="lg:col-span-4 space-y-6">
 
                     {/* High Converting Direct CTA Box */}
                     <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-orange-500/10 border border-amber-300/60 space-y-4 shadow-md">

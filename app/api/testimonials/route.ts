@@ -95,17 +95,18 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, message: 'ID is required' }, { status: 400 });
     }
 
+    const updateData: any = {};
+    if (name !== undefined) updateData.name = name;
+    if (role !== undefined) updateData.role = role;
+    if (company !== undefined) updateData.company = company;
+    if (quote !== undefined) updateData.quote = quote;
+    if (rating !== undefined) updateData.rating = Number(rating) || 5;
+    if (active !== undefined) updateData.active = Boolean(active);
+    if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl;
+
     const updated = await prisma.testimonial.update({
       where: { id: Number(id) },
-      data: {
-        name,
-        role,
-        company,
-        quote,
-        rating: Number(rating) || 5,
-        active: Boolean(active),
-        avatarUrl,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true, testimonial: updated });

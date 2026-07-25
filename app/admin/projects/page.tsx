@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { FolderKanban, Plus, Trash2, Edit, ExternalLink, Check, Upload, Smartphone, Monitor, Loader2, Image as ImageIcon, Star } from 'lucide-react';
+import { resolveValidImageSrc } from '@/lib/image-utils';
 
 interface Project {
   id: number;
@@ -16,6 +18,7 @@ interface Project {
   technologies: string[];
   featured: boolean;
   spotlight?: boolean;
+  active?: boolean;
 }
 
 const PREDEFINED_TECH = [
@@ -29,6 +32,11 @@ const PREDEFINED_TECH = [
   'Node.js',
   'Tailwind'
 ];
+
+function resolveImgSrc(src?: string | null) {
+  return resolveValidImageSrc(src);
+}
+
 
 export default function ProjectsManagerPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -54,6 +62,7 @@ export default function ProjectsManagerPage() {
     customTech: '',
     featured: true,
     spotlight: false,
+    active: true,
   });
 
   useEffect(() => {
@@ -93,6 +102,23 @@ export default function ProjectsManagerPage() {
       alert('Error setting spotlight project');
     } finally {
       setUpdatingSpotlightId(null);
+    }
+  };
+
+  const toggleProjectActive = async (proj: Project) => {
+    const newActive = proj.active === false ? true : false;
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: proj.id, active: newActive }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchProjects();
+      }
+    } catch (e) {
+      alert('Failed to update project status');
     }
   };
 
@@ -260,6 +286,7 @@ export default function ProjectsManagerPage() {
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-extrabold">
                 <th className="p-4">Thumbnails</th>
                 <th className="p-4">Project Name</th>
+                <th className="p-4">Visibility</th>
                 <th className="p-4">Homepage Spotlight</th>
                 <th className="p-4">Technologies & Tabs</th>
                 <th className="p-4 text-right">Actions</th>
@@ -271,14 +298,14 @@ export default function ProjectsManagerPage() {
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <div className="w-14 h-9 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 relative" title="Card Featured Image">
-                        <img
-                          src={proj.image ? (proj.image.startsWith('http') || proj.image.startsWith('/') ? proj.image : `/${proj.image}`) : '/placeholder-portfolio.jpg'}
-                          alt={proj.sitename}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/placeholder-portfolio.jpg';
-                          }}
+                        <Image
+                          src={resolveImgSrc(proj.image)}
+                          alt={proj.sitename || 'Project Thumbnail'}
+                          fill
+                          className="object-cover"
+                          unoptimized
                         />
+
                       </div>
                       {proj.fullDesktopImage && (
                         <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[9px] font-extrabold" title="Full Page Screenshot Available">
@@ -290,6 +317,21 @@ export default function ProjectsManagerPage() {
                   <td className="p-4">
                     <span className="font-extrabold text-[#0b1a30] block text-sm">{proj.sitename}</span>
                     {proj.url && <span className="text-slate-400 block font-mono text-[11px]">{proj.url}</span>}
+                  </td>
+                  <td className="p-4">
+                    <button
+                      type="button"
+                      onClick={() => toggleProjectActive(proj)}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-extrabold text-[11px] border cursor-pointer transition-all ${
+                        proj.active !== false
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                          : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+                      }`}
+                      title={proj.active !== false ? 'Click to Deactivate (Hide from website)' : 'Click to Activate (Show on website)'}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${proj.active !== false ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                      {proj.active !== false ? 'Active' : 'Deactivated'}
+                    </button>
                   </td>
                   <td className="p-4">
                     {proj.spotlight ? (
@@ -345,6 +387,7 @@ export default function ProjectsManagerPage() {
                           customTech: '',
                           featured: proj.featured,
                           spotlight: proj.spotlight || false,
+                          active: proj.active !== false,
                         });
                         setShowModal(true);
                       }}
@@ -424,10 +467,12 @@ export default function ProjectsManagerPage() {
 
                     {form.image && (
                       <div className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
-                        <img
-                          src={form.image.startsWith('http') || form.image.startsWith('/') ? form.image : `/${form.image}`}
+                        <Image
+                          src={resolveImgSrc(form.image)}
                           alt="Featured Desktop"
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          unoptimized
                         />
                       </div>
                     )}
@@ -447,10 +492,12 @@ export default function ProjectsManagerPage() {
 
                     {form.mobileImage && (
                       <div className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group flex items-center justify-center">
-                        <img
-                          src={form.mobileImage.startsWith('http') || form.mobileImage.startsWith('/') ? form.mobileImage : `/${form.mobileImage}`}
+                        <Image
+                          src={resolveImgSrc(form.mobileImage)}
                           alt="Featured Mobile"
-                          className="h-full object-contain"
+                          fill
+                          className="object-contain"
+                          unoptimized
                         />
                       </div>
                     )}
@@ -479,10 +526,13 @@ export default function ProjectsManagerPage() {
 
                     {form.fullDesktopImage && (
                       <div className="relative w-full h-28 rounded-xl overflow-y-auto border border-blue-200 bg-slate-900 group">
-                        <img
-                          src={form.fullDesktopImage.startsWith('http') || form.fullDesktopImage.startsWith('/') ? form.fullDesktopImage : `/${form.fullDesktopImage}`}
+                        <Image
+                          src={resolveImgSrc(form.fullDesktopImage)}
                           alt="Full Desktop Page"
+                          width={600}
+                          height={400}
                           className="w-full h-auto object-top block"
+                          unoptimized
                         />
                       </div>
                     )}
@@ -502,13 +552,17 @@ export default function ProjectsManagerPage() {
 
                     {form.fullMobileImage && (
                       <div className="relative w-full h-28 rounded-xl overflow-y-auto border border-purple-200 bg-slate-900 group flex items-center justify-center">
-                        <img
-                          src={form.fullMobileImage.startsWith('http') || form.fullMobileImage.startsWith('/') ? form.fullMobileImage : `/${form.fullMobileImage}`}
+                        <Image
+                          src={resolveImgSrc(form.fullMobileImage)}
                           alt="Full Mobile Page"
+                          width={400}
+                          height={600}
                           className="w-full h-auto object-top block"
+                          unoptimized
                         />
                       </div>
                     )}
+
 
                     <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 cursor-pointer text-purple-900 font-bold">
                       {uploadingFullMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-600" /> : <Upload className="w-3.5 h-3.5 text-purple-600" />}

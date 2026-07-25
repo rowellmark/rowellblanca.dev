@@ -12,14 +12,16 @@ import {
   ArrowRight,
   Clock,
   CheckCircle2,
-  Plus
+  Plus,
+  Bell,
+  Sparkles,
 } from 'lucide-react';
 
 export default function DashboardHome() {
   const [projectsCount, setProjectsCount] = useState(0);
   const [leads, setLeads] = useState<any[]>([]);
   const [testimonialsCount, setTestimonialsCount] = useState(0);
-  const [messagesCount, setMessagesCount] = useState(0);
+  const [messages, setMessages] = useState<any[]>([]);
 
   useEffect(() => {
     fetchDashboardStats();
@@ -51,15 +53,79 @@ export default function DashboardHome() {
 
       const msgData = await msgRes.json();
       if (msgData.success && Array.isArray(msgData.messages)) {
-        setMessagesCount(msgData.messages.length);
+        setMessages(msgData.messages);
       }
     } catch (e) {
       console.error('Error fetching dashboard stats:', e);
     }
   };
 
+  const unreadMessages = messages.filter((m) => m.status === 'UNREAD');
+  const newLeads = leads.filter((l) => l.status === 'NEW');
+  const totalNotifications = unreadMessages.length + newLeads.length;
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 font-sans">
+      
+      {/* ── NOTIFICATION ALERT BANNER ───────────────────────────────────────── */}
+      {totalNotifications > 0 ? (
+        <div className="bg-gradient-to-r from-blue-900 via-[#0b1a30] to-indigo-950 text-white rounded-2xl p-5 border border-blue-800/80 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="relative p-2.5 rounded-xl bg-blue-600/30 text-blue-300 border border-blue-500/40 shrink-0 mt-0.5">
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+              </span>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-black tracking-tight text-white">
+                  {totalNotifications} New Notification{totalNotifications > 1 ? 's' : ''} Requiring Attention
+                </h2>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 text-cyan-300 border border-cyan-400/30 px-2 py-0.5 rounded-full">
+                  Live CRM Alert
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 font-medium mt-1">
+                You have {unreadMessages.length} unread live chat inquiry message{unreadMessages.length !== 1 ? 's' : ''} and {newLeads.length} new CRM lead submission{newLeads.length !== 1 ? 's' : ''}.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 shrink-0">
+            {unreadMessages.length > 0 && (
+              <Link
+                href="/admin/messages"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Reply to Messages ({unreadMessages.length})</span>
+              </Link>
+            )}
+
+            {newLeads.length > 0 && (
+              <Link
+                href="/admin/leads"
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>Review Leads ({newLeads.length})</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center justify-between text-xs text-slate-600 shadow-2xs">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <span className="font-bold text-[#0b1a30]">All caught up!</span>
+            <span className="text-slate-400">No unread chat inquiries or pending CRM leads.</span>
+          </div>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">System Active</span>
+        </div>
+      )}
+
       
       {/* ── TOP STATS GRID (Views, Projects, Leads, Messages) ────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

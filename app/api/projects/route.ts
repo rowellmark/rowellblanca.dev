@@ -10,7 +10,7 @@ const FALLBACK_PROJECTS = [
     url: 'buildforuser.com',
     image: 'buildforuser.png',
     mobileImage: '',
-    description: 'SaaS & website management platform enabling automated WordPress and React site deployments, client management, and billing infrastructure.',
+    description: 'SaaS platform for managing client websites at scale — automated WordPress and React deployments, centralized client management, and integrated billing, replacing manual agency ops with a single operational dashboard.',
     technologies: ['React/Nextjs', 'Prisma', 'NeonDB', 'TypeScript', 'Node.js'],
     featured: true,
     spotlight: false,
@@ -22,7 +22,7 @@ const FALLBACK_PROJECTS = [
     url: 'macmanusfd.finance',
     image: 'macmanus-portal.png',
     mobileImage: '',
-    description: 'Enterprise asset finance portal featuring CRM lead management, funder product directories, document hub, and support ticket system.',
+    description: 'Enterprise asset finance platform built for a regulated UK lender — end-to-end CRM lead pipeline, funder product directory, document hub, and support ticketing unified in one system.',
     technologies: ['React/Nextjs', 'Prisma', 'NeonDB', 'TypeScript', 'CRM Pipeline'],
     featured: true,
     spotlight: true,
@@ -34,7 +34,7 @@ const FALLBACK_PROJECTS = [
     url: 'juliettehohnen.com',
     image: 'juliettehohnen.png',
     mobileImage: '',
-    description: 'Luxury real estate portal for top Beverly Hills & Los Angeles luxury property listings, custom galleries, and client inquiries.',
+    description: 'Luxury real estate platform for one of Beverly Hills\' top-producing agents — custom property galleries, curated listings, and a streamlined inquiry flow built to convert high-value buyers.',
     technologies: ['Wordpress', 'PHP', 'Real Estate API', 'JavaScript'],
     featured: true,
     spotlight: false,
@@ -46,8 +46,8 @@ const FALLBACK_PROJECTS = [
     url: 'towerfire.co.uk',
     image: 'towerfire.png',
     mobileImage: '',
-    description: 'WordPress build with a fully custom Gutenberg block library and a bespoke Gutenberg-native blog engine — no third-party page builder.',
-    technologies: ['Wordpress', 'Wordpress Plugins', 'PHP', 'Custom Gutenberg Blocks'],
+    description: 'Custom WordPress build powered by a hand-coded Gutenberg block library and a native Gutenberg blog engine — zero third-party page builders, full editorial control for the client\'s team.',
+    technologies: ['Wordpress', 'PHP', 'Custom Gutenberg Blocks'],
     featured: true,
     spotlight: false,
   },
@@ -58,8 +58,8 @@ const FALLBACK_PROJECTS = [
     url: 'macmanusassetfinance.co.uk',
     image: 'macmanus.png',
     mobileImage: '',
-    description: 'WordPress site for an FCA-regulated business finance brokerage, covering asset finance, business loans, invoice financing, and VAT loans.',
-    technologies: ['Wordpress', 'Wordpress Plugins', 'PHP', 'FCA-Regulated'],
+    description: 'FCA-regulated business finance brokerage site covering asset finance, business loans, invoice financing, and VAT loans — built for compliance-first content and lead capture.',
+    technologies: ['Wordpress', 'PHP', 'FCA-Regulated'],
     featured: true,
     spotlight: false,
   },
@@ -70,8 +70,8 @@ const FALLBACK_PROJECTS = [
     url: 'partners.macmanusassetfinance.co.uk',
     image: 'partner-portal.png',
     mobileImage: '',
-    description: 'Dedicated portal for commercial finance professionals applying to become MacManus Certified Individuals.',
-    technologies: ['Wordpress', 'Wordpress Plugins', 'PHP', 'Partner Portal'],
+    description: 'Application and onboarding portal for commercial finance professionals pursuing MacManus Certified Individual status, streamlining a previously manual approval process.',
+    technologies: ['Wordpress', 'PHP', 'Partner Portal'],
     featured: true,
     spotlight: false,
   },
@@ -82,8 +82,8 @@ const FALLBACK_PROJECTS = [
     url: 'suppliers.macmanusassetfinance.co.uk',
     image: 'supplier-portal.png',
     mobileImage: '',
-    description: 'Portal for vehicle, plant, equipment, and prestige car suppliers/dealers to offer asset financing to their customers.',
-    technologies: ['Wordpress', 'Wordpress Plugins', 'PHP', 'Supplier Portal'],
+    description: 'Finance-enablement portal for vehicle, plant, equipment, and prestige car suppliers to offer point-of-sale asset financing directly to their customers.',
+    technologies: ['Wordpress', 'PHP', 'Supplier Portal'],
     featured: true,
     spotlight: false,
   },
@@ -94,11 +94,12 @@ const FALLBACK_PROJECTS = [
     url: 'accountants.macmanusassetfinance.co.uk',
     image: 'accountant-portal.png',
     mobileImage: '',
-    description: 'Portal for accountancy firms and advisers to introduce SME clients to MacManus funding without taking on lending infrastructure.',
-    technologies: ['Wordpress', 'Wordpress Plugins', 'PHP', 'Accountant Portal'],
+    description: 'Referral portal for accountancy firms and advisers to introduce SME clients to MacManus funding without taking on lending infrastructure themselves.',
+    technologies: ['Wordpress', 'PHP', 'Accountant Portal'],
     featured: true,
     spotlight: false,
   },
+
   {
     id: 9,
     sitename: 'Rowell Blanca — Developer Portfolio',
@@ -106,12 +107,50 @@ const FALLBACK_PROJECTS = [
     url: 'rowellblanca.dev',
     image: 'rowellbanner.png',
     mobileImage: '',
-    description: 'Personal portfolio for a full-stack software engineer, covering React/Next.js frontend work, Node.js/PHP backend work, and AI/automation services.',
+    description: 'Personal portfolio showcasing full-stack engineering work across React/Next.js and Node.js/PHP backends, custom WordPress builds, and AI-driven automation workflows.',
     technologies: ['React/Nextjs', 'Prisma', 'NeonDB', 'TypeScript', 'Tailwind'],
     featured: true,
     spotlight: false,
   },
+  {
+    id: 10,
+    sitename: 'Blanc Leads — WordPress CRM & Multi-AI Nurturing Plugin',
+    permalink: 'blanc-leads-plugin',
+    url: 'wp-content/plugins/buildforuser-leads',
+    image: 'buildforuser.png',
+    mobileImage: '',
+    description: 'Bespoke WordPress CRM & AI Nurturing plugin capturing form submissions, lead pipelines, Kanban boards, and multi-provider AI nurturing.\n\nHOW IT WORKS:\n1. Form Lead Capture: Listens to WordPress form hooks (Kadence, WPForms, Contact Form 7), logging lead data, referrer, URL source, and user-agent.\n2. Native WP CRM: Manages lead records inside custom WP database tables with a Kanban board (New, Contacted, Qualified, Proposal Sent, Won, Lost), notes, tasks with due dates, and WP user owner assignments.\n3. Multi-Provider AI Nurturing: Connects to OpenAI, Claude, Gemini, DeepSeek, OpenRouter, or local Ollama to generate AI Lead Summaries, Suggested Next Actions, Context-Aware Email Drafts, 1-100 Lead Scoring, and Multi-Step Nurture Plans.\n4. Human-in-the-Loop Safety: AI creates drafts and insights, but all emails require human review before sending.',
+    technologies: ['Wordpress Plugins', 'PHP', 'AI Integration', 'REST API', 'JavaScript'],
+    featured: true,
+    spotlight: false,
+  },
+  {
+    id: 11,
+    sitename: 'Blanc Schema LD Generator — WordPress SEO Plugin',
+    permalink: 'blanc-schema-ld-generator',
+    url: 'wp-content/plugins/buildforuser-schema-ld-generator',
+    image: 'towerfire.png',
+    mobileImage: '',
+    description: 'Bespoke JSON-LD Structured Data & Schema Builder WordPress plugin featuring visual block editing, live AJAX previewing, and Yoast SEO graph assembly compatibility.\n\nHOW IT WORKS:\n1. Visual Schema Builder: Build and edit JSON-LD schema blocks directly inside the WordPress Gutenberg / Classic editor and site-wide global admin dashboard.\n2. SchemaGraphAssembler Engine: Modular PHP (PSR-4) pipeline merges global site schemas, per-post schemas, and defaults, deduplicating @id tags into a single valid @graph JSON-LD script.\n3. Live Admin AJAX Preview: Generates instant live previews of the exact JSON-LD script output directly within the admin dashboard without reloading.\n4. Yoast SEO Gate Coordination: Coordinates output with Yoast SEO or All in One SEO using YoastSchemaGate to prevent duplicate schema markup conflicts.',
+    technologies: ['Wordpress Plugins', 'PHP', 'JSON-LD', 'SEO', 'JavaScript'],
+    featured: true,
+    spotlight: false,
+  },
+  {
+    id: 12,
+    sitename: 'Blanc Chatbot — WordPress AI Widget & RAG Knowledge Base Plugin',
+    permalink: 'blanc-chatbot-plugin',
+    url: 'wp-content/plugins/buildforuser-chatbox',
+    image: 'buildforuser.png',
+    mobileImage: '',
+    description: 'Bespoke WordPress Chatbot & RAG Knowledge Base plugin featuring sitewide floating chat, shortcode embedding, WP post/page RAG import, FAQ builder, conversation history logging, and configurable LLM backends (OpenAI & local Ollama).\n\nHOW IT WORKS:\n1. RAG Knowledge Import: Imports published WordPress pages, posts, uploaded documents, or FAQs into a searchable local vector/knowledge chunk index.\n2. Configurable LLM Backend: Connects to OpenAI (GPT-4o) or local Ollama endpoints with customizable system prompts and company persona controls.\n3. Public Widget & Shortcode: Renders as a floating public widget or inline shortcode ([blanc_chatbox]) with contact details collection and instant streaming responses.\n4. Admin SPA & Transcripts: Full React/TypeScript Admin SPA to inspect visitor conversation logs, transcript summaries, and email notification alerts.',
+    technologies: ['Wordpress Plugins', 'PHP', 'AI Integration', 'REST API', 'RAG Knowledge Base'],
+    featured: true,
+    spotlight: false,
+  },
 ];
+
+
 
 export async function GET(request: Request) {
   try {
@@ -127,11 +166,15 @@ export async function GET(request: Request) {
           where: { permalink },
         });
         if (singleProject) {
+          if (!isAdminAuthenticated() && (singleProject as any).active === false) {
+            return NextResponse.json({ success: false, message: 'Project not found' }, { status: 404 });
+          }
           return NextResponse.json({ success: true, project: singleProject, projects: [singleProject] });
         }
       } else {
         const whereClause: any = {};
         if (featuredOnly) whereClause.featured = true;
+        if (!isAdminAuthenticated()) whereClause.active = true;
 
         dbProjects = await prisma.project.findMany({
           where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
@@ -143,6 +186,10 @@ export async function GET(request: Request) {
     }
 
     let projectsToReturn = dbProjects.length > 0 ? dbProjects : FALLBACK_PROJECTS;
+
+    if (!isAdminAuthenticated()) {
+      projectsToReturn = projectsToReturn.filter((p: any) => p.active !== false);
+    }
 
     if (category && category !== 'All') {
       const lowerCat = category.toLowerCase();
@@ -162,6 +209,15 @@ export async function GET(request: Request) {
   }
 }
 
+function cleanImg(img?: string | null) {
+  if (!img) return null;
+  let cleaned = img.trim();
+  if (cleaned.startsWith('//')) {
+    cleaned = '/' + cleaned.replace(/^\/+/, '');
+  }
+  return cleaned;
+}
+
 export async function POST(request: Request) {
   if (!isAdminAuthenticated()) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
@@ -169,7 +225,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, description, technologies, featured, spotlight } = body;
+    const { sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, description, technologies, featured, spotlight, active } = body;
 
     if (!sitename || !permalink) {
       return NextResponse.json({ success: false, message: 'Sitename and permalink are required' }, { status: 400 });
@@ -193,14 +249,15 @@ export async function POST(request: Request) {
         sitename,
         permalink,
         url: url || '',
-        image: image || 'placeholder-portfolio.jpg',
-        mobileImage: mobileImage || null,
-        fullDesktopImage: fullDesktopImage || null,
-        fullMobileImage: fullMobileImage || null,
+        image: cleanImg(image) || 'placeholder-portfolio.jpg',
+        mobileImage: cleanImg(mobileImage),
+        fullDesktopImage: cleanImg(fullDesktopImage),
+        fullMobileImage: cleanImg(fullMobileImage),
         description: description || '',
         technologies: techArray,
         featured: Boolean(featured),
         spotlight: isSpotlight,
+        active: active !== undefined ? Boolean(active) : true,
       },
     });
 
@@ -217,7 +274,7 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const { id, sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, description, technologies, featured, spotlight } = body;
+    const { id, sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, description, technologies, featured, spotlight, active } = body;
 
     if (!id) {
       return NextResponse.json({ success: false, message: 'Project ID is required for updates' }, { status: 400 });
@@ -236,34 +293,24 @@ export async function PUT(request: Request) {
       ? technologies
       : (technologies || '').split(',').map((t: string) => t.trim());
 
-    const updatedProject = await prisma.project.upsert({
+    // If only toggling active status or updating specific fields
+    const updateData: any = {};
+    if (sitename !== undefined) updateData.sitename = sitename;
+    if (permalink !== undefined) updateData.permalink = permalink;
+    if (url !== undefined) updateData.url = url || '';
+    if (image !== undefined) updateData.image = cleanImg(image) || 'placeholder-portfolio.jpg';
+    if (mobileImage !== undefined) updateData.mobileImage = cleanImg(mobileImage);
+    if (fullDesktopImage !== undefined) updateData.fullDesktopImage = cleanImg(fullDesktopImage);
+    if (fullMobileImage !== undefined) updateData.fullMobileImage = cleanImg(fullMobileImage);
+    if (description !== undefined) updateData.description = description || '';
+    if (technologies !== undefined) updateData.technologies = techArray;
+    if (featured !== undefined) updateData.featured = Boolean(featured);
+    if (spotlight !== undefined) updateData.spotlight = isSpotlight;
+    if (active !== undefined) updateData.active = Boolean(active);
+
+    const updatedProject = await prisma.project.update({
       where: { id: Number(id) },
-      update: {
-        sitename,
-        permalink,
-        url: url || '',
-        image: image || 'placeholder-portfolio.jpg',
-        mobileImage: mobileImage || null,
-        fullDesktopImage: fullDesktopImage || null,
-        fullMobileImage: fullMobileImage || null,
-        description: description || '',
-        technologies: techArray,
-        featured: Boolean(featured),
-        spotlight: isSpotlight,
-      },
-      create: {
-        sitename,
-        permalink,
-        url: url || '',
-        image: image || 'placeholder-portfolio.jpg',
-        mobileImage: mobileImage || null,
-        fullDesktopImage: fullDesktopImage || null,
-        fullMobileImage: fullMobileImage || null,
-        description: description || '',
-        technologies: techArray,
-        featured: Boolean(featured),
-        spotlight: isSpotlight,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true, project: updatedProject });
