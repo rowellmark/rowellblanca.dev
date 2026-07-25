@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { put } from '@vercel/blob';
 import { isAdminAuthenticated } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
@@ -16,25 +15,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create public/uploads directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    await mkdir(uploadDir, { recursive: true });
-
     // Clean up filename and append timestamp to avoid collision
     const sanitizedOriginalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const fileName = `${Date.now()}_${sanitizedOriginalName}`;
-    const filePath = path.join(uploadDir, fileName);
 
-    await writeFile(filePath, buffer);
-
-    const publicUrl = `/uploads/${fileName}`;
+    const blob = await put(`uploads/${fileName}`, file, { access: 'public' });
 
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: blob.url,
       fileName,
       size: file.size,
     });
