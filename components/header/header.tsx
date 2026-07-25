@@ -4,96 +4,118 @@ import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/logo.png";
-import { AnimatedButton } from '../buttons/animated-button';
-import classes from "./header.module.scss";
-
-import {
-    IconPhone
-} from "@tabler/icons-react";
-
-
+import { IconPhone } from "@tabler/icons-react";
+import { ContactModal } from "@/components/ui/contact-modal";
 
 export default function Header() {
-
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const [scrollClass, setHeaderScrollClass] = useState('');
+    const [scrolled, setScrolled] = useState(false);
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
-            const position = window.pageYOffset;
-            setScrollPosition(position);
-
-            // Add your condition here to determine when to apply the class
-            if (position > 100) {
-                setHeaderScrollClass(classes.header__sticky); // Apply the class from CSS module
-            } else {
-                setHeaderScrollClass('');
-            }
+            setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const navs = [
         { name: 'About', link: '/about' },
         { name: 'My Work', link: '/mywork' },
-
     ];
 
     const toggleMobileNav = () => {
         setIsMobileNavOpen(!isMobileNavOpen);
     };
 
-    const handleMovileMenuClick = () => {
+    const handleMobileMenuClick = () => {
         setIsMobileNavOpen(false);
-    }
-   
+    };
+
     return (
         <>
-            <header className={`${scrollClass} ${classes.header} ${isMobileNavOpen ? classes.headerOpen : ''} fixed w-full z-[9999] transition-all duration-500 ease-in-out top-0 left-0`}>
-                <div className="header__container flex justify-between items-center w-full px-8 max-sm:px-6">
-                    <div className={`${classes.header__logo} transition-all duration-500`}>
-                        <Link href="/">
+            <header
+                className={`fixed w-full z-50 top-0 left-0 transition-all duration-300 ${
+                    scrolled
+                        ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/90 py-3'
+                        : 'bg-white/80 backdrop-blur-md py-4 border-b border-slate-200/60 shadow-2xs'
+                }`}
+            >
+                <div className="container mx-auto px-6 max-w-6xl flex justify-between items-center">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="relative h-10 w-10 shrink-0 group-hover:scale-105 transition-transform">
                             <Image
                                 src={logo}
-                                className="mx-auto w-full h-auto"
+                                className="object-contain brightness-0"
                                 alt="Rowell Mark Blanca"
-                            ></Image>
-                        </Link>
-                    </div>
-                    <div className={`${classes.mobile_menu} flex item-center hidden max-lg:flex`}>
-                        <Link href="/contact">
-                            <IconPhone size="29" className="mr-4"/>
-                        </Link>
-                        <div onClick={toggleMobileNav}
-                            className={`
-                                ${classes.menu_toggle}
-                                ${isMobileNavOpen ? classes.nav_open : ''}
-                            `}>
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                                fill
+                                priority
+                            />
                         </div>
+                        <div className="flex flex-col">
+                            <span className="font-black text-[#0b1a30] text-base tracking-tight leading-none">
+                                Rowell Blanca
+                            </span>
+                            <span className="text-[10px] font-extrabold text-slate-600 uppercase tracking-wider mt-1">
+                                Software Engineer
+                            </span>
+                        </div>
+                    </Link>
+
+                    {/* Mobile Menu Icon */}
+                    <div className="flex items-center gap-3 lg:hidden">
+                        <button
+                            onClick={() => setIsContactModalOpen(true)}
+                            className="p-2 rounded-lg bg-amber-50 text-brand-amber border border-amber-200"
+                        >
+                            <IconPhone size="20" />
+                        </button>
+                        <button
+                            onClick={toggleMobileNav}
+                            className="p-2 rounded-lg text-brand-navy hover:bg-slate-100 transition-colors"
+                            aria-label="Toggle Navigation"
+                        >
+                            <div className="w-5 h-4 flex flex-col justify-between">
+                                <span className={`h-0.5 w-full bg-brand-navy rounded transition-all ${isMobileNavOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                                <span className={`h-0.5 w-full bg-brand-navy rounded transition-all ${isMobileNavOpen ? 'opacity-0' : ''}`} />
+                                <span className={`h-0.5 w-full bg-brand-navy rounded transition-all ${isMobileNavOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+                            </div>
+                        </button>
                     </div>
-                    <div className={`${isMobileNavOpen ? classes.nav_open : ''} ${classes.nav} max-lg:invisible`}>
-                        <ul className="flex items-center max-lg:flex-col">
+
+                    {/* Desktop Nav */}
+                    <nav className={`lg:flex items-center gap-8 ${isMobileNavOpen ? 'flex flex-col absolute top-full left-0 w-full bg-white border-b border-slate-200 p-6 shadow-xl' : 'hidden lg:flex'}`}>
+                        <ul className="flex items-center gap-8 max-lg:flex-col max-lg:w-full">
                             {navs.map((nav, index) => (
-                                <li key={index} className='px-4 max-lg:py-4 max-lg' onClick={handleMovileMenuClick}>
-                                    <Link href={nav.link} className="uppercase transition-all duration-500 hover:text-accent-color">{nav.name}</Link>
+                                <li key={index} onClick={handleMobileMenuClick} className="max-lg:w-full max-lg:text-center">
+                                    <Link
+                                        href={nav.link}
+                                        className="text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-brand-amber transition-colors"
+                                    >
+                                        {nav.name}
+                                    </Link>
                                 </li>
                             ))}
-                            <Link onClick={handleMovileMenuClick} href="/contact" className="
-                            font-semibold text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 rounded-[40px]
-                            ">Say Hello!</Link>
-                            
                         </ul>
-                    </div>
+                        <button
+                            onClick={() => {
+                                handleMobileMenuClick();
+                                setIsContactModalOpen(true);
+                            }}
+                            className="px-6 py-2.5 rounded-full bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 max-lg:w-full max-lg:text-center cursor-pointer"
+                        >
+                            Say Hello!
+                        </button>
+                    </nav>
                 </div>
             </header>
+
+            {/* Popup Contact Modal */}
+            <ContactModal
+                isOpen={isContactModalOpen}
+                onClose={() => setIsContactModalOpen(false)}
+            />
         </>
-    );    
+    );
 }

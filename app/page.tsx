@@ -1,29 +1,30 @@
 "use client";
+
+import { Hero } from "@/components/homepage/hero";
+import { StatsBar } from "@/components/homepage/stats-bar";
+import { ShowCasePortfolios } from "@/components/homepage/showcase-portfolios";
+import MyExpertise from "@/components/homepage/my-expertise";
 import ContactSection from "@/components/homepage/contact-section";
 import { FeaturedProject } from "@/components/homepage/featured-project";
-import { Hero } from "@/components/homepage/hero";
-import { WelcomeLoading } from "@/components/loading-intro/loading-screen";
-import MyExpertise from "@/components/homepage/my-expertise";
 import { MyWork } from "@/components/homepage/my-work";
-import { ShowCasePortfolios } from "@/components/homepage/showcase-portfolios";
-import Image from "next/image";
 import WorkHistory from "@/components/homepage/work-history";
+import { TestimonialsSection } from "@/components/homepage/testimonials";
 import { ContactFormSection } from "@/components/footer/contact-form-section";
+import { WelcomeLoading } from "@/components/loading-intro/loading-screen";
 
-export default function Home() {  
+export default function Home() {
   return (
     <>
       <WelcomeLoading />
       <Hero />
+      <StatsBar />
       <ShowCasePortfolios />
-
       <MyExpertise />
-
-      <ContactSection />
       <FeaturedProject />
-      <MyWork notitle=""/>
+      <MyWork notitle="" />
       <WorkHistory />
-      <ContactFormSection />
+      <TestimonialsSection />
+      <ContactSection />
     </>
   );
 }

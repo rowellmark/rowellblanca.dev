@@ -1,29 +1,27 @@
-import Image from "next/image";
-import BannerImage from "@/assets/images/banner-photo.jpg";
-import classes from "./banner.module.scss";
+import React from "react";
 
-import BannerImageNew from "@/assets/images/banner-photo-new.jpg";
-
-
-interface bannerOption {
+interface BannerOption {
     title: string;
-    subtitle: string;
+    subtitle?: string;
 }
 
-export default function Banner({ title, subtitle }: bannerOption) {
+export default function Banner({ title, subtitle }: BannerOption) {
     return (
-        <>
-            <div className={`${classes.banner} relative`}>
-                <canvas width="1600" height="250" className="block w-full bg-primary-accent"></canvas>
-                <Image src={BannerImageNew} className="block w-full h-full object-cover object-left-center absolute top-0 left-0" alt="Banner" />
-                <div className="absolute z-50 w-full h-full flex items-center justify-center top-0 left-0">
-                    <h2 className="text-white relative z-20 font-bold text-7xl text-center w-full pb-10">
-                        <span className="block text-accent-color-slate font-medium text-lg uppercase">{subtitle ? subtitle : ''}</span>
-                        {title ? title : ''}
-                    </h2>
-                </div>
-             
+        <div className="relative pt-36 pb-20 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-900 border-b border-slate-800 text-white overflow-hidden">
+            {/* Ambient background glow */}
+            <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-violet-500/10 blur-3xl pointer-events-none" />
+
+            <div className="container mx-auto px-6 max-w-6xl text-center relative z-10 space-y-2">
+                {subtitle && (
+                    <span className="block text-brand-amber font-extrabold text-xs uppercase tracking-widest">
+                        {subtitle}
+                    </span>
+                )}
+                <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight">
+                    {title}
+                </h1>
             </div>
-        </>
-    )
+        </div>
+    );
 }

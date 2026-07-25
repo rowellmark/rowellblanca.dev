@@ -2,19 +2,28 @@
   "name": "rowellmark.com",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev",
+    "postinstall": "prisma generate",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node scripts/seed.js",
+    "seed:reset": "node scripts/seed.js --reset"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "@react-three/fiber": "^8.16.1",
     "@tabler/icons-react": "^3.2.0",
     "clsx": "^2.1.0",
     "firebase": "^10.12.0",
     "framer-motion": "^11.0.28",
+    "lucide-react": "^1.26.0",
     "next": "14.2.35",
+    "nodemailer": "^9.0.3",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",
@@ -23,6 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/three": "^0.163.0",
@@ -30,6 +40,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
     "postcss": "^8",
+    "prisma": "^6.19.3",
     "sass": "^1.75.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"

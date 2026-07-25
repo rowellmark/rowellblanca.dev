@@ -1,124 +1,143 @@
-import PrimaryButton from "@/components/buttons/primaryButton";
+import { Metadata } from "next";
 import rowellPic from "@/assets/images/ROWELL-6.jpg";
 import Image from "next/image";
-import facebook from "@/assets/images/facebook.png";
-import instagram from "@/assets/images/instagram.png";
-import linkedin from "@/assets/images/linkedin.png";
-import git from "@/assets/images/git.png";
 import Link from "next/link";
-
-import {
-    IconDownload,
-    IconArrowLeft
-} from "@tabler/icons-react";
+import { IconArrowLeft, IconDownload } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
+import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
+
+export const metadata: Metadata = {
+    title: "About Rowell Mark Blanca",
+    description: "Learn more about Rowell Mark Blanca — Software Engineer with 12+ years experience in React, Next.js, Node.js, PHP, and custom WordPress systems.",
+};
 
 export default function AboutPage() {
-
-
     const socialMedia = [
-        {
-            'title': 'facebook',
-            'icon': facebook,
-            'url': 'https://www.facebook.com/itsmrrowrow',
-        },
-        {
-            'title': 'instagram',
-            'icon': instagram,
-            'url': 'https://www.instagram.com/its.mr.row/',
-        },
-        {
-            'title': 'linkedin',
-            'icon': linkedin,
-            'url': 'https://www.linkedin.com/in/rowell-blanca/',
-        },
-        {
-            'title': 'git',
-            'icon': git,
-            'url': 'https://github.com/rowellmark',
-        }
+        { title: 'GitHub', icon: IconBrandGithub, url: 'https://github.com/rowellmark' },
+        { title: 'LinkedIn', icon: IconBrandLinkedin, url: 'https://www.linkedin.com/in/rowell-blanca/' },
+        { title: 'Facebook', icon: IconBrandFacebook, url: 'https://www.facebook.com/itsmrrowrow' },
+        { title: 'Instagram', icon: IconBrandInstagram, url: 'https://www.instagram.com/its.mr.row/' },
     ];
 
+    const techCategories = [
+        { label: "Frontend", items: "HTML5, CSS3, JavaScript (ES6+), TypeScript, React.js, Next.js, Tailwind CSS, SASS/SCSS" },
+        { label: "Backend & DB", items: "Node.js (Express), PHP (Laravel, WordPress), NeonDB (PostgreSQL), MySQL, Redis, REST & GraphQL APIs" },
+        { label: "DevOps & Tools", items: "Git, Docker, GitHub Actions CI/CD, Figma, Photoshop, Vercel, AWS" },
+        { label: "Automation & AI", items: "n8n, Dify, OpenAI ChatGPT API, Google Gemini API, Automated Workflows" },
+        { label: "Testing & Security", items: "Playwright, Cypress E2E, JWT, OAuth 2.0, Security Hardening" },
+    ];
 
     return (
-        <>
-            <Banner title="About Me" subtitle=""/>
-            <div className="w-full pb-48 pt-6 aboutPage max-sm:px-8">
-                <div className="aboutPage__container container mx-auto">
+        <div className="bg-brand-bg min-h-screen">
+            <Banner title="About Me" subtitle="Biography & Background" />
+
+            <div className="py-12 pb-24">
+                <div className="container mx-auto px-6 max-w-6xl space-y-8">
                     
-                    <div className="back-button flex items-start pb-6 max-lg:px-0">
-                        <Link href="/" className="flex items-center py-2 uppercase font-semibold rounded-mdtext-white text-sm hover:-translate-y-1 transform transition duration-200 hover:shadow-md">
-                            <IconArrowLeft className="mr-3"/> Back
+                    {/* Back link */}
+                    <div className="flex items-start">
+                        <Link
+                            href="/"
+                            className="inline-flex items-center px-4 py-2 uppercase font-extrabold text-xs tracking-wider rounded-xl bg-white border border-slate-200 text-brand-navy hover:border-brand-amber transition-all shadow-xs hover:shadow-sm"
+                        >
+                            <IconArrowLeft className="mr-2 h-4 w-4 text-brand-amber" /> Back to Home
                         </Link>
                     </div>
-                  
-                    <div className="aboutPage__header flex items-center max-lg:flex-col-reverse">
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                         
-                        <div className="aboutPage_info w-full text-base leading-7">
-                            <h2 className="text-7xl font-semibold pb-9 max-lg:text-6xl">
-                                I'm <span className="text-accent-color">Rowell</span> <br />
-                                <span>Software Engineer</span>
-                            </h2>
-                            <ul>
-                                <li>
-                                    <strong className="text-accent-color">Address: </strong>
-                                    <span className="max-sm:text-sm">Ynares 2 Street Calumpang Binangonan Rizal</span>
-                                </li>
-                                <li>
-                                    <strong className="text-accent-color">Email: </strong>
-                                    <span>rowellblanca94@gmail.com</span>
-                                </li>
-                                <li>
-                                    <strong className="text-accent-color">Phone: </strong>
-                                    <span>+639688900418</span>
-                                </li>
-                            </ul>
+                        {/* Left Info Column */}
+                        <div className="lg:col-span-7 space-y-6">
+                            <div>
+                                <span className="text-xs font-bold uppercase tracking-wider text-brand-amber bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60 inline-block mb-3">
+                                    Software Engineer
+                                </span>
+                                <h1 className="text-4xl sm:text-5xl font-black text-brand-navy tracking-tight">
+                                    Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-amber to-amber-600">Rowell</span>
+                                </h1>
+                                <p className="text-base text-brand-slate mt-4 leading-relaxed font-medium">
+                                    Over 12 years of hands-on software development experience partnering with clients across the US, UK, Hong Kong, and Philippines. I build fast, scalable, accessible digital products using modern web standards.
+                                </p>
+                            </div>
 
-                            <h2 className="mt-5 text-xl font-semibold text-accent-color">Key Technologies</h2>
-                            <ul className="mt-2 list-disc ml-4">
-                                <li>Frontend: HTML5, CSS3, JavaScript (ES6+), TypeScript, React.js, Next.js, Tailwind CSS, Vue.js, SASS/SCSS – building responsive and interactive UIs.</li>
-                                <li>Backend: Node.js (Express.js), PHP (Laravel), WordPress – developing RESTful APIs, custom plugins, and server-side logic.</li>
-                                <li>Database: MySQL, PostgreSQL, MongoDB, Redis – schema design, optimization, and data management.</li>
-                                <li>Tools & Platforms: Git (version control), Photoshop & Figma (UI/UX design), Composer (PHP dependency management), Docker, CI/CD (GitHub Actions), Cloud (AWS, Azure, Vercel).</li>
-                                <li>Automation: N8N, Dify – workflow automation and integration.</li>
-                                <li>Testing: Cypress, Playwright – end-to-end and unit testing.</li>
-                                <li>Methodologies: Agile – collaborative and iterative development experience.</li>
-                                <li>Mobile: React Native, Flutter.</li>
-                                <li>Security: OWASP, JWT, OAuth.</li>
-                                <li>Other: API integration (REST, GraphQL), WebSockets, SEO tools, Analytics (Google Analytics, Mixpanel).</li>
-                                <li>AI: ChatGPT, Gemini, Llama – leveraging AI for content generation and automation.</li>
-                            </ul>
+                            {/* Contact Badges */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
+                                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase">
+                                        <Mail className="h-4 w-4 text-brand-amber" /> Email
+                                    </div>
+                                    <p className="text-xs sm:text-sm font-extrabold text-brand-navy">rowellblanca94@gmail.com</p>
+                                </div>
 
-                            <ul className="flex -mx-1 pt-5 pb-7">
-                                {socialMedia.map((social, index) => (
-                                    <li
-                                        key={index}
-                                        className="px-1"
+                                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase">
+                                        <Phone className="h-4 w-4 text-brand-amber" /> Phone / WhatsApp
+                                    </div>
+                                    <p className="text-xs sm:text-sm font-extrabold text-brand-navy">+63 968 890 0418</p>
+                                </div>
+                            </div>
+
+                            {/* Key Technologies */}
+                            <div className="space-y-4 pt-2">
+                                <h2 className="text-xl font-extrabold text-brand-navy">Technical Summary</h2>
+                                <div className="space-y-3">
+                                    {techCategories.map(({ label, items }, idx) => (
+                                        <div key={idx} className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-1">
+                                            <div className="flex items-center gap-2 text-xs font-extrabold text-brand-amber uppercase tracking-wider">
+                                                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                                                {label}
+                                            </div>
+                                            <p className="text-xs text-slate-700 font-medium leading-relaxed">{items}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Social Media */}
+                            <div className="pt-2 flex items-center gap-3">
+                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Find Me:</span>
+                                {socialMedia.map(({ title, icon: Icon, url }, idx) => (
+                                    <a
+                                        key={idx}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title={title}
+                                        className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-brand-amber hover:border-amber-300 transition-all shadow-xs"
                                     >
-                                        <a href={social.url} className="block relative w-7" target="_blank">
-                                            <Image src={social.icon} alt={social.title} priority />
-                                            <span className="hidden">{social.title}</span>
-                                        </a>
-                                    </li>
+                                        <Icon size="18" />
+                                    </a>
                                 ))}
-                            </ul>
-                            <div className="aboutPage__buttons flex pt-4">
-                                <Link href="/contact" className="text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 rounded-3xl">Say Hello!</Link>
-                                <Link href="/rowell-resume.pdf" target="_blank" className="flex items-center ml-3 text-black py-4 px-7 block rounded-md border border-black bg-accent-color text-neutarl-700 text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 rounded-3xl">Download CV <IconDownload className="ml-1"></IconDownload></Link>
                             </div>
                         </div>
 
-                        <div className="aboutPage_image w-[40%] relative shrink-0 max-lg:w-full max-lg:mb-5">
-                            <canvas width="480" height="480" className="block w-full"></canvas>
-                            <Image src={rowellPic} alt="Rowell Mark M Blanca" className="w-full block h-full absolute left-0 top-0 object-cover object-center"/>
+                        {/* Right Photo Column */}
+                        <div className="lg:col-span-5 space-y-6">
+                            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-white p-3">
+                                <Image
+                                    src={rowellPic}
+                                    alt="Rowell Mark Blanca"
+                                    fill
+                                    className="object-cover rounded-2xl"
+                                    sizes="(max-width: 1024px) 100vw, 450px"
+                                />
+                            </div>
+
+                            <a
+                                href="/resume.pdf"
+                                download
+                                className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-brand-navy hover:bg-slate-800 text-white font-extrabold text-sm uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
+                            >
+                                <IconDownload size="18" className="text-brand-amber" />
+                                Download Curriculum Vitae (CV)
+                            </a>
                         </div>
+
                     </div>
-                    <div className="blog-content text-base leading-7 py-7">
-                        <p>As a seasoned Full-stack Engineer with over a decade of experience, I've had the privilege of collaborating with clients across diverse industries and countries. With a solid foundation in WordPress spanning 13 years, I've honed my skills in architecting robust and scalable frontend solutions that prioritize exceptional user experiences. My passion lies in crafting digital experiences that seamlessly blend creativity with functionality. With a meticulous attention to detail and an unwavering commitment to excellence, I endeavor to deliver solutions that not only meet but surpass client expectations.</p>
-                    </div>
+
                 </div>
             </div>
-        </>
-    )
-} 
-
+        </div>
+    );
+}

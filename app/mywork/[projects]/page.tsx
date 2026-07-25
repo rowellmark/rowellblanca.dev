@@ -1,177 +1,206 @@
 "use client";
 
-import Banner from '@/components/banner/banner';
-import { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
-import PrimaryButton from '@/components/buttons/primaryButton';
-import facebook from "@/assets/images/facebook.png";
-import instagram from "@/assets/images/instagram.png";
-import linkedin from "@/assets/images/linkedin.png";
-import git from "@/assets/images/git.png";
 import { useEffect, useState } from 'react';
-import { db } from '@/utils/firebaseconfig';
-import { collection, query, where, getDocs, orderBy} from "firebase/firestore";
-
-
-import {
-    IconArrowLeft
-} from "@tabler/icons-react";
+import { IconArrowLeft } from "@tabler/icons-react";
+import { ExternalLink, Mail } from 'lucide-react';
+import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
+import { ProjectDetailPreview, PortfolioProject } from '@/components/ui/portfolio-card';
+import { ContactModal } from '@/components/ui/contact-modal';
 
 interface ProjectProps {
-    params: any; 
+    params: { projects: string };
 }
 
-interface Project {
-    key: number;
-    url: string;
-    image: string;
-    sitename: string;
-    stacks: string[];
-}
-
-
-interface ProjectDetails {
-    key: number;
-    url: string;
-    image: string;
-    permalink: string;
-    sitename: string;
-    description: string;
-    technologies: string[];
-}
-
+const SOCIAL_LINKS = [
+    { label: 'GitHub',    href: 'https://github.com/rowellmark',              Icon: IconBrandGithub },
+    { label: 'LinkedIn',  href: 'https://www.linkedin.com/in/rowell-blanca/', Icon: IconBrandLinkedin },
+    { label: 'Facebook',  href: 'https://www.facebook.com/itsmrrowrow',       Icon: IconBrandFacebook },
+    { label: 'Instagram', href: 'https://www.instagram.com/its.mr.row/',      Icon: IconBrandInstagram },
+];
 
 export default function Projects({ params }: ProjectProps) {
-    const [project, setProject] = useState<ProjectDetails[]>([]);
+    const [project, setProject] = useState<PortfolioProject | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
     const router = useRouter();
-    
+
     useEffect(() => {
-
-
         const fetchProjects = async () => {
             try {
-                const q = query(collection(db, 'projects'), where('permalink', '==', params.projects));
-                const querySnapshot = await getDocs(q);
-                
-                const projectsData: ProjectDetails[] = [];
-                    querySnapshot.forEach((doc) => {
-                    projectsData.push(doc.data() as ProjectDetails);
-                });
-
-                if (projectsData.length > 0) {
-                    setProject(projectsData);
+                const res = await fetch(`/api/projects?permalink=${params.projects}`);
+                const data = await res.json();
+                if (data.success && data.project) {
+                    setProject(data.project);
+                } else if (data.projects && data.projects.length > 0) {
+                    setProject(data.projects[0]);
                 } else {
-                    router.push('/404'); // Redirect to 404 if no project data is found
+                    router.push('/404');
                 }
             } catch (error) {
-                console.error('Error fetching projects:', error);
-                router.push('/404'); // Redirect to 404 in case of an error
+                console.error('Error fetching project from API:', error);
+                router.push('/404');
+            } finally {
+                setLoading(false);
             }
         };
 
-
         fetchProjects();
-
-
     }, [params.projects, router]);
 
-
-    const socialMedia = [
-        {
-            'title' : 'facebook',
-            'icon': facebook,
-            'url': 'https://www.facebook.com/itsmrrowrow',
-        },
-        {
-            'title': 'instagram',
-            'icon': instagram,
-            'url': 'https://www.instagram.com/its.mr.row/',
-        },
-        {
-            'title': 'linkedin',
-            'icon': linkedin,
-            'url': 'https://www.linkedin.com/in/rowell-blanca/',
-        },
-        {
-            'title': 'git',
-            'icon': git,
-            'url': 'https://github.com/rowellmark',
-        }
-    ];
-
-    return (
-        <>
-            <div className="project py-36">
-                <div className="projectContainer container mx-auto px-8">
-
-                    <div className="back-button flex items-start pb-6 max-lg:px-0">
-                        <Link href="/" className="flex items-center py-2 uppercase font-semibold rounded-mdtext-white text-sm hover:-translate-y-1 transform transition duration-200 hover:shadow-md">
-                            <IconArrowLeft className="mr-3" /> Back
-                        </Link>
-                    </div>
-
-                    <div className="projectHeader">
-                        {project[0] && (
-                            <>
-                                <div className="projectTitle">
-                                    <h1 className="text-7xl font-semibold  max-lg:text-3xl">{project[0]['sitename'] }</h1>
-                            
-                                </div>
-
-
-                                <div className="projectDetails pt-20 flex justify-between max-lg:flex-col">
-
-                                    <div className="projectDescriptionLeft">
-                                        <div className="projectDescription text-lg w-full pr-16">
-                                            
-                                            <p className="leading-6">{project[0]['description']}</p>
-
-                                            <p className='mt-9'>Have an exciting project you need help with?</p>
-                                            <p>Send me an email <a href="mailto:rowellblanca94@gmail.com" className="text-accent-color">rowellblanca94@gmail.com</a> or hit say hello!</p>
-                                            <ul className="flex -mx-1 pt-5 pb-7">
-                                                {socialMedia.map( (social, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="px-1"
-                                                    >
-                                                        <a href={social.url} className="block relative w-7" target="_blank">
-                                                            <Image src={social.icon} alt={social.title} priority />
-                                                            <span className="hidden">{social.title}</span>
-                                                        </a>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <PrimaryButton link="/about" label="Say Hello!" className=" mt-7" />
-                                        </div>
-                                    </div>
-                                    <div className="projectDescriptionRight flex max-lg:flex-col shrink-0 w-1/4">
-                                        <div className="projectClient border-t border-slate-200 px-3 max-lg:py-8 max-lg:mt-10">
-                                            <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Client</h3>
-                                            <p>Personal Project</p>
-                                        </div>
-                                        <div className="projectTechonologies border-t border-slate-200 ml-20 px-3 max-lg:ml-0 max-lg:py-8">
-                                            <h3 className="font-bold text-accent-color pb-4 pt-2 text-lg">Technologies</h3>
-                                            <ul className="list-disc px-4">
-                                                {project[0].technologies.map((technology, index) => (
-                                                    <li key={index} className="py-2">{technology}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="projectImage pt-11">
-                                    <Image src={`/${project[0]['image']}`} alt={project[0]['sitename']} width="1600" height="600" className='w-full h-auto'/>
-                                </div>
-                            </>
-                        )}
-                    </div>
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-brand-bg flex items-center justify-center">
+                <div className="flex gap-1.5">
+                    {[0, 1, 2].map((i) => (
+                        <div
+                            key={i}
+                            className="h-2.5 w-2.5 rounded-full bg-brand-amber animate-bounce"
+                            style={{ animationDelay: `${i * 0.15}s` }}
+                        />
+                    ))}
                 </div>
             </div>
-           
-        </>
-    )
-} 
+        );
+    }
 
+    if (!project) return null;
+
+    return (
+        <div className="min-h-screen bg-[#FAFAF7] text-brand-navy pb-24">
+
+            {/* Gradient hero header */}
+            <div className="relative pt-32 pb-24 bg-gradient-to-br from-slate-900 via-[#0B172A] to-slate-950 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-amber-500/10 blur-[120px] pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-violet-500/10 blur-[80px] pointer-events-none" />
+
+                <div className="relative max-w-6xl mx-auto px-6 space-y-4">
+                    <Link
+                        href="/mywork"
+                        className="inline-flex items-center gap-1.5 text-white/70 hover:text-white text-xs font-bold uppercase tracking-wider transition-all"
+                    >
+                        <IconArrowLeft className="h-4 w-4 text-brand-amber" /> Back to My Work
+                    </Link>
+
+                    <div className="flex flex-wrap items-center gap-3 pt-1">
+                        {project.technologies?.slice(0, 3).map((t) => (
+                            <span key={t} className="text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-500/20 text-brand-amber border border-amber-500/30">
+                                {t}
+                            </span>
+                        ))}
+                    </div>
+
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+                        {project.sitename}
+                    </h1>
+
+                    {project.url && project.url !== '#' && (
+                        <div className="flex items-center gap-2 text-sm text-slate-400 pt-2">
+                            <ExternalLink className="h-4 w-4 text-brand-amber" />
+                            {project.url.startsWith('wp-content') ? (
+                                <span className="font-mono text-amber-400 font-bold">
+                                    Plugin Source: {project.url}
+                                </span>
+                            ) : (
+                                <a
+                                    href={project.url.startsWith('http') ? project.url : `https://${project.url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-mono text-amber-400 hover:underline font-bold"
+                                >
+                                    {project.url}
+                                </a>
+                            )}
+                        </div>
+                    )}
+
+                </div>
+            </div>
+
+            {/* Widescreen Browser Mockup Section (Full Width Showcase) */}
+            <div className="max-w-6xl mx-auto px-6 -mt-14 relative z-20">
+                <ProjectDetailPreview project={project} />
+            </div>
+
+            {/* Content & Metadata Info Grid */}
+            <div className="max-w-6xl mx-auto px-6 pt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                {/* Left Column — Detailed Project Description */}
+                <div className="lg:col-span-8 space-y-6">
+                    {project.description && (
+                        <div className="space-y-4 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-md">
+                            <h2 className="text-2xl font-black text-[#0b1a30]">About This Project</h2>
+                            <p className="text-base text-slate-700 leading-relaxed">{project.description}</p>
+                        </div>
+                    )}
+
+                    {project.technologies && project.technologies.length > 0 && (
+                        <div className="p-6 sm:p-8 rounded-3xl border border-slate-200/80 bg-white shadow-md space-y-4">
+                            <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Technologies Used</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {project.technologies.map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className="text-xs font-extrabold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800 border border-slate-200/80"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Right Column — Direct CTA */}
+                <div className="lg:col-span-4 space-y-6">
+
+                    {/* High Converting Direct CTA Box */}
+                    <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-orange-500/10 border border-amber-300/60 space-y-4 shadow-md">
+                        <h4 className="text-lg font-black text-[#0b1a30]">Have a similar project in mind?</h4>
+                        <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                            Let me help you build a fast, scalable digital solution tailored to your business goals.
+                        </p>
+                        
+                        <a
+                            href="mailto:rowellblanca94@gmail.com"
+                            className="flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-brand-amber transition-colors"
+                        >
+                            <Mail className="h-4 w-4 text-brand-amber" />
+                            rowellblanca94@gmail.com
+                        </a>
+
+                        <div className="flex gap-2 pt-1">
+                            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={label}
+                                    className="h-9 w-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-brand-amber hover:border-amber-300 transition-all shadow-xs"
+                                >
+                                    <Icon size="18" />
+                                </a>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => setIsContactModalOpen(true)}
+                            className="w-full text-center mt-2 px-6 py-3.5 rounded-2xl bg-brand-amber hover:bg-brand-amber-h text-brand-navy text-xs font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer"
+                        >
+                            Get In Touch
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* Contact Modal Popup */}
+            <ContactModal
+                isOpen={isContactModalOpen}
+                onClose={() => setIsContactModalOpen(false)}
+            />
+        </div>
+    );
+}
