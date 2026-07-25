@@ -222,6 +222,7 @@ export default function ProjectsManagerPage() {
           customTech: '',
           featured: true,
           spotlight: false,
+          active: true,
         });
         fetchProjects();
       } else {
@@ -270,6 +271,7 @@ export default function ProjectsManagerPage() {
               customTech: '',
               featured: true,
               spotlight: false,
+              active: true,
             });
             setShowModal(true);
           }}
