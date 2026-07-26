@@ -47,13 +47,12 @@ Return ONLY a single valid JSON object (without any markdown formatting or extra
   "content": "A long-form, beautifully structured HTML blog post (approx 400-600 words) using clean semantic HTML elements (<h2>, <h3>, <p>, <ul>, <li>, <blockquote>, <code>, <pre>). Include sections like Overview, Technical Architecture, Core Features, Key Challenges & Breakthroughs, and Business Impact. Do NOT wrap in <html> or <body> tags."
 }`;
 
-    // Use Gemini 2.0 Flash, 1.5 Flash, 1.5 Pro with fallbacks
+    // Use Gemini 3.6 Flash, Gemini 3.5 Flash, and Gemini Flash Latest
     let geminiResponse;
     const modelUrls = [
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
     ];
 
     let lastError = '';
