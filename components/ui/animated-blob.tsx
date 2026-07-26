@@ -63,7 +63,7 @@ export function AnimatedBlob({
         </defs>
 
         <motion.path
-          d={BLOB_PATHS}
+          d={BLOB_PATHS[0]}
           animate={{
             d: BLOB_PATHS,
             rotate: [0, 90, 180, 270, 360],
