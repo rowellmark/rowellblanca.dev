@@ -758,6 +758,56 @@ export default function ProjectsManagerPage() {
                   </div>
                 </div>
               </div>
+
+              {/* 3. Project Gallery Screenshots (dashboard/portal multi-screen showcase) */}
+              <div className="space-y-2 pt-2 border-t border-slate-200">
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
+                  3. Project Gallery ({form.screenshots.length}) — Dashboard, Login, Settings screens, etc.
+                </span>
+
+                {form.screenshots.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {form.screenshots.map((src, index) => (
+                      <div
+                        key={`${src}-${index}`}
+                        className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group"
+                      >
+                        <Image
+                          src={resolveImgSrc(src)}
+                          alt={`Gallery Screenshot ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveScreenshot(index)}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                          title="Remove screenshot"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
+                    {uploadingScreenshot ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
+                    <span>Add Gallery Screenshot</span>
+                    <input type="file" accept="image/*" onChange={handleScreenshotUpload} disabled={uploadingScreenshot} className="hidden" />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setGalleryTarget('screenshots')}
+                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
+                    title="Choose from uploaded photos"
+                  >
+                    <Images className="w-3.5 h-3.5 text-[#1d63ed]" />
+                  </button>
+                </div>
+              </div>
               </>
               )}
 

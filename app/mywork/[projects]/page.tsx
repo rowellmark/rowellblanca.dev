@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { IconArrowLeft } from "@tabler/icons-react";
 import { ExternalLink, Mail } from 'lucide-react';
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
-import { ProjectDetailPreview, PortfolioProject } from '@/components/ui/portfolio-card';
+import { ProjectDetailPreview, ProjectGallery, PortfolioProject } from '@/components/ui/portfolio-card';
 import { ContactModal } from '@/components/ui/contact-modal';
 
 interface ProjectProps {
@@ -134,6 +134,8 @@ export default function Projects({ params }: ProjectProps) {
                             <p className="text-base text-slate-700 leading-relaxed">{project.description}</p>
                         </div>
                     )}
+
+                    <ProjectGallery project={project} />
 
                     {project.technologies && project.technologies.length > 0 && (
                         <div className="p-6 sm:p-8 rounded-3xl border border-slate-200/80 bg-white shadow-md space-y-4">

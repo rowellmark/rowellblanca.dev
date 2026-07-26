@@ -15,6 +15,7 @@ export interface PortfolioProject {
   mobileImage?: string;
   fullDesktopImage?: string;
   fullMobileImage?: string;
+  screenshots?: string[];
   sitename: string;
   permalink: string;
   technologies: string[];
@@ -849,6 +850,135 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
         </div>
 
       </div>
+    </div>
+  );
+}
+
+// ─── Project Screenshot Gallery (dashboard / portal projects) ────────────────
+
+export function ProjectGallery({ project }: { project: PortfolioProject }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const shots = project.screenshots?.filter(Boolean) || [];
+  if (shots.length === 0) return null;
+
+  const goPrev = () => setActiveSlide((prev) => (prev > 0 ? prev - 1 : shots.length - 1));
+  const goNext = () => setActiveSlide((prev) => (prev < shots.length - 1 ? prev + 1 : 0));
+
+  return (
+    <div className="space-y-4 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-md">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-2xl font-black text-[#0b1a30] flex items-center gap-2">
+          <ImageIcon className="h-5 w-5 text-brand-amber" /> Project Gallery
+        </h2>
+        <span className="text-[11px] font-mono font-bold text-slate-400">
+          {activeSlide + 1} / {shots.length}
+        </span>
+      </div>
+
+      {/* Featured active screenshot */}
+      <div className="relative w-full h-[280px] sm:h-[420px] rounded-2xl overflow-hidden border border-slate-200 bg-slate-950 group/gallery">
+        <Image
+          src={getImageSrc(shots[activeSlide])}
+          alt={`${project.sitename} screenshot ${activeSlide + 1}`}
+          fill
+          className="object-contain cursor-zoom-in"
+          sizes="(max-width: 768px) 100vw, 800px"
+          unoptimized
+          onClick={() => setLightboxOpen(true)}
+        />
+
+        {shots.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={goPrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/60 text-white opacity-0 group-hover/gallery:opacity-100 hover:bg-slate-900/90 transition-all"
+              title="Previous screenshot"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/60 text-white opacity-0 group-hover/gallery:opacity-100 hover:bg-slate-900/90 transition-all"
+              title="Next screenshot"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnail strip */}
+      {shots.length > 1 && (
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+          {shots.map((src, idx) => (
+            <button
+              key={`${src}-${idx}`}
+              type="button"
+              onClick={() => setActiveSlide(idx)}
+              className={`relative h-16 rounded-lg overflow-hidden border transition-all ${
+                activeSlide === idx ? 'border-brand-amber ring-1 ring-brand-amber' : 'border-slate-200 hover:border-slate-300'
+              }`}
+              title={`Screenshot ${idx + 1}`}
+            >
+              <Image
+                src={getImageSrc(src)}
+                alt={`${project.sitename} thumbnail ${idx + 1}`}
+                fill
+                className="object-cover"
+                sizes="120px"
+                unoptimized
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm px-4 py-8"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-5 right-5 h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div className="relative w-full max-w-5xl h-[80vh]" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={getImageSrc(shots[activeSlide])}
+              alt={`${project.sitename} screenshot ${activeSlide + 1}`}
+              fill
+              className="object-contain"
+              unoptimized
+            />
+            {shots.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goNext}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
