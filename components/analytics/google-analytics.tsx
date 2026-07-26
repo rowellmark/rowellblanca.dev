@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/next-script-for-ga */
 'use client';
 
 import Script from 'next/script';
@@ -12,15 +13,13 @@ export function GoogleAnalytics({
   gaId: initialGaId,
   gtmId: initialGtmId,
 }: GoogleAnalyticsProps) {
-  const [activeGaId, setActiveGaId] = useState<string>(
-    initialGaId || process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-XWQVTC4XWZ'
-  );
-  const [activeGtmId, setActiveGtmId] = useState<string>(
-    initialGtmId || process.env.NEXT_PUBLIC_GTM_ID || ''
-  );
-  const [googleVerification, setGoogleVerification] = useState<string>(
-    process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || ''
-  );
+  const defaultGaId = initialGaId || process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-DGBTMRS9FN';
+  const defaultGtmId = initialGtmId || process.env.NEXT_PUBLIC_GTM_ID || '';
+  const defaultVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '';
+
+  const [activeGaId, setActiveGaId] = useState<string>(defaultGaId);
+  const [activeGtmId, setActiveGtmId] = useState<string>(defaultGtmId);
+  const [googleVerification, setGoogleVerification] = useState<string>(defaultVerification);
 
   useEffect(() => {
     // 1. Fetch live DB settings from Admin CRM API
@@ -72,6 +71,9 @@ export function GoogleAnalytics({
     return () => window.removeEventListener('cookie_consent_updated', syncConsent);
   }, []);
 
+  const currentGaId = activeGaId || defaultGaId;
+  const currentGtmId = activeGtmId || defaultGtmId;
+
   return (
     <>
       {/* Search Console Meta Verification */}
@@ -79,50 +81,46 @@ export function GoogleAnalytics({
         <meta name="google-site-verification" content={googleVerification} />
       )}
 
-      {/* 1. Google Consent Mode v2 Default Settings (DENIED until user explicitly accepts) */}
-      <Script id="google-consent-default" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('consent', 'default', {
-            'analytics_storage': 'denied',
-            'ad_storage': 'denied',
-            'wait_for_update': 500
-          });
-        `}
-      </Script>
-
-      {/* 2. Google Analytics GA4 (gtag.js) */}
-      {activeGaId && (
+      {/* Google Analytics GA4 (gtag.js) - Standard Head Script */}
+      {currentGaId && (
         <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${activeGaId}`}
-            strategy="afterInteractive"
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${currentGaId}`}></script>
+          {/* eslint-disable-next-line @next/next/next-script-for-ga */}
+          <script
+            id="google-analytics-init"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('consent', 'default', {
+                  'analytics_storage': 'denied',
+                  'ad_storage': 'denied',
+                  'wait_for_update': 500
+                });
+                gtag('js', new Date());
+                gtag('config', '${currentGaId}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+            }}
           />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${activeGaId}', {
-                page_path: window.location.pathname,
-              });
-            `}
-          </Script>
         </>
       )}
 
-      {/* 3. Google Tag Manager (GTM) */}
-      {activeGtmId && (
-        <Script id="google-tag-manager" strategy="afterInteractive">
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${activeGtmId}');
-          `}
-        </Script>
+      {/* Google Tag Manager (GTM) - Standard Head Script */}
+      {currentGtmId && (
+        <script
+          id="google-gtm-init"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${currentGtmId}');
+            `,
+          }}
+        />
       )}
     </>
   );
