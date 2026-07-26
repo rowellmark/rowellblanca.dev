@@ -43,10 +43,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { gaId, gtmId, googleVerification } = body;
 
+    let cleanVerification = (googleVerification || '').trim();
+    if (cleanVerification.includes('content=')) {
+      const match = cleanVerification.match(/content=["']([^"']+)["']/);
+      if (match && match[1]) cleanVerification = match[1];
+    }
+
     const updates = [
-      { key: 'ga_id', value: gaId || '' },
-      { key: 'gtm_id', value: gtmId || '' },
-      { key: 'google_verification', value: googleVerification || '' },
+      { key: 'ga_id', value: (gaId || '').trim() },
+      { key: 'gtm_id', value: (gtmId || '').trim() },
+      { key: 'google_verification', value: cleanVerification },
     ];
 
     try {

@@ -105,10 +105,37 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+import { prisma } from "@/lib/prisma";
+
+async function getGoogleVerificationCode(): Promise<string> {
+  let code = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '';
+  try {
+    const settings = await (prisma as any).setting.findMany();
+    if (Array.isArray(settings)) {
+      const map = new Map(settings.map((s: { key: string; value: string }) => [s.key, s.value]));
+      if (map.get('google_verification')) {
+        code = map.get('google_verification')!;
+      }
+    }
+  } catch {}
+
+  // Clean token if full HTML meta tag was pasted
+  if (code.includes('content=')) {
+    const match = code.match(/content=["']([^"']+)["']/);
+    if (match && match[1]) code = match[1];
+  }
+  return code.trim();
+}
+
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const googleVerificationCode = await getGoogleVerificationCode();
+
   return (
     <html lang="en">
       <head>
+        {googleVerificationCode && (
+          <meta name="google-site-verification" content={googleVerificationCode} />
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
