@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ShieldCheck, Cookie, Check, X, SlidersHorizontal, Lock, RotateCcw } from 'lucide-react';
 
 export function CookieBanner() {
+  const pathname = usePathname();
   const [showBanner, setShowBanner] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   const [currentConsentStatus, setCurrentConsentStatus] = useState<string>('pending');
@@ -115,6 +117,11 @@ export function CookieBanner() {
     setShowPreferences(false);
     window.dispatchEvent(new Event('cookie_consent_updated'));
   };
+
+  // Hide cookie banner & floating button on admin and login pages
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
+    return null;
+  }
 
   if (!showBanner) {
     return (

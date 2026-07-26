@@ -117,7 +117,7 @@ export default function DashboardHome() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 font-sans">
-      
+
       {/* ── NOTIFICATION ALERT BANNER ───────────────────────────────────────── */}
       {totalNotifications > 0 ? (
         <div className="bg-gradient-to-r from-blue-900 via-[#0b1a30] to-indigo-950 text-white rounded-2xl p-5 border border-blue-800/80 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -177,10 +177,10 @@ export default function DashboardHome() {
         </div>
       )}
 
-      
+
       {/* ── TOP STATS GRID (Views, Projects, Leads, Messages) ────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         {/* Stat 1: Site Stats / Views */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs hover:border-[#1d63ed] transition-all group">
           <div className="flex items-center justify-between">
@@ -246,9 +246,9 @@ export default function DashboardHome() {
         <h2 className="text-[11px] font-extrabold tracking-wider uppercase text-slate-400">
           CORE PORTAL MODULES
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          
+
           <Link
             href="/admin/projects"
             className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between hover:border-[#1d63ed] hover:shadow-lg transition-all group"
@@ -343,7 +343,7 @@ export default function DashboardHome() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
+
           {/* Card 1: Google Analytics (GA4) & GTM Status */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
             <div className="flex items-start justify-between">
@@ -510,9 +510,9 @@ export default function DashboardHome() {
 
       {/* ── GTM & SEO CONFIGURATION MODAL ────────────────────────────────────── */}
       {isSettingsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150 !mt-0">
           <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative">
-            
+
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-slate-900 text-amber-400">
@@ -540,7 +540,7 @@ export default function DashboardHome() {
             )}
 
             <form onSubmit={handleSaveSettings} className="space-y-4">
-              
+
               {/* GA4 ID */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
