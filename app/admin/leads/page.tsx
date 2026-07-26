@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Users, Trash2, FileText } from 'lucide-react';
+import { Users, Trash2, FileText, ShieldCheck } from 'lucide-react';
 
 interface LeadNote {
   id: number;
@@ -208,9 +208,14 @@ export default function LeadsPage() {
             </button>
 
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#1d63ed] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
-                {selectedLead.status}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#1d63ed] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+                  {selectedLead.status}
+                </span>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 flex items-center gap-1">
+                  <ShieldCheck className="h-3 w-3 text-emerald-600" /> GDPR Verified
+                </span>
+              </div>
               <h2 className="text-xl font-black text-[#0b1a30] mt-2">{selectedLead.contactName}</h2>
               <p className="text-xs text-slate-500 font-mono">{selectedLead.email}</p>
             </div>

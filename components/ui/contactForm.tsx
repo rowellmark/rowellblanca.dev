@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { Send, Loader2 } from "lucide-react";
+import { trackContactForm } from "@/lib/analytics";
 
 const Contact: React.FC = () => {
     const router = useRouter();
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [gdprConsent, setGdprConsent] = useState(false);
     const web3AccessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +32,7 @@ const Contact: React.FC = () => {
             newErrors.email = "Valid email address is required";
         }
         if (!message?.trim()) newErrors.message = "Message is required";
+        if (!gdprConsent) newErrors.gdpr = "Consent to the Privacy Policy is required";
 
         if (honeypot) {
             console.log("Spam submission blocked");
@@ -48,11 +51,18 @@ const Contact: React.FC = () => {
             const response = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, message }),
+                body: JSON.stringify({
+                    name,
+                    email,
+                    message,
+                    gdprConsent: true,
+                    gdprTimestamp: new Date().toISOString(),
+                }),
             });
             const data = await response.json().catch(() => null);
 
             if (response.ok && data?.success) {
+                trackContactForm("api_contact");
                 router.push("/thank-you");
             } else {
                 // Fallback to Web3Forms only when a public access key exists.
@@ -72,6 +82,7 @@ const Contact: React.FC = () => {
                     }),
                 });
                 if (web3Res.ok) {
+                    trackContactForm("web3forms_fallback");
                     router.push("/thank-you");
                 } else {
                     setErrors({ general: data?.error || "Unable to send message right now. Please email directly." });
@@ -133,6 +144,27 @@ const Contact: React.FC = () => {
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-amber/50 focus:border-brand-amber transition-all"
                 />
                 {errors.message && <span className="text-xs text-rose-600 font-semibold mt-1 block">{errors.message}</span>}
+            </div>
+
+            {/* GDPR Consent Checkbox */}
+            <div className="pt-1 space-y-1">
+                <div className="flex items-start gap-2.5">
+                    <input
+                        type="checkbox"
+                        id="gdprConsent"
+                        name="gdprConsent"
+                        checked={gdprConsent}
+                        onChange={(e) => setGdprConsent(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-brand-amber focus:ring-brand-amber cursor-pointer"
+                    />
+                    <label htmlFor="gdprConsent" className="text-xs text-slate-600 leading-snug cursor-pointer">
+                        I consent to the processing of my personal data in accordance with the{' '}
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-brand-navy underline font-extrabold hover:text-brand-amber">
+                            Privacy Policy
+                        </a>.
+                    </label>
+                </div>
+                {errors.gdpr && <span className="text-xs text-rose-600 font-semibold block">{errors.gdpr}</span>}
             </div>
 
             {/* Honeypot field */}

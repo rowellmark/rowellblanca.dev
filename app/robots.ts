@@ -5,8 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/'],
+      disallow: ['/api/', '/admin/', '/login/'],
     },
     sitemap: 'https://www.rowellblanca.dev/sitemap.xml',
   };
 }
+

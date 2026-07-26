@@ -37,6 +37,7 @@ export default function Footer() {
                     <Link href="/about" className="hover:text-brand-amber transition-colors">About</Link>
                     <Link href="/mywork" className="hover:text-brand-amber transition-colors">My Work</Link>
                     <Link href="/contact" className="hover:text-brand-amber transition-colors">Contact</Link>
+                    <Link href="/privacy" className="hover:text-brand-amber transition-colors">Privacy</Link>
                 </div>
 
                 {/* Social & copyright */}

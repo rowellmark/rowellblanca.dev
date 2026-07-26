@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import rowellPic from "@/assets/images/ROWELL-6.jpg";
 import Image from "next/image";
 import Link from "next/link";
-import { IconArrowLeft, IconDownload } from "@tabler/icons-react";
-import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
+import { CVDownloadButton } from "@/components/ui/cv-download-button";
+import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
 import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
 
@@ -124,14 +124,7 @@ export default function AboutPage() {
                                 />
                             </div>
 
-                            <a
-                                href="/resume.pdf"
-                                download
-                                className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-brand-navy hover:bg-slate-800 text-white font-extrabold text-sm uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
-                            >
-                                <IconDownload size="18" className="text-brand-amber" />
-                                Download Curriculum Vitae (CV)
-                            </a>
+                            <CVDownloadButton />
                         </div>
 
                     </div>

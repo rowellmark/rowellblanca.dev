@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Star, CheckCircle2, Send, Loader2, MessageSquareQuote, Building2, User, ArrowLeft, Sparkles } from 'lucide-react';
+import { trackReviewSubmission } from '@/lib/analytics';
 
 export default function SubmitReviewPage() {
   const [form, setForm] = useState({
@@ -38,6 +39,7 @@ export default function SubmitReviewPage() {
       const data = await res.json();
 
       if (data.success) {
+        trackReviewSubmission(form.rating);
         setSubmitted(true);
       } else {
         setErrorMsg(data.message || 'Failed to submit review. Please try again.');
