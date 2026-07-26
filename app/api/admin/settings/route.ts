@@ -7,6 +7,9 @@ export async function GET() {
     let gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-XWQVTC4XWZ';
     let gtmId = process.env.NEXT_PUBLIC_GTM_ID || '';
     let googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '';
+    let metaTitle = '';
+    let metaDescription = '';
+    let ogImage = '';
 
     try {
       // Check database settings table if available
@@ -16,6 +19,9 @@ export async function GET() {
         if (settingsMap.get('ga_id')) gaId = settingsMap.get('ga_id')!;
         if (settingsMap.get('gtm_id')) gtmId = settingsMap.get('gtm_id')!;
         if (settingsMap.get('google_verification')) googleVerification = settingsMap.get('google_verification')!;
+        if (settingsMap.get('meta_title')) metaTitle = settingsMap.get('meta_title')!;
+        if (settingsMap.get('meta_description')) metaDescription = settingsMap.get('meta_description')!;
+        if (settingsMap.get('og_image')) ogImage = settingsMap.get('og_image')!;
       }
     } catch {
       // Fallback to env variables if Setting table is not yet pushed
@@ -27,6 +33,9 @@ export async function GET() {
         gaId,
         gtmId,
         googleVerification,
+        metaTitle,
+        metaDescription,
+        ogImage,
       },
     });
   } catch (error: any) {
@@ -41,7 +50,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { gaId, gtmId, googleVerification } = body;
+    const { gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage } = body;
 
     let cleanVerification = (googleVerification || '').trim();
     if (cleanVerification.includes('content=')) {
@@ -53,6 +62,9 @@ export async function POST(req: Request) {
       { key: 'ga_id', value: (gaId || '').trim() },
       { key: 'gtm_id', value: (gtmId || '').trim() },
       { key: 'google_verification', value: cleanVerification },
+      { key: 'meta_title', value: (metaTitle || '').trim() },
+      { key: 'meta_description', value: (metaDescription || '').trim() },
+      { key: 'og_image', value: (ogImage || '').trim() },
     ];
 
     try {
@@ -70,7 +82,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: 'SEO & Analytics settings updated successfully',
-      settings: { gaId, gtmId, googleVerification },
+      settings: { gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage },
     });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

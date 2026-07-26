@@ -25,7 +25,11 @@ import {
   Save,
   Check,
   Loader2,
+  Upload,
+  Image as ImageIcon,
 } from 'lucide-react';
+import Image from 'next/image';
+import { resolveValidImageSrc } from '@/lib/image-utils';
 
 export default function DashboardHome() {
   const [projectsCount, setProjectsCount] = useState(0);
@@ -38,6 +42,10 @@ export default function DashboardHome() {
   const [gaId, setGaId] = useState('G-XWQVTC4XWZ');
   const [gtmId, setGtmId] = useState('');
   const [googleVerification, setGoogleVerification] = useState('');
+  const [metaTitle, setMetaTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
+  const [ogImage, setOgImage] = useState('');
+  const [uploadingOgImage, setUploadingOgImage] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsSuccess, setSettingsSuccess] = useState('');
 
@@ -80,6 +88,9 @@ export default function DashboardHome() {
         if (settingsData.settings.gaId) setGaId(settingsData.settings.gaId);
         if (settingsData.settings.gtmId) setGtmId(settingsData.settings.gtmId);
         if (settingsData.settings.googleVerification) setGoogleVerification(settingsData.settings.googleVerification);
+        if (settingsData.settings.metaTitle) setMetaTitle(settingsData.settings.metaTitle);
+        if (settingsData.settings.metaDescription) setMetaDescription(settingsData.settings.metaDescription);
+        if (settingsData.settings.ogImage) setOgImage(settingsData.settings.ogImage);
       }
     } catch (e) {
       console.error('Error fetching dashboard stats:', e);
@@ -94,7 +105,7 @@ export default function DashboardHome() {
       const res = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gaId, gtmId, googleVerification }),
+        body: JSON.stringify({ gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage }),
       });
       const data = await res.json();
       if (data.success) {
@@ -108,6 +119,30 @@ export default function DashboardHome() {
       console.error('Error saving settings:', err);
     } finally {
       setSavingSettings(false);
+    }
+  };
+
+  const handleOgImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingOgImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setOgImage(data.url);
+      } else {
+        alert(data.message || 'Image upload failed');
+      }
+    } catch (err) {
+      alert('Error uploading file');
+    } finally {
+      setUploadingOgImage(false);
+      e.target.value = '';
     }
   };
 
@@ -519,8 +554,8 @@ export default function DashboardHome() {
                   <Settings className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-[#0b1a30]">GTM & SEO Settings</h3>
-                  <p className="text-xs text-slate-500 font-medium">Manage Google Tag Manager & Search Console keys</p>
+                  <h3 className="text-lg font-black text-[#0b1a30]">Site Meta & SEO Settings</h3>
+                  <p className="text-xs text-slate-500 font-medium">Manage meta title/description, OG image, GTM & Search Console keys</p>
                 </div>
               </div>
               <button
@@ -540,6 +575,70 @@ export default function DashboardHome() {
             )}
 
             <form onSubmit={handleSaveSettings} className="space-y-4">
+
+              {/* Meta Title */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Meta Title
+                </label>
+                <input
+                  type="text"
+                  value={metaTitle}
+                  onChange={(e) => setMetaTitle(e.target.value)}
+                  placeholder="Full-Stack Software Engineer | Rowell Mark Blanca"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all"
+                />
+                <p className="text-[11px] text-slate-400">Overrides the default site title tag. Leave blank to use default.</p>
+              </div>
+
+              {/* Meta Description */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Meta Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={metaDescription}
+                  onChange={(e) => setMetaDescription(e.target.value)}
+                  placeholder="Short description shown in search results and social previews"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all"
+                />
+                <p className="text-[11px] text-slate-400">Overrides the default meta description. Leave blank to use default.</p>
+              </div>
+
+              {/* OG / Social Share Image */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <ImageIcon className="w-3.5 h-3.5 text-[#1d63ed]" /> Open Graph / Social Share Image
+                </label>
+
+                {ogImage && (
+                  <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
+                    <Image
+                      src={resolveValidImageSrc(ogImage)}
+                      alt="OG Image Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setOgImage('')}
+                      className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
+                      title="Remove image"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                <label className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold text-xs">
+                  {uploadingOgImage ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
+                  <span>{ogImage ? 'Replace Image' : 'Upload Image'}</span>
+                  <input type="file" accept="image/*" onChange={handleOgImageUpload} disabled={uploadingOgImage} className="hidden" />
+                </label>
+                <p className="text-[11px] text-slate-400">Shown when the site is shared on social media (recommended 1200×630).</p>
+              </div>
 
               {/* GA4 ID */}
               <div className="space-y-1.5">

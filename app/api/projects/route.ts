@@ -158,6 +158,7 @@ export async function GET(request: Request) {
     const permalink = searchParams.get('permalink');
     const category = searchParams.get('category');
     const featuredOnly = searchParams.get('featured') === 'true';
+    const includeInactive = searchParams.get('includeInactive') === 'true' && isAdminAuthenticated();
 
     let dbProjects: any[] = [];
     try {
@@ -166,7 +167,7 @@ export async function GET(request: Request) {
           where: { permalink },
         });
         if (singleProject) {
-          if (!isAdminAuthenticated() && (singleProject as any).active === false) {
+          if (!includeInactive && (singleProject as any).active === false) {
             return NextResponse.json({ success: false, message: 'Project not found' }, { status: 404 });
           }
           return NextResponse.json({ success: true, project: singleProject, projects: [singleProject] });
@@ -174,7 +175,7 @@ export async function GET(request: Request) {
       } else {
         const whereClause: any = {};
         if (featuredOnly) whereClause.featured = true;
-        if (!isAdminAuthenticated()) whereClause.active = true;
+        if (!includeInactive) whereClause.active = true;
 
         dbProjects = await prisma.project.findMany({
           where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
@@ -187,7 +188,7 @@ export async function GET(request: Request) {
 
     let projectsToReturn = dbProjects.length > 0 ? dbProjects : FALLBACK_PROJECTS;
 
-    if (!isAdminAuthenticated()) {
+    if (!includeInactive) {
       projectsToReturn = projectsToReturn.filter((p: any) => p.active !== false);
     }
 

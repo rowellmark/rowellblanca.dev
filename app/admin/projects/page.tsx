@@ -79,7 +79,7 @@ export default function ProjectsManagerPage() {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch('/api/projects');
+      const res = await fetch('/api/projects?includeInactive=true');
       const data = await res.json();
       if (data.success && Array.isArray(data.projects)) {
         setProjects(data.projects);

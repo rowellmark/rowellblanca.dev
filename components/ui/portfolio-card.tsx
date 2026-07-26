@@ -208,7 +208,7 @@ function ScreenshotPreview({
     return (
       <div className={`relative ${height} overflow-hidden bg-[#111]`}>
         <Image
-          src={getImageSrc(project.fullDesktopImage || project.image)}
+          src={getImageSrc(project.image || project.fullDesktopImage)}
           alt={project.sitename}
           fill
           className="object-cover object-left-top"
@@ -220,7 +220,7 @@ function ScreenshotPreview({
   }
 
   // Phone frame
-  const mobileSrc = getImageSrc(project.fullMobileImage || project.mobileImage || project.image);
+  const mobileSrc = getImageSrc(project.mobileImage || project.fullMobileImage || project.image);
 
 
   return (
