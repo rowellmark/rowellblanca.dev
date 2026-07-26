@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import "./globals.css";
-import Footer from "@/components/footer/footer";
-import Header from "@/components/header/header";
 import LayoutShell from "@/components/layout/layout-shell";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { CookieBanner } from "@/components/ui/cookie-banner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rowellblanca.dev"),
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     "WordPress Architect",
     "Frontend Engineer",
     "Node.js Developer",
+    "Full-Stack Engineer",
   ],
   authors: [{ name: "Rowell Mark Blanca", url: "https://www.rowellblanca.dev" }],
   creator: "Rowell Mark Blanca",
@@ -55,30 +56,48 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.rowellblanca.dev",
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Rowell Mark Blanca",
-  url: "https://www.rowellblanca.dev",
-  jobTitle: "Creative Software Engineer",
-  sameAs: [
-    "https://github.com/rowellmark",
-    "https://www.linkedin.com/in/rowell-blanca/",
-    "https://www.facebook.com/itsmrrowrow",
-    "https://www.instagram.com/its.mr.row/",
-  ],
-  knowsAbout: [
-    "Software Engineering",
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Node.js",
-    "PHP",
-    "WordPress",
-    "Tailwind CSS",
-    "AI Integrations",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://www.rowellblanca.dev/#person",
+      name: "Rowell Mark Blanca",
+      url: "https://www.rowellblanca.dev",
+      jobTitle: "Creative Software Engineer",
+      sameAs: [
+        "https://github.com/rowellmark",
+        "https://www.linkedin.com/in/rowell-blanca/",
+        "https://www.facebook.com/itsmrrowrow",
+        "https://www.instagram.com/its.mr.row/",
+      ],
+      knowsAbout: [
+        "Software Engineering",
+        "React",
+        "Next.js",
+        "TypeScript",
+        "Node.js",
+        "PHP",
+        "WordPress",
+        "Tailwind CSS",
+        "AI Integrations",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.rowellblanca.dev/#website",
+      url: "https://www.rowellblanca.dev",
+      name: "Rowell Mark Blanca Portfolio",
+      description: "Portfolio of Rowell Mark Blanca — Creative Software Engineer specializing in React, Next.js, & WordPress.",
+      publisher: {
+        "@id": "https://www.rowellblanca.dev/#person",
+      },
+    },
   ],
 };
 
@@ -94,11 +113,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <GoogleAnalytics />
       </head>
       <body className="bg-brand-bg text-brand-navy antialiased">
         <LayoutShell>{children}</LayoutShell>
+        <CookieBanner />
       </body>
     </html>
   );
 }
+
 

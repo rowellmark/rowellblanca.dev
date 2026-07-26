@@ -1,7 +1,16 @@
-import { ContactFormSection } from "@/components/footer/contact-form-section";
+import { Metadata } from "next";
 import Link from "next/link";
 
-export default function ContactUs() {
+export const metadata: Metadata = {
+    title: "Thank You | Rowell Mark Blanca",
+    description: "Thank you for reaching out. I look forward to connecting with you soon.",
+    robots: {
+        index: false,
+        follow: true,
+    },
+};
+
+export default function ThankYouPage() {
     return (
         <>
             <div className="thankYou__page h-[80vh] flex justify-center items-center flex-col text-center">
@@ -12,6 +21,7 @@ export default function ContactUs() {
 
             </div>
         </>
-    )
-} 
+    );
+}
+ 
 

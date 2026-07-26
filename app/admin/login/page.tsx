@@ -42,13 +42,13 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-[#0b1a30] text-white flex flex-col justify-center items-center px-6 py-16 relative overflow-hidden font-sans">
-      
+
       {/* Ambient background mesh glow */}
       <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/3 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md bg-slate-900/90 backdrop-blur-xl border border-slate-800 p-8 sm:p-10 rounded-3xl shadow-2xl space-y-8 relative z-10">
-        
+
         {/* Just Logo Header */}
         <div className="flex justify-center pt-2">
           <div className="relative h-14 w-14">
@@ -78,7 +78,7 @@ export default function AdminLogin() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@rowellblanca.dev"
+                placeholder="Email Address"
                 required
                 className="w-full pl-10 pr-4 py-3.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 text-sm font-medium focus:outline-none focus:border-[#1d63ed] transition-all"
               />

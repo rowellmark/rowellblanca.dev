@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
             serviceInterest: service || subject || 'General Inquiry',
             budget: budget || null,
             enquiryDetails: message,
+            sourceUrl: 'Web Contact Form (GDPR Verified)',
             status: 'NEW',
           },
         });

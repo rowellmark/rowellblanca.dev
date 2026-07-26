@@ -230,6 +230,24 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
                     />
                   </div>
 
+                  {/* GDPR Consent Checkbox */}
+                  <div className="pt-1">
+                    <div className="flex items-start gap-2.5">
+                      <input
+                        type="checkbox"
+                        id="modalGdprConsent"
+                        required
+                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer"
+                      />
+                      <label htmlFor="modalGdprConsent" className="text-[11px] text-slate-600 leading-snug cursor-pointer">
+                        I consent to the processing of my personal data according to the{' '}
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#1d63ed] underline font-bold hover:text-blue-700">
+                          Privacy Policy
+                        </a>.
+                      </label>
+                    </div>
+                  </div>
+
                   <div className="pt-2">
                     <button
                       type="submit"

@@ -15,6 +15,16 @@ import {
   Plus,
   Bell,
   Sparkles,
+  Globe,
+  BarChart3,
+  ExternalLink,
+  FileText,
+  Tag,
+  Settings,
+  X,
+  Save,
+  Check,
+  Loader2,
 } from 'lucide-react';
 
 export default function DashboardHome() {
@@ -23,17 +33,26 @@ export default function DashboardHome() {
   const [testimonialsCount, setTestimonialsCount] = useState(0);
   const [messages, setMessages] = useState<any[]>([]);
 
+  // SEO & GTM Settings State
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [gaId, setGaId] = useState('G-XWQVTC4XWZ');
+  const [gtmId, setGtmId] = useState('');
+  const [googleVerification, setGoogleVerification] = useState('');
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsSuccess, setSettingsSuccess] = useState('');
+
   useEffect(() => {
     fetchDashboardStats();
   }, []);
 
   const fetchDashboardStats = async () => {
     try {
-      const [projRes, leadRes, testRes, msgRes] = await Promise.all([
+      const [projRes, leadRes, testRes, msgRes, settingsRes] = await Promise.all([
         fetch('/api/projects'),
         fetch('/api/crm/leads'),
         fetch('/api/testimonials'),
         fetch('/api/crm/messages'),
+        fetch('/api/admin/settings'),
       ]);
 
       const projData = await projRes.json();
@@ -55,8 +74,40 @@ export default function DashboardHome() {
       if (msgData.success && Array.isArray(msgData.messages)) {
         setMessages(msgData.messages);
       }
+
+      const settingsData = await settingsRes.json();
+      if (settingsData.success && settingsData.settings) {
+        if (settingsData.settings.gaId) setGaId(settingsData.settings.gaId);
+        if (settingsData.settings.gtmId) setGtmId(settingsData.settings.gtmId);
+        if (settingsData.settings.googleVerification) setGoogleVerification(settingsData.settings.googleVerification);
+      }
     } catch (e) {
       console.error('Error fetching dashboard stats:', e);
+    }
+  };
+
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingSettings(true);
+    setSettingsSuccess('');
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gaId, gtmId, googleVerification }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSettingsSuccess('GTM & SEO Settings updated successfully!');
+        setTimeout(() => {
+          setIsSettingsModalOpen(false);
+          setSettingsSuccess('');
+        }, 1500);
+      }
+    } catch (err) {
+      console.error('Error saving settings:', err);
+    } finally {
+      setSavingSettings(false);
     }
   };
 
@@ -285,6 +336,119 @@ export default function DashboardHome() {
         </div>
       </section>
 
+      {/* ── SEO, GOOGLE ANALYTICS (GTM) & SITEMAP CONTROL PANEL ───────────── */}
+      <section className="space-y-4">
+        <h2 className="text-[11px] font-extrabold tracking-wider uppercase text-slate-400">
+          SEO, ANALYTICS & INDEXING STATUS
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          {/* Card 1: Google Analytics (GA4) & GTM Status */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-emerald-600" />
+                  <h3 className="font-extrabold text-sm text-[#0b1a30]">Google Analytics & GTM</h3>
+                </div>
+                <p className="text-xs text-slate-500">GA4 gtag.js & Tag Manager event tracking scripts.</p>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Active
+              </span>
+            </div>
+
+            <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 font-medium">GA4 ID:</span>
+                <span className="font-mono font-extrabold text-[#0b1a30]">
+                  {gaId || 'G-XWQVTC4XWZ'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 font-medium">GTM ID:</span>
+                <span className="font-mono font-extrabold text-slate-600">
+                  {gtmId || 'Not Set'}
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsSettingsModalOpen(true)}
+                className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition-all shadow-xs"
+              >
+                <Settings className="w-3.5 h-3.5 text-amber-400" />
+                <span>Configure GTM & SEO Keys</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2: Live XML Sitemap */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-blue-600" />
+                  <h3 className="font-extrabold text-sm text-[#0b1a30]">XML Sitemap</h3>
+                </div>
+                <p className="text-xs text-slate-500">Dynamic sitemap for Google & Bing web crawlers.</p>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-50 text-blue-700 border border-blue-200">
+                Dynamic
+              </span>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-xs text-slate-500 font-medium">
+                Indexes <strong className="text-[#0b1a30] font-extrabold">{5 + projectsCount}</strong> pages
+              </span>
+              <a
+                href="/sitemap.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-extrabold transition-all border border-blue-200"
+              >
+                <span>View sitemap.xml</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+          {/* Card 3: Robots.txt & Crawler Directives */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-amber-600" />
+                  <h3 className="font-extrabold text-sm text-[#0b1a30]">Robots.txt Rules</h3>
+                </div>
+                <p className="text-xs text-slate-500">Blocks /admin & /api while allowing public pages.</p>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-50 text-amber-700 border border-amber-200">
+                Configured
+              </span>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-xs text-slate-500 font-medium">Search Engine Crawler Rules</span>
+              <a
+                href="/robots.txt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-extrabold transition-all border border-amber-200"
+              >
+                <span>View robots.txt</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* ── RECENT CRM LEADS OVERVIEW ───────────────────────────────────────── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
@@ -344,6 +508,118 @@ export default function DashboardHome() {
         </div>
       </section>
 
+      {/* ── GTM & SEO CONFIGURATION MODAL ────────────────────────────────────── */}
+      {isSettingsModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative">
+            
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-slate-900 text-amber-400">
+                  <Settings className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-[#0b1a30]">GTM & SEO Settings</h3>
+                  <p className="text-xs text-slate-500 font-medium">Manage Google Tag Manager & Search Console keys</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSettingsModalOpen(false)}
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {settingsSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+                <Check className="w-4 h-4 text-emerald-600" />
+                <span>{settingsSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveSettings} className="space-y-4">
+              
+              {/* GA4 ID */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Google Analytics GA4 Measurement ID
+                </label>
+                <input
+                  type="text"
+                  value={gaId}
+                  onChange={(e) => setGaId(e.target.value)}
+                  placeholder="G-XWQVTC4XWZ"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-mono text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all"
+                />
+                <p className="text-[11px] text-slate-400">Your Google Analytics 4 ID (e.g. G-XXXXXXXXXX)</p>
+              </div>
+
+              {/* GTM ID */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Google Tag Manager Container ID (GTM)
+                </label>
+                <input
+                  type="text"
+                  value={gtmId}
+                  onChange={(e) => setGtmId(e.target.value)}
+                  placeholder="GTM-N89XYZ"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-mono text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all"
+                />
+                <p className="text-[11px] text-slate-400">Your Google Tag Manager Container ID (e.g. GTM-XXXXXXX)</p>
+              </div>
+
+              {/* Search Console Meta Verification */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Google Search Console Meta Verification String
+                </label>
+                <input
+                  type="text"
+                  value={googleVerification}
+                  onChange={(e) => setGoogleVerification(e.target.value)}
+                  placeholder="verification_code_string_from_google"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-mono text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all"
+                />
+                <p className="text-[11px] text-slate-400">Content string for google-site-verification meta tag</p>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsSettingsModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-extrabold hover:bg-slate-50 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingSettings}
+                  className="px-5 py-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+                >
+                  {savingSettings ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      <span>Save Settings</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
+
