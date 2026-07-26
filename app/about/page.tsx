@@ -6,6 +6,7 @@ import { CVDownloadButton } from "@/components/ui/cv-download-button";
 import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
 import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
+import { FallingText } from "@/components/ui/falling-text";
 
 export const metadata: Metadata = {
     title: "About Rowell Mark Blanca",
@@ -81,7 +82,11 @@ export default function AboutPage() {
                             {/* Key Technologies */}
                             <div className="space-y-4 pt-2">
                                 <h2 className="text-xl font-extrabold text-brand-navy">Technical Summary</h2>
-                                <div className="space-y-3">
+
+                                {/* Interactive Falling Text Physics Sandbox */}
+                                <FallingText containerHeight={260} />
+
+                                <div className="space-y-3 pt-2">
                                     {techCategories.map(({ label, items }, idx) => (
                                         <div key={idx} className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-1">
                                             <div className="flex items-center gap-2 text-xs font-extrabold text-brand-amber uppercase tracking-wider">

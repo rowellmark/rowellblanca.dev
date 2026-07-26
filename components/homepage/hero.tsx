@@ -7,6 +7,7 @@ import { ArrowRight, Sparkles, Code, CheckCircle, ShieldCheck, Award, Zap } from
 import { motion, AnimatePresence } from "framer-motion";
 import rowellbanner from '@/assets/images/rowellbanner.png';
 import { ContactModal } from "@/components/ui/contact-modal";
+import { FallingText } from "@/components/ui/falling-text";
 
 const ROTATING_PREFIXES = [
     "Creative",
@@ -28,6 +29,7 @@ const TECH_PILLS = [
 export function Hero() {
     const [titleIndex, setTitleIndex] = useState(0);
     const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+    const [showFallingPlayground, setShowFallingPlayground] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -105,20 +107,46 @@ export function Hero() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="flex flex-wrap items-center gap-2 pt-1"
+                            className="space-y-3 pt-1"
                         >
-                            {TECH_PILLS.map(({ label, bg }, idx) => (
-                                <motion.span
-                                    key={idx}
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    transition={{ duration: 0.35, delay: 0.25 + idx * 0.06 }}
-                                    whileHover={{ scale: 1.08, y: -2 }}
-                                    className={`text-xs font-extrabold px-3 py-1 rounded-lg border shadow-2xs cursor-pointer transition-colors ${bg}`}
+                            <div className="flex flex-wrap items-center gap-2">
+                                {TECH_PILLS.map(({ label, bg }, idx) => (
+                                    <motion.span
+                                        key={idx}
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        transition={{ duration: 0.35, delay: 0.25 + idx * 0.06 }}
+                                        whileHover={{ scale: 1.08, y: -2 }}
+                                        className={`text-xs font-extrabold px-3 py-1 rounded-lg border shadow-2xs cursor-pointer transition-colors ${bg}`}
+                                    >
+                                        {label}
+                                    </motion.span>
+                                ))}
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowFallingPlayground(!showFallingPlayground)}
+                                    className="text-xs font-black px-3 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-md transition-all cursor-pointer flex items-center gap-1.5"
                                 >
-                                    {label}
-                                </motion.span>
-                            ))}
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                    <span>{showFallingPlayground ? 'Close Physics' : 'Try Falling Physics'}</span>
+                                </button>
+                            </div>
+
+                            {/* Collapsible Physics Playground */}
+                            <AnimatePresence>
+                                {showFallingPlayground && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="pt-2"
+                                    >
+                                        <FallingText containerHeight={240} />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
 
                         {/* Subtitle */}
