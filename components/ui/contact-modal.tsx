@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { X, Send, Sparkles, CheckCircle2, Clock, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,6 +12,7 @@ interface ContactModalProps {
 }
 
 export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactModalProps) {
+  const router = useRouter();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -50,6 +52,8 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
       const data = await res.json();
       if (res.ok && data.success) {
         setSuccess(true);
+        onClose();
+        router.push('/thank-you');
       } else if (web3AccessKey) {
         const fallbackRes = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
@@ -65,6 +69,8 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
 
         if (fallbackRes.ok) {
           setSuccess(true);
+          onClose();
+          router.push('/thank-you');
         } else {
           setError(data.error || 'Failed to submit message.');
         }

@@ -12,6 +12,89 @@ body {
   line-height: 1.5;
 }
 
+/* ReactBits Glitch Text Keyframe Animations */
+@keyframes glitch-anim-top {
+  0% {
+    clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    transform: translate(-3px, -2px);
+  }
+  20% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 55%, 0 55%);
+    transform: translate(3px, 1px);
+  }
+  40% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 40%, 0 40%);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 85%, 0 85%);
+    transform: translate(2px, -1px);
+  }
+  80% {
+    clip-path: polygon(0 25%, 100% 25%, 100% 60%, 0 60%);
+    transform: translate(-1px, 2px);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes glitch-anim-bottom {
+  0% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%);
+    transform: translate(3px, 2px);
+  }
+  25% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 90%, 0 90%);
+    transform: translate(-3px, -1px);
+  }
+  50% {
+    clip-path: polygon(0 20%, 100% 20%, 100% 70%, 0 70%);
+    transform: translate(2px, -2px);
+  }
+  75% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+    transform: translate(-2px, 1px);
+  }
+  100% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%);
+    transform: translate(0, 0);
+  }
+}
+
+/* Organic Liquid Blob Morphing Animation */
+@keyframes blob-morph {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(0deg) scale(1);
+  }
+  33% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: rotate(120deg) scale(1.06);
+  }
+  66% {
+    border-radius: 70% 30% 50% 50% / 30% 70% 50% 50%;
+    transform: rotate(240deg) scale(0.96);
+  }
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.animate-blob-morph {
+  animation: blob-morph 5s infinite ease-in-out;
+}
+
+.animate-glitch-top {
+  animation: glitch-anim-top 2s infinite ease-in-out alternate-reverse;
+}
+
+.animate-glitch-bottom {
+  animation: glitch-anim-bottom 1.8s infinite ease-in-out alternate-reverse;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -23,4 +106,4 @@ body {
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
-}
+}

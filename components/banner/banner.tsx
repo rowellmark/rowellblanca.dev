@@ -1,11 +1,13 @@
 import React from "react";
+import { RotatingText } from "@/components/ui/rotating-text";
 
 interface BannerOption {
     title: string;
     subtitle?: string;
+    rotatingTitles?: string[];
 }
 
-export default function Banner({ title, subtitle }: BannerOption) {
+export default function Banner({ title, subtitle, rotatingTitles }: BannerOption) {
     return (
         <div className="relative pt-36 pb-20 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-900 border-b border-slate-800 text-white overflow-hidden">
             {/* Ambient background glow */}
@@ -18,8 +20,14 @@ export default function Banner({ title, subtitle }: BannerOption) {
                         {subtitle}
                     </span>
                 )}
-                <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight">
-                    {title}
+                <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight flex items-center justify-center gap-3 flex-wrap">
+                    <span>{title}</span>
+                    {rotatingTitles && rotatingTitles.length > 0 && (
+                        <RotatingText
+                            texts={rotatingTitles}
+                            badgeBg="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 px-3.5 py-0.5 rounded-xl text-3xl sm:text-5xl shadow-md border border-amber-300"
+                        />
+                    )}
                 </h1>
             </div>
         </div>

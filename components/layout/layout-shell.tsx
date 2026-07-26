@@ -6,6 +6,7 @@ import Header from '@/components/header/header';
 import Footer from '@/components/footer/footer';
 import { WelcomeLoading } from '@/components/loading-intro/loading-screen';
 import ChatBubble from '@/components/ui/chat-bubble';
+import { ScrollProgress } from '@/components/ui/scroll-progress';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -19,6 +20,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
 
   return (
     <>
+      <ScrollProgress />
       <WelcomeLoading />
       <Header />
       <main>{children}</main>
@@ -27,4 +29,3 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     </>
   );
 }
-

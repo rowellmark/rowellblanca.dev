@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { resolveValidImageSrc } from "@/lib/image-utils";
+import { TrueFocus } from "@/components/ui/true-focus";
 
 export const HeroParallax = ({
     products,
@@ -112,7 +113,7 @@ export const HeroParallax = ({
                         Interactive Showcase
                     </span>
                     <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-                        Featured Work & Applications
+                        <TrueFocus sentence="Featured Work & Applications" borderColor="#f59e0b" glowColor="rgba(245, 158, 11, 0.6)" />
                     </h2>
                     <p className="text-slate-300 text-sm sm:text-base font-medium max-w-xl mx-auto leading-relaxed">
                         Explore custom web builds, React applications, and WordPress solutions designed for high performance and user engagement.

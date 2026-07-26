@@ -8,14 +8,14 @@ import { CookieBanner } from "@/components/ui/cookie-banner";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rowellblanca.dev"),
   title: {
-    default: "Creative Software Engineer | Rowell Mark Blanca",
+    default: "Full-Stack Software Engineer | Rowell Mark Blanca",
     template: "%s | Rowell Mark Blanca",
   },
   description:
-    "Rowell Mark Blanca is a creative software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
+    "Rowell Mark Blanca is a full-stack software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
   keywords: [
     "Rowell Mark Blanca",
-    "Creative Software Engineer",
+    "Full-Stack Software Engineer",
     "Software Engineer Philippines",
     "React Developer",
     "Next.js Developer",
@@ -30,16 +30,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://www.rowellblanca.dev",
-    title: "Creative Software Engineer | Rowell Mark Blanca",
+    title: "Full-Stack Software Engineer | Rowell Mark Blanca",
     description:
-      "Rowell Mark Blanca is a creative software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
+      "Rowell Mark Blanca is a full-stack software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
     siteName: "Rowell Mark Blanca Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Creative Software Engineer | Rowell Mark Blanca",
+    title: "Full-Stack Software Engineer | Rowell Mark Blanca",
     description:
-      "Rowell Mark Blanca is a creative software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
+      "Rowell Mark Blanca is a full-stack software engineer building scalable React and Next.js applications, custom WordPress platforms, and digital solutions that help businesses grow.",
     creator: "@itsmrrowrow",
   },
   robots: {
@@ -69,7 +69,7 @@ const jsonLd = {
       "@id": "https://www.rowellblanca.dev/#person",
       name: "Rowell Mark Blanca",
       url: "https://www.rowellblanca.dev",
-      jobTitle: "Creative Software Engineer",
+      jobTitle: "Full-Stack Software Engineer",
       sameAs: [
         "https://github.com/rowellmark",
         "https://www.linkedin.com/in/rowell-blanca/",
@@ -93,7 +93,7 @@ const jsonLd = {
       "@id": "https://www.rowellblanca.dev/#website",
       url: "https://www.rowellblanca.dev",
       name: "Rowell Mark Blanca Portfolio",
-      description: "Portfolio of Rowell Mark Blanca — Creative Software Engineer specializing in React, Next.js, & WordPress.",
+      description: "Portfolio of Rowell Mark Blanca — Full-Stack Software Engineer specializing in React, Next.js, & WordPress.",
       publisher: {
         "@id": "https://www.rowellblanca.dev/#person",
       },
