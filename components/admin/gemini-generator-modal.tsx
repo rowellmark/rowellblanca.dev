@@ -54,8 +54,20 @@ export default function GeminiGeneratorModal({
         }),
       });
 
-      const data = await res.json();
-      if (data.success && data.caseStudy) {
+      const contentType = res.headers.get('content-type') || '';
+      let data: any = {};
+
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const textResponse = await res.text();
+        if (res.status === 401) {
+          throw new Error('Admin session expired or unauthorized. Please log in to the admin dashboard.');
+        }
+        throw new Error(textResponse || `Server error (${res.status})`);
+      }
+
+      if (res.ok && data.success && data.caseStudy) {
         setResult(data.caseStudy);
       } else {
         setError(data.message || 'Failed to generate case study. Check your GEMINI_API_KEY.');
