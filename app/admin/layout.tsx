@@ -202,7 +202,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 Welcome back, Rowell
               </h1>
               <p className="text-xs text-slate-500 font-medium mt-1 hidden sm:block">
-                MacManus-Style CRM Portal — NeonDB PostgreSQL & Lead Pipeline.
+                Portfolio Admin Dashboard & CRM Control Panel
               </p>
             </div>
           </div>
