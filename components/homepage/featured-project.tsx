@@ -14,6 +14,7 @@ interface Project {
     url?: string;
     image: string;
     mobileImage?: string;
+    fullMobileImage?: string;
     description?: string;
     spotlight?: boolean;
     featured?: boolean;
@@ -54,7 +55,7 @@ export function FeaturedProject() {
 
     const initialImgSrc = resolveImageSrc(spotlightProject?.image);
     const [projectImgSrc, setProjectImgSrc] = useState(initialImgSrc);
-    const mobileImgSrc = resolveImageSrc(spotlightProject?.mobileImage || spotlightProject?.image);
+    const mobileImgSrc = resolveImageSrc(spotlightProject?.fullMobileImage || spotlightProject?.mobileImage || spotlightProject?.image);
 
     useEffect(() => {
         setProjectImgSrc(resolveImageSrc(spotlightProject?.image));

@@ -76,7 +76,8 @@ export async function POST(req: Request) {
         });
       }
     } catch (e: any) {
-      console.warn('Prisma Setting upsert fallback:', e.message);
+      console.error('Prisma Setting upsert failed:', e.message);
+      return NextResponse.json({ success: false, error: `Failed to save settings: ${e.message}` }, { status: 500 });
     }
 
     return NextResponse.json({

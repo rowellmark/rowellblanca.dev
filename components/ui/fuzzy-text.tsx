@@ -55,6 +55,9 @@ export function FuzzyText({
     canvas.height = height * dpr;
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
+    canvas.style.maxWidth = '100%';
+    // Preserve aspect ratio when maxWidth clamps the rendered width down on narrow screens.
+    canvas.style.height = 'auto';
 
     ctx.scale(dpr, dpr);
 
@@ -115,11 +118,11 @@ export function FuzzyText({
 
   return (
     <div
-      className={`inline-block relative select-none cursor-pointer ${className}`}
+      className={`relative select-none cursor-pointer max-w-full ${className}`}
       onMouseEnter={() => (isHovered.current = true)}
       onMouseLeave={() => (isHovered.current = false)}
     >
-      <canvas ref={canvasRef} className={`block ${align === 'center' ? 'mx-auto' : ''}`} />
+      <canvas ref={canvasRef} className={`block max-w-full ${align === 'center' ? 'mx-auto' : ''}`} />
     </div>
   );
 }
