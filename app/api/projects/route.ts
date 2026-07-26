@@ -226,7 +226,29 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, screenshots, description, technologies, featured, spotlight, active } = body;
+    const {
+      sitename,
+      permalink,
+      url,
+      image,
+      mobileImage,
+      fullDesktopImage,
+      fullMobileImage,
+      screenshots,
+      description,
+      content,
+      client,
+      role,
+      duration,
+      category,
+      challenge,
+      solution,
+      results,
+      technologies,
+      featured,
+      spotlight,
+      active,
+    } = body;
 
     if (!sitename || !permalink) {
       return NextResponse.json({ success: false, message: 'Sitename and permalink are required' }, { status: 400 });
@@ -256,6 +278,14 @@ export async function POST(request: Request) {
         fullMobileImage: cleanImg(fullMobileImage),
         screenshots: Array.isArray(screenshots) ? screenshots.map((s: string) => cleanImg(s)).filter((s): s is string => Boolean(s)) : [],
         description: description || '',
+        content: content || '',
+        client: client || '',
+        role: role || '',
+        duration: duration || '',
+        category: category || '',
+        challenge: challenge || '',
+        solution: solution || '',
+        results: results || '',
         technologies: techArray,
         featured: Boolean(featured),
         spotlight: isSpotlight,
@@ -276,7 +306,30 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const { id, sitename, permalink, url, image, mobileImage, fullDesktopImage, fullMobileImage, screenshots, description, technologies, featured, spotlight, active } = body;
+    const {
+      id,
+      sitename,
+      permalink,
+      url,
+      image,
+      mobileImage,
+      fullDesktopImage,
+      fullMobileImage,
+      screenshots,
+      description,
+      content,
+      client,
+      role,
+      duration,
+      category,
+      challenge,
+      solution,
+      results,
+      technologies,
+      featured,
+      spotlight,
+      active,
+    } = body;
 
     if (!id) {
       return NextResponse.json({ success: false, message: 'Project ID is required for updates' }, { status: 400 });
@@ -310,6 +363,14 @@ export async function PUT(request: Request) {
         : [];
     }
     if (description !== undefined) updateData.description = description || '';
+    if (content !== undefined) updateData.content = content || '';
+    if (client !== undefined) updateData.client = client || '';
+    if (role !== undefined) updateData.role = role || '';
+    if (duration !== undefined) updateData.duration = duration || '';
+    if (category !== undefined) updateData.category = category || '';
+    if (challenge !== undefined) updateData.challenge = challenge || '';
+    if (solution !== undefined) updateData.solution = solution || '';
+    if (results !== undefined) updateData.results = results || '';
     if (technologies !== undefined) updateData.technologies = techArray;
     if (featured !== undefined) updateData.featured = Boolean(featured);
     if (spotlight !== undefined) updateData.spotlight = isSpotlight;

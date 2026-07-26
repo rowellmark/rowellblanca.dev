@@ -2,12 +2,36 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FolderKanban, Plus, Trash2, Edit, ExternalLink, Check, Upload, Smartphone, Monitor, Loader2, Image as ImageIcon, Star, X, Images } from 'lucide-react';
+import {
+  FolderKanban,
+  Plus,
+  Trash2,
+  Edit,
+  ExternalLink,
+  Check,
+  Upload,
+  Smartphone,
+  Monitor,
+  Loader2,
+  Image as ImageIcon,
+  Star,
+  X,
+  Images,
+  Sparkles,
+  Eye,
+  BookOpen,
+  FileText,
+  Layers,
+  Wrench,
+  SparkleIcon,
+} from 'lucide-react';
 import { resolveValidImageSrc } from '@/lib/image-utils';
 import MediaPickerModal from '@/components/admin/media-picker-modal';
+import RichTextEditor from '@/components/admin/rich-text-editor';
+import GeminiGeneratorModal from '@/components/admin/gemini-generator-modal';
 
 type ImageSlot = 'desktop' | 'mobile' | 'fullDesktop' | 'fullMobile';
-type GalleryTarget = ImageSlot | 'screenshots';
+type GalleryTarget = ImageSlot | 'screenshots' | 'richText';
 
 interface Project {
   id: number;
@@ -20,6 +44,14 @@ interface Project {
   fullMobileImage?: string;
   screenshots?: string[];
   description?: string;
+  content?: string;
+  client?: string;
+  role?: string;
+  duration?: string;
+  category?: string;
+  challenge?: string;
+  solution?: string;
+  results?: string;
   technologies: string[];
   featured: boolean;
   spotlight?: boolean;
@@ -35,19 +67,22 @@ const PREDEFINED_TECH = [
   'PHP',
   'TypeScript',
   'Node.js',
-  'Tailwind'
+  'Tailwind',
 ];
 
 function resolveImgSrc(src?: string | null) {
   return resolveValidImageSrc(src);
 }
 
-
 export default function ProjectsManagerPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  
+
+  const [activeTab, setActiveTab] = useState<'basic' | 'media' | 'summary' | 'blog' | 'tech'>('basic');
+  const [showGeminiModal, setShowGeminiModal] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+
   const [uploadingDesktop, setUploadingDesktop] = useState(false);
   const [uploadingMobile, setUploadingMobile] = useState(false);
   const [uploadingFullDesktop, setUploadingFullDesktop] = useState(false);
@@ -66,6 +101,14 @@ export default function ProjectsManagerPage() {
     fullMobileImage: '',
     screenshots: [] as string[],
     description: '',
+    content: '',
+    client: '',
+    role: '',
+    duration: '',
+    category: '',
+    challenge: '',
+    solution: '',
+    results: '',
     technologies: [] as string[],
     customTech: '',
     featured: true,
@@ -119,21 +162,21 @@ export default function ProjectsManagerPage() {
       const res = await fetch('/api/projects', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: proj.id, active: newActive }),
+        body: JSON.stringify({
+          id: proj.id,
+          active: newActive,
+        }),
       });
       const data = await res.json();
       if (data.success) {
         fetchProjects();
       }
     } catch (e) {
-      alert('Failed to update project status');
+      console.error('Error toggling active state:', e);
     }
   };
 
-  const handleFileUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: ImageSlot
-  ) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: ImageSlot) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -184,6 +227,10 @@ export default function ProjectsManagerPage() {
     else if (type === 'fullDesktop') setForm((prev) => ({ ...prev, fullDesktopImage: url }));
     else if (type === 'fullMobile') setForm((prev) => ({ ...prev, fullMobileImage: url }));
     else if (type === 'screenshots') setForm((prev) => ({ ...prev, screenshots: [...prev.screenshots, url] }));
+    else if (type === 'richText') {
+      const imgHtml = `<p><img src="${url}" alt="Case study screenshot" className="rounded-2xl border border-slate-200 my-4 max-w-full h-auto shadow-md" /></p>`;
+      setForm((prev) => ({ ...prev, content: (prev.content || '') + imgHtml }));
+    }
   };
 
   const handleScreenshotUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,6 +293,21 @@ export default function ProjectsManagerPage() {
     }
   };
 
+  const handleSitenameChange = (val: string) => {
+    setForm((prev) => {
+      // Auto slugify if permalink hasn't been manually typed or matches previous slugified title
+      const slugified = val
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+      return {
+        ...prev,
+        sitename: val,
+        permalink: prev.permalink === '' || editingProject === null ? slugified : prev.permalink,
+      };
+    });
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const method = editingProject ? 'PUT' : 'POST';
@@ -275,6 +337,14 @@ export default function ProjectsManagerPage() {
           fullMobileImage: '',
           screenshots: [],
           description: '',
+          content: '',
+          client: '',
+          role: '',
+          duration: '',
+          category: '',
+          challenge: '',
+          solution: '',
+          results: '',
           technologies: [],
           customTech: '',
           featured: true,
@@ -291,7 +361,7 @@ export default function ProjectsManagerPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+    if (!confirm('Are you sure you want to delete this project record?')) return;
     try {
       const res = await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
       const data = await res.json();
@@ -305,18 +375,19 @@ export default function ProjectsManagerPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 font-sans">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-[#0b1a30]">
-            Portfolio Projects ({(Array.isArray(projects) ? projects : []).length})
+          <h1 className="text-2xl font-black text-[#0b1a30] flex items-center gap-2">
+            Case Studies & Projects ({ (Array.isArray(projects) ? projects : []).length })
           </h1>
           <p className="text-xs text-slate-500 font-medium mt-1">
-            Manage project records. Click 🌟 Set Spotlight on any project to feature it in the Homepage Spotlight section.
+            Manage portfolio projects, write long-form case studies, and auto-generate content using Gemini AI.
           </p>
         </div>
         <button
           onClick={() => {
             setEditingProject(null);
+            setActiveTab('basic');
             setForm({
               sitename: '',
               permalink: '',
@@ -327,6 +398,14 @@ export default function ProjectsManagerPage() {
               fullMobileImage: '',
               screenshots: [],
               description: '',
+              content: '',
+              client: '',
+              role: '',
+              duration: '',
+              category: 'SaaS Web App',
+              challenge: '',
+              solution: '',
+              results: '',
               technologies: ['React/Nextjs', 'Prisma', 'NeonDB'],
               customTech: '',
               featured: true,
@@ -335,50 +414,66 @@ export default function ProjectsManagerPage() {
             });
             setShowModal(true);
           }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1d63ed] text-white font-extrabold text-xs shadow-md"
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-[#1d63ed] hover:bg-blue-600 text-white font-black text-xs shadow-md transition-all cursor-pointer"
         >
-          <Plus className="h-4 w-4" /> Add New Project
+          <Plus className="h-4 w-4" /> Add New Case Study Project
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+      {/* Projects List Table */}
+      <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-extrabold">
                 <th className="p-4">Thumbnails</th>
-                <th className="p-4">Project Name</th>
-                <th className="p-4">Visibility</th>
-                <th className="p-4">Homepage Spotlight</th>
-                <th className="p-4">Technologies & Tabs</th>
+                <th className="p-4">Project Name & Category</th>
+                <th className="p-4">Status</th>
+                <th className="p-4">Spotlight</th>
+                <th className="p-4">Tech Stack</th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-medium">
+            <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
               {(Array.isArray(projects) ? projects : []).map((proj) => (
-                <tr key={proj.id} className="hover:bg-slate-50">
+                <tr key={proj.id} className="hover:bg-slate-50/70 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-14 h-9 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 relative" title="Card Featured Image">
-                        <Image
-                          src={resolveImgSrc(proj.image)}
-                          alt={proj.sitename || 'Project Thumbnail'}
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
-
+                      <div className="relative w-14 h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shrink-0">
+                        {proj.image ? (
+                          <Image
+                            src={resolveImgSrc(proj.image)}
+                            alt={proj.sitename}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-300">
+                            <ImageIcon className="w-4 h-4" />
+                          </div>
+                        )}
                       </div>
-                      {proj.fullDesktopImage && (
-                        <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[9px] font-extrabold" title="Full Page Screenshot Available">
-                          Full Page
+                      {proj.content && (
+                        <span
+                          className="px-2 py-0.5 rounded-md bg-amber-500/10 text-brand-amber font-extrabold text-[10px] border border-amber-300/40"
+                          title="Has Case Study Blog Post"
+                        >
+                          Blog Post
                         </span>
                       )}
                     </div>
                   </td>
                   <td className="p-4">
-                    <span className="font-extrabold text-[#0b1a30] block text-sm">{proj.sitename}</span>
-                    {proj.url && <span className="text-slate-400 block font-mono text-[11px]">{proj.url}</span>}
+                    <span className="font-black text-[#0b1a30] block text-sm">{proj.sitename}</span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {proj.category && (
+                        <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                          {proj.category}
+                        </span>
+                      )}
+                      {proj.url && <span className="text-slate-400 font-mono text-[11px]">{proj.url}</span>}
+                    </div>
                   </td>
                   <td className="p-4">
                     <button
@@ -389,9 +484,15 @@ export default function ProjectsManagerPage() {
                           ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
                           : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
                       }`}
-                      title={proj.active !== false ? 'Click to Deactivate (Hide from website)' : 'Click to Activate (Show on website)'}
+                      title={
+                        proj.active !== false ? 'Click to Deactivate (Hide from website)' : 'Click to Activate'
+                      }
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full ${proj.active !== false ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          proj.active !== false ? 'bg-emerald-500' : 'bg-amber-500'
+                        }`}
+                      />
                       {proj.active !== false ? 'Active' : 'Deactivated'}
                     </button>
                   </td>
@@ -418,7 +519,7 @@ export default function ProjectsManagerPage() {
                   </td>
                   <td className="p-4">
                     <div className="flex flex-wrap gap-1">
-                      {proj.technologies?.map((tech) => (
+                      {proj.technologies?.slice(0, 4).map((tech) => (
                         <span
                           key={tech}
                           className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
@@ -436,6 +537,7 @@ export default function ProjectsManagerPage() {
                     <button
                       onClick={() => {
                         setEditingProject(proj);
+                        setActiveTab('basic');
                         setForm({
                           sitename: proj.sitename,
                           permalink: proj.permalink,
@@ -446,6 +548,14 @@ export default function ProjectsManagerPage() {
                           fullMobileImage: proj.fullMobileImage || '',
                           screenshots: proj.screenshots || [],
                           description: proj.description || '',
+                          content: proj.content || '',
+                          client: proj.client || '',
+                          role: proj.role || '',
+                          duration: proj.duration || '',
+                          category: proj.category || '',
+                          challenge: proj.challenge || '',
+                          solution: proj.solution || '',
+                          results: proj.results || '',
                           technologies: proj.technologies || [],
                           customTech: '',
                           featured: proj.featured,
@@ -454,14 +564,14 @@ export default function ProjectsManagerPage() {
                         });
                         setShowModal(true);
                       }}
-                      className="p-1.5 text-slate-400 hover:text-[#1d63ed] transition-colors"
-                      title="Edit"
+                      className="p-2 rounded-lg text-slate-500 hover:text-[#1d63ed] hover:bg-slate-100 transition-colors"
+                      title="Edit Case Study & Media"
                     >
                       <Edit className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(proj.id)}
-                      className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                      className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -474,459 +584,594 @@ export default function ProjectsManagerPage() {
         </div>
       </div>
 
+      {/* Modern Add / Edit Case Study Modal with Tabs */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-6 !mt-0">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative max-h-[85vh] overflow-y-auto">
-            <h3 className="text-lg font-black text-[#0b1a30]">
-              {editingProject ? 'Edit Project Record' : 'Add New Project'}
-            </h3>
-
-            <form onSubmit={handleSave} className="space-y-4 text-xs">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto !mt-0">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[92vh] flex flex-col my-6">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
-                <label className="block text-slate-700 font-extrabold mb-1">Project Name</label>
-                <input
-                  type="text"
-                  value={form.sitename}
-                  onChange={(e) => setForm({ ...form, sitename: e.target.value })}
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
-                />
+                <h3 className="text-xl font-black text-[#0b1a30]">
+                  {editingProject ? `Edit Case Study: ${editingProject.sitename}` : 'Add New Case Study Project'}
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Fill in project details, executive summaries, or auto-generate with Gemini AI.
+                </p>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 font-extrabold mb-1">Permalink (slug)</label>
-                  <input
-                    type="text"
-                    value={form.permalink}
-                    onChange={(e) => setForm({ ...form, permalink: e.target.value })}
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 font-extrabold mb-1">Live URL</label>
-                  <input
-                    type="text"
-                    value={form.url}
-                    onChange={(e) => setForm({ ...form, url: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
-                  />
-                </div>
-              </div>
-
-              {isPlugin ? (
-                <div className="space-y-2 pt-2 border-t border-slate-200">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
-                    Plugin Screenshots ({form.screenshots.length})
-                  </span>
-
-                  {form.screenshots.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {form.screenshots.map((src, index) => (
-                        <div
-                          key={`${src}-${index}`}
-                          className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group"
-                        >
-                          <Image
-                            src={resolveImgSrc(src)}
-                            alt={`Plugin Screenshot ${index + 1}`}
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveScreenshot(index)}
-                            className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                            title="Remove screenshot"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex gap-2">
-                    <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
-                      {uploadingScreenshot ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
-                      <span>Add Screenshot</span>
-                      <input type="file" accept="image/*" onChange={handleScreenshotUpload} disabled={uploadingScreenshot} className="hidden" />
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => setGalleryTarget('screenshots')}
-                      className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
-                      title="Choose from uploaded photos"
-                    >
-                      <Images className="w-3.5 h-3.5 text-[#1d63ed]" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-              <>
-              {/* 1. Featured Homepage Card Thumbnails (Lightweight) */}
-              <div className="space-y-2 pt-2 border-t border-slate-200">
-                <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
-                  1. Homepage Card Featured Thumbnails (Lightweight)
-                </span>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Card Desktop */}
-                  <div className="space-y-1.5">
-                    <label className="block text-slate-700 font-extrabold flex items-center gap-1.5">
-                      <Monitor className="w-3.5 h-3.5 text-[#1d63ed]" /> Featured Card Image (Desktop)
-                    </label>
-
-                    {form.image && (
-                      <div className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
-                        <Image
-                          src={resolveImgSrc(form.image)}
-                          alt="Featured Desktop"
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage('desktop')}
-                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                          title="Remove image"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-
-                    <div className="flex gap-2">
-                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
-                        {uploadingDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
-                        <span>{form.image ? 'Replace' : 'Upload'}</span>
-                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'desktop')} disabled={uploadingDesktop} className="hidden" />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => setGalleryTarget('desktop')}
-                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
-                        title="Choose from uploaded photos"
-                      >
-                        <Images className="w-3.5 h-3.5 text-[#1d63ed]" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Card Mobile */}
-                  <div className="space-y-1.5">
-                    <label className="block text-slate-700 font-extrabold flex items-center gap-1.5">
-                      <Smartphone className="w-3.5 h-3.5 text-amber-500" /> Featured Card Image (Mobile)
-                    </label>
-
-                    {form.mobileImage && (
-                      <div className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group flex items-center justify-center">
-                        <Image
-                          src={resolveImgSrc(form.mobileImage)}
-                          alt="Featured Mobile"
-                          fill
-                          className="object-contain"
-                          unoptimized
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage('mobile')}
-                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                          title="Remove image"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-
-                    <div className="flex gap-2">
-                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 cursor-pointer text-amber-900 font-bold">
-                        {uploadingMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" /> : <Upload className="w-3.5 h-3.5 text-amber-600" />}
-                        <span>{form.mobileImage ? 'Replace' : 'Upload'}</span>
-                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'mobile')} disabled={uploadingMobile} className="hidden" />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => setGalleryTarget('mobile')}
-                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 text-amber-900 font-bold"
-                        title="Choose from uploaded photos"
-                      >
-                        <Images className="w-3.5 h-3.5 text-amber-600" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 2. Full Page Screenshots for Detail View (Scrollable) */}
-              <div className="space-y-2 pt-2 border-t border-slate-200">
-                <span className="text-[11px] font-black uppercase tracking-wider text-[#1d63ed] block">
-                  2. Full Page Screenshots for Detail View (Scrollable Viewport)
-                </span>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Full Desktop Screenshot */}
-                  <div className="space-y-1.5">
-                    <label className="block text-slate-700 font-extrabold flex items-center gap-1.5">
-                      <ImageIcon className="w-3.5 h-3.5 text-blue-600" /> Full Desktop Page Screenshot
-                    </label>
-
-                    {form.fullDesktopImage && (
-                      <div className="relative w-full h-28 rounded-xl overflow-y-auto border border-blue-200 bg-slate-900 group">
-                        <Image
-                          src={resolveImgSrc(form.fullDesktopImage)}
-                          alt="Full Desktop Page"
-                          width={600}
-                          height={400}
-                          className="w-full h-auto object-top block"
-                          unoptimized
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage('fullDesktop')}
-                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                          title="Remove image"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-
-                    <div className="flex gap-2">
-                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer text-blue-900 font-bold">
-                        {uploadingFullDesktop ? <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" /> : <Upload className="w-3.5 h-3.5 text-blue-600" />}
-                        <span>{form.fullDesktopImage ? 'Replace' : 'Upload'}</span>
-                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullDesktop')} disabled={uploadingFullDesktop} className="hidden" />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => setGalleryTarget('fullDesktop')}
-                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-100/50 text-blue-900 font-bold"
-                        title="Choose from uploaded photos"
-                      >
-                        <Images className="w-3.5 h-3.5 text-blue-600" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Full Mobile Screenshot */}
-                  <div className="space-y-1.5">
-                    <label className="block text-slate-700 font-extrabold flex items-center gap-1.5">
-                      <Smartphone className="w-3.5 h-3.5 text-purple-600" /> Full Mobile Page Screenshot
-                    </label>
-
-                    {form.fullMobileImage && (
-                      <div className="relative w-full h-28 rounded-xl overflow-y-auto border border-purple-200 bg-slate-900 group flex items-center justify-center">
-                        <Image
-                          src={resolveImgSrc(form.fullMobileImage)}
-                          alt="Full Mobile Page"
-                          width={400}
-                          height={600}
-                          className="w-full h-auto object-top block"
-                          unoptimized
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage('fullMobile')}
-                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                          title="Remove image"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-
-
-                    <div className="flex gap-2">
-                      <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 cursor-pointer text-purple-900 font-bold">
-                        {uploadingFullMobile ? <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-600" /> : <Upload className="w-3.5 h-3.5 text-purple-600" />}
-                        <span>{form.fullMobileImage ? 'Replace' : 'Upload'}</span>
-                        <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'fullMobile')} disabled={uploadingFullMobile} className="hidden" />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => setGalleryTarget('fullMobile')}
-                        className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/50 hover:bg-purple-100/50 text-purple-900 font-bold"
-                        title="Choose from uploaded photos"
-                      >
-                        <Images className="w-3.5 h-3.5 text-purple-600" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Project Gallery Screenshots (dashboard/portal multi-screen showcase) */}
-              <div className="space-y-2 pt-2 border-t border-slate-200">
-                <span className="text-[11px] font-black uppercase tracking-wider text-slate-800 block">
-                  3. Project Gallery ({form.screenshots.length}) — Dashboard, Login, Settings screens, etc.
-                </span>
-
-                {form.screenshots.length > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {form.screenshots.map((src, index) => (
-                      <div
-                        key={`${src}-${index}`}
-                        className="relative w-full h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group"
-                      >
-                        <Image
-                          src={resolveImgSrc(src)}
-                          alt={`Gallery Screenshot ${index + 1}`}
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveScreenshot(index)}
-                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all"
-                          title="Remove screenshot"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex gap-2">
-                  <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold">
-                    {uploadingScreenshot ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
-                    <span>Add Gallery Screenshot</span>
-                    <input type="file" accept="image/*" onChange={handleScreenshotUpload} disabled={uploadingScreenshot} className="hidden" />
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setGalleryTarget('screenshots')}
-                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold"
-                    title="Choose from uploaded photos"
-                  >
-                    <Images className="w-3.5 h-3.5 text-[#1d63ed]" />
-                  </button>
-                </div>
-              </div>
-              </>
-              )}
-
-              {/* Selectable Technologies Chips (WordPress, Wordpress Plugins, React/Nextjs, etc.) */}
-              <div className="space-y-2 pt-2 border-t border-slate-200">
-                <label className="block text-slate-700 font-extrabold">
-                  Select Technologies & Frontend Tabs (Click to Toggle)
-                </label>
-                <div className="flex flex-wrap gap-1.5 p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                  {PREDEFINED_TECH.map((tech) => {
-                    const selected = form.technologies.includes(tech);
-                    return (
-                      <button
-                        type="button"
-                        key={tech}
-                        onClick={() => toggleTechnology(tech)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                          selected
-                            ? 'bg-[#1d63ed] text-white shadow-xs'
-                            : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
-                        }`}
-                      >
-                        {selected && <Check className="w-3 h-3 text-white" />}
-                        {tech}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Add Custom Tech Tag */}
-              <div className="space-y-1">
-                <label className="block text-slate-700 font-extrabold">Add Custom Tech Tag</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={form.customTech}
-                    onChange={(e) => setForm({ ...form, customTech: e.target.value })}
-                    onKeyDown={addCustomTech}
-                    placeholder="Type custom tech tag & press Enter..."
-                    className="flex-1 px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
-                  />
-                  <button
-                    type="button"
-                    onClick={addCustomTech}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold"
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              {/* Selected Tags Display */}
-              {form.technologies.length > 0 && (
-                <div className="space-y-1 pt-1">
-                  <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">Selected Pills</span>
-                  <div className="flex flex-wrap gap-1">
-                    {form.technologies.map((t) => (
-                      <span
-                        key={t}
-                        onClick={() => toggleTechnology(t)}
-                        className="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 font-extrabold text-[11px] cursor-pointer hover:bg-amber-100 transition-colors flex items-center gap-1"
-                        title="Click to remove"
-                      >
-                        {t} ✕
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center gap-6 pt-2 pb-1 bg-amber-50/60 p-3 rounded-2xl border border-amber-200/80">
-                <label className="flex items-center gap-2 cursor-pointer font-extrabold text-amber-950">
-                  <input
-                    type="checkbox"
-                    checked={form.spotlight}
-                    onChange={(e) => setForm({ ...form, spotlight: e.target.checked })}
-                    className="h-4 w-4 rounded text-amber-500 focus:ring-amber-400"
-                  />
-                  <span>🌟 Set as Homepage Spotlight Project</span>
-                </label>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 font-extrabold mb-1">Description</label>
-                <textarea
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowGeminiModal(true)}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-md hover:scale-105 transition-all cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4" /> ✨ Gemini AI Assistant
+                </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold"
+                  className="p-2 rounded-xl text-slate-400 hover:bg-slate-100"
                 >
-                  Cancel
+                  <X className="w-5 h-5" />
                 </button>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <div className="flex border-b border-slate-200 gap-1 overflow-x-auto">
+              <button
+                type="button"
+                onClick={() => setActiveTab('basic')}
+                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'basic'
+                    ? 'border-[#1d63ed] text-[#1d63ed]'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <Layers className="w-4 h-4" /> 1. General & Links
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('media')}
+                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'media'
+                    ? 'border-[#1d63ed] text-[#1d63ed]'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <ImageIcon className="w-4 h-4" /> 2. Media & Screenshots
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('summary')}
+                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'summary'
+                    ? 'border-[#1d63ed] text-[#1d63ed]'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <FileText className="w-4 h-4" /> 3. Executive Breakdown
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('blog')}
+                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'blog'
+                    ? 'border-[#1d63ed] text-[#1d63ed]'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <BookOpen className="w-4 h-4" /> 4. Long-form Blog Content
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('tech')}
+                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                  activeTab === 'tech'
+                    ? 'border-[#1d63ed] text-[#1d63ed]'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <Wrench className="w-4 h-4" /> 5. Tech Stack ({form.technologies.length})
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSave} className="flex-1 overflow-y-auto pr-1 space-y-6 text-xs">
+              {/* TAB 1: GENERAL INFO */}
+              {activeTab === 'basic' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">Project / Case Study Title *</label>
+                    <input
+                      type="text"
+                      value={form.sitename}
+                      onChange={(e) => handleSitenameChange(e.target.value)}
+                      required
+                      placeholder="e.g. BuildForUser SaaS Platform"
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">Permalink / Slug *</label>
+                      <input
+                        type="text"
+                        value={form.permalink}
+                        onChange={(e) => setForm({ ...form, permalink: e.target.value })}
+                        required
+                        placeholder="buildforuser-platform"
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">Target Live URL</label>
+                      <input
+                        type="text"
+                        value={form.url}
+                        onChange={(e) => setForm({ ...form, url: e.target.value })}
+                        placeholder="https://buildforuser.com"
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">Client Name</label>
+                      <input
+                        type="text"
+                        value={form.client}
+                        onChange={(e) => setForm({ ...form, client: e.target.value })}
+                        placeholder="e.g. MacManus Asset Finance"
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">Your Role / Responsibility</label>
+                      <input
+                        type="text"
+                        value={form.role}
+                        onChange={(e) => setForm({ ...form, role: e.target.value })}
+                        placeholder="e.g. Lead Full-Stack Architect"
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">Duration / Timeline</label>
+                      <input
+                        type="text"
+                        value={form.duration}
+                        onChange={(e) => setForm({ ...form, duration: e.target.value })}
+                        placeholder="e.g. 3 Months"
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">Project Category</label>
+                    <input
+                      type="text"
+                      value={form.category}
+                      onChange={(e) => setForm({ ...form, category: e.target.value })}
+                      placeholder="e.g. SaaS Web Platform, FinTech Portal, WordPress Solution"
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                    />
+                  </div>
+
+                  {/* Status Toggles */}
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap items-center gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={form.active}
+                        onChange={(e) => setForm({ ...form, active: e.target.checked })}
+                        className="h-4 w-4 rounded text-[#1d63ed]"
+                      />
+                      Active (Visible on public site)
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={form.featured}
+                        onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                        className="h-4 w-4 rounded text-[#1d63ed]"
+                      />
+                      Featured in Portfolio Grid
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer font-bold text-amber-900">
+                      <input
+                        type="checkbox"
+                        checked={form.spotlight}
+                        onChange={(e) => setForm({ ...form, spotlight: e.target.checked })}
+                        className="h-4 w-4 rounded text-amber-500"
+                      />
+                      Set as Primary Homepage Spotlight
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: MEDIA & SCREENSHOTS */}
+              {activeTab === 'media' && (
+                <div className="space-y-6">
+                  {/* Desktop Thumbnail */}
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <Monitor className="w-4 h-4 text-brand-amber" /> Primary Desktop Thumbnail / Cover Image
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGalleryTarget('desktop');
+                        }}
+                        className="text-xs font-bold text-[#1d63ed] hover:underline"
+                      >
+                        Pick from uploaded files
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      {form.image && (
+                        <div className="relative w-28 h-16 rounded-xl overflow-hidden border border-slate-300 bg-slate-100 shrink-0">
+                          <Image src={resolveImgSrc(form.image)} alt="Desktop preview" fill className="object-cover" unoptimized />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage('desktop')}
+                            className="absolute top-1 right-1 p-1 rounded-md bg-slate-900/80 text-white hover:bg-red-600"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleFileUpload(e, 'desktop')}
+                        className="text-xs text-slate-600"
+                      />
+                      {uploadingDesktop && <Loader2 className="w-4 h-4 animate-spin text-brand-amber" />}
+                    </div>
+                  </div>
+
+                  {/* Multi Screenshot Gallery */}
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <Images className="w-4 h-4 text-amber-500" /> Case Study Image Gallery ({form.screenshots.length})
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setGalleryTarget('screenshots')}
+                        className="text-xs font-bold text-[#1d63ed] hover:underline"
+                      >
+                        Pick from uploaded photos
+                      </button>
+                    </div>
+
+                    {form.screenshots.length > 0 && (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {form.screenshots.map((src, idx) => (
+                          <div key={idx} className="relative h-20 rounded-xl overflow-hidden border border-slate-200 bg-white group">
+                            <Image src={resolveImgSrc(src)} alt="Screenshot" fill className="object-cover" unoptimized />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveScreenshot(idx)}
+                              className="absolute top-1 right-1 p-1 rounded-md bg-slate-900/80 text-white hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-3 pt-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleScreenshotUpload}
+                        className="text-xs text-slate-600"
+                      />
+                      {uploadingScreenshot && <Loader2 className="w-4 h-4 animate-spin text-brand-amber" />}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: EXECUTIVE BREAKDOWN */}
+              {activeTab === 'summary' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between bg-amber-50 border border-amber-200 p-4 rounded-2xl">
+                    <div>
+                      <h4 className="font-black text-[#0b1a30]">Executive Summary Breakdown</h4>
+                      <p className="text-[11px] text-slate-600 font-medium">
+                        Used for fast-reading executive cards: Challenge vs. Solution vs. Impact Results.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowGeminiModal(true)}
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md"
+                    >
+                      <Sparkles className="w-4 h-4" /> AI Auto-Fill
+                    </button>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">Short Description / Catchphrase</label>
+                    <textarea
+                      value={form.description}
+                      onChange={(e) => setForm({ ...form, description: e.target.value })}
+                      placeholder="High-level 1-2 sentence overview..."
+                      className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      rows={2}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">The Challenge</label>
+                    <textarea
+                      value={form.challenge}
+                      onChange={(e) => setForm({ ...form, challenge: e.target.value })}
+                      placeholder="What was the client's main problem or technical bottleneck?"
+                      className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">The Solution & Architecture</label>
+                    <textarea
+                      value={form.solution}
+                      onChange={(e) => setForm({ ...form, solution: e.target.value })}
+                      placeholder="How did you solve it technically? Architecture, stack, workflows built..."
+                      className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">Key Results & Business Impact</label>
+                    <textarea
+                      value={form.results}
+                      onChange={(e) => setForm({ ...form, results: e.target.value })}
+                      placeholder="Quantitative metrics, speed improvements, conversions, user growth..."
+                      className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: LONG-FORM BLOG CONTENT EDITOR */}
+              {activeTab === 'blog' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-slate-800 font-black text-sm">Long-Form Case Study Blog Post</label>
+                      <p className="text-[11px] text-slate-500 font-medium">
+                        Write long-form markdown/HTML content with headings, lists, code snippets, and embedded images.
+                      </p>
+                    </div>
+                  </div>
+
+                  <RichTextEditor
+                    value={form.content}
+                    onChange={(val) => setForm((prev) => ({ ...prev, content: val }))}
+                    onOpenMediaPicker={() => setGalleryTarget('richText')}
+                    onOpenGeminiAI={() => setShowGeminiModal(true)}
+                  />
+                </div>
+              )}
+
+              {/* TAB 5: TECH STACK */}
+              {activeTab === 'tech' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-slate-800 font-black mb-2">Select Tech Stack Badges</label>
+                    <div className="flex flex-wrap gap-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                      {PREDEFINED_TECH.map((tech) => {
+                        const selected = form.technologies.includes(tech);
+                        return (
+                          <button
+                            key={tech}
+                            type="button"
+                            onClick={() => toggleTechnology(tech)}
+                            className={`px-3 py-1.5 rounded-xl font-extrabold text-xs border transition-all cursor-pointer ${
+                              selected
+                                ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-xs'
+                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                            }`}
+                          >
+                            {selected ? '✓ ' : '+ '} {tech}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-800 font-extrabold mb-1">Add Custom Technology</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={form.customTech}
+                        onChange={(e) => setForm({ ...form, customTech: e.target.value })}
+                        onKeyDown={addCustomTech}
+                        placeholder="e.g. GraphQL, Redis, Docker"
+                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={addCustomTech}
+                        className="px-4 py-2.5 rounded-xl bg-slate-900 text-white font-extrabold text-xs shrink-0"
+                      >
+                        Add Tag
+                      </button>
+                    </div>
+                  </div>
+
+                  {form.technologies.length > 0 && (
+                    <div>
+                      <span className="block text-slate-600 font-bold mb-1">Active Selected Stack:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {form.technologies.map((t) => (
+                          <span
+                            key={t}
+                            className="px-3 py-1 rounded-xl bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center gap-1"
+                          >
+                            {t}
+                            <button
+                              type="button"
+                              onClick={() => toggleTechnology(t)}
+                              className="text-amber-700 hover:text-red-600"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Modal Footer Actions */}
+              <div className="border-t border-slate-100 pt-5 flex items-center justify-between gap-3">
                 <button
-                  type="submit"
-                  disabled={uploadingDesktop || uploadingMobile || uploadingFullDesktop || uploadingFullMobile}
-                  className="px-5 py-2 rounded-xl bg-[#1d63ed] text-white font-extrabold shadow-xs"
+                  type="button"
+                  onClick={() => setShowPreviewModal(true)}
+                  className="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black flex items-center gap-2 transition-all cursor-pointer"
                 >
-                  Save Project
+                  <Eye className="w-4 h-4 text-brand-amber" /> Preview Case Study
                 </button>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2.5 rounded-2xl text-slate-500 hover:bg-slate-100 text-xs font-bold"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-3 rounded-2xl bg-[#1d63ed] hover:bg-blue-600 text-white text-xs font-black uppercase tracking-wider shadow-lg transition-all cursor-pointer"
+                  >
+                    {editingProject ? 'Update Case Study' : 'Save New Case Study'}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* Media Picker Modal */}
       <MediaPickerModal
         open={galleryTarget !== null}
         onClose={() => setGalleryTarget(null)}
-        onSelect={handleGallerySelect}
+        onSelect={(url) => {
+          handleGallerySelect(url);
+          setGalleryTarget(null);
+        }}
       />
+
+      {/* Gemini AI Generator Modal */}
+      <GeminiGeneratorModal
+        open={showGeminiModal}
+        onClose={() => setShowGeminiModal(false)}
+        initialData={{
+          sitename: form.sitename,
+          technologies: form.technologies,
+          description: form.description,
+          client: form.client,
+          role: form.role,
+        }}
+        onApply={(generated) => {
+          setForm((prev) => ({
+            ...prev,
+            category: generated.category || prev.category,
+            role: generated.role || prev.role,
+            duration: generated.duration || prev.duration,
+            challenge: generated.challenge || prev.challenge,
+            solution: generated.solution || prev.solution,
+            results: generated.results || prev.results,
+            content: generated.content || prev.content,
+          }));
+          setActiveTab('summary');
+        }}
+      />
+
+      {/* Live Case Study Preview Modal */}
+      {showPreviewModal && (
+        <div className="fixed inset-0 z-[80] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="bg-[#FAFAF7] border border-slate-200 rounded-3xl max-w-4xl w-full p-6 sm:p-10 space-y-6 shadow-2xl relative my-8 max-h-[90vh] overflow-y-auto text-brand-navy">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <span className="text-xs font-black uppercase tracking-widest text-brand-amber flex items-center gap-1.5">
+                <Eye className="w-4 h-4" /> Case Study Live Preview
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowPreviewModal(false)}
+                className="p-2 rounded-xl text-slate-400 hover:bg-slate-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Preview Banner */}
+            <div className="bg-slate-900 text-white p-8 rounded-3xl space-y-3">
+              {form.category && (
+                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/20 text-brand-amber border border-amber-500/30">
+                  {form.category}
+                </span>
+              )}
+              <h1 className="text-3xl font-black text-white">{form.sitename || 'Untitled Case Study'}</h1>
+              {form.client && <p className="text-xs text-amber-400 font-bold">Client: {form.client}</p>}
+            </div>
+
+            {/* Executive Summary Cards */}
+            {(form.challenge || form.solution || form.results) && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {form.challenge && (
+                  <div className="p-5 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+                    <h4 className="font-extrabold text-[#0b1a30] text-xs uppercase tracking-wider">The Challenge</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">{form.challenge}</p>
+                  </div>
+                )}
+                {form.solution && (
+                  <div className="p-5 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+                    <h4 className="font-extrabold text-[#0b1a30] text-xs uppercase tracking-wider">The Solution</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">{form.solution}</p>
+                  </div>
+                )}
+                {form.results && (
+                  <div className="p-5 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+                    <h4 className="font-extrabold text-[#0b1a30] text-xs uppercase tracking-wider">Key Impact</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">{form.results}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Blog Post Preview */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+              <h3 className="text-lg font-black text-[#0b1a30]">Full Case Study Article</h3>
+              {form.content ? (
+                <div
+                  className="prose max-w-none text-slate-700 text-sm leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: form.content }}
+                />
+              ) : (
+                <p className="text-xs text-slate-400 italic">No blog post content written yet.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

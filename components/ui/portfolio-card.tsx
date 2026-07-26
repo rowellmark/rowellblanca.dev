@@ -20,6 +20,14 @@ export interface PortfolioProject {
   permalink: string;
   technologies: string[];
   description?: string;
+  content?: string;
+  client?: string;
+  role?: string;
+  duration?: string;
+  category?: string;
+  challenge?: string;
+  solution?: string;
+  results?: string;
 }
 
 

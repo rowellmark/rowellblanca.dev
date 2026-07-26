@@ -1,14 +1,9 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-// Get the directory name of the current module
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    sassOptions: {
-        includePaths: [path.join(__dirname, 'styles')],
+    experimental: {
+        outputFileTracingRoot: path.resolve(__dirname),
     },
     images: {
         remotePatterns: [
@@ -24,4 +19,4 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

@@ -70,6 +70,14 @@ model Project {
   fullMobileImage  String?
   screenshots      String[] @default([])
   description      String?  @db.Text
+  content          String?  @db.Text
+  client           String?
+  role             String?
+  duration         String?
+  category         String?
+  challenge        String?  @db.Text
+  solution         String?  @db.Text
+  results          String?  @db.Text
   technologies     String[]
   featured         Boolean  @default(false)
   spotlight        Boolean  @default(false)
