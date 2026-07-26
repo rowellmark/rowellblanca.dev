@@ -26,7 +26,6 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const web3AccessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,33 +48,12 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
         }),
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
+      const data = await res.json().catch(() => null);
+      if (res.ok || data?.success) {
         setSuccess(true);
-        onClose();
         router.push('/thank-you');
-      } else if (web3AccessKey) {
-        const fallbackRes = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            access_key: web3AccessKey,
-            name: form.name,
-            email: form.email,
-            subject: `Inquiry: ${form.service}`,
-            message: form.message,
-          }),
-        });
-
-        if (fallbackRes.ok) {
-          setSuccess(true);
-          onClose();
-          router.push('/thank-you');
-        } else {
-          setError(data.error || 'Failed to submit message.');
-        }
       } else {
-        setError(data.error || 'Failed to submit message.');
+        setError(data?.error || 'Failed to submit message.');
       }
     } catch (e) {
       setError('Error sending message. Please try again.');

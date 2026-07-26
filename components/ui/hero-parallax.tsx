@@ -11,13 +11,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { resolveValidImageSrc } from "@/lib/image-utils";
-import { TrueFocus } from "@/components/ui/true-focus";
+import { FuzzyText } from "@/components/ui/fuzzy-text";
 
 export const HeroParallax = ({
     products,
 }: {
     products: {
-        key: number;
+        key?: number;
+        id?: number;
         url: string;
         image: string;
         permalink: string;
@@ -25,9 +26,34 @@ export const HeroParallax = ({
         technologies: string[];
     }[];
 }) => {
-    const firstRow = products.slice(0, 5);
-    const secondRow = products.slice(5, 10);
-    const thirdRow = products.slice(10, 15);
+    const filteredProducts = React.useMemo(() => {
+        if (!products || !Array.isArray(products)) return [];
+        return products.filter((product) => {
+            const isPluginTech = product.technologies?.some((tech) =>
+                tech.toLowerCase().includes("plugin")
+            );
+            const isPluginTitle = product.sitename?.toLowerCase().includes("plugin");
+            const isPluginPermalink = product.permalink?.toLowerCase().includes("plugin");
+            const isPluginUrl = product.url?.startsWith("wp-content");
+            return !isPluginTech && !isPluginTitle && !isPluginPermalink && !isPluginUrl;
+        });
+    }, [products]);
+
+    const displayProducts = React.useMemo(() => {
+        if (!filteredProducts.length) return [];
+        const cardsPerRow = 10;
+        const totalNeeded = cardsPerRow * 3;
+        const repeated = [];
+        for (let i = 0; i < totalNeeded; i++) {
+            repeated.push(filteredProducts[i % filteredProducts.length]);
+        }
+        return repeated;
+    }, [filteredProducts]);
+
+    const firstRow = displayProducts.slice(0, 10);
+    const secondRow = displayProducts.slice(10, 20);
+    const thirdRow = displayProducts.slice(20, 30);
+
     const ref = React.useRef(null);
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -77,29 +103,29 @@ export const HeroParallax = ({
                     }}
                 >
                     <motion.div className="flex flex-row-reverse space-x-reverse space-x-8 mb-8">
-                        {firstRow.map((product) => (
+                        {firstRow.map((product, idx) => (
                             <ProductCard
                                 product={product}
                                 translate={translateX}
-                                key={product.sitename}
+                                key={`row1-${product.permalink || product.sitename || idx}-${idx}`}
                             />
                         ))}
                     </motion.div>
                     <motion.div className="flex flex-row mb-8 space-x-8">
-                        {secondRow.map((product) => (
+                        {secondRow.map((product, idx) => (
                             <ProductCard
                                 product={product}
                                 translate={translateXReverse}
-                                key={product.sitename}
+                                key={`row2-${product.permalink || product.sitename || idx}-${idx}`}
                             />
                         ))}
                     </motion.div>
                     <motion.div className="flex flex-row-reverse space-x-reverse space-x-8">
-                        {thirdRow.map((product) => (
+                        {thirdRow.map((product, idx) => (
                             <ProductCard
                                 product={product}
                                 translate={translateX}
-                                key={product.sitename}
+                                key={`row3-${product.permalink || product.sitename || idx}-${idx}`}
                             />
                         ))}
                     </motion.div>
@@ -112,11 +138,20 @@ export const HeroParallax = ({
                     <span className="text-xs font-extrabold uppercase tracking-widest text-brand-amber bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/30 inline-block shadow-xs">
                         Interactive Showcase
                     </span>
-                    <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-                        <TrueFocus sentence="Featured Work & Applications" borderColor="#f59e0b" glowColor="rgba(245, 158, 11, 0.6)" />
-                    </h2>
+                    <div className="flex justify-center py-1">
+                        <FuzzyText
+                            fontSize={38}
+                            fontWeight={900}
+                            color="#F59E0B"
+                            align="center"
+                            baseIntensity={0.15}
+                            hoverIntensity={0.4}
+                        >
+                            Featured Projects & Digital Platforms
+                        </FuzzyText>
+                    </div>
                     <p className="text-slate-300 text-sm sm:text-base font-medium max-w-xl mx-auto leading-relaxed">
-                        Explore custom web builds, React applications, and WordPress solutions designed for high performance and user engagement.
+                        Explore high-impact Next.js web applications, custom SaaS portals, and enterprise client platforms engineered for high performance, scale, and conversion.
                     </p>
                     <div className="pt-2 flex justify-center">
                         <Link
@@ -142,7 +177,8 @@ export const ProductCard = ({
     translate,
 }: {
     product: {
-        key: number;
+        key?: number;
+        id?: number;
         url: string;
         image: string;
         permalink: string;
@@ -162,17 +198,15 @@ export const ProductCard = ({
                 y: -10,
                 scale: 1.03,
             }}
-            key={product.sitename}
-            className="group/product h-64 w-[20rem] relative shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-800"
+            className="group/product h-56 w-[22rem] relative shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-800"
         >
             <Link
                 href={`/mywork/${product.permalink}`}
-                className="block opacity-80 group-hover/product:opacity-100 h-full w-full"
+                className="block opacity-80 group-hover/product:opacity-100 h-full w-full relative"
             >
                 <Image
                     src={imgSrc}
-                    height="400"
-                    width="400"
+                    fill
                     className="object-cover object-left-top absolute inset-0 h-full w-full"
                     alt={product.sitename}
                     onError={() => setImgSrc('/no-image-placeholder.svg')}

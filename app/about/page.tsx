@@ -3,12 +3,12 @@ import rowellPic from "@/assets/images/ROWELL-6.jpg";
 import Image from "next/image";
 import Link from "next/link";
 import { CVDownloadButton } from "@/components/ui/cv-download-button";
-import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
+import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
-import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, CheckCircle2, Award, Briefcase, Sparkles, Send, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "About Rowell Mark Blanca",
+    title: "About Rowell Mark Blanca — Senior Software Engineer",
     description: "Learn more about Rowell Mark Blanca — Software Engineer with 12+ years experience in React, Next.js, Node.js, PHP, and custom WordPress systems.",
 };
 
@@ -20,20 +20,65 @@ export default function AboutPage() {
         { title: 'Instagram', icon: IconBrandInstagram, url: 'https://www.instagram.com/its.mr.row/' },
     ];
 
+    const stats = [
+        { label: "Years Experience", value: "12+", icon: Award },
+        { label: "Job Success Rate", value: "100%", icon: Sparkles },
+        { label: "Web Builds Delivered", value: "50+", icon: Briefcase },
+        { label: "Global Regions", value: "US, UK, HK, PH", icon: Globe },
+    ];
+
+    const coreCapabilities = [
+        {
+            title: "Full-Stack Web Engineering",
+            description: "Building fast, SEO-driven Next.js and React applications using modern TypeScript architectures, Tailwind CSS, and scalable APIs.",
+            icon: IconCode,
+        },
+        {
+            title: "WordPress & Plugin Development",
+            description: "Architecting custom WordPress plugins, headless integrations, Bedrock/Sage setups, and Gutenberg blocks without bloated page builders.",
+            icon: IconCpu,
+        },
+        {
+            title: "AI Integration & Automation",
+            description: "Connecting LLMs (OpenAI, Gemini, Ollama), vector RAG bases, n8n automation workflows, and CRM lead nurturing plugins.",
+            icon: IconRocket,
+        },
+        {
+            title: "Security & Optimization",
+            description: "Enforcing web accessibility standards, security hardening, automated CI/CD pipelines, and high Lighthouse speed scores.",
+            icon: IconShieldCheck,
+        },
+    ];
+
     const techCategories = [
-        { label: "Frontend", items: "HTML5, CSS3, JavaScript (ES6+), TypeScript, React.js, Next.js, Tailwind CSS, SASS/SCSS" },
-        { label: "Backend & DB", items: "Node.js (Express), PHP (Laravel, WordPress), NeonDB (PostgreSQL), MySQL, Redis, REST & GraphQL APIs" },
-        { label: "DevOps & Tools", items: "Git, Docker, GitHub Actions CI/CD, Figma, Photoshop, Vercel, AWS" },
-        { label: "Automation & AI", items: "n8n, Dify, OpenAI ChatGPT API, Google Gemini API, Automated Workflows" },
-        { label: "Testing & Security", items: "Playwright, Cypress E2E, JWT, OAuth 2.0, Security Hardening" },
+        {
+            label: "Frontend",
+            items: ["HTML5", "CSS3", "JavaScript (ES6+)", "TypeScript", "React.js", "Next.js", "Tailwind CSS", "SASS/SCSS", "Framer Motion"],
+        },
+        {
+            label: "Backend & Database",
+            items: ["Node.js (Express)", "PHP (Laravel, WordPress)", "NeonDB (PostgreSQL)", "Prisma ORM", "MySQL", "Redis", "REST & GraphQL APIs"],
+        },
+        {
+            label: "DevOps & Cloud Tools",
+            items: ["Git", "Docker", "GitHub Actions CI/CD", "Vercel", "AWS", "Figma", "Photoshop"],
+        },
+        {
+            label: "AI & Automation Workflows",
+            items: ["n8n", "Dify", "OpenAI ChatGPT API", "Google Gemini API", "Ollama", "RAG Knowledge Indexing"],
+        },
+        {
+            label: "Testing & Security",
+            items: ["Playwright", "Cypress E2E", "JWT", "OAuth 2.0", "Security Hardening", "Lighthouse SEO"],
+        },
     ];
 
     return (
         <div className="bg-brand-bg min-h-screen">
-            <Banner title="About Me" subtitle="Biography & Background" />
+            <Banner title="About Me" subtitle="Biography, Skills & Technical Background" />
 
             <div className="py-12 pb-24">
-                <div className="container mx-auto px-6 max-w-6xl space-y-8">
+                <div className="container mx-auto px-6 max-w-6xl space-y-16">
                     
                     {/* Back link */}
                     <div className="flex items-start">
@@ -45,88 +90,173 @@ export default function AboutPage() {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    {/* Main Hero Overview */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                         
                         {/* Left Info Column */}
                         <div className="lg:col-span-7 space-y-6">
                             <div>
-                                <span className="text-xs font-bold uppercase tracking-wider text-brand-amber bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60 inline-block mb-3">
-                                    Software Engineer
+                                <span className="text-xs font-extrabold uppercase tracking-wider text-brand-amber bg-amber-500/10 px-3.5 py-1.5 rounded-full border border-amber-500/30 inline-block mb-3">
+                                    Senior Software Engineer
                                 </span>
-                                <h1 className="text-4xl sm:text-5xl font-black text-brand-navy tracking-tight">
-                                    Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-amber to-amber-600">Rowell</span>
+                                <h1 className="text-4xl sm:text-5xl font-black text-brand-navy tracking-tight leading-tight">
+                                    Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-amber to-amber-600">Rowell Mark Blanca</span>
                                 </h1>
                                 <p className="text-base text-brand-slate mt-4 leading-relaxed font-medium">
-                                    Over 12 years of hands-on software development experience partnering with clients across the US, UK, Hong Kong, and Philippines. I build fast, scalable, accessible digital products using modern web standards.
+                                    Over 12 years of hands-on software development experience partnering with agency leaders, corporate platforms, and clients across the US, UK, Hong Kong, and Philippines. Specializing in high-performance Next.js web applications, custom WordPress systems, and AI-driven automation workflows.
                                 </p>
                             </div>
 
-                            {/* Contact Badges */}
+                            {/* Quick Contact Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
-                                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
-                                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase">
+                                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-1">
+                                    <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                                         <Mail className="h-4 w-4 text-brand-amber" /> Email
                                     </div>
-                                    <p className="text-xs sm:text-sm font-extrabold text-brand-navy">rowellblanca94@gmail.com</p>
+                                    <p className="text-xs sm:text-sm font-black text-brand-navy">rowellblanca94@gmail.com</p>
                                 </div>
 
-                                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
-                                    <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase">
+                                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-1">
+                                    <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                                         <Phone className="h-4 w-4 text-brand-amber" /> Phone / WhatsApp
                                     </div>
-                                    <p className="text-xs sm:text-sm font-extrabold text-brand-navy">+63 968 890 0418</p>
+                                    <p className="text-xs sm:text-sm font-black text-brand-navy">+63 968 890 0418</p>
                                 </div>
                             </div>
 
-                            {/* Key Technologies */}
-                            <div className="space-y-4 pt-2">
-                                <h2 className="text-xl font-extrabold text-brand-navy">Technical Summary</h2>
-                                <div className="space-y-3">
-                                    {techCategories.map(({ label, items }, idx) => (
-                                        <div key={idx} className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-1">
-                                            <div className="flex items-center gap-2 text-xs font-extrabold text-brand-amber uppercase tracking-wider">
-                                                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                                                {label}
-                                            </div>
-                                            <p className="text-xs text-slate-700 font-medium leading-relaxed">{items}</p>
-                                        </div>
+                            {/* Social Media & Action */}
+                            <div className="pt-2 flex flex-wrap items-center gap-4">
+                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Connect:</span>
+                                <div className="flex items-center gap-2.5">
+                                    {socialMedia.map(({ title, icon: Icon, url }, idx) => (
+                                        <a
+                                            key={idx}
+                                            href={url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title={title}
+                                            className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-brand-amber hover:border-amber-400 hover:shadow-md transition-all shadow-xs"
+                                        >
+                                            <Icon size="18" />
+                                        </a>
                                     ))}
                                 </div>
-                            </div>
-
-                            {/* Social Media */}
-                            <div className="pt-2 flex items-center gap-3">
-                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Find Me:</span>
-                                {socialMedia.map(({ title, icon: Icon, url }, idx) => (
-                                    <a
-                                        key={idx}
-                                        href={url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        title={title}
-                                        className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-brand-amber hover:border-amber-300 transition-all shadow-xs"
-                                    >
-                                        <Icon size="18" />
-                                    </a>
-                                ))}
                             </div>
                         </div>
 
                         {/* Right Photo Column */}
                         <div className="lg:col-span-5 space-y-6">
-                            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-white p-3">
+                            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden border border-slate-200/90 shadow-2xl bg-white p-3 group">
                                 <Image
                                     src={rowellPic}
                                     alt="Rowell Mark Blanca"
                                     fill
-                                    className="object-cover rounded-2xl"
+                                    className="object-cover rounded-2xl group-hover:scale-102 transition-transform duration-500"
                                     sizes="(max-width: 1024px) 100vw, 450px"
+                                    priority
                                 />
+                                
+                                {/* Floating Experience Badge */}
+                                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-white/20 text-white shadow-xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs font-extrabold text-amber-400 uppercase tracking-widest">Full-Stack & WP Engineer</p>
+                                        <p className="text-sm font-black text-white mt-0.5">12+ Years Experience</p>
+                                    </div>
+                                    <Sparkles className="w-6 h-6 text-amber-400 shrink-0" />
+                                </div>
                             </div>
 
                             <CVDownloadButton />
                         </div>
 
+                    </div>
+
+                    {/* Key Stats Bar */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+                        {stats.map(({ label, value, icon: Icon }, idx) => (
+                            <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs text-center space-y-2 hover:shadow-md hover:border-amber-300 transition-all">
+                                <Icon className="w-6 h-6 text-brand-amber mx-auto" />
+                                <h3 className="text-3xl font-black text-brand-navy">{value}</h3>
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Core Capabilities */}
+                    <div className="space-y-6 pt-4">
+                        <div className="text-center max-w-xl mx-auto space-y-2">
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-brand-amber bg-amber-500/10 px-3.5 py-1 rounded-full border border-amber-500/30 inline-block">
+                                Core Capabilities
+                            </span>
+                            <h2 className="text-3xl font-black text-brand-navy">What I Build & Specialize In</h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {coreCapabilities.map(({ title, description, icon: Icon }, idx) => (
+                                <div key={idx} className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3 hover:shadow-md hover:border-amber-300 transition-all">
+                                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600">
+                                        <Icon size={24} />
+                                    </div>
+                                    <h3 className="text-lg font-black text-brand-navy">{title}</h3>
+                                    <p className="text-sm text-slate-600 leading-relaxed font-medium">{description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Categorized Technical Summary Chips */}
+                    <div className="space-y-6 pt-4">
+                        <div className="space-y-2">
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-brand-amber bg-amber-500/10 px-3.5 py-1 rounded-full border border-amber-500/30 inline-block">
+                                Technology Matrix
+                            </span>
+                            <h2 className="text-3xl font-black text-brand-navy">Technical Skills & Ecosystem</h2>
+                        </div>
+
+                        <div className="space-y-4">
+                            {techCategories.map(({ label, items }, idx) => (
+                                <div key={idx} className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3">
+                                    <div className="flex items-center gap-2 text-xs font-extrabold text-brand-navy uppercase tracking-wider border-b border-slate-100 pb-2">
+                                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                                        {label}
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        {items.map((item, i) => (
+                                            <span
+                                                key={i}
+                                                className="bg-slate-100/90 border border-slate-200/90 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-800 hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 transition-all cursor-default"
+                                            >
+                                                {item}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Bottom CTA Card */}
+                    <div className="p-8 sm:p-12 rounded-3xl bg-slate-900 text-white shadow-2xl relative overflow-hidden border border-slate-800 text-center space-y-5">
+                        <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+                            <span className="text-xs font-extrabold uppercase tracking-widest text-brand-amber bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/30 inline-block">
+                                Let's Build Together
+                            </span>
+                            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+                                Have a Project or Product in Mind?
+                            </h2>
+                            <p className="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
+                                Whether you need a full Next.js web application, a custom WordPress ecosystem, or AI workflow integrations, I'm available for technical contracts and high-impact projects.
+                            </p>
+                            <div className="pt-2 flex justify-center gap-4">
+                                <Link
+                                    href="/contact"
+                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-md hover:shadow-xl transition-all cursor-pointer"
+                                >
+                                    <Send className="h-4 w-4" />
+                                    <span>Get In Touch</span>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

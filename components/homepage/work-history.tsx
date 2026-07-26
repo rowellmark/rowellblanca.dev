@@ -90,15 +90,15 @@ export default function WorkHistory() {
                             setOpenAccordion={setOpenAccordion}
                             workyear={history.year}
                         >
-                            <div className="space-y-4 pt-2">
-                                <ul className="flex items-center gap-6 text-xs font-semibold text-slate-600 max-sm:flex-col max-sm:items-start max-sm:gap-2">
-                                    <li className="flex items-center gap-1.5 text-brand-amber">
-                                        <IconMap2 size="16" />
-                                        <span className="text-slate-700">{history.location}</span>
+                            <div className="space-y-4 pt-1">
+                                <ul className="flex items-center gap-6 text-xs font-bold text-slate-600 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+                                    <li className="flex items-center gap-1.5 text-amber-600 bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">
+                                        <IconMap2 size="15" className="text-amber-600 shrink-0" />
+                                        <span className="text-slate-800">{history.location}</span>
                                     </li>
-                                    <li className="flex items-center gap-1.5 text-brand-amber">
-                                        <IconLink size="16" />
-                                        <a href={history.companyurl} target="_blank" rel="noopener noreferrer" className="text-brand-amber hover:underline">
+                                    <li className="flex items-center gap-1.5 text-amber-600 bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">
+                                        <IconLink size="15" className="text-amber-600 shrink-0" />
+                                        <a href={history.companyurl} target="_blank" rel="noopener noreferrer" className="text-amber-700 hover:text-amber-900 font-extrabold hover:underline">
                                             {history.company}
                                         </a>
                                     </li>
@@ -106,18 +106,18 @@ export default function WorkHistory() {
 
                                 <div className="flex max-lg:flex-col-reverse justify-between gap-6 items-start">
                                     <div className="w-full space-y-4">
-                                        <p className="text-sm text-slate-600 leading-relaxed">
+                                        <p className="text-sm text-slate-600 leading-relaxed font-medium">
                                             {history.desciption}
                                         </p>
                                         <div className="flex flex-wrap gap-2 pt-2">
                                             {history.stacks.map((stack, key) => (
-                                                <span key={key} className="bg-slate-100 border border-slate-200 px-3 py-1 rounded-full text-xs font-bold text-slate-700">
+                                                <span key={key} className="bg-slate-100/80 border border-slate-200/80 px-3 py-1 rounded-lg text-xs font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-800 hover:border-amber-300 transition-colors">
                                                     {stack}
                                                 </span>
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="w-24 shrink-0 p-2 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+                                    <div className="w-24 shrink-0 p-2.5 bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300">
                                         <Image src={history.logo} className="w-full h-auto object-contain block" alt={history.logoAlt} />
                                     </div>
                                 </div>

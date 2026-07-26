@@ -1,12 +1,16 @@
-import { useState } from 'react';
+'use client';
+
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 
 interface AccordionProps {
     title: string;
     workyear: string;
     children: React.ReactNode;
-    index: number; // Add index prop to identify each accordion
-    openAccordion: number; // Add openAccordion prop to track which accordion is open
-    setOpenAccordion: (index: number) => void; // Add setOpenAccordion prop to update openAccordion
+    index: number;
+    openAccordion: number;
+    setOpenAccordion: (index: number) => void;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
@@ -20,37 +24,63 @@ const Accordion: React.FC<AccordionProps> = ({
     const isOpen = openAccordion === index;
 
     const handleClick = () => {
-        setOpenAccordion(isOpen ? -1 : index); // Close if already open, otherwise open
+        setOpenAccordion(isOpen ? -1 : index);
     };
 
     return (
-        <div className="border border-gray-200 rounded-md bg-white text-primary-accent accordionHead my-3">
-            <div
-                className="flex justify-between items-center p-4 font-semibold cursor-pointer relative max-sm:flex-col max-sm:items-start max-sm:px-4"
+        <div
+            className={`rounded-2xl transition-all duration-300 border overflow-hidden my-3.5 ${
+                isOpen
+                    ? 'bg-white border-amber-400/80 shadow-lg shadow-amber-500/5 ring-1 ring-amber-400/30'
+                    : 'bg-white/95 border-slate-200/90 shadow-xs hover:border-amber-300/60 hover:shadow-md'
+            }`}
+        >
+            <button
+                type="button"
+                className="w-full flex items-center justify-between p-5 text-left font-bold cursor-pointer transition-colors duration-200 group focus:outline-none max-sm:flex-col max-sm:items-start"
                 onClick={handleClick}
             >
-                <h2 className="text-lg font-semibold">{title}</h2>
-
-                <div className="workyear px-10 max-sm:px-0 max-sm:text-sm max-sm:text-accent-color">
-                    {workyear}
-                </div>
-                <div className="arrows absolute right-0 top-0 h-full flex items-center px-4">
-                <svg
-                    className={`w-6 h-6 transition-transform transform ${isOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d={isOpen ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'}
+                <div className="flex items-center gap-3 pr-4">
+                    <span
+                        className={`w-2.5 h-2.5 rounded-full transition-all duration-300 shrink-0 ${
+                            isOpen ? 'bg-amber-500 scale-125 shadow-xs shadow-amber-500/50' : 'bg-slate-300 group-hover:bg-amber-400'
+                        }`}
                     />
-                    </svg>
+                    <h2 className={`text-base sm:text-lg font-black transition-colors ${isOpen ? 'text-slate-900' : 'text-slate-800 group-hover:text-amber-600'}`}>
+                        {title}
+                    </h2>
                 </div>
-            </div>
-            {isOpen && <div className="p-4 accordionContent text-base leading-7">{children}</div>}
+
+                <div className="flex items-center gap-4 shrink-0 max-sm:mt-3 max-sm:w-full max-sm:justify-between">
+                    <span className="text-xs font-extrabold text-amber-700 bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200/80 shadow-xs">
+                        {workyear}
+                    </span>
+                    <div
+                        className={`p-1.5 rounded-full transition-transform duration-300 ${
+                            isOpen ? 'rotate-180 bg-amber-500/10 text-amber-600' : 'text-slate-400 group-hover:text-slate-600'
+                        }`}
+                    >
+                        <ChevronDown className="w-5 h-5" />
+                    </div>
+                </div>
+            </button>
+
+            <AnimatePresence initial={false}>
+                {isOpen && (
+                    <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                    >
+                        <div className="p-5 pt-3 border-t border-slate-100/90 text-base leading-7">
+                            {children}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
