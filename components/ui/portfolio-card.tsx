@@ -29,6 +29,9 @@ export interface PortfolioProject {
   challenge?: string;
   solution?: string;
   results?: string;
+  featured?: boolean;
+  spotlight?: boolean;
+  active?: boolean;
 }
 
 
@@ -1066,4 +1069,6 @@ export function ProjectDetailPreview({ project }: { project: PortfolioProject })
     </>
   );
 }
+
+export default PortfolioCard;
 

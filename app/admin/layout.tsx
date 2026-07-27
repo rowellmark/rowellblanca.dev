@@ -31,13 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // Exclude auth check layout styling for login page
   const isLoginPage = pathname === '/admin/login';
 
-  useEffect(() => {
-    if (!isLoginPage) {
-      checkAuth();
-    }
-  }, [pathname]);
-
-  const checkAuth = async () => {
+  const checkAuth = React.useCallback(async () => {
     try {
       const res = await fetch('/api/crm/leads');
       if (res.status === 401) {
@@ -50,7 +44,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       setIsAuthenticated(false);
       router.push('/admin/login');
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    if (!isLoginPage) {
+      checkAuth();
+    }
+  }, [isLoginPage, checkAuth]);
 
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });

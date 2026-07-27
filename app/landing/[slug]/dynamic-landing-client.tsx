@@ -17,7 +17,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import PortfolioCard from '@/components/ui/portfolio-card';
+import { PortfolioCard } from '@/components/ui/portfolio-card';
 import { ContactModal } from '@/components/ui/contact-modal';
 
 interface DynamicLandingPageClientProps {
