@@ -47,28 +47,34 @@ Return ONLY a single valid JSON object (without any markdown formatting or extra
   "content": "A long-form, beautifully structured HTML blog post (approx 400-600 words) using clean semantic HTML elements (<h2>, <h3>, <p>, <ul>, <li>, <blockquote>, <code>, <pre>). Include sections like Overview, Technical Architecture, Core Features, Key Challenges & Breakthroughs, and Business Impact. Do NOT wrap in <html> or <body> tags."
 }`;
 
-    // Use Gemini 3.6 Flash, Gemini 3.5 Flash, and Gemini Flash Latest
+    // Valid Gemini API endpoints with 7s max timeout per request
     let geminiResponse;
     const modelUrls = [
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
     ];
 
     let lastError = '';
     for (const url of modelUrls) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 7000);
+
         const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             contents: [{ parts: [{ text: systemPrompt }] }],
             generationConfig: {
               temperature: 0.7,
-              maxOutputTokens: 2500,
+              maxOutputTokens: 2000,
             },
           }),
         });
+
+        clearTimeout(timeoutId);
 
         if (res.ok) {
           geminiResponse = await res.json();
@@ -78,7 +84,7 @@ Return ONLY a single valid JSON object (without any markdown formatting or extra
           lastError = `Status ${res.status}: ${errText}`;
         }
       } catch (err: any) {
-        lastError = err?.message || 'Network error calling Gemini API';
+        lastError = err?.message || 'Network timeout calling Gemini API';
       }
     }
 

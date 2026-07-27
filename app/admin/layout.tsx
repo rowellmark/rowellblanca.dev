@@ -16,7 +16,8 @@ import {
   Menu,
   Headphones,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Globe
 } from 'lucide-react';
 import NotificationBell from '@/components/admin/notification-bell';
 
@@ -70,6 +71,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       title: 'CORE NAVIGATION',
       items: [
         { title: 'Dashboard', href: '/admin', icon: LayoutDashboard, external: false },
+        { title: 'Landing Pages', href: '/admin/landing-pages', icon: Globe, external: false },
         { title: 'Projects', href: '/admin/projects', icon: FolderKanban, external: false },
         { title: 'Leads', href: '/admin/leads', icon: Users, external: false },
         { title: 'Testimonials', href: '/admin/testimonials', icon: Star, external: false },

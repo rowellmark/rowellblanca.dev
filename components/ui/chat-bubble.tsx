@@ -141,6 +141,8 @@ export default function ChatBubble() {
     }
   };
 
+  const [hpField, setHpField] = useState('');
+
   const handleInitialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) return;
@@ -161,6 +163,7 @@ export default function ChatBubble() {
           email,
           subject: subject || 'Portfolio Chat Inquiry',
           message,
+          hp_field: hpField,
         }),
       });
 
@@ -377,6 +380,17 @@ export default function ChatBubble() {
 
                 {/* Visitor Form */}
                 <form onSubmit={handleInitialSubmit} className="space-y-3 pt-1">
+                  {/* Honeypot field - hidden from real visitors, catches automated spam bots */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={hpField}
+                    onChange={(e) => setHpField(e.target.value)}
+                    className="hidden"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                  />
                   <div>
                     <label className="block text-[11px] font-bold text-slate-300 mb-1">Your Name *</label>
                     <input

@@ -26,6 +26,8 @@ export default function TestimonialsPage() {
     quote: '',
     rating: 5,
     active: true,
+    targetUkReact: false,
+    targetUkWp: false,
   });
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function TestimonialsPage() {
 
   const fetchTestimonials = async () => {
     try {
-      const res = await fetch('/api/testimonials');
+      const res = await fetch('/api/testimonials?includeInactive=true');
       const data = await res.json();
       if (data.success && Array.isArray(data.testimonials)) {
         setTestimonials(data.testimonials);
@@ -54,7 +56,16 @@ export default function TestimonialsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const method = editingItem ? 'PUT' : 'POST';
-    const payload = editingItem ? { ...form, id: editingItem.id } : form;
+
+    // Encode target tags in avatarUrl
+    const tags: string[] = [];
+    if (form.targetUkReact) tags.push('target:uk-react');
+    if (form.targetUkWp) tags.push('target:uk-wordpress');
+    const avatarUrl = tags.join(',');
+
+    const payload = editingItem
+      ? { ...form, avatarUrl, id: editingItem.id }
+      : { ...form, avatarUrl };
 
     try {
       const res = await fetch('/api/testimonials', {
@@ -66,7 +77,16 @@ export default function TestimonialsPage() {
       if (data.success) {
         setShowModal(false);
         setEditingItem(null);
-        setForm({ name: '', role: '', company: '', quote: '', rating: 5, active: true });
+        setForm({
+          name: '',
+          role: '',
+          company: '',
+          quote: '',
+          rating: 5,
+          active: true,
+          targetUkReact: false,
+          targetUkWp: false,
+        });
         fetchTestimonials();
       } else {
         alert(data.message || 'Error saving testimonial');
@@ -145,7 +165,16 @@ export default function TestimonialsPage() {
           <button
             onClick={() => {
               setEditingItem(null);
-              setForm({ name: '', role: '', company: '', quote: '', rating: 5, active: true });
+              setForm({
+                name: '',
+                role: '',
+                company: '',
+                quote: '',
+                rating: 5,
+                active: true,
+                targetUkReact: true,
+                targetUkWp: true,
+              });
               setShowModal(true);
             }}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-700 text-white font-extrabold text-xs shadow-md transition-all cursor-pointer"
@@ -212,6 +241,8 @@ export default function TestimonialsPage() {
                       quote: t.quote,
                       rating: t.rating,
                       active: t.active,
+                      targetUkReact: Boolean(t.avatarUrl?.includes('target:uk-react') || t.company?.toLowerCase().includes('macmanus')),
+                      targetUkWp: Boolean(t.avatarUrl?.includes('target:uk-wordpress') || t.company?.toLowerCase().includes('tower') || t.company?.toLowerCase().includes('macmanus')),
                     });
                     setShowModal(true);
                   }}
@@ -272,12 +303,42 @@ export default function TestimonialsPage() {
               <div>
                 <label className="block text-slate-700 font-extrabold mb-1">Testimonial Quote</label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   value={form.quote}
                   onChange={(e) => setForm({ ...form, quote: e.target.value })}
                   required
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
                 />
+              </div>
+
+              {/* Target Landing Page Settings */}
+              <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-2xl space-y-2">
+                <label className="block text-amber-900 font-black text-xs uppercase tracking-wider">
+                  🎯 Target Landing Pages Settings
+                </label>
+                <p className="text-[11px] text-slate-600">Select which landing page(s) will render this testimonial:</p>
+
+                <div className="space-y-1.5 pt-1">
+                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-xs">
+                    <input
+                      type="checkbox"
+                      checked={form.targetUkReact}
+                      onChange={(e) => setForm({ ...form, targetUkReact: e.target.checked })}
+                      className="h-4 w-4 rounded text-[#1d63ed]"
+                    />
+                    <span>🇬🇧 UK React Developer Page (/hire-uk-react-developer)</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-xs">
+                    <input
+                      type="checkbox"
+                      checked={form.targetUkWp}
+                      onChange={(e) => setForm({ ...form, targetUkWp: e.target.checked })}
+                      className="h-4 w-4 rounded text-indigo-600"
+                    />
+                    <span>🇬🇧 UK WordPress Developer Page (/hire-uk-wordpress-developer)</span>
+                  </label>
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">

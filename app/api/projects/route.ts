@@ -186,16 +186,53 @@ export async function GET(request: Request) {
       console.warn('NeonDB query warning, serving fallback projects dataset.');
     }
 
+    const target = searchParams.get('target');
+    const type = searchParams.get('type'); // 'website' | 'plugin'
+
     let projectsToReturn = dbProjects.length > 0 ? dbProjects : FALLBACK_PROJECTS;
 
     if (!includeInactive) {
       projectsToReturn = projectsToReturn.filter((p: any) => p.active !== false);
     }
 
-    if (category && category !== 'All') {
+    if (target === 'uk-react') {
+      projectsToReturn = projectsToReturn.filter((p: any) =>
+        (p.technologies && p.technologies.includes('target:uk-react')) ||
+        p.permalink?.includes('macmanus-portal') ||
+        p.sitename?.toLowerCase().includes('macmanus asset finance portal') ||
+        (p.technologies && p.technologies.some((t: string) => t.toLowerCase().includes('react')))
+      );
+    } else if (target === 'uk-wordpress') {
+      projectsToReturn = projectsToReturn.filter((p: any) =>
+        (p.technologies && p.technologies.includes('target:uk-wordpress')) ||
+        p.permalink?.includes('tower-fire') ||
+        p.permalink?.includes('macmanus') ||
+        p.sitename?.toLowerCase().includes('tower fire') ||
+        p.sitename?.toLowerCase().includes('macmanus') ||
+        (p.technologies && p.technologies.some((t: string) => t.toLowerCase().includes('wordpress')))
+      );
+    } else if (category && category !== 'All') {
       const lowerCat = category.toLowerCase();
       projectsToReturn = projectsToReturn.filter((p) => {
         return p.technologies && p.technologies.some((t: string) => t.toLowerCase() === lowerCat || t.toLowerCase().includes(lowerCat));
+      });
+    }
+
+    if (type === 'website') {
+      projectsToReturn = projectsToReturn.filter((p: any) => {
+        const isPlugin =
+          p.url?.startsWith('wp-content') ||
+          p.permalink?.includes('plugin') ||
+          p.technologies?.some((t: string) => t.toLowerCase() === 'wordpress plugins');
+        return !isPlugin;
+      });
+    } else if (type === 'plugin') {
+      projectsToReturn = projectsToReturn.filter((p: any) => {
+        const isPlugin =
+          p.url?.startsWith('wp-content') ||
+          p.permalink?.includes('plugin') ||
+          p.technologies?.some((t: string) => t.toLowerCase() === 'wordpress plugins');
+        return isPlugin;
       });
     }
 

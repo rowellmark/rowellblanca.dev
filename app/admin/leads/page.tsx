@@ -28,6 +28,7 @@ const LEAD_STATUSES = ['ALL', 'NEW', 'CONTACTED', 'QUALIFIED', 'PROPOSAL_SENT', 
 export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [sourceFilter, setSourceFilter] = useState<'ALL' | 'LIVE_CHAT' | 'WEB_FORM'>('ALL');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [newNoteContent, setNewNoteContent] = useState('');
 
@@ -102,30 +103,72 @@ export default function LeadsPage() {
     }
   };
 
+  const filteredLeads = (Array.isArray(leads) ? leads : []).filter((lead: any) => {
+    const isLiveChat = lead.sourceUrl?.includes('Live Chat') || lead.serviceInterest?.includes('[Live Chat]');
+    if (sourceFilter === 'LIVE_CHAT') return isLiveChat;
+    if (sourceFilter === 'WEB_FORM') return !isLiveChat;
+    return true;
+  });
+
   return (
     <div className="max-w-7xl mx-auto space-y-6 font-sans">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-black text-[#0b1a30]">
-            CRM Leads Pipeline ({(Array.isArray(leads) ? leads : []).length})
+            CRM Leads Pipeline ({filteredLeads.length})
           </h1>
-          <p className="text-xs text-slate-500 font-medium mt-1">Manage leads, track status stages, and write internal notes.</p>
+          <p className="text-xs text-slate-500 font-medium mt-1">Manage leads, track status stages, and filter live chat vs web form inquiries.</p>
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {LEAD_STATUSES.map((st) => (
+        {/* Source & Status Filters */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Channel Filter */}
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
-              key={st}
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
-                statusFilter === st
-                  ? 'bg-[#1d63ed] text-white shadow-xs'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              type="button"
+              onClick={() => setSourceFilter('ALL')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                sourceFilter === 'ALL' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              {st}
+              All Sources
             </button>
-          ))}
+            <button
+              type="button"
+              onClick={() => setSourceFilter('LIVE_CHAT')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                sourceFilter === 'LIVE_CHAT' ? 'bg-cyan-600 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>💬 Live Chat</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSourceFilter('WEB_FORM')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                sourceFilter === 'WEB_FORM' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>📩 Web Forms</span>
+            </button>
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex items-center gap-1 flex-wrap">
+            {LEAD_STATUSES.map((st) => (
+              <button
+                key={st}
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
+                  statusFilter === st
+                    ? 'bg-[#1d63ed] text-white shadow-xs'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -137,60 +180,72 @@ export default function LeadsPage() {
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-extrabold">
                     <th className="p-4">Contact</th>
-                    <th className="p-4">Service</th>
+                    <th className="p-4">Service & Source</th>
                     <th className="p-4">Status</th>
                     <th className="p-4">Submitted</th>
                     <th className="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium">
-                  {(!Array.isArray(leads) || leads.length === 0) ? (
+                  {filteredLeads.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="p-8 text-center text-slate-400">
-                        No CRM leads matching current status filter.
+                        No CRM leads matching current status and source filters.
                       </td>
                     </tr>
                   ) : (
-                    leads.map((lead) => (
-                      <tr
-                        key={lead.id}
-                        className={`hover:bg-slate-50 cursor-pointer transition-colors ${
-                          selectedLead?.id === lead.id ? 'bg-amber-50/60 border-l-4 border-amber-500' : ''
-                        }`}
-                        onClick={() => setSelectedLead(lead)}
-                      >
-                        <td className="p-4">
-                          <span className="font-extrabold text-[#0b1a30] block text-sm">{lead.contactName}</span>
-                          <span className="text-slate-500 block font-mono text-[11px]">{lead.email}</span>
-                        </td>
-                        <td className="p-4 text-slate-700 font-bold">
-                          {lead.serviceInterest || 'General Inquiry'}
-                        </td>
-                        <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                          <select
-                            value={lead.status}
-                            onChange={(e) => handleLeadStatusChange(lead.id, e.target.value)}
-                            className="bg-slate-100 text-xs font-extrabold px-2.5 py-1 rounded-lg border border-slate-300 text-[#0b1a30]"
-                          >
-                            {LEAD_STATUSES.filter(s => s !== 'ALL').map(s => (
-                              <option key={s} value={s}>{s}</option>
-                            ))}
-                          </select>
-                        </td>
-                        <td className="p-4 text-slate-400 font-mono">
-                          {new Date(lead.submittedAt).toLocaleDateString()}
-                        </td>
-                        <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => handleDeleteLead(lead.id)}
-                            className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+                    filteredLeads.map((lead: any) => {
+                      const isLiveChat = lead.sourceUrl?.includes('Live Chat') || lead.serviceInterest?.includes('[Live Chat]');
+                      return (
+                        <tr
+                          key={lead.id}
+                          className={`hover:bg-slate-50 cursor-pointer transition-colors ${
+                            selectedLead?.id === lead.id ? 'bg-amber-50/60 border-l-4 border-amber-500' : ''
+                          }`}
+                          onClick={() => setSelectedLead(lead)}
+                        >
+                          <td className="p-4">
+                            <span className="font-extrabold text-[#0b1a30] block text-sm">{lead.contactName}</span>
+                            <span className="text-slate-500 block font-mono text-[11px]">{lead.email}</span>
+                          </td>
+                          <td className="p-4 text-slate-700 font-bold">
+                            <div>{lead.serviceInterest || 'General Inquiry'}</div>
+                            {isLiveChat ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-800 text-[10px] font-extrabold">
+                                💬 Live Chat
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-800 text-[10px] font-extrabold">
+                                📩 Web Form
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                            <select
+                              value={lead.status}
+                              onChange={(e) => handleLeadStatusChange(lead.id, e.target.value)}
+                              className="bg-slate-100 text-xs font-extrabold px-2.5 py-1 rounded-lg border border-slate-300 text-[#0b1a30]"
+                            >
+                              {LEAD_STATUSES.filter(s => s !== 'ALL').map(s => (
+                                <option key={s} value={s}>{s}</option>
+                              ))}
+                            </select>
+                          </td>
+                          <td className="p-4 text-slate-400 font-mono">
+                            {new Date(lead.submittedAt).toLocaleDateString()}
+                          </td>
+                          <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => handleDeleteLead(lead.id)}
+                              className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>

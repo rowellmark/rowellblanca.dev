@@ -13,7 +13,6 @@ const Contact: React.FC = () => {
         phone: '',
         company: '',
         service: 'Full-Stack Web App Development',
-        budget: 'Below $1,500',
         message: '',
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -53,7 +52,6 @@ const Contact: React.FC = () => {
                     phone: form.phone,
                     company: form.company,
                     service: form.service,
-                    budget: form.budget,
                     subject: `Inquiry: ${form.service}`,
                     message: form.message,
                     gdprConsent: true,
@@ -146,24 +144,6 @@ const Contact: React.FC = () => {
                         <option value="Custom WordPress Engine / Plugin">Custom WordPress Engine / Plugin</option>
                         <option value="AI / Automation Workflow Integration">AI / Automation Workflow Integration</option>
                         <option value="Retainer / Ongoing Maintenance">Retainer / Ongoing Maintenance</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="budget" className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Estimated Budget
-                    </label>
-                    <select
-                        id="budget"
-                        value={form.budget}
-                        onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 text-xs font-extrabold focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
-                    >
-                        <option value="Below $1,500">Below $1,500</option>
-                        <option value="$1,500 - $3,000">$1,500 - $3,000</option>
-                        <option value="$3,000 - $5,000">$3,000 - $5,000</option>
-                        <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                        <option value="$10,000+">$10,000+</option>
                     </select>
                 </div>
             </div>

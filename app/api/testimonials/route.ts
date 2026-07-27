@@ -32,19 +32,45 @@ const FALLBACK_TESTIMONIALS = [
   },
 ];
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const target = searchParams.get('target'); // e.g. 'uk-react' | 'uk-wordpress'
+    const includeInactive = searchParams.get('includeInactive') === 'true' && isAdminAuthenticated();
+
     let dbTestimonials: any[] = [];
     try {
       dbTestimonials = await prisma.testimonial.findMany({
-        where: isAdminAuthenticated() ? undefined : { active: true },
+        where: includeInactive ? undefined : { active: true },
         orderBy: { createdAt: 'desc' },
       });
     } catch (e) {
       console.warn('NeonDB query warning, serving fallback testimonials.');
     }
 
-    const items = dbTestimonials.length > 0 ? dbTestimonials : FALLBACK_TESTIMONIALS;
+    let items = dbTestimonials.length > 0 ? dbTestimonials : FALLBACK_TESTIMONIALS;
+
+    if (!includeInactive) {
+      items = items.filter((t: any) => t.active === true);
+    }
+
+    if (target === 'uk-react') {
+      items = items.filter((t: any) =>
+        t.avatarUrl?.includes('target:uk-react') ||
+        t.company?.toLowerCase().includes('macmanus') ||
+        t.quote?.toLowerCase().includes('react') ||
+        t.role?.toLowerCase().includes('react')
+      );
+    } else if (target === 'uk-wordpress') {
+      items = items.filter((t: any) =>
+        t.avatarUrl?.includes('target:uk-wordpress') ||
+        t.company?.toLowerCase().includes('tower') ||
+        t.company?.toLowerCase().includes('macmanus') ||
+        t.quote?.toLowerCase().includes('wordpress') ||
+        t.role?.toLowerCase().includes('wordpress')
+      );
+    }
+
     return NextResponse.json({ success: true, testimonials: items });
   } catch (error) {
     return NextResponse.json({ success: false, testimonials: FALLBACK_TESTIMONIALS });

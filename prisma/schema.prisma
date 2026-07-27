@@ -126,4 +126,22 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
+model LandingPage {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  heroTitle       String
+  heroSubtitle    String   @db.Text
+  badgeText       String?
+  heroCtaText     String?  @default("Book Discovery Call")
+  targetKeyword   String?
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  projectIds      Int[]    @default([])
+  testimonialIds Int[]    @default([])
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt @default(now())
+}
+
+
 

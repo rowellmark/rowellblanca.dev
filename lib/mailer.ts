@@ -330,3 +330,61 @@ export async function sendAcknowledgmentReceipt({
   });
 }
 
+interface TestimonialNotifyParams {
+  name: string;
+  role?: string;
+  company?: string;
+  quote: string;
+  rating: number;
+}
+
+export async function sendTestimonialNotification({
+  name,
+  role,
+  company,
+  quote,
+  rating,
+}: TestimonialNotifyParams) {
+  const config = getMailTransportConfig();
+
+  if (!config) {
+    console.warn('[Mailer] Email provider credentials missing. Testimonial notification skipped.');
+    return { success: false, reason: 'Credentials not configured' };
+  }
+
+  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+  const clientInfo = [role, company].filter(Boolean).join(' · ');
+
+  return sendMail(config, {
+    to: config.toEmail,
+    subject: `⭐ New Client Review Submitted: ${name} (${rating}/5 Stars)`,
+    text: `New Client Testimonial Received!\n\nName: ${name}\nRole/Company: ${clientInfo}\nRating: ${rating}/5 (${stars})\nQuote:\n"${quote}"\n\nApprove or Manage in Admin Dashboard: https://www.rowellblanca.dev/admin/testimonials`,
+    html: buildEmailShell({
+      eyebrow: 'New Review Submitted',
+      title: `⭐ New ${rating}-Star Review Received!`,
+      intro: `${escapeHtml(name)} just submitted a new client testimonial on rowellblanca.dev. Review and approve it in your Admin Dashboard.`,
+      content: `
+        <div style="padding: 22px; border-radius: 20px; background: linear-gradient(180deg, #fffdf7 0%, #f8fafc 100%); border: 1px solid #fde68a; margin-bottom: 24px;">
+          <div style="margin-bottom: 14px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #b45309;">Reviewer details</div>
+          <table style="width: 100%; border-collapse: collapse;">
+            ${renderDetailRow('Client Name', name)}
+            ${renderDetailRow('Role / Company', clientInfo)}
+            ${renderDetailRow('Rating', `${rating} / 5 Stars (${stars})`, true)}
+          </table>
+        </div>
+
+        <div style="padding: 22px; border-radius: 20px; background: #ffffff; border: 1px solid #dbeafe; margin-bottom: 24px;">
+          <div style="margin-bottom: 12px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1d4ed8;">Testimonial Quote</div>
+          <div style="font-size: 15px; line-height: 1.8; color: #1e293b; font-style: italic;">"${renderParagraph(quote)}"</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 28px;">
+          <a href="https://www.rowellblanca.dev/admin/testimonials" style="display: inline-block; padding: 14px 28px; border-radius: 999px; background: #0b1a30; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 800; shadow: 0 4px 12px rgba(11,26,48,0.2);">Approve Review in Admin Dashboard →</a>
+        </div>
+      `,
+      footer: 'Pending testimonials require manual approval in your Admin Dashboard before publishing to public landing pages.',
+    }),
+  });
+}
+
+

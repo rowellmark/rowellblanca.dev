@@ -19,7 +19,6 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
     phone: '',
     company: '',
     service: defaultService || 'Full-Stack Web App Development',
-    budget: 'Below $1,500',
     message: '',
   });
 
@@ -42,7 +41,6 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
           phone: form.phone,
           company: form.company,
           service: form.service,
-          budget: form.budget,
           subject: `Inquiry: ${form.service}`,
           message: form.message,
         }),
@@ -70,7 +68,6 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
       phone: '',
       company: '',
       service: 'Full-Stack Web App Development',
-      budget: 'Below $1,500',
       message: '',
     });
     onClose();
@@ -170,36 +167,19 @@ export function ContactModal({ isOpen, onClose, defaultService = '' }: ContactMo
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-slate-700 font-extrabold mb-1">Service Interest</label>
-                      <select
-                        value={form.service}
-                        onChange={(e) => setForm({ ...form, service: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
-                      >
-                        <option value="React / Next.js Web App">React / Next.js Web App</option>
-                        <option value="Custom WordPress Engine / Plugin">Custom WordPress Engine / Plugin</option>
-                        <option value="Full-Stack Web App Development">Full-Stack Web App Development</option>
-                        <option value="AI / Automation Workflow Integration">AI / Automation Workflow Integration</option>
-                        <option value="Retainer / Ongoing Maintenance">Retainer / Ongoing Maintenance</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-slate-700 font-extrabold mb-1">Estimated Budget</label>
-                      <select
-                        value={form.budget}
-                        onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
-                      >
-                        <option value="Below $1,500">Below $1,500</option>
-                        <option value="$1,500 - $3,000">$1,500 - $3,000</option>
-                        <option value="$3,000 - $5,000">$3,000 - $5,000</option>
-                        <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                        <option value="$10,000+">$10,000+</option>
-                      </select>
-                    </div>
+                  <div>
+                    <label className="block text-slate-700 font-extrabold mb-1">Service Interest</label>
+                    <select
+                      value={form.service}
+                      onChange={(e) => setForm({ ...form, service: e.target.value })}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
+                    >
+                      <option value="React / Next.js Web App">React / Next.js Web App</option>
+                      <option value="Custom WordPress Engine / Plugin">Custom WordPress Engine / Plugin</option>
+                      <option value="Full-Stack Web App Development">Full-Stack Web App Development</option>
+                      <option value="AI / Automation Workflow Integration">AI / Automation Workflow Integration</option>
+                      <option value="Retainer / Ongoing Maintenance">Retainer / Ongoing Maintenance</option>
+                    </select>
                   </div>
 
                   <div>

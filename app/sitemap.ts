@@ -22,11 +22,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/mywork',
     '/contact',
     '/review',
+    '/hire-uk-react-developer',
+    '/hire-uk-wordpress-developer',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.8,
+    priority: route === '' ? 1.0 : 0.9,
   }));
 
   // 2. Automatically query all active projects created via Admin Dashboard

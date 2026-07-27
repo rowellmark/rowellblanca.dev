@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendTestimonialNotification } from '@/lib/mailer';
 
 export async function POST(request: Request) {
   try {
@@ -26,6 +27,19 @@ export async function POST(request: Request) {
         avatarUrl: avatarUrl?.trim() || '',
       },
     });
+
+    // Send instant email notification to site owner
+    try {
+      await sendTestimonialNotification({
+        name: newTestimonial.name,
+        role: newTestimonial.role,
+        company: newTestimonial.company,
+        quote: newTestimonial.quote,
+        rating: newTestimonial.rating,
+      });
+    } catch (e) {
+      console.warn('[Testimonial Submit] Failed to send email alert to admin:', e);
+    }
 
     return NextResponse.json({
       success: true,

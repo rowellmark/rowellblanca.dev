@@ -114,6 +114,8 @@ export default function ProjectsManagerPage() {
     featured: true,
     spotlight: false,
     active: true,
+    targetUkReact: true,
+    targetUkWp: true,
   });
 
   useEffect(() => {
@@ -311,8 +313,14 @@ export default function ProjectsManagerPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const method = editingProject ? 'PUT' : 'POST';
+
+    let techList = Array.from(new Set(form.technologies.filter(t => !t.startsWith('target:'))));
+    if (form.targetUkReact) techList.push('target:uk-react');
+    if (form.targetUkWp) techList.push('target:uk-wordpress');
+
     const payload = {
       ...form,
+      technologies: techList,
       image: (isPlugin ? form.screenshots[0] : form.image) || form.image || 'placeholder-portfolio.jpg',
       id: editingProject ? editingProject.id : undefined,
     };
@@ -350,6 +358,8 @@ export default function ProjectsManagerPage() {
           featured: true,
           spotlight: false,
           active: true,
+          targetUkReact: true,
+          targetUkWp: true,
         });
         fetchProjects();
       } else {
@@ -411,6 +421,8 @@ export default function ProjectsManagerPage() {
               featured: true,
               spotlight: false,
               active: true,
+              targetUkReact: true,
+              targetUkWp: true,
             });
             setShowModal(true);
           }}
@@ -561,6 +573,17 @@ export default function ProjectsManagerPage() {
                           featured: proj.featured,
                           spotlight: proj.spotlight || false,
                           active: proj.active !== false,
+                          targetUkReact: Boolean(
+                            proj.technologies?.includes('target:uk-react') ||
+                            proj.permalink?.includes('macmanus-portal') ||
+                            proj.technologies?.some((t: string) => t.toLowerCase().includes('react'))
+                          ),
+                          targetUkWp: Boolean(
+                            proj.technologies?.includes('target:uk-wordpress') ||
+                            proj.permalink?.includes('tower') ||
+                            proj.permalink?.includes('macmanus') ||
+                            proj.technologies?.some((t: string) => t.toLowerCase().includes('wordpress'))
+                          ),
                         });
                         setShowModal(true);
                       }}
@@ -789,6 +812,36 @@ export default function ProjectsManagerPage() {
                       />
                       Set as Primary Homepage Spotlight
                     </label>
+                  </div>
+
+                  {/* Target Landing Page Display Settings */}
+                  <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl space-y-2">
+                    <label className="block text-amber-900 font-black text-xs uppercase tracking-wider">
+                      🎯 Target Landing Pages Settings (Assign Landing Page Display)
+                    </label>
+                    <p className="text-xs text-slate-600">Select which landing page(s) will render this project:</p>
+
+                    <div className="flex flex-wrap items-center gap-6 pt-1">
+                      <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-xs">
+                        <input
+                          type="checkbox"
+                          checked={form.targetUkReact}
+                          onChange={(e) => setForm({ ...form, targetUkReact: e.target.checked })}
+                          className="h-4 w-4 rounded text-[#1d63ed]"
+                        />
+                        <span>🇬🇧 UK React Developer Page (/hire-uk-react-developer)</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-xs">
+                        <input
+                          type="checkbox"
+                          checked={form.targetUkWp}
+                          onChange={(e) => setForm({ ...form, targetUkWp: e.target.checked })}
+                          className="h-4 w-4 rounded text-indigo-600"
+                        />
+                        <span>🇬🇧 UK WordPress Developer Page (/hire-uk-wordpress-developer)</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               )}

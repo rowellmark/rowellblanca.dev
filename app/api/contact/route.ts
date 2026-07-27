@@ -2,11 +2,40 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendAcknowledgmentReceipt, sendContactEmail } from '@/lib/mailer';
 
+import { checkRateLimit, checkSpamPayload, getClientIp } from '@/lib/anti-spam';
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rateLimit = checkRateLimit(ip, 5, 60 * 1000);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: `Too many requests. Please wait ${rateLimit.retryAfter || 60} seconds.` },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
-    const { name, email, message, subject, phone, company, service, budget } = body;
+    const { name, email, message, subject, phone, company, service, budget, website, hp_field } = body;
     let savedToCrm = false;
+
+    // Anti-spam check
+    const spamCheck = checkSpamPayload({
+      honeypot: website || hp_field,
+      email,
+      message,
+      name,
+    });
+
+    if (spamCheck.isSpam) {
+      console.warn(`[API/contact] Blocked spam request from IP ${ip}: ${spamCheck.reason}`);
+      return NextResponse.json({
+        success: true,
+        message: 'Thank you! Your message has been received.',
+        savedToCrm: false,
+        mailSent: true,
+      });
+    }
 
     if (!name || !email || !message) {
       return NextResponse.json(

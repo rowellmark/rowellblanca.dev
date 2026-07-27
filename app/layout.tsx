@@ -4,6 +4,7 @@ import "./globals.css";
 import LayoutShell from "@/components/layout/layout-shell";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { CookieBanner } from "@/components/ui/cookie-banner";
+import { AiAssistant } from "@/components/ui/ai-assistant";
 import { prisma } from "@/lib/prisma";
 
 const DEFAULT_TITLE = "Full-Stack Software Engineer | Rowell Mark Blanca";
@@ -48,19 +49,22 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: [
       "Rowell Mark Blanca",
       "Full-Stack Software Engineer",
-      "Software Engineer Philippines",
-      "React Developer",
-      "Next.js Developer",
-      "WordPress Architect",
-      "Frontend Engineer",
-      "Node.js Developer",
-      "Full-Stack Engineer",
+      "React Developer UK",
+      "Next.js Developer UK",
+      "WordPress Developer UK",
+      "WordPress Architect UK",
+      "Frontend Engineer London",
+      "Node.js Developer UK",
+      "Freelance Web Developer United Kingdom",
+      "Full-Stack Engineer for UK Businesses",
+      "Towerfire UK Client Developer",
+      "Macmanus UK Client Developer",
     ],
     authors: [{ name: "Rowell Mark Blanca", url: "https://www.rowellblanca.dev" }],
     creator: "Rowell Mark Blanca",
     openGraph: {
       type: "website",
-      locale: "en_US",
+      locale: "en_GB",
       url: "https://www.rowellblanca.dev",
       title,
       description,
@@ -87,6 +91,10 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     alternates: {
       canonical: "https://www.rowellblanca.dev",
+      languages: {
+        "en-GB": "https://www.rowellblanca.dev",
+        "en-US": "https://www.rowellblanca.dev",
+      },
     },
     verification: {
       google: googleVerification,
@@ -102,7 +110,19 @@ const jsonLd = {
       "@id": "https://www.rowellblanca.dev/#person",
       name: "Rowell Mark Blanca",
       url: "https://www.rowellblanca.dev",
-      jobTitle: "Full-Stack Software Engineer",
+      jobTitle: "Full-Stack Software Engineer & WordPress Architect",
+      description: "Senior Full-Stack Engineer specializing in React, Next.js, and WordPress solutions for global and UK businesses including Towerfire and Macmanus.",
+      areaServed: [
+        {
+          "@type": "Country",
+          name: "United Kingdom",
+          identifier: "GB",
+        },
+        {
+          "@type": "AdministrativeArea",
+          name: "London",
+        },
+      ],
       sameAs: [
         "https://github.com/rowellmark",
         "https://www.linkedin.com/in/rowell-blanca/",
@@ -118,6 +138,7 @@ const jsonLd = {
         "PHP",
         "WordPress",
         "Tailwind CSS",
+        "Headless CMS",
         "AI Integrations",
       ],
     },
@@ -126,7 +147,7 @@ const jsonLd = {
       "@id": "https://www.rowellblanca.dev/#website",
       url: "https://www.rowellblanca.dev",
       name: "Rowell Mark Blanca Portfolio",
-      description: "Portfolio of Rowell Mark Blanca — Full-Stack Software Engineer specializing in React, Next.js, & WordPress.",
+      description: "Portfolio of Rowell Mark Blanca — Senior Full-Stack Software Engineer & WordPress Architect building web platforms for UK and global companies.",
       publisher: {
         "@id": "https://www.rowellblanca.dev/#person",
       },
@@ -151,6 +172,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className="bg-brand-bg text-brand-navy antialiased">
         <LayoutShell>{children}</LayoutShell>
         <CookieBanner />
+        <AiAssistant />
       </body>
     </html>
   );

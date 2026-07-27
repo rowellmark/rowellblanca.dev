@@ -63,21 +63,38 @@ export function Hero() {
                     {/* Left Column (Content) */}
                     <div className="lg:col-span-7 space-y-6 text-left">
                         
-                        {/* Status Badge */}
-                        <motion.div
-                            initial={{ y: -15, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-xs"
-                        >
-                            <span className="relative flex h-2.5 w-2.5">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                            </span>
-                            <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
-                                Available for Select Projects
-                            </span>
-                        </motion.div>
+                        {/* Status Badge & UK Trust Badge */}
+                        <div className="flex flex-wrap items-center gap-2">
+                            <motion.div
+                                initial={{ y: -15, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-xs"
+                            >
+                                <span className="relative flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                                </span>
+                                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                    Available for Select Projects
+                                </span>
+                            </motion.div>
+
+                            <Link href="/hire-uk-react-developer">
+                                <motion.div
+                                    initial={{ y: -15, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                    whileHover={{ scale: 1.04 }}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-900 shadow-xs cursor-pointer hover:bg-amber-500/20 transition-all"
+                                >
+                                    <span className="text-xs">🇬🇧</span>
+                                    <span className="text-xs font-bold text-slate-800 tracking-wide">
+                                        Trusted by UK Clients: <span className="font-extrabold text-amber-700">Towerfire</span> & <span className="font-extrabold text-amber-700">Macmanus</span>
+                                    </span>
+                                </motion.div>
+                            </Link>
+                        </div>
 
                         {/* Title with ReactBits RotatingText Animation */}
                         <h1 className="space-y-2">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendContactEmail, sendAcknowledgmentReceipt } from '@/lib/mailer';
+import { checkRateLimit, checkSpamPayload, getClientIp } from '@/lib/anti-spam';
 
 export async function GET(req: NextRequest) {
   try {
@@ -38,8 +39,34 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rateLimit = checkRateLimit(ip, 5, 60 * 1000);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: `Too many requests. Please wait ${rateLimit.retryAfter || 60} seconds.` },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
-    const { sessionId, name, email, message, subject } = body;
+    const { sessionId, name, email, message, subject, website, hp_field } = body;
+
+    // Anti-spam honeypot, disposable email, and keyword filter
+    const spamCheck = checkSpamPayload({
+      honeypot: website || hp_field,
+      email,
+      message,
+      name,
+    });
+
+    if (spamCheck.isSpam) {
+      console.warn(`[API/chat/inquiry] Blocked spam request from IP ${ip}: ${spamCheck.reason}`);
+      // Silent success response to fool spam bots
+      return NextResponse.json({
+        success: true,
+        message: 'Message sent successfully!',
+      });
+    }
 
     if (!sessionId || !message) {
       return NextResponse.json(
@@ -55,6 +82,7 @@ export async function POST(req: NextRequest) {
     });
 
     let threadId: number;
+    const formattedSubject = subject ? `[Live Chat] ${subject}` : '[Live Chat] General Inquiry';
 
     if (!existingThread) {
       if (!name || !email) {
@@ -64,13 +92,13 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Create new ContactMessage and Lead
+      // Create new ContactMessage and Lead with explicit Live Chat tagging
       const createdMessage = await prisma.contactMessage.create({
         data: {
           sessionId,
           name,
           email,
-          subject: subject || 'Live Chat Inquiry',
+          subject: formattedSubject,
           message,
           status: 'UNREAD',
         },
@@ -83,8 +111,9 @@ export async function POST(req: NextRequest) {
           data: {
             contactName: name,
             email,
-            serviceInterest: subject || 'Live Chat Inquiry',
+            serviceInterest: formattedSubject,
             enquiryDetails: message,
+            sourceUrl: 'Live Chat Widget',
             status: 'NEW',
           },
         });
@@ -97,7 +126,7 @@ export async function POST(req: NextRequest) {
         await sendContactEmail({
           name,
           email,
-          subject: `[Live Chat Inquiry] ${subject || 'New message'}`,
+          subject: formattedSubject,
           message,
         });
       } catch (mailErr) {
@@ -109,7 +138,7 @@ export async function POST(req: NextRequest) {
         await sendAcknowledgmentReceipt({
           name,
           email,
-          subject: subject || 'Live Chat Inquiry',
+          subject: formattedSubject,
           message,
         });
       } catch (receiptErr) {

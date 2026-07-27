@@ -3,7 +3,7 @@ const path = require('path');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
-        outputFileTracingRoot: path.resolve(__dirname),
+        outputFileTracingRoot: path.join(__dirname),
     },
     images: {
         remotePatterns: [
