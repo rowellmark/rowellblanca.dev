@@ -5,7 +5,7 @@ import { sendTestimonialNotification } from '@/lib/mailer';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, role, company, quote, rating, avatarUrl } = body;
+    const { name, role, company, companyUrl, photoUrl, quote, rating, avatarUrl } = body;
 
     if (!name?.trim() || !quote?.trim()) {
       return NextResponse.json(
@@ -16,15 +16,20 @@ export async function POST(request: Request) {
 
     const parsedRating = Math.min(5, Math.max(1, Number(rating) || 5));
 
+    const finalAvatarUrl = photoUrl?.trim()
+      ? `photo:${photoUrl.trim()}`
+      : avatarUrl?.trim() || '';
+
     const newTestimonial = await prisma.testimonial.create({
       data: {
         name: name.trim(),
         role: role?.trim() || 'Client',
         company: company?.trim() || '',
+        companyUrl: companyUrl?.trim() || '',
         quote: quote.trim(),
         rating: parsedRating,
         active: false, // Default to false until admin clicks Approve in Dashboard
-        avatarUrl: avatarUrl?.trim() || '',
+        avatarUrl: finalAvatarUrl,
       },
     });
 

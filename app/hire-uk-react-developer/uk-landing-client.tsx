@@ -20,6 +20,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { LandingPageAiAssistant } from "@/components/ui/landing-page-ai-assistant";
 
 import { PortfolioCard, PortfolioProject } from "@/components/ui/portfolio-card";
 
@@ -497,6 +498,15 @@ export function UkLandingClient() {
             })}
           </div>
         </div>
+      </section>
+
+      {/* Interactive AI Assistant Section */}
+      <section className="py-12 px-6 bg-slate-950">
+        <LandingPageAiAssistant
+          pageTitle={pageConfig?.heroTitle || "Senior UK React & Next.js Developer"}
+          targetKeyword="UK React & Next.js Development"
+          badgeText="React/Next.js Architecture"
+        />
       </section>
 
       {/* CTA Footer Section */}

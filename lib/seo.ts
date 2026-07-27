@@ -136,3 +136,51 @@ export function generateCaseStudyJsonLd({
     keywords: technologies.join(', '),
   };
 }
+
+export interface TestimonialSchemaItem {
+  id?: number;
+  name: string;
+  role?: string;
+  company?: string;
+  quote: string;
+  rating?: number;
+}
+
+/**
+ * Generates Schema.org JSON-LD Structured Data for Client Testimonials & Star Ratings
+ */
+export function generateTestimonialsJsonLd(testimonials: TestimonialSchemaItem[]) {
+  if (!testimonials || testimonials.length === 0) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'Rowell Mark Blanca - Senior Software Engineering Services',
+    url: SITE_URL,
+    image: `${SITE_URL}/opengraph-image1.jpg`,
+    priceRange: '$$',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5.0',
+      reviewCount: testimonials.length.toString(),
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: testimonials.map((t) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: t.name,
+        jobTitle: t.role || undefined,
+        worksFor: t.company ? { '@type': 'Organization', name: t.company } : undefined,
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: (t.rating || 5).toString(),
+        bestRating: '5',
+        worstRating: '1',
+      },
+      reviewBody: t.quote,
+    })),
+  };
+}

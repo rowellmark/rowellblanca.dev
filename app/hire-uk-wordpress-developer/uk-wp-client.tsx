@@ -20,6 +20,7 @@ import {
   Cpu,
 } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { LandingPageAiAssistant } from "@/components/ui/landing-page-ai-assistant";
 import { PortfolioCard, PortfolioProject } from "@/components/ui/portfolio-card";
 
 const DEFAULT_WP_PROJECTS: PortfolioProject[] = [
@@ -568,6 +569,15 @@ export function UkWpLandingClient() {
             })}
           </div>
         </div>
+      </section>
+
+      {/* Interactive AI Assistant Section */}
+      <section className="py-12 px-6 bg-slate-950">
+        <LandingPageAiAssistant
+          pageTitle={pageConfig?.heroTitle || "Senior UK WordPress Architect"}
+          targetKeyword="UK Custom WordPress Engineering"
+          badgeText="Custom WordPress Blocks & ACF Pro"
+        />
       </section>
 
       {/* CTA Footer Section */}

@@ -86,15 +86,18 @@ model Project {
 }
 
 model Testimonial {
-  id        Int      @id @default(autoincrement())
-  name      String
-  role      String
-  company   String
-  quote     String   @db.Text
-  avatarUrl String?
-  rating    Int      @default(5)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  name       String
+  role       String
+  company    String
+  companyUrl String?
+  quote      String   @db.Text
+  avatarUrl  String?
+  rating     Int      @default(5)
+  featured   Boolean  @default(false)
+  order      Int      @default(0)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
 }
 
 model ContactMessage {

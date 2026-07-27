@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     try {
       dbTestimonials = await prisma.testimonial.findMany({
         where: includeInactive ? undefined : { active: true },
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ featured: 'desc' }, { order: 'asc' }, { createdAt: 'desc' }],
       });
     } catch (e) {
       console.warn('NeonDB query warning, serving fallback testimonials.');
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, role, company, quote, rating, active, avatarUrl } = body;
+    const { name, role, company, companyUrl, quote, rating, active, avatarUrl, featured, order } = body;
 
     if (!name || !quote) {
       return NextResponse.json({ success: false, message: 'Name and quote are required' }, { status: 400 });
@@ -95,8 +95,11 @@ export async function POST(request: Request) {
         name,
         role: role || '',
         company: company || '',
+        companyUrl: companyUrl || '',
         quote,
         rating: Number(rating) || 5,
+        featured: Boolean(featured),
+        order: Number(order) || 0,
         active: active !== undefined ? Boolean(active) : true,
         avatarUrl: avatarUrl || '',
       },
@@ -115,7 +118,21 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const { id, name, role, company, quote, rating, active, avatarUrl } = body;
+
+    // Support batch re-ordering if items array is provided
+    if (Array.isArray(body.reorderItems)) {
+      for (const item of body.reorderItems) {
+        if (item.id) {
+          await prisma.testimonial.update({
+            where: { id: Number(item.id) },
+            data: { order: Number(item.order) || 0 },
+          });
+        }
+      }
+      return NextResponse.json({ success: true, message: 'Testimonials re-ordered successfully' });
+    }
+
+    const { id, name, role, company, companyUrl, quote, rating, active, avatarUrl, featured, order } = body;
 
     if (!id) {
       return NextResponse.json({ success: false, message: 'ID is required' }, { status: 400 });
@@ -125,9 +142,12 @@ export async function PUT(request: Request) {
     if (name !== undefined) updateData.name = name;
     if (role !== undefined) updateData.role = role;
     if (company !== undefined) updateData.company = company;
+    if (companyUrl !== undefined) updateData.companyUrl = companyUrl;
     if (quote !== undefined) updateData.quote = quote;
     if (rating !== undefined) updateData.rating = Number(rating) || 5;
     if (active !== undefined) updateData.active = Boolean(active);
+    if (featured !== undefined) updateData.featured = Boolean(featured);
+    if (order !== undefined) updateData.order = Number(order) || 0;
     if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl;
 
     const updated = await prisma.testimonial.update({

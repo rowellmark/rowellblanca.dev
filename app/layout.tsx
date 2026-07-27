@@ -4,7 +4,6 @@ import "./globals.css";
 import LayoutShell from "@/components/layout/layout-shell";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { CookieBanner } from "@/components/ui/cookie-banner";
-import { AiAssistant } from "@/components/ui/ai-assistant";
 import { prisma } from "@/lib/prisma";
 
 const DEFAULT_TITLE = "Full-Stack Software Engineer | Rowell Mark Blanca";
@@ -172,7 +171,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className="bg-brand-bg text-brand-navy antialiased">
         <LayoutShell>{children}</LayoutShell>
         <CookieBanner />
-        <AiAssistant />
       </body>
     </html>
   );

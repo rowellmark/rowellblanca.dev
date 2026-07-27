@@ -1,57 +1,120 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, X, Send, Sparkles, User, RefreshCw, CheckCheck, Clock, LogOut, Timer, AlertCircle } from 'lucide-react';
+import { Sparkles, MessageSquare, X, Send, Loader2, Bot, User, ArrowRight, CheckCircle2, Mail, CheckCheck, RotateCcw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ContactModal } from '@/components/ui/contact-modal';
 
-interface Reply {
-  id: number;
-  sender: 'user' | 'admin';
+interface ChatMessage {
+  id: string;
+  sender: 'ai' | 'user' | 'admin';
   senderName: string;
-  message: string;
-  createdAt: string;
-}
-
-interface Thread {
-  id: number;
-  sessionId: string;
-  name: string;
-  email: string;
-  subject?: string;
-  message: string;
-  status: string;
-  sentAt: string;
-  updatedAt: string;
-  replies: Reply[];
+  text: string;
+  time?: string;
 }
 
 const QUICK_PROMPTS = [
-  '🚀 Request a Project Quote',
-  '💼 Hire for Freelance / Full-Time',
-  '⚡ Web App / Next.js Inquiry',
+  'What are your React & Next.js capabilities?',
+  'Tell me about your UK client work (Macmanus / Towerfire)',
+  'What are your engagement rates & working hours?',
+  'I want to hire Rowell for a project',
 ];
 
 export default function ChatBubble() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [sessionId, setSessionId] = useState<string>('');
-  const [thread, setThread] = useState<Thread | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [polling, setPolling] = useState(false);
-  
-  // Visitor Form inputs
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [showContactInput, setShowContactInput] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  // Input fields
+  const [input, setInput] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [subject, setSubject] = useState('');
-  
-  // Follow-up message input
-  const [followUpMsg, setFollowUpMsg] = useState('');
-  const [sendingFollowUp, setSendingFollowUp] = useState(false);
-  const [autoEndedMsg, setAutoEndedMsg] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string>('');
+  const [threadId, setThreadId] = useState<number | null>(null);
+
+  const handleSaveInitialInfo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
+
+    localStorage.setItem('rb_chat_user_name', name.trim());
+    localStorage.setItem('rb_chat_user_email', email.trim());
+    setIsRegistered(true);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `sys_${Date.now()}`,
+        sender: 'ai',
+        senderName: "Friday (Rowell's AI Assistant)",
+        text: `Nice to meet you, ${name.trim()}! 👋 I've saved your contact info so Rowell can also connect with you directly. How can I help you today?`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      },
+    ]);
+  };
+
+  // Unified Chat Stream (Gemini AI + Admin Replies)
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: '1',
+      sender: 'ai',
+      senderName: "Friday (Rowell's AI Assistant)",
+      text: "👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about Rowell's portfolio, UK client projects, tech stack, or booking a call!",
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    },
+  ]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize or retrieve visitor session ID from localStorage
+  // End Chat & Reset Session (Saves History to DB & Emails Admin)
+  const handleEndChat = async () => {
+    if (messages.length > 1 && name.trim() && email.trim()) {
+      const transcriptText = messages
+        .map((m) => `[${m.time || 'HH:MM'}] ${m.senderName}: ${m.text}`)
+        .join('\n\n');
+
+      try {
+        await fetch('/api/chat/end', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            name: name.trim(),
+            email: email.trim(),
+            transcript: transcriptText,
+          }),
+        });
+      } catch (e) {
+        console.warn('[handleEndChat] Failed to log session transcript:', e);
+      }
+    }
+
+    const newSid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+    localStorage.setItem('rb_chat_session_id', newSid);
+    localStorage.removeItem('rb_chat_user_name');
+    localStorage.removeItem('rb_chat_user_email');
+    setSessionId(newSid);
+    setThreadId(null);
+    setName('');
+    setEmail('');
+    setIsRegistered(false);
+    setShowContactInput(false);
+    setInput('');
+    setMessages([
+      {
+        id: `sys_${Date.now()}`,
+        sender: 'ai',
+        senderName: "Friday (Rowell's AI Assistant)",
+        text: "👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about Rowell's portfolio, UK client projects, tech stack, or booking a call!",
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      },
+    ]);
+  };
+
+  // Initialize session & restore contact details
   useEffect(() => {
     setMounted(true);
     let id = localStorage.getItem('rb_chat_session_id');
@@ -61,477 +124,436 @@ export default function ChatBubble() {
     }
     setSessionId(id);
 
-    // Retrieve saved user info if available
     const savedName = localStorage.getItem('rb_chat_user_name');
     const savedEmail = localStorage.getItem('rb_chat_user_email');
-    if (savedName) setName(savedName);
-    if (savedEmail) setEmail(savedEmail);
+    if (savedName && savedEmail) {
+      setName(savedName);
+      setEmail(savedEmail);
+      setIsRegistered(true);
+    }
   }, []);
 
-
-  // Fetch active thread whenever sessionId changes or widget opens
-  useEffect(() => {
-    if (sessionId) {
-      fetchThread(sessionId);
-    }
-  }, [sessionId, isOpen]);
-
-  // Set up periodic polling for real-time admin replies when widget is active
+  // Poll for admin replies if thread exists
   useEffect(() => {
     if (!sessionId || !isOpen) return;
 
-    const interval = setInterval(() => {
-      fetchThread(sessionId, true);
-    }, 6000); // Poll every 6s
+    const fetchAdminReplies = async () => {
+      try {
+        const res = await fetch(`/api/chat/inquiry?sessionId=${sessionId}`);
+        const data = await res.json();
 
-    return () => clearInterval(interval);
-  }, [sessionId, isOpen]);
+        if (data.success && data.thread) {
+          setThreadId(data.thread.id);
+          const replies: any[] = data.thread.replies || [];
 
-  // Auto scroll to bottom of chat stream
-  useEffect(() => {
-    if (thread) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [thread, thread?.replies?.length]);
+          // Merge admin replies into single message stream
+          setMessages((prev) => {
+            const existingIds = new Set(prev.map((m) => m.id));
+            const newAdminMsgs: ChatMessage[] = [];
 
-  // Touch activity helper
-  const touchActivity = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('rb_chat_last_activity', Date.now().toString());
-    }
-  };
+            replies.forEach((r) => {
+              const msgId = `admin_${r.id}`;
+              if (!existingIds.has(msgId) && r.sender === 'admin') {
+                newAdminMsgs.push({
+                  id: msgId,
+                  sender: 'admin',
+                  senderName: 'Rowell Mark Blanca (Owner)',
+                  text: r.message,
+                  time: new Date(r.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                });
+              }
+            });
 
-  // 30-Minute Auto-Deactivation Tracker
-  useEffect(() => {
-    if (!sessionId || !thread) return;
-
-    const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
-
-    const checkInactivity = () => {
-      const lastAct = localStorage.getItem('rb_chat_last_activity');
-      if (lastAct) {
-        const elapsed = Date.now() - Number(lastAct);
-        if (elapsed >= INACTIVITY_TIMEOUT_MS) {
-          handleEndChat(true); // Auto-deactivate session
+            if (newAdminMsgs.length > 0) {
+              return [...prev, ...newAdminMsgs];
+            }
+            return prev;
+          });
         }
+      } catch (e) {
+        // Silent error handling
       }
     };
 
-    const interval = setInterval(checkInactivity, 30000); // Check every 30s
-    checkInactivity();
-
+    fetchAdminReplies();
+    const interval = setInterval(fetchAdminReplies, 5000);
     return () => clearInterval(interval);
-  }, [sessionId, thread]);
+  }, [sessionId, isOpen]);
 
-  const fetchThread = async (sid: string, isSilent = false) => {
-    if (!isSilent) setLoading(true);
-    else setPolling(true);
+  // Scroll to bottom when messages update
+  useEffect(() => {
+    if (isOpen) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isOpen, loading]);
+
+  // Unified Message Handler (AI + Direct Inquiry fallback)
+  const handleSendMessage = async (textToSend?: string) => {
+    const query = textToSend || input;
+    if (!query.trim() || loading) return;
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMsg: ChatMessage = {
+      id: `user_${Date.now()}`,
+      sender: 'user',
+      senderName: name || 'You',
+      text: query.trim(),
+      time: timeStr,
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    if (!textToSend) setInput('');
+    setLoading(true);
 
     try {
-      const res = await fetch(`/api/chat/inquiry?sessionId=${sid}`);
-      const data = await res.json();
-      if (data.success && data.thread) {
-        setThread(data.thread);
+      // 1. Call Gemini AI Endpoint
+      const aiRes = await fetch('/api/ai/assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: messages
+            .filter((m) => m.sender !== 'admin')
+            .map((m) => ({
+              role: m.sender === 'user' ? 'user' : 'assistant',
+              content: m.text,
+            })),
+        }),
+      });
+
+      const data = await aiRes.json();
+      const aiReply =
+        data.reply ||
+        `Rowell is a Senior Full-Stack Engineer with full UK (GMT/BST) overlap. Would you like to leave your email so he can connect directly?`;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai_${Date.now()}`,
+          sender: 'ai',
+          senderName: 'Gemini AI Assistant',
+          text: aiReply,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+
+      // 2. If user mentions hiring/proposal/contact, prompt contact capture
+      const queryLower = query.toLowerCase();
+      if (
+        queryLower.includes('hire') ||
+        queryLower.includes('quote') ||
+        queryLower.includes('project') ||
+        queryLower.includes('call') ||
+        queryLower.includes('contact')
+      ) {
+        setShowContactInput(true);
+      }
+
+      // 3. Log query silently to CRM
+      if (name && email) {
+        fetch('/api/chat/inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            name,
+            email,
+            subject: 'AI Hybrid Chat Inquiry',
+            message: query.trim(),
+          }),
+        }).catch(() => {});
       }
     } catch (err) {
-      console.error('Error fetching chat thread:', err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai_${Date.now()}`,
+          sender: 'ai',
+          senderName: 'Gemini AI Assistant',
+          text: "Rowell is a Senior Software Engineer specializing in React, Next.js, and Custom WordPress. Feel free to use the Book Discovery Call button to connect directly!",
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
     } finally {
       setLoading(false);
-      setPolling(false);
     }
   };
 
-  const [hpField, setHpField] = useState('');
-
-  const handleInitialSubmit = async (e: React.FormEvent) => {
+  // Submit Contact Form to notify Rowell
+  const handleSaveContactDetails = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) return;
+    if (!name.trim() || !email.trim()) return;
 
-    setLoading(true);
-
-    // Save user info for future sessions
     localStorage.setItem('rb_chat_user_name', name);
     localStorage.setItem('rb_chat_user_email', email);
+    setShowContactInput(false);
+
+    const lastUserMsg = [...messages].reverse().find((m) => m.sender === 'user')?.text || 'Inquiry from hybrid chat';
 
     try {
-      const res = await fetch('/api/chat/inquiry', {
+      await fetch('/api/chat/inquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId,
           name,
           email,
-          subject: subject || 'Portfolio Chat Inquiry',
-          message,
-          hp_field: hpField,
+          subject: 'Hybrid Live Chat Contact Request',
+          message: lastUserMsg,
         }),
       });
 
-      const data = await res.json();
-      if (data.success && data.thread) {
-        touchActivity();
-        setThread(data.thread);
-        setMessage('');
-        setAutoEndedMsg(null);
-      } else {
-        alert(data.error || 'Failed to send message.');
-      }
-    } catch (err) {
-      alert('Error submitting inquiry. Please try again.');
-    } finally {
-      setLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `sys_${Date.now()}`,
+          sender: 'ai',
+          senderName: 'Gemini AI Assistant',
+          text: `✅ Thanks ${name}! I've notified Rowell directly. He'll receive your inquiry at ${email} and can reply right here in this chat thread!`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch (e) {
+      alert('Failed to send contact info');
     }
   };
-
-  const handleSendFollowUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!followUpMsg.trim() || !sessionId) return;
-
-    setSendingFollowUp(true);
-    const contentToSend = followUpMsg;
-    setFollowUpMsg('');
-
-    try {
-      const res = await fetch('/api/chat/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId,
-          name: name || thread?.name,
-          email: email || thread?.email,
-          message: contentToSend,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.success && data.thread) {
-        touchActivity();
-        setThread(data.thread);
-      }
-    } catch (err) {
-      console.error('Error sending follow-up:', err);
-      setFollowUpMsg(contentToSend); // restore on error
-    } finally {
-      setSendingFollowUp(false);
-    }
-  };
-
-  const selectPrompt = (promptText: string) => {
-    setSubject(promptText);
-    setMessage(`Hi Rowell! I'd like to talk about: ${promptText}`);
-  };
-
-  const handleEndChat = (isAuto = false) => {
-    if (!isAuto && typeof window !== 'undefined' && !confirm('Are you sure you want to end this chat session?')) {
-      return;
-    }
-
-    const newSid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
-    localStorage.setItem('rb_chat_session_id', newSid);
-    localStorage.removeItem('rb_chat_last_activity');
-
-    setSessionId(newSid);
-    setThread(null);
-    setMessage('');
-    setSubject('');
-
-    if (isAuto) {
-      setAutoEndedMsg('Chat session automatically closed after 30 minutes of inactivity.');
-    } else {
-      setAutoEndedMsg('Chat session ended. Thank you for reaching out!');
-    }
-  };
-
-  const hasUnreadAdminReply = thread?.status === 'REPLIED';
 
   if (!mounted) return null;
 
   return (
+    <>
+      {/* Floating Single Hybrid Trigger Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#0b1a30] via-slate-900 to-[#1d63ed] text-white shadow-2xl border border-amber-400/40 hover:border-amber-400 cursor-pointer group"
+          title="Chat with Gemini AI & Rowell"
+        >
+          <div className="relative flex items-center gap-1 text-amber-400">
+            <Sparkles className="w-5 h-5 animate-pulse" />
+          </div>
+          <span className="text-xs font-black tracking-wide hidden sm:inline">Ask Friday!</span>
+          {!isOpen && (
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping absolute -top-1 -right-1" />
+          )}
+        </motion.button>
+      </div>
 
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans">
-      {/* Floating Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative group flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white shadow-xl shadow-blue-500/30 hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all duration-300 border border-white/20"
-        aria-label="Toggle chat widget"
-      >
-        {isOpen ? (
-          <X className="w-6 h-6 transition-transform duration-200 rotate-90" />
-        ) : (
-          <>
-            <MessageSquare className="w-6 h-6 transition-transform duration-200 group-hover:scale-110" />
-            
-            {/* Online Pulse Indicator */}
-            <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-slate-900"></span>
-            </span>
-
-            {/* Unread Reply Badge */}
-            {hasUnreadAdminReply && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full border-2 border-slate-900 animate-bounce">
-                1
-              </span>
-            )}
-          </>
-        )}
-      </button>
-
-      {/* Tooltip prompt when closed */}
-      {!isOpen && (
-        <div className="absolute right-16 bottom-2 hidden sm:flex items-center gap-2 bg-slate-900/90 text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg whitespace-nowrap backdrop-blur-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <span>Chat with Rowell</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        </div>
-      )}
-
-      {/* Chat Popup Box */}
-      {isOpen && (
-        <div className="absolute right-0 bottom-full mb-4 w-[380px] max-w-[calc(100vw-2rem)] h-[540px] max-h-[calc(100vh-7rem)] bg-slate-900/95 backdrop-blur-2xl border border-slate-700/60 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300">
-
-          
-          {/* Header */}
-          <div className="p-4 bg-slate-800/80 border-b border-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white font-black text-sm border border-white/20 shadow-inner">
-                  RB
+      {/* Main Unified Hybrid Chat Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[420px] h-[580px] bg-slate-950/95 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden font-sans"
+          >
+            {/* Header */}
+            <div className="p-4 bg-gradient-to-r from-[#0b1a30] to-slate-900 border-b border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                  <Sparkles className="w-4 h-4 animate-pulse" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-800"></span>
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h3 className="text-sm font-black text-white leading-none">Rowell Mark Blanca</h3>
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <div>
+                  <h3 className="text-xs font-black text-white flex items-center gap-1.5">
+                    Friday • Rowell's AI Desk
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
+                      Online
+                    </span>
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-medium">Friday AI + Direct Human Support</p>
                 </div>
-                <p className="text-[11px] text-slate-400 font-medium mt-1">
-                  {polling ? 'Syncing replies...' : 'Typically replies quickly'}
-                </p>
               </div>
-            </div>
 
-            <div className="flex items-center gap-1.5">
-              {thread && (
+              <div className="flex items-center gap-1">
+                {isRegistered && (
+                  <button
+                    type="button"
+                    onClick={handleEndChat}
+                    className="px-2.5 py-1 rounded-xl text-[10px] font-extrabold text-slate-300 hover:text-amber-300 bg-slate-900/80 border border-slate-800 hover:border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
+                    title="End Chat & Start New Session"
+                  >
+                    <RotateCcw className="w-3 h-3 text-amber-400" />
+                    <span>End Chat</span>
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={() => handleEndChat(false)}
-                  title="End Chat Session"
-                  className="px-2.5 py-1 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-100 border border-red-500/30 text-[11px] font-extrabold transition-all flex items-center gap-1 cursor-pointer"
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
+                  title="Close Chat Drawer"
                 >
-                  <LogOut className="w-3 h-3 text-red-400" />
-                  <span>End Chat</span>
+                  <X className="w-4 h-4" />
                 </button>
-              )}
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
-              >
-                <X className="w-4.5 h-4.5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Main Body */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            {loading && !thread ? (
-              <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2">
-                <RefreshCw className="w-6 h-6 animate-spin text-cyan-400" />
-                <p className="text-xs font-medium">Loading chat...</p>
               </div>
-            ) : !thread ? (
-              /* SCREEN 1: Welcome & Initial Inquiry Form */
-              <div className="space-y-4">
-                {autoEndedMsg && (
-                  <div className="bg-amber-500/20 border border-amber-500/40 rounded-2xl p-3 text-xs text-amber-200 flex items-start gap-2 animate-in fade-in duration-300">
-                    <Timer className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="font-bold text-amber-300">Session Closed</p>
-                      <p className="text-[11px] text-amber-200/90 mt-0.5 leading-relaxed">{autoEndedMsg}</p>
-                    </div>
-                    <button onClick={() => setAutoEndedMsg(null)} className="text-amber-400 hover:text-white">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                )}
-                <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-3.5 text-xs text-slate-300 space-y-2">
-                  <p className="font-bold text-white text-sm flex items-center gap-1.5">
-                    <span>👋 Hello & Welcome!</span>
-                  </p>
-                  <p className="text-slate-300 leading-relaxed">
-                    Looking to build a modern web application, request a custom project quote, or discuss a freelance opportunity? Drop me a message below!
-                  </p>
+            </div>
+
+            {/* Compulsory Upfront Registration Gate */}
+            {!isRegistered ? (
+              <div className="flex-1 flex flex-col justify-center p-6 space-y-5 text-center">
+                <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-600 border border-amber-400/40 flex items-center justify-center text-slate-950 mx-auto shadow-lg">
+                  <Sparkles className="w-7 h-7 animate-pulse" />
                 </div>
 
-                {/* Quick Prompts */}
                 <div className="space-y-1.5">
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Quick Topics</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {QUICK_PROMPTS.map((prompt) => (
-                      <button
-                        key={prompt}
-                        onClick={() => selectPrompt(prompt)}
-                        className="text-[11px] font-medium bg-slate-800 hover:bg-slate-700 text-cyan-300 hover:text-white border border-slate-700/60 rounded-full px-3 py-1 transition-all text-left"
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
+                  <h4 className="text-base font-black text-white">Welcome, I&apos;m FRIDAY — Rowell&apos;s AI Assistant</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Please enter your name and email to start chatting with Friday & connect with Rowell:
+                  </p>
                 </div>
 
-                {/* Visitor Form */}
-                <form onSubmit={handleInitialSubmit} className="space-y-3 pt-1">
-                  {/* Honeypot field - hidden from real visitors, catches automated spam bots */}
-                  <input
-                    type="text"
-                    name="website"
-                    value={hpField}
-                    onChange={(e) => setHpField(e.target.value)}
-                    className="hidden"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                  />
+                <form onSubmit={handleSaveInitialInfo} className="space-y-3 text-left">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 mb-1">Your Name *</label>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Your Full Name *
+                    </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Alex Morgan"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-slate-950/70 border border-slate-700/70 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors"
+                      placeholder="e.g. Alex Morgan"
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-2xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 mb-1">Email Address *</label>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Your Email Address *
+                    </label>
                     <input
                       type="email"
                       required
-                      placeholder="alex@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-slate-950/70 border border-slate-700/70 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 mb-1">Message / Inquiry *</label>
-                    <textarea
-                      required
-                      rows={3}
-                      placeholder="Tell me about your project scope, timeline, or questions..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="w-full bg-slate-950/70 border border-slate-700/70 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors resize-none"
+                      placeholder="alex@company.com"
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-2xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs py-2.5 rounded-xl shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2 mt-2"
                   >
-                    {loading ? (
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <span>Start Conversation</span>
-                        <Send className="w-3.5 h-3.5" />
-                      </>
-                    )}
+                    <span>🚀 Start Chatting with Friday</span>
                   </button>
                 </form>
               </div>
             ) : (
-              /* SCREEN 2: Active Chat Conversation Stream */
-              <div className="space-y-3">
-                {/* Initial Visitor Message Card */}
-                <div className="flex flex-col items-end space-y-1">
-                  <div className="max-w-[85%] bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs p-3 rounded-2xl rounded-tr-xs shadow-md space-y-1">
-                    <div className="text-[10px] text-blue-200 font-bold border-b border-white/15 pb-1 mb-1">
-                      {thread.name} ({thread.email})
-                    </div>
-                    <p className="whitespace-pre-wrap leading-relaxed">{thread.message}</p>
-                  </div>
-                  <span className="text-[10px] text-slate-500 font-mono flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {new Date(thread.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-
-                {/* Reply Stream */}
-                {thread.replies && thread.replies.length > 0 ? (
-                  thread.replies.map((rep) => {
-                    const isAdmin = rep.sender === 'admin';
-                    return (
+              <>
+                {/* Single Merged Conversation Stream */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
+                  {messages.map((m) => (
+                    <div
+                      key={m.id}
+                      className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
+                    >
                       <div
-                        key={rep.id}
-                        className={`flex flex-col ${isAdmin ? 'items-start' : 'items-end'} space-y-1`}
+                        className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
+                          m.sender === 'user'
+                            ? 'bg-blue-600 text-white'
+                            : m.sender === 'admin'
+                            ? 'bg-emerald-500 text-slate-950 font-black'
+                            : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        }`}
                       >
+                        {m.sender === 'user' ? (
+                          <User className="w-3.5 h-3.5" />
+                        ) : m.sender === 'admin' ? (
+                          <CheckCheck className="w-3.5 h-3.5 text-slate-950" />
+                        ) : (
+                          <Bot className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+
+                      <div className="max-w-[85%] space-y-0.5">
                         <div
-                          className={`max-w-[85%] text-xs p-3 rounded-2xl ${
-                            isAdmin
-                              ? 'bg-slate-800 border border-slate-700/80 text-slate-100 rounded-tl-xs shadow-md'
-                              : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-tr-xs shadow-md'
+                          className={`p-3.5 rounded-2xl leading-relaxed ${
+                            m.sender === 'user'
+                              ? 'bg-[#1d63ed] text-white font-medium rounded-tr-none'
+                              : m.sender === 'admin'
+                              ? 'bg-emerald-950/90 border border-emerald-500/40 text-emerald-100 rounded-tl-none font-medium shadow-md'
+                              : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'
                           }`}
                         >
-                          {isAdmin && (
-                            <div className="flex items-center gap-1.5 text-[10px] font-black text-cyan-400 border-b border-slate-700/60 pb-1 mb-1">
-                              <Sparkles className="w-3 h-3" />
-                              <span>{rep.senderName}</span>
-                            </div>
-                          )}
-                          <p className="whitespace-pre-wrap leading-relaxed">{rep.message}</p>
+                          <span className="text-[10px] font-extrabold block opacity-75 mb-0.5">
+                            {m.senderName}
+                          </span>
+                          {m.text}
                         </div>
-                        <span className="text-[10px] text-slate-500 font-mono flex items-center gap-1">
-                          {new Date(rep.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          {isAdmin && <CheckCheck className="w-3 h-3 text-cyan-400" />}
-                        </span>
+                        {m.time && (
+                          <span className="text-[9px] text-slate-500 font-mono block px-1 text-right">
+                            {m.time}
+                          </span>
+                        )}
                       </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-center py-4 bg-slate-800/40 border border-slate-700/40 rounded-xl p-3">
-                    <p className="text-xs text-cyan-300 font-medium">Inquiry received! 🚀</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
-                      Rowell has been notified. Replies will appear right here in real time.
-                    </p>
+                    </div>
+                  ))}
+
+                  {loading && (
+                    <div className="flex items-center gap-2 text-slate-400 text-xs italic pl-8">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                      <span>Gemini AI is thinking...</span>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                {/* Quick Prompt Chips */}
+                {messages.length < 3 && (
+                  <div className="px-4 pb-2 flex flex-wrap gap-1.5">
+                    {QUICK_PROMPTS.map((prompt, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleSendMessage(prompt)}
+                        className="text-[10px] font-bold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-full"
+                      >
+                        💡 {prompt}
+                      </button>
+                    ))}
                   </div>
                 )}
 
-                <div ref={messagesEndRef} />
-              </div>
-            )}
-          </div>
+                {/* Book Call CTA Bar */}
+                <div className="px-4 py-2 bg-amber-500/10 border-t border-slate-800 flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> PST (GMT+8) • UK/US Overlap
+                  </span>
+                  <button
+                    onClick={() => setIsContactOpen(true)}
+                    className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-brand-amber hover:bg-amber-400 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer"
+                  >
+                    <span>Book Call</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
 
-          {/* Follow-up Footer (Active Chat mode) */}
-          {thread && (
-            <div className="p-3 bg-slate-800/90 border-t border-slate-700/50">
-              <form onSubmit={handleSendFollowUp} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Type a follow-up message..."
-                  value={followUpMsg}
-                  onChange={(e) => setFollowUpMsg(e.target.value)}
-                  className="flex-1 bg-slate-950/80 border border-slate-700/70 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors"
-                />
-                <button
-                  type="submit"
-                  disabled={sendingFollowUp || !followUpMsg.trim()}
-                  className="p-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl disabled:opacity-40 transition-colors flex items-center justify-center"
-                >
-                  {sendingFollowUp ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                  ) : (
+                {/* Input Box */}
+                <div className="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Ask AI or type a message to Rowell..."
+                    className="flex-1 px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
+                  />
+                  <button
+                    onClick={() => handleSendMessage()}
+                    disabled={loading || !input.trim()}
+                    className="p-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-600 disabled:opacity-40 text-white transition-all cursor-pointer"
+                  >
                     <Send className="w-4 h-4" />
-                  )}
-                </button>
-              </form>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+                  </button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
+    </>
   );
 }

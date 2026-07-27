@@ -19,6 +19,8 @@ import {
 import { motion } from 'framer-motion';
 import { PortfolioCard } from '@/components/ui/portfolio-card';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { generateTestimonialsJsonLd } from '@/lib/seo';
+import { LandingPageAiAssistant } from '@/components/ui/landing-page-ai-assistant';
 
 interface DynamicLandingPageClientProps {
   page: {
@@ -184,6 +186,12 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
       {/* Client Reviews Section */}
       {testimonials.length > 0 && (
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/60 border-t border-b border-slate-800/80">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(generateTestimonialsJsonLd(testimonials)),
+            }}
+          />
           <div className="max-w-6xl mx-auto space-y-12">
             <div className="text-center space-y-3">
               <span className="text-xs font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
@@ -196,15 +204,28 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
               {testimonials.map((t) => (
                 <div
                   key={t.id}
-                  className="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-xl relative"
+                  className={`rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-xl relative transition-all ${
+                    t.featured
+                      ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/30 border-2 border-amber-400/70 shadow-amber-500/10 shadow-2xl ring-1 ring-amber-400/30'
+                      : 'bg-slate-900 border border-slate-800'
+                  }`}
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center gap-1 text-amber-400">
-                      {Array.from({ length: t.rating || 5 }).map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                      ))}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-amber-400">
+                        {Array.from({ length: t.rating || 5 }).map((_, i) => (
+                          <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                        ))}
+                      </div>
+
+                      {t.featured && (
+                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                          <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
+                        </span>
+                      )}
                     </div>
-                    <p className="text-slate-300 text-xs sm:text-sm leading-relaxed italic">
+
+                    <p className="text-slate-200 text-xs sm:text-sm leading-relaxed italic">
                       "{t.quote}"
                     </p>
                   </div>
@@ -223,6 +244,15 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
           </div>
         </section>
       )}
+
+      {/* Interactive AI Assistant Section */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        <LandingPageAiAssistant
+          pageTitle={page.heroTitle}
+          targetKeyword={page.targetKeyword || page.heroTitle}
+          badgeText={page.badgeText || undefined}
+        />
+      </div>
 
       {/* Final CTA Banner */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8">

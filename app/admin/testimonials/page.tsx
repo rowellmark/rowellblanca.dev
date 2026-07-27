@@ -1,15 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Star, Plus, Trash2, Edit, CheckCircle2, Copy, Check, ExternalLink } from 'lucide-react';
+import { Star, Plus, Trash2, Edit, Copy, Check, ExternalLink, ArrowUp, ArrowDown, Sparkles } from 'lucide-react';
 
 interface Testimonial {
   id: number;
   name: string;
   role: string;
   company: string;
+  companyUrl?: string;
   quote: string;
   rating: number;
+  featured?: boolean;
+  order?: number;
   active: boolean;
   avatarUrl?: string;
 }
@@ -23,9 +26,12 @@ export default function TestimonialsPage() {
     name: '',
     role: '',
     company: '',
+    companyUrl: '',
     quote: '',
     rating: 5,
+    featured: false,
     active: true,
+    photoUrl: '',
     targetUkReact: false,
     targetUkWp: false,
   });
@@ -53,14 +59,70 @@ export default function TestimonialsPage() {
     setTimeout(() => setCopied(false), 3000);
   };
 
+  const toggleFeatured = async (t: Testimonial) => {
+    try {
+      const res = await fetch('/api/testimonials', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: t.id, featured: !t.featured }),
+      });
+      const data = await res.json();
+      if (data.success) fetchTestimonials();
+    } catch (e) {
+      alert('Failed to update featured state');
+    }
+  };
+
+  const toggleActive = async (t: Testimonial) => {
+    try {
+      const res = await fetch('/api/testimonials', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: t.id, active: !t.active }),
+      });
+      const data = await res.json();
+      if (data.success) fetchTestimonials();
+    } catch (e) {
+      alert('Failed to update status');
+    }
+  };
+
+  const moveOrder = async (index: number, direction: 'up' | 'down') => {
+    const newList = [...testimonials];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+    if (targetIndex < 0 || targetIndex >= newList.length) return;
+
+    const temp = newList[index];
+    newList[index] = newList[targetIndex];
+    newList[targetIndex] = temp;
+
+    const reorderItems = newList.map((item, idx) => ({
+      id: item.id,
+      order: idx + 1,
+    }));
+
+    setTestimonials(newList);
+
+    try {
+      await fetch('/api/testimonials', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reorderItems }),
+      });
+    } catch (e) {
+      console.error('Failed to save reordered order', e);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const method = editingItem ? 'PUT' : 'POST';
 
-    // Encode target tags in avatarUrl
     const tags: string[] = [];
     if (form.targetUkReact) tags.push('target:uk-react');
     if (form.targetUkWp) tags.push('target:uk-wordpress');
+    if (form.photoUrl.trim()) tags.push(`photo:${form.photoUrl.trim()}`);
     const avatarUrl = tags.join(',');
 
     const payload = editingItem
@@ -81,9 +143,12 @@ export default function TestimonialsPage() {
           name: '',
           role: '',
           company: '',
+          companyUrl: '',
           quote: '',
           rating: 5,
+          featured: false,
           active: true,
+          photoUrl: '',
           targetUkReact: false,
           targetUkWp: false,
         });
@@ -92,7 +157,7 @@ export default function TestimonialsPage() {
         alert(data.message || 'Error saving testimonial');
       }
     } catch (e) {
-      alert('Failed to save testimonial');
+      alert('Error saving testimonial');
     }
   };
 
@@ -103,41 +168,24 @@ export default function TestimonialsPage() {
       const data = await res.json();
       if (data.success) fetchTestimonials();
     } catch (e) {
-      alert('Failed to delete testimonial');
-    }
-  };
-
-  const toggleActive = async (item: Testimonial) => {
-    try {
-      const res = await fetch('/api/testimonials', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: item.id, active: !item.active }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        fetchTestimonials();
-      }
-    } catch (e) {
-      alert('Failed to update status');
+      alert('Failed to delete');
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 font-sans">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
-          <h1 className="text-2xl font-black text-[#0b1a30]">
-            Client Testimonials ({(Array.isArray(testimonials) ? testimonials : []).length})
-          </h1>
-          <p className="text-xs text-slate-500 font-medium mt-1">Manage client recommendations, star ratings, and review quotes.</p>
+          <h1 className="text-2xl font-black text-[#0b1a30]">Testimonials & Reviews ({testimonials.length})</h1>
+          <p className="text-xs text-slate-500 font-medium mt-1">
+            Manage client reviews, highlight featured testimonials, and re-arrange display order on landing pages.
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={copyReviewLink}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-300 font-bold text-xs shadow-xs hover:bg-amber-100 transition-all cursor-pointer"
-            title="Copy link to send to clients for review submission"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 font-extrabold text-xs transition-all cursor-pointer"
           >
             {copied ? (
               <>
@@ -147,7 +195,7 @@ export default function TestimonialsPage() {
             ) : (
               <>
                 <Copy className="h-4 w-4 text-amber-700" />
-                <span>Copy Review Link for Clients</span>
+                <span>Copy Review Link</span>
               </>
             )}
           </button>
@@ -169,9 +217,12 @@ export default function TestimonialsPage() {
                 name: '',
                 role: '',
                 company: '',
+                companyUrl: '',
                 quote: '',
                 rating: 5,
+                featured: false,
                 active: true,
+                photoUrl: '',
                 targetUkReact: true,
                 targetUkWp: true,
               });
@@ -185,75 +236,160 @@ export default function TestimonialsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {(Array.isArray(testimonials) ? testimonials : []).map((t) => (
-          <div key={t.id} className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-xs relative">
+        {(Array.isArray(testimonials) ? testimonials : []).map((t, idx) => (
+          <div
+            key={t.id}
+            className={`rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-xs relative transition-all ${
+              t.featured
+                ? 'bg-gradient-to-br from-amber-50/90 via-white to-amber-50/40 border-2 border-amber-400/80 shadow-md ring-2 ring-amber-400/20'
+                : 'bg-white border border-slate-200'
+            }`}
+          >
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-amber-400">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400" />
-                  ))}
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-0.5 text-amber-400">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                    ))}
+                  </div>
+
+                  {t.featured && (
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 flex items-center gap-1 shadow-xs">
+                      <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
+                    </span>
+                  )}
                 </div>
-                <span className={`text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full border ${
-                  t.active 
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                    : 'bg-amber-50 text-amber-800 border-amber-300 animate-pulse'
-                }`}>
-                  {t.active ? 'Published' : 'Pending Approval'}
-                </span>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moveOrder(idx, 'up')}
+                    disabled={idx === 0}
+                    className="p-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 disabled:opacity-30"
+                    title="Move Up in Display Order"
+                  >
+                    <ArrowUp className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveOrder(idx, 'down')}
+                    disabled={idx === testimonials.length - 1}
+                    className="p-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 disabled:opacity-30"
+                    title="Move Down in Display Order"
+                  >
+                    <ArrowDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  <span
+                    className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${
+                      t.active
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-amber-50 text-amber-800 border-amber-300 animate-pulse'
+                    }`}
+                  >
+                    {t.active ? 'Published' : 'Pending'}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => toggleFeatured(t)}
+                    className={`p-1.5 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                      t.featured
+                        ? 'bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-300'
+                        : 'bg-slate-100 text-slate-400 hover:text-amber-500 hover:bg-slate-200'
+                    }`}
+                    title={t.featured ? 'Remove Highlight' : 'Highlight as Featured Review'}
+                  >
+                    <Star className={`w-4 h-4 ${t.featured ? 'fill-amber-500 text-amber-600' : ''}`} />
+                  </button>
+
+                  <button
+                    onClick={() => toggleActive(t)}
+                    className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-all flex items-center gap-1 cursor-pointer ${
+                      t.active
+                        ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs'
+                    }`}
+                    title={t.active ? 'Deactivate and hide from website' : 'Approve and publish to website'}
+                  >
+                    {t.active ? 'Hide' : 'Publish'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingItem(t);
+                      setForm({
+                        name: t.name,
+                        role: t.role,
+                        company: t.company,
+                        companyUrl: t.companyUrl || '',
+                        quote: t.quote,
+                        rating: t.rating,
+                        featured: Boolean(t.featured),
+                        active: t.active,
+                        photoUrl: t.avatarUrl?.includes('photo:') ? t.avatarUrl.split('photo:')[1].split(',')[0] : '',
+                        targetUkReact: Boolean(
+                          t.avatarUrl?.includes('target:uk-react') || t.company?.toLowerCase().includes('macmanus')
+                        ),
+                        targetUkWp: Boolean(
+                          t.avatarUrl?.includes('target:uk-wordpress') ||
+                            t.company?.toLowerCase().includes('tower') ||
+                            t.company?.toLowerCase().includes('macmanus')
+                        ),
+                      });
+                      setShowModal(true);
+                    }}
+                    className="p-1.5 text-slate-400 hover:text-[#1d63ed]"
+                    title="Edit Testimonial"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => handleDelete(t.id)} className="p-1.5 text-slate-400 hover:text-red-500">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
               <p className="text-xs text-slate-700 leading-relaxed italic">"{t.quote}"</p>
             </div>
 
             <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <div>
-                <span className="font-black text-[#0b1a30] text-sm block">{t.name}</span>
-                <span className="text-[11px] text-slate-500 block">{t.role} {t.company && `• ${t.company}`}</span>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={() => toggleActive(t)}
-                  className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all flex items-center gap-1 cursor-pointer ${
-                    t.active
-                      ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm'
-                  }`}
-                  title={t.active ? 'Deactivate and hide from website' : 'Approve and publish to website'}
-                >
-                  {t.active ? (
-                    'Deactivate'
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center font-black text-xs text-amber-700 overflow-hidden shrink-0">
+                  {t.avatarUrl?.includes('photo:') ? (
+                    <img
+                      src={t.avatarUrl.split('photo:')[1].split(',')[0]}
+                      alt={t.name}
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                      <span>Approve & Publish</span>
-                    </>
+                    <span>{t.name?.charAt(0) || 'C'}</span>
                   )}
-                </button>
-                <button
-                  onClick={() => {
-                    setEditingItem(t);
-                    setForm({
-                      name: t.name,
-                      role: t.role,
-                      company: t.company,
-                      quote: t.quote,
-                      rating: t.rating,
-                      active: t.active,
-                      targetUkReact: Boolean(t.avatarUrl?.includes('target:uk-react') || t.company?.toLowerCase().includes('macmanus')),
-                      targetUkWp: Boolean(t.avatarUrl?.includes('target:uk-wordpress') || t.company?.toLowerCase().includes('tower') || t.company?.toLowerCase().includes('macmanus')),
-                    });
-                    setShowModal(true);
-                  }}
-                  className="p-1.5 text-slate-400 hover:text-[#1d63ed]"
-                  title="Edit Testimonial"
-                >
-                  <Edit className="w-4 h-4" />
-                </button>
-                <button onClick={() => handleDelete(t.id)} className="p-1.5 text-slate-400 hover:text-red-500">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                </div>
+                <div>
+                  <span className="font-black text-[#0b1a30] text-sm block">{t.name}</span>
+                  <span className="text-[11px] text-slate-500 block flex items-center gap-1">
+                    {t.role}{' '}
+                    {t.company && (
+                      <>
+                        •{' '}
+                        {t.companyUrl ? (
+                          <a
+                            href={t.companyUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 font-extrabold hover:underline inline-flex items-center gap-0.5"
+                          >
+                            <span>{t.company}</span>
+                            <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                        ) : (
+                          <span>{t.company}</span>
+                        )}
+                      </>
+                    )}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -261,32 +397,43 @@ export default function TestimonialsPage() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-6">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
-            <h3 className="text-lg font-black text-[#0b1a30]">
-              {editingItem ? 'Edit Testimonial' : 'Add Testimonial'}
-            </h3>
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-lg font-black text-[#0b1a30]">
+                {editingItem ? 'Edit Testimonial' : 'Add Testimonial'}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100"
+              >
+                ✕
+              </button>
+            </div>
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-700 font-extrabold mb-1">Client Name</label>
+                <label className="block text-slate-700 font-extrabold mb-1">Client Name *</label>
                 <input
                   type="text"
+                  required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  placeholder="e.g. Giles McManus"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-extrabold mb-1">Role / Position</label>
+                  <label className="block text-slate-700 font-extrabold mb-1">Role / Title</label>
                   <input
                     type="text"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    placeholder="e.g. Managing Director"
                   />
                 </div>
                 <div>
@@ -295,63 +442,58 @@ export default function TestimonialsPage() {
                     type="text"
                     value={form.company}
                     onChange={(e) => setForm({ ...form, company: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    placeholder="e.g. MacManus Finance"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-700 font-extrabold mb-1">Company Website URL</label>
+                  <input
+                    type="url"
+                    value={form.companyUrl}
+                    onChange={(e) => setForm({ ...form, companyUrl: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    placeholder="https://company.co.uk"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-extrabold mb-1">Profile Photo URL</label>
+                  <input
+                    type="url"
+                    value={form.photoUrl}
+                    onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    placeholder="https://.../photo.jpg"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-extrabold mb-1">Testimonial Quote</label>
+                <label className="block text-slate-700 font-extrabold mb-1">Testimonial Quote *</label>
                 <textarea
                   rows={3}
+                  required
                   value={form.quote}
                   onChange={(e) => setForm({ ...form, quote: e.target.value })}
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  placeholder="Enter client review quote..."
                 />
               </div>
 
-              {/* Target Landing Page Settings */}
-              <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-2xl space-y-2">
-                <label className="block text-amber-900 font-black text-xs uppercase tracking-wider">
-                  🎯 Target Landing Pages Settings
-                </label>
-                <p className="text-[11px] text-slate-600">Select which landing page(s) will render this testimonial:</p>
-
-                <div className="space-y-1.5 pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-xs">
-                    <input
-                      type="checkbox"
-                      checked={form.targetUkReact}
-                      onChange={(e) => setForm({ ...form, targetUkReact: e.target.checked })}
-                      className="h-4 w-4 rounded text-[#1d63ed]"
-                    />
-                    <span>🇬🇧 UK React Developer Page (/hire-uk-react-developer)</span>
-                  </label>
-
-                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-xs">
-                    <input
-                      type="checkbox"
-                      checked={form.targetUkWp}
-                      onChange={(e) => setForm({ ...form, targetUkWp: e.target.checked })}
-                      className="h-4 w-4 rounded text-indigo-600"
-                    />
-                    <span>🇬🇧 UK WordPress Developer Page (/hire-uk-wordpress-developer)</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold"
+                  className="px-4 py-2 rounded-xl text-slate-500 font-bold hover:bg-slate-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#1d63ed] text-white font-extrabold shadow-xs"
+                  className="px-5 py-2 rounded-xl bg-[#1d63ed] text-white font-extrabold hover:bg-blue-700 shadow-md"
                 >
                   Save Testimonial
                 </button>

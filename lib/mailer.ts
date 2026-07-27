@@ -386,5 +386,51 @@ export async function sendTestimonialNotification({
     }),
   });
 }
+export async function sendChatTranscriptEmail({
+  name,
+  email,
+  sessionId,
+  transcript,
+}: {
+  name: string;
+  email: string;
+  sessionId: string;
+  transcript: string;
+}) {
+  const config = getMailTransportConfig();
+
+  if (!config) {
+    console.warn('[Mailer] Email provider credentials missing. Chat transcript email skipped.');
+    return { success: false, reason: 'Credentials not configured' };
+  }
+
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+
+  return sendMail(config, {
+    to: config.toEmail,
+    replyTo: email,
+    subject: `💬 Ended Chat Session Transcript: ${name}`,
+    text: `Chat Session Completed!\nName: ${name}\nEmail: ${email}\nSession ID: ${sessionId}\n\nFull Chat Transcript:\n${transcript}`,
+    html: buildEmailShell({
+      eyebrow: 'Chat Session Completed',
+      title: `💬 Completed Chat Transcript from ${safeName}`,
+      intro: `${safeName} (&lt;<a href="mailto:${safeEmail}" style="color: #1d4ed8;">${safeEmail}</a>&gt;) just ended a live chat session with Friday. Below is the full chat conversation history.`,
+      content: `
+        <div style="padding: 18px 20px; border-radius: 18px; bg-color: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+          <div style="font-size: 16px; font-weight: 800; color: #0b1a30;">${safeName}</div>
+          <div style="font-size: 13px; color: #475569; margin-top: 4px;">Email: &lt;<a href="mailto:${safeEmail}" style="color: #1d4ed8; text-decoration: none;">${safeEmail}</a>&gt;</div>
+          <div style="font-size: 11px; font-family: monospace; color: #94a3b8; margin-top: 4px;">Session ID: ${escapeHtml(sessionId)}</div>
+        </div>
+
+        <div style="padding: 22px; border-radius: 20px; background: #0f172a; color: #f8fafc; margin-bottom: 24px;">
+          <div style="margin-bottom: 12px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #fbbf24;">Full Chat Transcript History</div>
+          <div style="font-size: 13px; line-height: 1.8; font-family: monospace; white-space: pre-wrap; color: rgba(248,250,252,0.92);">${renderParagraph(transcript)}</div>
+        </div>
+      `,
+      footer: 'Sent via rowellblanca.dev Friday AI & Live Chat · Reply directly to this email to contact the client.',
+    }),
+  });
+}
 
 

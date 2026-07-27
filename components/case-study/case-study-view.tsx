@@ -7,6 +7,7 @@ import { ExternalLink, Mail, Target, Calendar, UserCheck, Briefcase } from 'luci
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
 import { ProjectDetailPreview, ProjectGallery, PortfolioProject } from '@/components/ui/portfolio-card';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { BlogAiAssistant } from '@/components/ui/blog-ai-assistant';
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', href: 'https://github.com/rowellmark', Icon: IconBrandGithub },
@@ -183,6 +184,18 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
               </div>
             </div>
           )}
+
+          {/* Gemini AI Article Assistant */}
+          <BlogAiAssistant
+            title={project.sitename}
+            category={project.category}
+            technologies={project.technologies}
+            description={project.description}
+            challenge={project.challenge}
+            solution={project.solution}
+            results={project.results}
+            content={project.content}
+          />
         </div>
 
         {/* Right Column — Sidebar Meta & Direct CTA */}
