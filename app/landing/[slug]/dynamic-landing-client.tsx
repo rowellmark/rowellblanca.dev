@@ -40,11 +40,7 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
   const [projects, setProjects] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
 
-  useEffect(() => {
-    fetchPageData();
-  }, [page]);
-
-  const fetchPageData = async () => {
+  const fetchPageData = React.useCallback(async () => {
     try {
       const [pRes, tRes] = await Promise.all([
         fetch('/api/projects'),
@@ -75,7 +71,11 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
     } catch (e) {
       console.error('Error loading page components:', e);
     }
-  };
+  }, [page]);
+
+  useEffect(() => {
+    fetchPageData();
+  }, [fetchPageData]);
 
   return (
     <div className="min-h-screen bg-[#071224] text-slate-100 font-sans selection:bg-brand-amber selection:text-slate-950 overflow-x-hidden">

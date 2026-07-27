@@ -32,11 +32,7 @@ export default function LeadsPage() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [newNoteContent, setNewNoteContent] = useState('');
 
-  useEffect(() => {
-    fetchLeads();
-  }, [statusFilter]);
-
-  const fetchLeads = async () => {
+  const fetchLeads = React.useCallback(async () => {
     try {
       const res = await fetch(`/api/crm/leads?status=${statusFilter}`);
       const data = await res.json();
@@ -44,7 +40,11 @@ export default function LeadsPage() {
     } catch (e) {
       console.error('Error fetching leads:', e);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
   const handleLeadStatusChange = async (leadId: number, newStatus: string) => {
     try {

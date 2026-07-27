@@ -60,11 +60,7 @@ export default function MessagesPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    fetchMessages();
-  }, []);
-
-  const fetchMessages = async (maintainSelected = true) => {
+  const fetchMessages = React.useCallback(async (maintainSelected = true) => {
     try {
       const res = await fetch('/api/crm/messages');
       const data = await res.json();
@@ -79,7 +75,11 @@ export default function MessagesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedMsgId]);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
 
   const selectedMessage = messages.find((m) => m.id === selectedMsgId);
 
@@ -88,7 +88,7 @@ export default function MessagesPage() {
     if (selectedMessage) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [selectedMsgId, selectedMessage?.replies?.length]);
+  }, [selectedMsgId, selectedMessage, selectedMessage?.replies?.length]);
 
   const handleDelete = async (id: number, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();

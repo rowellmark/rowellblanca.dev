@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bell, MessageSquare, Users, Check, X, ArrowRight, Sparkles, Clock } from 'lucide-react';
+import { Bell, MessageSquare, Users, Check, X, ArrowRight, Sparkles, Clock, Star } from 'lucide-react';
 
 interface NotificationItem {
   id: string;
-  type: 'MESSAGE' | 'LEAD';
+  type: 'MESSAGE' | 'LEAD' | 'TESTIMONIAL';
   title: string;
   subtitle: string;
   time: string;
@@ -43,9 +43,10 @@ export default function NotificationBell() {
 
   const fetchNotifications = async () => {
     try {
-      const [msgRes, leadRes] = await Promise.all([
+      const [msgRes, leadRes, testRes] = await Promise.all([
         fetch('/api/crm/messages'),
         fetch('/api/crm/leads'),
+        fetch('/api/testimonials?includeInactive=true'),
       ]);
 
       const items: NotificationItem[] = [];
@@ -78,6 +79,23 @@ export default function NotificationBell() {
               subtitle: lead.serviceInterest || lead.enquiryDetails || 'New lead submission',
               time: lead.submittedAt,
               href: '/admin/leads',
+              read: false,
+            });
+          }
+        });
+      }
+
+      const testData = await testRes.json();
+      if (testData.success && Array.isArray(testData.testimonials)) {
+        testData.testimonials.forEach((t: any) => {
+          if (t.active === false) {
+            items.push({
+              id: `t_${t.id}`,
+              type: 'TESTIMONIAL',
+              title: `⭐ Pending Review from ${t.name}`,
+              subtitle: t.quote,
+              time: t.createdAt || new Date().toISOString(),
+              href: '/admin/testimonials',
               read: false,
             });
           }
@@ -167,11 +185,15 @@ export default function NotificationBell() {
                     className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
                       item.type === 'MESSAGE'
                         ? 'bg-blue-50 text-blue-600'
-                        : 'bg-amber-50 text-amber-600'
+                        : item.type === 'TESTIMONIAL'
+                        ? 'bg-amber-100 text-amber-700'
+                        : 'bg-indigo-50 text-indigo-600'
                     }`}
                   >
                     {item.type === 'MESSAGE' ? (
                       <MessageSquare className="w-4 h-4" />
+                    ) : item.type === 'TESTIMONIAL' ? (
+                      <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
                     ) : (
                       <Users className="w-4 h-4" />
                     )}

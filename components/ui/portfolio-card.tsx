@@ -9,6 +9,7 @@ import { Monitor, Smartphone, Maximize2, X, ExternalLink, ArrowRight, Package, T
 // ─── Shared Project Type ──────────────────────────────────────────────────────
 
 export interface PortfolioProject {
+  id?: number;
   key?: number;
   url: string;
   image: string;
