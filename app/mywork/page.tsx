@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { MyWork } from "@/components/homepage/my-work";
+import { LandingPagesShowcase } from "@/components/homepage/landing-pages-showcase";
 import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
@@ -26,6 +27,7 @@ export default function MyWorkPage() {
                     <MyWork notitle="true" />
                 </div>
             </div>
+            <LandingPagesShowcase />
         </div>
     );
 }

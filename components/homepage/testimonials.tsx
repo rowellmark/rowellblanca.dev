@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Quote, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 
 interface Testimonial {
@@ -10,6 +10,7 @@ interface Testimonial {
   name: string;
   role: string;
   company: string;
+  companyUrl?: string;
   quote: string;
   avatarUrl?: string;
   rating: number;
@@ -29,7 +30,8 @@ export function TestimonialsSection() {
           const data = await res.json();
           const rawList = Array.isArray(data.testimonials) ? data.testimonials : (Array.isArray(data) ? data : []);
           const activeList = rawList.filter((t: any) => t.active !== false);
-          setTestimonials(activeList);
+          const featuredList = activeList.filter((t: any) => t.featured === true);
+          setTestimonials(featuredList.length > 0 ? featuredList : activeList);
         }
       } catch (e) {
         console.error('Failed to load testimonials:', e);
@@ -157,7 +159,20 @@ export function TestimonialsSection() {
                         {testimonials[currentIndex]?.name}
                       </h4>
                       <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                        {testimonials[currentIndex]?.role} · <span className="text-brand-amber font-extrabold">{testimonials[currentIndex]?.company}</span>
+                        {testimonials[currentIndex]?.role} ·{' '}
+                        {testimonials[currentIndex]?.companyUrl ? (
+                          <a
+                            href={testimonials[currentIndex]?.companyUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-brand-amber font-extrabold hover:underline inline-flex items-center gap-1"
+                          >
+                            {testimonials[currentIndex]?.company}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ) : (
+                          <span className="text-brand-amber font-extrabold">{testimonials[currentIndex]?.company}</span>
+                        )}
                       </p>
                     </div>
                   </div>

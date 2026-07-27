@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Star, Plus, Trash2, Edit, Copy, Check, ExternalLink, ArrowUp, ArrowDown, Sparkles } from 'lucide-react';
+import { Star, Plus, Trash2, Edit, Copy, Check, ExternalLink, ArrowUp, ArrowDown, Sparkles, Loader2, X } from 'lucide-react';
 
 interface Testimonial {
   id: number;
@@ -22,6 +22,7 @@ export default function TestimonialsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState<Testimonial | null>(null);
   const [copied, setCopied] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [form, setForm] = useState({
     name: '',
     role: '',
@@ -112,6 +113,34 @@ export default function TestimonialsPage() {
       });
     } catch (e) {
       console.error('Failed to save reordered order', e);
+    }
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingPhoto(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success && data.url) {
+        setForm((prev) => ({ ...prev, photoUrl: data.url }));
+      } else {
+        alert(data.message || 'Image upload failed');
+      }
+    } catch (error) {
+      alert('Error uploading file');
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = '';
     }
   };
 
@@ -460,14 +489,29 @@ export default function TestimonialsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-extrabold mb-1">Profile Photo URL</label>
-                  <input
-                    type="url"
-                    value={form.photoUrl}
-                    onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-                    placeholder="https://.../photo.jpg"
-                  />
+                  <label className="block text-slate-700 font-extrabold mb-1">Profile Photo</label>
+                  <div className="flex items-center gap-2">
+                    {form.photoUrl && (
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-300 bg-slate-100 shrink-0">
+                        <img src={form.photoUrl} alt="Profile preview" className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => setForm({ ...form, photoUrl: '' })}
+                          className="absolute inset-0 flex items-center justify-center bg-slate-900/60 text-white opacity-0 hover:opacity-100 transition-opacity"
+                          title="Remove photo"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="text-xs text-slate-600 min-w-0"
+                    />
+                    {uploadingPhoto && <Loader2 className="w-4 h-4 animate-spin text-brand-amber shrink-0" />}
+                  </div>
                 </div>
               </div>
 

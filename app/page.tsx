@@ -7,6 +7,7 @@ import MyExpertise from "@/components/homepage/my-expertise";
 import ContactSection from "@/components/homepage/contact-section";
 import { FeaturedProject } from "@/components/homepage/featured-project";
 import { MyWork } from "@/components/homepage/my-work";
+import { LandingPagesShowcase } from "@/components/homepage/landing-pages-showcase";
 import WorkHistory from "@/components/homepage/work-history";
 import { TestimonialsSection } from "@/components/homepage/testimonials";
 import { ContactFormSection } from "@/components/footer/contact-form-section";
@@ -22,6 +23,7 @@ export default function Home() {
       <MyExpertise />
       <FeaturedProject />
       <MyWork notitle="" />
+      <LandingPagesShowcase />
       <WorkHistory />
       <TestimonialsSection />
       <ContactSection />

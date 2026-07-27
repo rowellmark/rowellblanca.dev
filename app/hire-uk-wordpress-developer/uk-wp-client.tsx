@@ -20,7 +20,6 @@ import {
   Cpu,
 } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
-import { LandingPageAiAssistant } from "@/components/ui/landing-page-ai-assistant";
 import { PortfolioCard, PortfolioProject } from "@/components/ui/portfolio-card";
 
 const DEFAULT_WP_PROJECTS: PortfolioProject[] = [
@@ -149,9 +148,10 @@ export function UkWpLandingClient() {
   React.useEffect(() => {
     async function loadData() {
       try {
-        const [lpRes, tRes, pRes] = await Promise.all([
+        const [lpRes, tRes, tAllRes, pRes] = await Promise.all([
           fetch('/api/landing-pages?slug=hire-uk-wordpress-developer'),
           fetch('/api/testimonials?target=uk-wordpress'),
+          fetch('/api/testimonials'),
           fetch('/api/projects?includeInactive=false'),
         ]);
 
@@ -167,8 +167,11 @@ export function UkWpLandingClient() {
           }
         }
 
-        if (tRes.ok) {
-          const tData = await tRes.json();
+        // Explicit admin selection wins over the keyword-matched target list
+        const testimonialsSource = assignedTestimonialIds.length > 0 ? tAllRes : tRes;
+
+        if (testimonialsSource.ok) {
+          const tData = await testimonialsSource.json();
           if (tData.success && Array.isArray(tData.testimonials) && tData.testimonials.length > 0) {
             let filteredTestimonials = tData.testimonials;
             if (assignedTestimonialIds.length > 0) {
@@ -569,15 +572,6 @@ export function UkWpLandingClient() {
             })}
           </div>
         </div>
-      </section>
-
-      {/* Interactive AI Assistant Section */}
-      <section className="py-12 px-6 bg-slate-950">
-        <LandingPageAiAssistant
-          pageTitle={pageConfig?.heroTitle || "Senior UK WordPress Architect"}
-          targetKeyword="UK Custom WordPress Engineering"
-          badgeText="Custom WordPress Blocks & ACF Pro"
-        />
       </section>
 
       {/* CTA Footer Section */}

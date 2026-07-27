@@ -88,7 +88,6 @@ export function Hero() {
                                     whileHover={{ scale: 1.04 }}
                                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-900 shadow-xs cursor-pointer hover:bg-amber-500/20 transition-all"
                                 >
-                                    <span className="text-xs">🇬🇧</span>
                                     <span className="text-xs font-bold text-slate-800 tracking-wide">
                                         Trusted by UK Clients: <span className="font-extrabold text-amber-700">Towerfire</span> & <span className="font-extrabold text-amber-700">Macmanus</span>
                                     </span>
@@ -217,54 +216,6 @@ export function Hero() {
                     </div>
 
                 </div>
-
-                {/* Bottom Quick Feature Highlights Row */}
-                <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    className="mt-16 pt-8 border-t border-slate-200/80 grid grid-cols-2 md:grid-cols-4 gap-4"
-                >
-                    <motion.div whileHover={{ y: -3 }} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/70 shadow-2xs transition-shadow hover:shadow-md">
-                        <div className="h-9 w-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
-                            <Award className="h-4 w-4" />
-                        </div>
-                        <div>
-                            <span className="font-extrabold text-brand-navy text-sm block leading-none">12+ Years</span>
-                            <span className="text-[11px] font-semibold text-slate-500">Field Experience</span>
-                        </div>
-                    </motion.div>
-
-                    <motion.div whileHover={{ y: -3 }} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/70 shadow-2xs transition-shadow hover:shadow-md">
-                        <div className="h-9 w-9 rounded-xl bg-violet-50 flex items-center justify-center text-violet-600 shrink-0">
-                            <Code className="h-4 w-4" />
-                        </div>
-                        <div>
-                            <span className="font-extrabold text-brand-navy text-sm block leading-none">50+ Projects</span>
-                            <span className="text-[11px] font-semibold text-slate-500">Shipped Worldwide</span>
-                        </div>
-                    </motion.div>
-
-                    <motion.div whileHover={{ y: -3 }} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/70 shadow-2xs transition-shadow hover:shadow-md">
-                        <div className="h-9 w-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
-                            <CheckCircle className="h-4 w-4" />
-                        </div>
-                        <div>
-                            <span className="font-extrabold text-brand-navy text-sm block leading-none">100% Success</span>
-                            <span className="text-[11px] font-semibold text-slate-500">Upwork Top Rated</span>
-                        </div>
-                    </motion.div>
-
-                    <motion.div whileHover={{ y: -3 }} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/70 shadow-2xs transition-shadow hover:shadow-md">
-                        <div className="h-9 w-9 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600 shrink-0">
-                            <Sparkles className="h-4 w-4" />
-                        </div>
-                        <div>
-                            <span className="font-extrabold text-brand-navy text-sm block leading-none">AI & Web Stack</span>
-                            <span className="text-[11px] font-semibold text-slate-500">React, Next & WP</span>
-                        </div>
-                    </motion.div>
-                </motion.div>
 
             </div>
 

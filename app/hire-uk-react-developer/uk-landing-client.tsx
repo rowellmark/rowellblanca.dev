@@ -20,7 +20,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
-import { LandingPageAiAssistant } from "@/components/ui/landing-page-ai-assistant";
 
 import { PortfolioCard, PortfolioProject } from "@/components/ui/portfolio-card";
 
@@ -134,9 +133,10 @@ export function UkLandingClient() {
   React.useEffect(() => {
     async function loadData() {
       try {
-        const [lpRes, tRes, pRes] = await Promise.all([
+        const [lpRes, tRes, tAllRes, pRes] = await Promise.all([
           fetch('/api/landing-pages?slug=hire-uk-react-developer'),
           fetch('/api/testimonials?target=uk-react'),
+          fetch('/api/testimonials'),
           fetch('/api/projects?target=uk-react'),
         ]);
 
@@ -152,8 +152,11 @@ export function UkLandingClient() {
           }
         }
 
-        if (tRes.ok) {
-          const tData = await tRes.json();
+        // Explicit admin selection wins over the keyword-matched target list
+        const testimonialsSource = assignedTestimonialIds.length > 0 ? tAllRes : tRes;
+
+        if (testimonialsSource.ok) {
+          const tData = await testimonialsSource.json();
           if (tData.success && Array.isArray(tData.testimonials) && tData.testimonials.length > 0) {
             let filteredTestimonials = tData.testimonials;
             if (assignedTestimonialIds.length > 0) {
@@ -498,15 +501,6 @@ export function UkLandingClient() {
             })}
           </div>
         </div>
-      </section>
-
-      {/* Interactive AI Assistant Section */}
-      <section className="py-12 px-6 bg-slate-950">
-        <LandingPageAiAssistant
-          pageTitle={pageConfig?.heroTitle || "Senior UK React & Next.js Developer"}
-          targetKeyword="UK React & Next.js Development"
-          badgeText="React/Next.js Architecture"
-        />
       </section>
 
       {/* CTA Footer Section */}

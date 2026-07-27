@@ -10,6 +10,7 @@ export function CookieBanner() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -34,6 +35,7 @@ export function CookieBanner() {
   const handleAccept = () => {
     localStorage.setItem('cookie_consent', JSON.stringify({ necessary: true, analytics: true, marketing: true }));
     setAccepted(true);
+    setOpen(false);
     updateGoogleConsent(true, true);
     window.dispatchEvent(new Event('cookie_consent_updated'));
   };
@@ -46,7 +48,20 @@ export function CookieBanner() {
     return null;
   }
 
-  const showBanner = !accepted;
+  const showBanner = !accepted || open;
+
+  if (accepted && !open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Edit cookie preferences"
+        className="fixed bottom-20 left-4 sm:left-6 z-[99999] p-3 rounded-full bg-slate-900/95 backdrop-blur-xl text-amber-400 border border-slate-800 shadow-2xl hover:bg-slate-800 transition-colors cursor-pointer"
+      >
+        <Cookie className="w-5 h-5" />
+      </button>
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -57,7 +72,7 @@ export function CookieBanner() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-          className="fixed bottom-20 right-4 sm:right-6 max-w-[calc(100vw-2rem)] sm:max-w-sm z-[99999]"
+          className="fixed bottom-20 left-4 sm:left-6 max-w-[calc(100vw-2rem)] sm:max-w-sm z-[99999]"
         >
           <div className="bg-slate-900/95 backdrop-blur-xl text-white p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-2xl space-y-3">
             <div className="flex items-start gap-3">

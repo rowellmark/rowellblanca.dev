@@ -20,7 +20,6 @@ import { motion } from 'framer-motion';
 import { PortfolioCard } from '@/components/ui/portfolio-card';
 import { ContactModal } from '@/components/ui/contact-modal';
 import { generateTestimonialsJsonLd } from '@/lib/seo';
-import { LandingPageAiAssistant } from '@/components/ui/landing-page-ai-assistant';
 
 interface DynamicLandingPageClientProps {
   page: {
@@ -244,15 +243,6 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
           </div>
         </section>
       )}
-
-      {/* Interactive AI Assistant Section */}
-      <div className="px-4 sm:px-6 lg:px-8">
-        <LandingPageAiAssistant
-          pageTitle={page.heroTitle}
-          targetKeyword={page.targetKeyword || page.heroTitle}
-          badgeText={page.badgeText || undefined}
-        />
-      </div>
 
       {/* Final CTA Banner */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8">

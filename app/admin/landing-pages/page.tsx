@@ -18,6 +18,7 @@ import {
   Search,
   Globe,
 } from 'lucide-react';
+import GeminiLandingModal from '@/components/admin/gemini-landing-modal';
 
 interface Project {
   id: number;
@@ -54,6 +55,7 @@ export default function LandingPagesManagerPage() {
   const [allTestimonials, setAllTestimonials] = useState<Testimonial[]>([]);
   
   const [showModal, setShowModal] = useState(false);
+  const [showGeminiModal, setShowGeminiModal] = useState(false);
   const [editingItem, setEditingItem] = useState<LandingPageItem | null>(null);
   const [activeTab, setActiveTab] = useState<'hero' | 'seo' | 'projects' | 'testimonials'>('hero');
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
@@ -387,13 +389,22 @@ export default function LandingPagesManagerPage() {
                   Configure custom hero copy, SEO metadata, and assigned projects & testimonials.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowModal(false)}
-                className="p-2 rounded-xl text-slate-400 hover:bg-slate-100"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowGeminiModal(true)}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-md hover:scale-105 transition-all cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4" /> ✨ Gemini AI Assistant
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="p-2 rounded-xl text-slate-400 hover:bg-slate-100"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* Modal Navigation Tabs */}
@@ -670,6 +681,29 @@ export default function LandingPagesManagerPage() {
           </div>
         </div>
       )}
+
+      {/* Gemini AI Landing Page Copy Generator */}
+      <GeminiLandingModal
+        open={showGeminiModal}
+        onClose={() => setShowGeminiModal(false)}
+        initialData={{
+          slug: form.slug,
+          targetKeyword: form.targetKeyword,
+        }}
+        onApply={(generated) => {
+          setForm((prev) => ({
+            ...prev,
+            badgeText: generated.badgeText || prev.badgeText,
+            heroTitle: generated.heroTitle || prev.heroTitle,
+            heroSubtitle: generated.heroSubtitle || prev.heroSubtitle,
+            heroCtaText: generated.heroCtaText || prev.heroCtaText,
+            targetKeyword: generated.targetKeyword || prev.targetKeyword,
+            metaTitle: generated.metaTitle || prev.metaTitle,
+            metaDescription: generated.metaDescription || prev.metaDescription,
+          }));
+          setActiveTab('hero');
+        }}
+      />
     </div>
   );
 }
