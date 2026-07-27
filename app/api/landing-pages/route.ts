@@ -127,9 +127,22 @@ export async function POST(request: Request) {
       .replace(/[^a-z0-9-]+/g, '-')
       .replace(/(^-|-$)+/g, '');
 
-    const newPage = await prisma.landingPage.create({
-      data: {
+    const newPage = await prisma.landingPage.upsert({
+      where: { slug: cleanSlug },
+      create: {
         slug: cleanSlug,
+        heroTitle: heroTitle.trim(),
+        heroSubtitle: heroSubtitle.trim(),
+        badgeText: badgeText?.trim() || '',
+        heroCtaText: heroCtaText?.trim() || 'Book Discovery Call',
+        targetKeyword: targetKeyword?.trim() || '',
+        metaTitle: metaTitle?.trim() || heroTitle.trim(),
+        metaDescription: metaDescription?.trim() || heroSubtitle.trim(),
+        projectIds: Array.isArray(projectIds) ? projectIds.map(Number) : [],
+        testimonialIds: Array.isArray(testimonialIds) ? testimonialIds.map(Number) : [],
+        active: active !== undefined ? Boolean(active) : true,
+      },
+      update: {
         heroTitle: heroTitle.trim(),
         heroSubtitle: heroSubtitle.trim(),
         badgeText: badgeText?.trim() || '',
@@ -174,18 +187,14 @@ export async function PUT(request: Request) {
       active,
     } = body;
 
-    if (!id) {
-      return NextResponse.json({ success: false, message: 'Landing Page ID is required' }, { status: 400 });
-    }
+    const cleanSlug = (slug || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
 
     const updateData: any = {};
-    if (slug !== undefined) {
-      updateData.slug = slug
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9-]+/g, '-')
-        .replace(/(^-|-$)+/g, '');
-    }
+    if (slug !== undefined) updateData.slug = cleanSlug;
     if (heroTitle !== undefined) updateData.heroTitle = heroTitle.trim();
     if (heroSubtitle !== undefined) updateData.heroSubtitle = heroSubtitle.trim();
     if (badgeText !== undefined) updateData.badgeText = badgeText.trim();
@@ -197,10 +206,54 @@ export async function PUT(request: Request) {
     if (testimonialIds !== undefined) updateData.testimonialIds = Array.isArray(testimonialIds) ? testimonialIds.map(Number) : [];
     if (active !== undefined) updateData.active = Boolean(active);
 
-    const updatedPage = await prisma.landingPage.update({
-      where: { id: Number(id) },
-      data: updateData,
-    });
+    let updatedPage;
+    if (id && Number(id) > 0) {
+      try {
+        updatedPage = await prisma.landingPage.update({
+          where: { id: Number(id) },
+          data: updateData,
+        });
+      } catch (err) {
+        // Fallback to upsert by slug if ID not found in database yet
+        if (cleanSlug) {
+          updatedPage = await prisma.landingPage.upsert({
+            where: { slug: cleanSlug },
+            create: {
+              slug: cleanSlug,
+              heroTitle: heroTitle?.trim() || 'Hire Senior Developer',
+              heroSubtitle: heroSubtitle?.trim() || 'Enterprise software engineering.',
+              badgeText: badgeText?.trim() || '',
+              heroCtaText: heroCtaText?.trim() || 'Book Discovery Call',
+              targetKeyword: targetKeyword?.trim() || '',
+              metaTitle: metaTitle?.trim() || '',
+              metaDescription: metaDescription?.trim() || '',
+              projectIds: Array.isArray(projectIds) ? projectIds.map(Number) : [],
+              testimonialIds: Array.isArray(testimonialIds) ? testimonialIds.map(Number) : [],
+              active: active !== undefined ? Boolean(active) : true,
+            },
+            update: updateData,
+          });
+        }
+      }
+    } else if (cleanSlug) {
+      updatedPage = await prisma.landingPage.upsert({
+        where: { slug: cleanSlug },
+        create: {
+          slug: cleanSlug,
+          heroTitle: heroTitle?.trim() || 'Hire Senior Developer',
+          heroSubtitle: heroSubtitle?.trim() || 'Enterprise software engineering.',
+          badgeText: badgeText?.trim() || '',
+          heroCtaText: heroCtaText?.trim() || 'Book Discovery Call',
+          targetKeyword: targetKeyword?.trim() || '',
+          metaTitle: metaTitle?.trim() || '',
+          metaDescription: metaDescription?.trim() || '',
+          projectIds: Array.isArray(projectIds) ? projectIds.map(Number) : [],
+          testimonialIds: Array.isArray(testimonialIds) ? testimonialIds.map(Number) : [],
+          active: active !== undefined ? Boolean(active) : true,
+        },
+        update: updateData,
+      });
+    }
 
     return NextResponse.json({ success: true, landingPage: updatedPage });
   } catch (error: any) {
