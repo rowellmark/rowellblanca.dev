@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Quote, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { Star, Quote, ChevronLeft, ChevronRight, ExternalLink, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 interface Testimonial {
@@ -14,6 +14,7 @@ interface Testimonial {
   quote: string;
   avatarUrl?: string;
   rating: number;
+  featured?: boolean;
 }
 
 export function TestimonialsSection() {
@@ -30,8 +31,7 @@ export function TestimonialsSection() {
           const data = await res.json();
           const rawList = Array.isArray(data.testimonials) ? data.testimonials : (Array.isArray(data) ? data : []);
           const activeList = rawList.filter((t: any) => t.active !== false);
-          const featuredList = activeList.filter((t: any) => t.featured === true);
-          setTestimonials(featuredList.length > 0 ? featuredList : activeList);
+          setTestimonials(activeList);
         }
       } catch (e) {
         console.error('Failed to load testimonials:', e);
@@ -59,6 +59,11 @@ export function TestimonialsSection() {
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const getPhotoUrl = (avatarUrl?: string) => {
+    if (!avatarUrl?.includes('photo:')) return undefined;
+    return avatarUrl.split('photo:')[1].split(',')[0];
   };
 
   return (
@@ -120,10 +125,20 @@ export function TestimonialsSection() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -40 }}
                   transition={{ duration: 0.45, ease: "easeOut" }}
-                  className="relative bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/90 shadow-xl flex flex-col justify-between"
+                  className={`relative rounded-3xl p-8 sm:p-12 flex flex-col justify-between transition-all ${
+                    testimonials[currentIndex]?.featured
+                      ? 'bg-gradient-to-b from-white via-white to-amber-50/50 border-2 border-amber-400/70 shadow-amber-500/10 shadow-2xl ring-1 ring-amber-400/30'
+                      : 'bg-white border border-slate-200/90 shadow-xl'
+                  }`}
                 >
                   {/* Accent bar */}
                   <div className="absolute top-0 inset-x-12 h-1 bg-gradient-to-r from-brand-amber via-amber-500 to-amber-600 rounded-b-full" />
+
+                  {testimonials[currentIndex]?.featured && (
+                    <span className="absolute -top-3 right-8 text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                      <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
+                    </span>
+                  )}
 
                   <div className="space-y-6">
                     {/* Star Rating & Quote Icon */}
@@ -146,7 +161,7 @@ export function TestimonialsSection() {
                   <div className="flex items-center gap-4 pt-8 mt-8 border-t border-slate-100">
                     <div className="relative h-14 w-14 rounded-full overflow-hidden bg-slate-100 shrink-0 border-2 border-amber-200 shadow-sm">
                       <Image
-                        src={testimonials[currentIndex]?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'}
+                        src={getPhotoUrl(testimonials[currentIndex]?.avatarUrl) || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'}
                         alt={testimonials[currentIndex]?.name}
                         fill
                         className="object-cover"
