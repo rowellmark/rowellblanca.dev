@@ -34,6 +34,7 @@ export function BlogAiAssistant({
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isRegistered, setIsRegistered] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
@@ -63,37 +64,75 @@ export function BlogAiAssistant({
 
     const savedName = localStorage.getItem('rb_chat_user_name');
     const savedEmail = localStorage.getItem('rb_chat_user_email');
+    const savedPhone = localStorage.getItem('rb_chat_user_phone');
     if (savedName && savedEmail) {
       setName(savedName);
       setEmail(savedEmail);
+      if (savedPhone) setPhone(savedPhone);
       setIsRegistered(true);
     }
   }, []);
 
-  const handleSaveInitialInfo = async (e: React.FormEvent) => {
+  const handleSaveInitialInfo = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
 
     localStorage.setItem('rb_chat_user_name', name.trim());
     localStorage.setItem('rb_chat_user_email', email.trim());
+    if (phone.trim()) localStorage.setItem('rb_chat_user_phone', phone.trim());
     setIsRegistered(true);
+  };
 
-    try {
-      await fetch('/api/chat/inquiry', {
+  const lastSavedMessageCount = useRef(0);
+
+  // Refs so the unmount/beforeunload handlers (registered once) always read
+  // current values instead of the stale closure from whichever render set them up.
+  const latestRef = useRef({ messages, name, email, phone, sessionId, title });
+  latestRef.current = { messages, name, email, phone, sessionId, title };
+
+  // Persist the full transcript as a Lead + ContactMessage — called on unmount
+  // (navigating away) and tab close; no-ops without contact info or new messages.
+  const persistChatHistory = () => {
+    const { messages, name, email, phone, sessionId, title } = latestRef.current;
+    if (messages.length <= 1 || !name.trim() || !email.trim()) return;
+    if (messages.length === lastSavedMessageCount.current) return;
+    lastSavedMessageCount.current = messages.length;
+
+    const transcriptText = messages
+      .map((m) => `[${m.sender === 'user' ? 'User' : 'Friday'}] ${m.text}`)
+      .join('\n\n');
+
+    const payload = JSON.stringify({
+      sessionId,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || undefined,
+      transcript: transcriptText,
+      sourceUrl: `My Work — ${title}${typeof window !== 'undefined' ? ` (${window.location.pathname})` : ''}`,
+    });
+
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      navigator.sendBeacon('/api/chat/end', new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/api/chat/end', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId,
-          name: name.trim(),
-          email: email.trim(),
-          subject: `AI Architecture Chat — ${title}`,
-          message: `Started an AI architecture Q&A on the "${title}" project page.`,
-        }),
-      });
-    } catch (e) {
-      console.warn('[BlogAiAssistant] Failed to log lead capture:', e);
+        body: payload,
+        keepalive: true,
+      }).catch((e) => console.warn('[BlogAiAssistant] Failed to log session transcript:', e));
     }
   };
+
+  // Registered once: fires on real tab close/navigation (beforeunload) and on
+  // this component actually unmounting (route change) — not on every render.
+  useEffect(() => {
+    window.addEventListener('beforeunload', persistChatHistory);
+    return () => {
+      window.removeEventListener('beforeunload', persistChatHistory);
+      persistChatHistory();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const QUICK_PROMPTS = [
     `Summarize architecture for ${title}`,
@@ -209,7 +248,7 @@ export function BlogAiAssistant({
           className="h-[230px] max-h-[250px] flex flex-col justify-center gap-3 relative z-10"
         >
           <p className="text-xs text-slate-300 leading-relaxed">
-            Leave your name and email so Rowell can follow up directly, then ask away about this project's architecture.
+            Leave your details so Rowell can follow up directly, then ask away about this project's architecture.
           </p>
           <input
             type="text"
@@ -225,6 +264,13 @@ export function BlogAiAssistant({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email"
             required
+            className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-all shadow-inner"
+          />
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone (optional)"
             className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-all shadow-inner"
           />
           <button

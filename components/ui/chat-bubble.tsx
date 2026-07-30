@@ -24,13 +24,13 @@ export default function ChatBubble() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
-  const [showContactInput, setShowContactInput] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
   // Input fields
   const [input, setInput] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
@@ -42,6 +42,7 @@ export default function ChatBubble() {
 
     localStorage.setItem('rb_chat_user_name', name.trim());
     localStorage.setItem('rb_chat_user_email', email.trim());
+    if (phone.trim()) localStorage.setItem('rb_chat_user_phone', phone.trim());
     setIsRegistered(true);
 
     setMessages((prev) => [
@@ -68,41 +69,58 @@ export default function ChatBubble() {
   ]);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const lastSavedMessageCount = useRef(0);
+
+  // Persist the full transcript as a Lead + ContactMessage — safe to call on
+  // any exit path (close button, End Chat, tab close) since it no-ops when
+  // there's no contact info yet or nothing new to save since the last call.
+  const persistChatHistory = () => {
+    if (messages.length <= 1 || !name.trim() || !email.trim()) return;
+    if (messages.length === lastSavedMessageCount.current) return;
+    lastSavedMessageCount.current = messages.length;
+
+    const transcriptText = messages
+      .map((m) => `[${m.time || 'HH:MM'}] ${m.senderName}: ${m.text}`)
+      .join('\n\n');
+
+    const payload = JSON.stringify({
+      sessionId,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || undefined,
+      transcript: transcriptText,
+      sourceUrl: typeof window !== 'undefined' ? window.location.pathname : undefined,
+    });
+
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      navigator.sendBeacon('/api/chat/end', new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/api/chat/end', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true,
+      }).catch((e) => console.warn('[persistChatHistory] Failed to log session transcript:', e));
+    }
+  };
 
   // End Chat & Reset Session (Saves History to DB & Emails Admin)
   const handleEndChat = async () => {
-    if (messages.length > 1 && name.trim() && email.trim()) {
-      const transcriptText = messages
-        .map((m) => `[${m.time || 'HH:MM'}] ${m.senderName}: ${m.text}`)
-        .join('\n\n');
-
-      try {
-        await fetch('/api/chat/end', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId,
-            name: name.trim(),
-            email: email.trim(),
-            transcript: transcriptText,
-          }),
-        });
-      } catch (e) {
-        console.warn('[handleEndChat] Failed to log session transcript:', e);
-      }
-    }
+    persistChatHistory();
 
     const newSid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
     localStorage.setItem('rb_chat_session_id', newSid);
     localStorage.removeItem('rb_chat_user_name');
     localStorage.removeItem('rb_chat_user_email');
+    localStorage.removeItem('rb_chat_user_phone');
     setSessionId(newSid);
     setThreadId(null);
     setName('');
     setEmail('');
+    setPhone('');
     setIsRegistered(false);
-    setShowContactInput(false);
     setInput('');
+    lastSavedMessageCount.current = 0;
     setMessages([
       {
         id: `sys_${Date.now()}`,
@@ -126,12 +144,21 @@ export default function ChatBubble() {
 
     const savedName = localStorage.getItem('rb_chat_user_name');
     const savedEmail = localStorage.getItem('rb_chat_user_email');
+    const savedPhone = localStorage.getItem('rb_chat_user_phone');
     if (savedName && savedEmail) {
       setName(savedName);
       setEmail(savedEmail);
+      if (savedPhone) setPhone(savedPhone);
       setIsRegistered(true);
     }
   }, []);
+
+  // Save transcript on tab close / navigation away, even if the widget was never explicitly closed
+  useEffect(() => {
+    const handler = () => persistChatHistory();
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [messages, name, email, sessionId]);
 
   // Poll for admin replies if thread exists
   useEffect(() => {
@@ -240,19 +267,7 @@ export default function ChatBubble() {
         },
       ]);
 
-      // 2. If user mentions hiring/proposal/contact, prompt contact capture
-      const queryLower = query.toLowerCase();
-      if (
-        queryLower.includes('hire') ||
-        queryLower.includes('quote') ||
-        queryLower.includes('project') ||
-        queryLower.includes('call') ||
-        queryLower.includes('contact')
-      ) {
-        setShowContactInput(true);
-      }
-
-      // 3. Log query silently to CRM
+      // 2. Log query silently to CRM
       if (name && email) {
         fetch('/api/chat/inquiry', {
           method: 'POST',
@@ -282,44 +297,6 @@ export default function ChatBubble() {
     }
   };
 
-  // Submit Contact Form to notify Rowell
-  const handleSaveContactDetails = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
-
-    localStorage.setItem('rb_chat_user_name', name);
-    localStorage.setItem('rb_chat_user_email', email);
-    setShowContactInput(false);
-
-    const lastUserMsg = [...messages].reverse().find((m) => m.sender === 'user')?.text || 'Inquiry from hybrid chat';
-
-    try {
-      await fetch('/api/chat/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId,
-          name,
-          email,
-          subject: 'Hybrid Live Chat Contact Request',
-          message: lastUserMsg,
-        }),
-      });
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `sys_${Date.now()}`,
-          sender: 'ai',
-          senderName: 'Gemini AI Assistant',
-          text: `✅ Thanks ${name}! I've notified Rowell directly. He'll receive your inquiry at ${email} and can reply right here in this chat thread!`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        },
-      ]);
-    } catch (e) {
-      alert('Failed to send contact info');
-    }
-  };
 
   if (!mounted) return null;
 
@@ -384,7 +361,10 @@ export default function ChatBubble() {
                 )}
                 <button
                   type="button"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    persistChatHistory();
+                    setIsOpen(false);
+                  }}
                   className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
                   title="Close Chat Drawer"
                 >
@@ -393,7 +373,6 @@ export default function ChatBubble() {
               </div>
             </div>
 
-            {/* Compulsory Upfront Registration Gate */}
             {!isRegistered ? (
               <div className="flex-1 flex flex-col justify-center p-6 space-y-5 text-center">
                 <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-600 border border-amber-400/40 flex items-center justify-center text-slate-950 mx-auto shadow-lg">
@@ -403,7 +382,7 @@ export default function ChatBubble() {
                 <div className="space-y-1.5">
                   <h4 className="text-base font-black text-white">Welcome, I&apos;m FRIDAY — Rowell&apos;s AI Assistant</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Please enter your name and email to start chatting with Friday & connect with Rowell:
+                    Please enter your details to start chatting with Friday & connect with Rowell:
                   </p>
                 </div>
 
@@ -432,6 +411,19 @@ export default function ChatBubble() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="alex@company.com"
+                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-2xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Phone Number (optional)
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+44 7700 900000"
                       className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-2xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
                     />
                   </div>

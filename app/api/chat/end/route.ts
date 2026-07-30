@@ -5,7 +5,7 @@ import { sendChatTranscriptEmail, sendAcknowledgmentReceipt } from '@/lib/mailer
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { sessionId, name, email, transcript } = body;
+    const { sessionId, name, email, phone, transcript, sourceUrl } = body;
 
     if (!name || !email || !transcript) {
       return NextResponse.json(
@@ -34,9 +34,10 @@ export async function POST(req: NextRequest) {
         data: {
           contactName: name.trim(),
           email: email.trim(),
+          phone: phone && phone.trim() ? phone.trim() : undefined,
           serviceInterest: 'Completed Friday AI Chat Session',
           enquiryDetails: transcript.trim().slice(0, 1000),
-          sourceUrl: 'Friday AI & Live Chat Widget',
+          sourceUrl: sourceUrl || 'Friday AI & Live Chat Widget',
           status: 'NEW',
         },
       });
