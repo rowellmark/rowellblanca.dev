@@ -23,6 +23,47 @@ Guidelines:
 2. If asked about pricing or booking a project, encourage them to click the "Book Discovery Call" or "Get in Touch" button on the page.
 3. Be professional, technical when needed, but clear and accessible.`;
 
+const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
+  {
+    keywords: ['price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much'],
+    reply: `Rowell offers cost-effective senior engineering rates with enterprise-grade code quality — no agency overhead. Exact pricing depends on project scope, so the fastest way to get a number is to click "Book Discovery Call" or "Get in Touch" on this page.`,
+  },
+  {
+    keywords: ['hire', 'available', 'availability', 'retainer', 'contract', 'freelance'],
+    reply: `Rowell is currently open for custom web application builds, Next.js/WordPress projects, and ongoing developer retainer engagements. Use the "Book Discovery Call" or "Get in Touch" button to check current availability.`,
+  },
+  {
+    keywords: ['stack', 'tech', 'technology', 'react', 'next.js', 'nextjs', 'wordpress', 'php', 'node', 'typescript', 'skill'],
+    reply: `Rowell specializes in React, Next.js 14 (App Router, Server Components), TypeScript, Node.js, and custom WordPress theme/plugin development (ACF Pro, Gutenberg, PHP), plus headless CMS and AI/LLM workflow integrations.`,
+  },
+  {
+    keywords: ['timezone', 'time zone', 'location', 'based', 'where', 'philippines', 'overlap'],
+    reply: `Rowell is based in the Philippines (PST, UTC+8) and provides full afternoon/evening overlap with UK business hours (GMT/BST), US EST/PST, and Australia (AEST).`,
+  },
+  {
+    keywords: ['project', 'portfolio', 'work', 'case stud', 'client', 'built', 'macmanus', 'tower fire', 'juliette'],
+    reply: `Featured UK client work includes the MacManus Asset Finance Portal (lead pipelines, application tracking), Tower Fire UK (a bespoke Gutenberg block engine), and a luxury real estate platform for Juliette Hohnen. See more under "My Work" on this site.`,
+  },
+  {
+    keywords: ['blog', 'article', 'write', 'writing'],
+    reply: `Rowell publishes technical articles at /blog covering Next.js vs Custom WordPress, FCA-regulated FinTech portals, and custom RAG AI plugin engineering.`,
+  },
+  {
+    keywords: ['contact', 'email', 'reach', 'talk', 'call', 'book', 'discovery'],
+    reply: `You can reach Rowell directly by clicking "Book Discovery Call" or "Get in Touch" on this page — both go straight to his inbox.`,
+  },
+];
+
+function getInteractiveFallbackReply(question: string): string {
+  const lower = question.toLowerCase();
+  for (const intent of FALLBACK_INTENTS) {
+    if (intent.keywords.some((kw) => lower.includes(kw))) {
+      return intent.reply;
+    }
+  }
+  return `Hi! I'm Friday, Rowell's AI Assistant. Rowell Mark Blanca is a Senior Full-Stack Engineer & Architect specializing in React, Next.js, and Custom WordPress. Ask me about his tech stack, availability, or past projects — or click "Book Discovery Call" to reach him directly.`;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -58,9 +99,11 @@ User Question: "${userQuestion}"`;
       temperature: 0.7,
     });
 
+    const reply = aiRes.provider === 'fallback' ? getInteractiveFallbackReply(userQuestion) : aiRes.text;
+
     return NextResponse.json({
       success: true,
-      reply: aiRes.text,
+      reply,
       provider: aiRes.provider,
       model: aiRes.model,
     });

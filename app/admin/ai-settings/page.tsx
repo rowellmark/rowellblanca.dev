@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 interface AISettings {
-  activeProvider: 'gemini' | 'openai' | 'claude' | 'ollama';
+  activeProvider: 'gemini' | 'openai' | 'claude' | 'ollama' | 'groq';
   geminiApiKey: string;
   geminiHasKey: boolean;
   geminiModel: string;
@@ -32,6 +32,9 @@ interface AISettings {
   claudeModel: string;
   ollamaUrl: string;
   ollamaModel: string;
+  groqApiKey: string;
+  groqHasKey: boolean;
+  groqModel: string;
 }
 
 interface OllamaStatus {
@@ -60,6 +63,9 @@ export default function AISettingsPage() {
     claudeModel: 'claude-3-5-sonnet-20241022',
     ollamaUrl: 'http://localhost:11434',
     ollamaModel: 'llama3',
+    groqApiKey: '',
+    groqHasKey: false,
+    groqModel: 'llama-3.3-70b-versatile',
   });
 
   const [ollamaStatus, setOllamaStatus] = useState<OllamaStatus>({
@@ -174,6 +180,13 @@ export default function AISettingsPage() {
       tagline: 'Privacy-first, zero cloud data transfer',
       badge: ollamaStatus.online ? 'Online (Local)' : 'Offline',
       badgeColor: ollamaStatus.online ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200',
+    },
+    {
+      id: 'groq',
+      name: 'Groq',
+      tagline: 'Free tier · Llama/Mixtral models, works in production',
+      badge: settings.groqHasKey ? 'Key Configured' : 'Missing Key',
+      badgeColor: settings.groqHasKey ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200',
     },
   ];
 
@@ -394,6 +407,39 @@ export default function AISettingsPage() {
             </div>
 
             <p className="text-[11px] text-slate-500">{ollamaStatus.message}</p>
+          </div>
+
+          {/* GROQ SETTINGS */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 space-y-4 shadow-xs">
+            <div className="flex items-center gap-2 font-black text-sm text-[#0b1a30]">
+              <Radio className="w-4 h-4 text-purple-600" /> Groq Configuration
+            </div>
+
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 mb-1">
+                Groq API Key (GROQ_API_KEY)
+              </label>
+              <input
+                type="password"
+                value={settings.groqApiKey}
+                onChange={(e) => setSettings({ ...settings, groqApiKey: e.target.value })}
+                placeholder="gsk_..."
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 mb-1">Groq Model</label>
+              <input
+                type="text"
+                value={settings.groqModel}
+                onChange={(e) => setSettings({ ...settings, groqModel: e.target.value })}
+                placeholder="e.g. llama-3.3-70b-versatile"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-mono font-bold"
+              />
+            </div>
+
+            <p className="text-[11px] text-slate-500">Free tier, no credit card required. Get a key at console.groq.com.</p>
           </div>
         </div>
 

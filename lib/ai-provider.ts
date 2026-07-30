@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 
 export interface AIProviderConfig {
-  activeProvider: 'gemini' | 'openai' | 'claude' | 'ollama';
+  activeProvider: 'gemini' | 'openai' | 'claude' | 'ollama' | 'groq';
   geminiApiKey?: string;
   geminiModel?: string;
   openaiApiKey?: string;
@@ -10,6 +10,8 @@ export interface AIProviderConfig {
   claudeModel?: string;
   ollamaUrl?: string;
   ollamaModel?: string;
+  groqApiKey?: string;
+  groqModel?: string;
 }
 
 export async function getAISettings(): Promise<AIProviderConfig> {
@@ -23,6 +25,8 @@ export async function getAISettings(): Promise<AIProviderConfig> {
     claudeModel: process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022',
     ollamaUrl: process.env.OLLAMA_URL || 'http://localhost:11434',
     ollamaModel: process.env.OLLAMA_MODEL || 'llama3',
+    groqApiKey: process.env.GROQ_API_KEY || '',
+    groqModel: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
   };
 
   try {
@@ -38,6 +42,8 @@ export async function getAISettings(): Promise<AIProviderConfig> {
       if (map.get('claude_model')) config.claudeModel = map.get('claude_model');
       if (map.get('ollama_url')) config.ollamaUrl = map.get('ollama_url');
       if (map.get('ollama_model')) config.ollamaModel = map.get('ollama_model');
+      if (map.get('groq_api_key')) config.groqApiKey = map.get('groq_api_key');
+      if (map.get('groq_model')) config.groqModel = map.get('groq_model');
     }
   } catch (e) {
     console.warn('[getAISettings] DB settings lookup fallback to env defaults');
@@ -82,7 +88,7 @@ export async function generateAIResponse(options: {
   systemInstruction?: string;
   temperature?: number;
   maxTokens?: number;
-  overrideProvider?: 'gemini' | 'openai' | 'claude' | 'ollama';
+  overrideProvider?: 'gemini' | 'openai' | 'claude' | 'ollama' | 'groq';
 }): Promise<{ text: string; provider: string; model: string }> {
   const config = await getAISettings();
   const provider = options.overrideProvider || config.activeProvider || 'gemini';
@@ -170,7 +176,50 @@ export async function generateAIResponse(options: {
     }
   }
 
-  // 3. ANTHROPIC CLAUDE
+  // 3. GROQ (OpenAI-compatible endpoint)
+  if (provider === 'groq') {
+    const apiKey = config.groqApiKey;
+    const model = config.groqModel || 'llama-3.3-70b-versatile';
+
+    if (apiKey) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model,
+            messages: [
+              ...(options.systemInstruction ? [{ role: 'system', content: options.systemInstruction }] : []),
+              { role: 'user', content: options.prompt },
+            ],
+            temperature,
+            max_tokens: maxTokens,
+          }),
+        });
+
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          const reply = data?.choices?.[0]?.message?.content;
+          if (reply) {
+            return { text: reply.trim(), provider: 'groq', model };
+          }
+        }
+      } catch (e) {
+        console.warn('[AIProvider] Groq request failed, falling back to Gemini...');
+      }
+    }
+  }
+
+  // 4. ANTHROPIC CLAUDE
   if (provider === 'claude') {
     const apiKey = config.claudeApiKey;
     const model = config.claudeModel || 'claude-3-5-sonnet-20241022';
@@ -212,16 +261,16 @@ export async function generateAIResponse(options: {
     }
   }
 
-  // 4. GOOGLE GEMINI (DEFAULT / PRIMARY FALLBACK)
+  // 5. GOOGLE GEMINI (DEFAULT / PRIMARY FALLBACK)
   const geminiApiKey = config.geminiApiKey;
   const geminiModel = config.geminiModel || 'gemini-2.5-flash';
 
   if (geminiApiKey) {
-    const modelUrls = [
-      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
-    ];
+    const fallbackModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
+    const modelsToTry = [geminiModel, ...fallbackModels.filter((m) => m !== geminiModel)];
+    const modelUrls = modelsToTry.map(
+      (m) => `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${geminiApiKey}`
+    );
 
     for (const url of modelUrls) {
       try {

@@ -35,6 +35,9 @@ export async function GET() {
         claudeModel: config.claudeModel,
         ollamaUrl: config.ollamaUrl,
         ollamaModel: config.ollamaModel,
+        groqApiKey: config.groqApiKey ? maskKey(config.groqApiKey) : '',
+        groqHasKey: Boolean(config.groqApiKey),
+        groqModel: config.groqModel,
       },
       ollamaStatus,
     });
@@ -61,6 +64,8 @@ export async function POST(request: Request) {
       claudeModel,
       ollamaUrl,
       ollamaModel,
+      groqApiKey,
+      groqModel,
     } = body;
 
     const upsertSetting = async (key: string, value: string) => {
@@ -81,6 +86,8 @@ export async function POST(request: Request) {
     if (claudeModel) await upsertSetting('claude_model', claudeModel);
     if (ollamaUrl) await upsertSetting('ollama_url', ollamaUrl);
     if (ollamaModel) await upsertSetting('ollama_model', ollamaModel);
+    if (groqApiKey !== undefined && !groqApiKey.includes('••••')) await upsertSetting('groq_api_key', groqApiKey);
+    if (groqModel) await upsertSetting('groq_model', groqModel);
 
     return NextResponse.json({ success: true, message: 'AI settings updated successfully' });
   } catch (error: any) {
