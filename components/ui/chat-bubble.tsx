@@ -67,7 +67,7 @@ export default function ChatBubble() {
     },
   ]);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // End Chat & Reset Session (Saves History to DB & Emails Admin)
   const handleEndChat = async () => {
@@ -180,10 +180,14 @@ export default function ChatBubble() {
     return () => clearInterval(interval);
   }, [sessionId, isOpen]);
 
-  // Scroll to bottom when messages update
+  // Scroll to bottom when messages update — scrolls only the internal message
+  // list (via scrollTop), never the page: scrollIntoView() walks every
+  // scrollable ancestor including the document, which dragged the whole
+  // page down whenever this fixed-position widget updated.
   useEffect(() => {
-    if (isOpen) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const container = messagesContainerRef.current;
+    if (isOpen && container) {
+      container.scrollTop = container.scrollHeight;
     }
   }, [messages, isOpen, loading]);
 
@@ -443,7 +447,7 @@ export default function ChatBubble() {
             ) : (
               <>
                 {/* Single Merged Conversation Stream */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
+                <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
                   {messages.map((m) => (
                     <div
                       key={m.id}
@@ -497,7 +501,6 @@ export default function ChatBubble() {
                       <span>Gemini AI is thinking...</span>
                     </div>
                   )}
-                  <div ref={messagesEndRef} />
                 </div>
 
                 {/* Quick Prompt Chips */}

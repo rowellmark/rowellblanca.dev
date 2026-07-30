@@ -31,6 +31,11 @@ export function BlogAiAssistant({
   const [loading, setLoading] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [activeEngine, setActiveEngine] = useState<string>('Backend AI');
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [sessionId, setSessionId] = useState('');
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
@@ -38,15 +43,57 @@ export function BlogAiAssistant({
     },
   ]);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToBottom();
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   }, [messages, loading]);
+
+  // Restore contact details already captured elsewhere on the site (e.g. the floating chat widget)
+  useEffect(() => {
+    let sid = localStorage.getItem('rb_chat_session_id');
+    if (!sid) {
+      sid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+      localStorage.setItem('rb_chat_session_id', sid);
+    }
+    setSessionId(sid);
+
+    const savedName = localStorage.getItem('rb_chat_user_name');
+    const savedEmail = localStorage.getItem('rb_chat_user_email');
+    if (savedName && savedEmail) {
+      setName(savedName);
+      setEmail(savedEmail);
+      setIsRegistered(true);
+    }
+  }, []);
+
+  const handleSaveInitialInfo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
+
+    localStorage.setItem('rb_chat_user_name', name.trim());
+    localStorage.setItem('rb_chat_user_email', email.trim());
+    setIsRegistered(true);
+
+    try {
+      await fetch('/api/chat/inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          name: name.trim(),
+          email: email.trim(),
+          subject: `AI Architecture Chat — ${title}`,
+          message: `Started an AI architecture Q&A on the "${title}" project page.`,
+        }),
+      });
+    } catch (e) {
+      console.warn('[BlogAiAssistant] Failed to log lead capture:', e);
+    }
+  };
 
   const QUICK_PROMPTS = [
     `Summarize architecture for ${title}`,
@@ -156,8 +203,41 @@ export function BlogAiAssistant({
         </button>
       </div>
 
+      {!isRegistered ? (
+        <form
+          onSubmit={handleSaveInitialInfo}
+          className="h-[230px] max-h-[250px] flex flex-col justify-center gap-3 relative z-10"
+        >
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Leave your name and email so Rowell can follow up directly, then ask away about this project's architecture.
+          </p>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            required
+            className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-all shadow-inner"
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your email"
+            required
+            className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-all shadow-inner"
+          />
+          <button
+            type="submit"
+            className="w-full px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition-all cursor-pointer"
+          >
+            Start Chat
+          </button>
+        </form>
+      ) : (
+        <>
       {/* Messages Thread (Fixed Height, Scrollable Answer Container with Auto-Scroll) */}
-      <div className="h-[230px] max-h-[250px] overflow-y-auto space-y-3 pr-1.5 relative z-10 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900/50">
+      <div ref={messagesContainerRef} className="h-[230px] max-h-[250px] overflow-y-auto space-y-3 pr-1.5 relative z-10 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900/50">
         {messages.map((m, idx) => (
           <div
             key={idx}
@@ -189,7 +269,6 @@ export function BlogAiAssistant({
             <span>Analyzing architecture...</span>
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Bottom Section: Suggested Questions + Input + Quick Specs Footer */}
@@ -251,6 +330,8 @@ export function BlogAiAssistant({
           </button>
         </div>
       </div>
+        </>
+      )}
 
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </div>
