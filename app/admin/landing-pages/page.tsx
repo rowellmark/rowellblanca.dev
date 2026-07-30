@@ -46,6 +46,9 @@ interface LandingPageItem {
   metaDescription?: string;
   projectIds: number[];
   testimonialIds: number[];
+  serviceSectionType?: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
   active: boolean;
 }
 
@@ -71,6 +74,9 @@ export default function LandingPagesManagerPage() {
     metaDescription: '',
     projectIds: [] as number[],
     testimonialIds: [] as number[],
+    serviceSectionType: 'wordpress',
+    ctaTitle: 'Need a Custom WordPress Architect for Your UK Business?',
+    ctaSubtitle: "Let's discuss your WordPress project requirement. Enjoy seamless GMT/BST communication, clean PHP/Next.js code, and reliable delivery.",
     active: true,
   });
 
@@ -188,6 +194,9 @@ export default function LandingPagesManagerPage() {
           metaDescription: '',
           projectIds: [],
           testimonialIds: [],
+          serviceSectionType: 'wordpress',
+          ctaTitle: 'Need a Custom WordPress Architect for Your UK Business?',
+          ctaSubtitle: "Let's discuss your WordPress project requirement. Enjoy seamless GMT/BST communication, clean PHP/Next.js code, and reliable delivery.",
           active: true,
         });
         fetchInitialData();
@@ -238,6 +247,9 @@ export default function LandingPagesManagerPage() {
               metaDescription: 'Senior full-stack software engineer building enterprise platforms for UK companies.',
               projectIds: allProjects.map((p) => p.id),
               testimonialIds: allTestimonials.map((t) => t.id),
+              serviceSectionType: 'wordpress',
+              ctaTitle: 'Need a Custom WordPress Architect for Your UK Business?',
+              ctaSubtitle: "Let's discuss your WordPress project requirement. Enjoy seamless GMT/BST communication, clean PHP/Next.js code, and reliable delivery.",
               active: true,
             });
             setShowModal(true);
@@ -350,6 +362,9 @@ export default function LandingPagesManagerPage() {
                             metaDescription: page.metaDescription || '',
                             projectIds: page.projectIds || [],
                             testimonialIds: page.testimonialIds || [],
+                            serviceSectionType: page.serviceSectionType || 'wordpress',
+                            ctaTitle: page.ctaTitle || 'Need a Custom WordPress Architect for Your UK Business?',
+                            ctaSubtitle: page.ctaSubtitle || "Let's discuss your WordPress project requirement. Enjoy seamless GMT/BST communication, clean PHP/Next.js code, and reliable delivery.",
                             active: page.active !== false,
                           });
                           setShowModal(true);
@@ -519,6 +534,47 @@ export default function LandingPagesManagerPage() {
                       placeholder="e.g. Book UK Discovery Call"
                       className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
                     />
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-200 space-y-4">
+                    <h4 className="font-extrabold text-[#0b1a30] text-xs uppercase tracking-wider">
+                      Services Grid & Pitch Section Settings
+                    </h4>
+
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">Services Section Type</label>
+                      <select
+                        value={form.serviceSectionType || 'wordpress'}
+                        onChange={(e) => setForm({ ...form, serviceSectionType: e.target.value })}
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-extrabold text-xs"
+                      >
+                        <option value="wordpress">WordPress Services (Themes, Plugins, Headless, Core Web Vitals)</option>
+                        <option value="react">React & Next.js Services (Next.js 14, TypeScript, APIs, AI Engines)</option>
+                        <option value="both">Both WordPress & React Service Grids</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">CTA Pitch Section Title</label>
+                      <input
+                        type="text"
+                        value={form.ctaTitle}
+                        onChange={(e) => setForm({ ...form, ctaTitle: e.target.value })}
+                        placeholder="e.g. Need a Custom WordPress Architect for Your UK Business?"
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-extrabold text-xs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-700 font-extrabold mb-1">CTA Pitch Subtitle</label>
+                      <textarea
+                        rows={2}
+                        value={form.ctaSubtitle}
+                        onChange={(e) => setForm({ ...form, ctaSubtitle: e.target.value })}
+                        placeholder="Let's discuss your project requirement..."
+                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 text-xs"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

@@ -151,6 +151,25 @@ const jsonLd = {
         "@id": "https://www.rowellblanca.dev/#person",
       },
     },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://www.rowellblanca.dev/#service",
+      name: "Rowell Mark Blanca — Software Engineering & WordPress Architecture",
+      url: "https://www.rowellblanca.dev",
+      image: "https://www.rowellblanca.dev/opengraph-image1.jpg",
+      description: "Custom React & Next.js 14 Web Applications, Bespoke WordPress Theme & Plugin Architecture, FinTech CRM Systems, and AI Integrations for UK & Global Enterprise Clients.",
+      priceRange: "£££",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "GB",
+        addressLocality: "London",
+      },
+      provider: {
+        "@id": "https://www.rowellblanca.dev/#person",
+      },
+      areaServed: ["United Kingdom", "London", "Global"],
+      knowsLanguage: ["English"],
+    },
   ],
 };
 

@@ -61,6 +61,13 @@ export function FeaturedProject() {
         setProjectImgSrc(resolveImageSrc(spotlightProject?.image));
     }, [spotlightProject]);
 
+    const truncateDescription = (text: string, maxLength = 160) => {
+        if (!text) return "";
+        const cleanText = text.replace(/<[^>]*>?/gm, '').trim();
+        if (cleanText.length <= maxLength) return cleanText;
+        return cleanText.substring(0, maxLength).trim() + "...";
+    };
+
     return (
         <div className="flex flex-col overflow-hidden px-8 max-sm:px-0 relative">
             <ContainerScroll
@@ -76,8 +83,8 @@ export function FeaturedProject() {
                                 {projectTitle}
                             </span>
                         </h2>
-                        <p className="mt-4 max-w-2xl mx-auto text-sm sm:text-base text-brand-slate leading-relaxed">
-                            {projectDescription}
+                        <p className="mt-3 max-w-xl mx-auto text-xs sm:text-sm text-brand-slate leading-relaxed line-clamp-2 font-medium">
+                            {truncateDescription(projectDescription, 150)}
                         </p>
 
                         {/* CTA Buttons */}

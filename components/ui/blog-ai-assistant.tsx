@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Sparkles, Send, Loader2, Bot, User, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { Sparkles, Send, Loader2, Bot, User, ArrowRight, Cpu, Zap, ShieldCheck } from 'lucide-react';
 import { ContactModal } from '@/components/ui/contact-modal';
 
 interface BlogAiAssistantProps {
@@ -14,6 +13,7 @@ interface BlogAiAssistantProps {
   solution?: string;
   results?: string;
   content?: string;
+  className?: string;
 }
 
 export function BlogAiAssistant({
@@ -25,22 +25,34 @@ export function BlogAiAssistant({
   solution,
   results,
   content,
+  className,
 }: BlogAiAssistantProps) {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [activeEngine, setActiveEngine] = useState<string>('Backend AI');
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: `👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about the technical architecture, challenges, or results for "${title}"!`,
+      text: `👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about the technical architecture, stack, or results for "${title}"!`,
     },
   ]);
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
+
   const QUICK_PROMPTS = [
-    `Summarize the key architectural breakthroughs for ${title}`,
-    `What technologies were used in this build?`,
-    `What challenges were solved during development?`,
-    `How can Rowell build a similar solution for my company?`,
+    `Summarize architecture for ${title}`,
+    `Tech stack used?`,
+    `Key challenges solved?`,
+    `Build a similar solution?`,
   ];
 
   const handleSend = async (queryText?: string) => {
@@ -53,45 +65,49 @@ export function BlogAiAssistant({
     setLoading(true);
 
     try {
-      const articleContext = `Article Title: ${title}
-Category: ${category || 'Case Study / Technical Blog'}
-Technologies: ${technologies.join(', ')}
-Summary: ${description || ''}
-Challenge: ${challenge || ''}
-Solution: ${solution || ''}
-Results: ${results || ''}
-Full Content: ${content?.replace(/<[^>]*>?/gm, '').slice(0, 1500) || ''}`;
-
       const res = await fetch('/api/ai/assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [
-            {
-              role: 'system',
-              content: `You are Rowell's AI Blog & Case Study Assistant on rowellblanca.dev. Context:\n${articleContext}`,
-            },
-            ...messages.map((m) => ({
-              role: m.sender === 'user' ? 'user' : 'assistant',
-              content: m.text,
-            })),
-            { role: 'user', content: prompt.trim() },
-          ],
+          message: prompt.trim(),
+          context: {
+            title,
+            category,
+            technologies,
+            description,
+            challenge,
+            solution,
+            results,
+            content,
+          },
         }),
       });
 
       const data = await res.json();
-      const botMessage = {
-        sender: 'bot' as const,
-        text: data.reply || `Great question about ${title}! Rowell built this system focusing on enterprise scalability, performance, and clean code.`,
-      };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (e) {
+      if (data.success && data.reply) {
+        setMessages((prev) => [...prev, { sender: 'bot', text: data.reply }]);
+        if (data.provider) {
+          const providerName =
+            data.provider === 'gemini'
+              ? `Gemini ${data.model || 'Flash'}`
+              : data.provider === 'openai'
+              ? `OpenAI ${data.model || 'GPT-4o'}`
+              : data.provider === 'claude'
+              ? `Claude ${data.model || 'Sonnet'}`
+              : data.provider === 'ollama'
+              ? `Local Ollama`
+              : 'Backend AI';
+          setActiveEngine(providerName);
+        }
+      } else {
+        throw new Error(data.message || 'Failed to get answer');
+      }
+    } catch (error) {
       setMessages((prev) => [
         ...prev,
         {
           sender: 'bot',
-          text: `This project showcases Rowell's expertise in ${technologies.slice(0, 3).join(', ')}. Feel free to book a call to discuss building a similar platform!`,
+          text: `This project showcases expertise in ${technologies.slice(0, 3).join(', ')}. Book a discovery call to discuss building a custom platform!`,
         },
       ]);
     } finally {
@@ -100,111 +116,140 @@ Full Content: ${content?.replace(/<[^>]*>?/gm, '').slice(0, 1500) || ''}`;
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 via-[#0b172a] to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden font-sans text-slate-100 my-12">
-      {/* Decorative Glow */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div
+      className={`bg-gradient-to-br from-[#0b172a] via-slate-900 to-indigo-950 border border-slate-800/80 rounded-3xl p-5 sm:p-6 space-y-4 shadow-2xl relative overflow-hidden font-sans text-slate-100 backdrop-blur-md flex flex-col justify-between ${
+        className || ''
+      }`}
+    >
+      {/* Subtle Ambient Glow */}
+      <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <Sparkles className="w-5 h-5 animate-pulse" />
+      {/* Top Header */}
+      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3.5 relative z-10 shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0 shadow-xs">
+            <Sparkles className="w-4.5 h-4.5 animate-pulse text-amber-400" />
           </div>
-          <div>
-            <h3 className="text-base font-black text-white flex items-center gap-2">
-              Gemini AI Article Assistant
-              <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-                Interactive
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
+                AI Engineering Assistant
+              </h3>
+              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                <Cpu className="w-3 h-3 text-emerald-400" />
+                <span>{activeEngine}</span>
               </span>
-            </h3>
-            <p className="text-xs text-slate-400">Ask any question about {title}'s architecture & tech stack</p>
+            </div>
+            <p className="text-xs text-slate-300 truncate pt-0.5">
+              Architecture & stack Q&A for {title}
+            </p>
           </div>
         </div>
 
         <button
           onClick={() => setIsContactOpen(true)}
-          className="text-xs font-black uppercase tracking-wider text-slate-950 bg-brand-amber hover:bg-amber-400 px-4 py-2 rounded-xl hidden sm:flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
+          className="text-xs font-black uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 px-3.5 py-1.5 rounded-lg hidden sm:flex items-center gap-1.5 transition-all shadow-sm shrink-0 cursor-pointer hover:scale-105"
         >
-          <span>Build Similar App</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <span>Build Similar</span>
+          <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
         </button>
       </div>
 
-      {/* Messages Thread */}
-      <div className="max-h-72 overflow-y-auto space-y-3.5 text-xs pr-1">
+      {/* Messages Thread (Fixed Height, Scrollable Answer Container with Auto-Scroll) */}
+      <div className="h-[230px] max-h-[250px] overflow-y-auto space-y-3 pr-1.5 relative z-10 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900/50">
         {messages.map((m, idx) => (
           <div
             key={idx}
             className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 ${
                 m.sender === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                  ? 'bg-amber-400 text-slate-950 font-black'
+                  : 'bg-slate-800 text-amber-400 border border-slate-700'
               }`}
             >
               {m.sender === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
             </div>
-
             <div
-              className={`p-3.5 rounded-2xl max-w-[85%] leading-relaxed ${
+              className={`p-3.5 rounded-2xl max-w-[88%] text-xs sm:text-sm leading-relaxed font-medium ${
                 m.sender === 'user'
-                  ? 'bg-[#1d63ed] text-white font-medium rounded-tr-none'
-                  : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 rounded-tr-none font-bold shadow-xs'
+                  : 'bg-slate-800/90 text-slate-100 border border-slate-700/70 rounded-tl-none shadow-xs'
               }`}
             >
               {m.text}
             </div>
           </div>
         ))}
-
         {loading && (
-          <div className="flex items-center gap-2 text-slate-400 text-xs italic pl-8">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
-            <span>Analyzing article details...</span>
+          <div className="flex items-center gap-2 text-slate-300 text-xs py-1.5">
+            <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+            <span>Analyzing architecture...</span>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Prompt Chips */}
-      {messages.length < 3 && (
-        <div className="space-y-2">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-            Suggested Questions:
+      {/* Bottom Section: Suggested Questions + Input + Quick Specs Footer */}
+      <div className="space-y-3 shrink-0 pt-3 border-t border-slate-800/80 relative z-10">
+        {/* Suggested Quick Question Chips */}
+        <div className="space-y-1.5">
+          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+            SUGGESTED QUESTIONS:
           </span>
           <div className="flex flex-wrap gap-1.5">
-            {QUICK_PROMPTS.map((prompt, i) => (
+            {QUICK_PROMPTS.map((promptText, idx) => (
               <button
-                key={i}
-                onClick={() => handleSend(prompt)}
-                className="text-[11px] font-bold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/50 rounded-full px-3 py-1.5 transition-all text-left truncate max-w-full"
+                key={idx}
+                onClick={() => handleSend(promptText)}
+                disabled={loading}
+                className="text-left text-xs font-semibold text-slate-200 bg-slate-800/90 hover:bg-amber-500/20 hover:text-amber-300 border border-slate-700/80 hover:border-amber-400/40 px-3 py-1.5 rounded-full transition-all cursor-pointer disabled:opacity-50"
               >
-                💡 {prompt}
+                💡 {promptText}
               </button>
             ))}
           </div>
         </div>
-      )}
 
-      {/* Input Box */}
-      <div className="flex items-center gap-2 pt-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder={`Ask Gemini AI anything about ${title}...`}
-          className="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-2xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
-        />
-        <button
-          onClick={() => handleSend()}
-          disabled={loading || !input.trim()}
-          className="px-5 py-3 rounded-2xl bg-[#1d63ed] hover:bg-blue-600 disabled:opacity-40 text-white font-extrabold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
-        >
-          <span>Ask</span>
-          <Send className="w-3.5 h-3.5" />
-        </button>
+        {/* Input Field */}
+        <div className="relative flex items-center">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            placeholder={`Ask AI about ${title}...`}
+            className="w-full pl-4 pr-24 py-3 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-amber-400 transition-all shadow-inner"
+          />
+          <button
+            onClick={() => handleSend()}
+            disabled={loading || !input.trim()}
+            className="absolute right-1.5 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs transition-all disabled:opacity-40 flex items-center gap-1.5 cursor-pointer shadow-xs"
+          >
+            <span>Ask</span>
+            <Send className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Bottom Feature Badges */}
+        <div className="flex items-center justify-between text-xs text-slate-300 pt-1 font-mono">
+          <span className="flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            <span>Speed Optimized</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Verified Architecture</span>
+          </span>
+          <button
+            onClick={() => setIsContactOpen(true)}
+            className="text-amber-400 hover:underline font-bold"
+          >
+            Book Call →
+          </button>
+        </div>
       </div>
 
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />

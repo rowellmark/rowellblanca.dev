@@ -23,6 +23,8 @@ export default function Header() {
     const navs = [
         { name: 'About', link: '/about' },
         { name: 'My Work', link: '/mywork' },
+        { name: 'Case Studies', link: '/case-studies' },
+        { name: 'Blog', link: '/blog' },
     ];
 
     const toggleMobileNav = () => {

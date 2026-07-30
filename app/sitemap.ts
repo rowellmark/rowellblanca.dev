@@ -20,6 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/about',
     '/mywork',
+    '/case-studies',
+    '/blog',
     '/contact',
     '/review',
     '/hire-uk-react-developer',
@@ -56,7 +58,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...projectRoutes];
+  // 3. Query all published blog posts
+  let blogRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const dbPosts = await (prisma as any).blogPost.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true, publishedAt: true },
+      orderBy: { publishedAt: 'desc' },
+    });
+    if (dbPosts.length > 0) {
+      blogRoutes = dbPosts.map((post: any) => ({
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: post.updatedAt || post.publishedAt || new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }));
+    }
+  } catch (error) {
+    console.error('Sitemap blog posts fetch error:', error);
+  }
+
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
 }
 
 

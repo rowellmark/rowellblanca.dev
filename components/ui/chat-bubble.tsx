@@ -333,7 +333,7 @@ export default function ChatBubble() {
           <div className="relative flex items-center gap-1 text-amber-400">
             <Sparkles className="w-5 h-5 animate-pulse" />
           </div>
-          <span className="text-xs font-black tracking-wide hidden sm:inline">Ask Friday!</span>
+          <span className="text-xs font-black tracking-wide hidden sm:inline">Have a project in mind?</span>
           {!isOpen && (
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping absolute -top-1 -right-1" />
           )}

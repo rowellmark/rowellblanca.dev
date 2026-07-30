@@ -17,7 +17,9 @@ import {
   Headphones,
   Sparkles,
   ExternalLink,
-  Globe
+  Globe,
+  BookOpen,
+  Cpu,
 } from 'lucide-react';
 import NotificationBell from '@/components/admin/notification-bell';
 
@@ -71,6 +73,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       title: 'CORE NAVIGATION',
       items: [
         { title: 'Dashboard', href: '/admin', icon: LayoutDashboard, external: false },
+        { title: 'Blog Articles', href: '/admin/blog', icon: BookOpen, external: false },
+        { title: 'AI API Settings', href: '/admin/ai-settings', icon: Cpu, external: false },
         { title: 'Landing Pages', href: '/admin/landing-pages', icon: Globe, external: false },
         { title: 'Projects', href: '/admin/projects', icon: FolderKanban, external: false },
         { title: 'Leads', href: '/admin/leads', icon: Users, external: false },
@@ -82,6 +86,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       title: 'PORTFOLIO LINKS',
       items: [
         { title: 'View Live Portfolio', href: '/', icon: ExternalLink, external: true },
+        { title: 'View Case Studies Hub', href: '/case-studies', icon: ExternalLink, external: true },
+        { title: 'View Blog Hub', href: '/blog', icon: ExternalLink, external: true },
         { title: 'View All Projects', href: '/mywork', icon: ExternalLink, external: true },
       ],
     },

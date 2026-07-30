@@ -10,6 +10,8 @@ export async function GET() {
     let metaTitle = '';
     let metaDescription = '';
     let ogImage = '';
+    let authorAvatar = '';
+    let authorBio = 'Senior Full-Stack Engineer & WordPress Architect with 8+ years of production experience building high-performance web platforms.';
 
     try {
       // Check database settings table if available
@@ -22,6 +24,8 @@ export async function GET() {
         if (settingsMap.get('meta_title')) metaTitle = settingsMap.get('meta_title')!;
         if (settingsMap.get('meta_description')) metaDescription = settingsMap.get('meta_description')!;
         if (settingsMap.get('og_image')) ogImage = settingsMap.get('og_image')!;
+        if (settingsMap.get('author_avatar')) authorAvatar = settingsMap.get('author_avatar')!;
+        if (settingsMap.get('author_bio')) authorBio = settingsMap.get('author_bio')!;
       }
     } catch {
       // Fallback to env variables if Setting table is not yet pushed
@@ -36,6 +40,8 @@ export async function GET() {
         metaTitle,
         metaDescription,
         ogImage,
+        authorAvatar,
+        authorBio,
       },
     });
   } catch (error: any) {
@@ -50,7 +56,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage } = body;
+    const { gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage, authorAvatar, authorBio } = body;
 
     let cleanVerification = (googleVerification || '').trim();
     if (cleanVerification.includes('content=')) {
@@ -65,6 +71,8 @@ export async function POST(req: Request) {
       { key: 'meta_title', value: (metaTitle || '').trim() },
       { key: 'meta_description', value: (metaDescription || '').trim() },
       { key: 'og_image', value: (ogImage || '').trim() },
+      { key: 'author_avatar', value: (authorAvatar || '').trim() },
+      { key: 'author_bio', value: (authorBio || '').trim() },
     ];
 
     try {
@@ -82,8 +90,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'SEO & Analytics settings updated successfully',
-      settings: { gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage },
+      message: 'Settings updated successfully',
+      settings: { gaId, gtmId, googleVerification, metaTitle, metaDescription, ogImage, authorAvatar, authorBio },
     });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { isAdminAuthenticated } from '@/lib/auth';
 
 export async function POST(request: Request) {
-  if (!isAdminAuthenticated()) {
+  const auth = await isAdminAuthenticated();
+  if (!auth) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

@@ -11,7 +11,7 @@ interface DynamicLandingPageProps {
 
 async function getLandingPageData(slug: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.rowellblanca.dev';
     const res = await fetch(`${baseUrl}/api/landing-pages?slug=${slug}`, {
       next: { revalidate: 60 },
     });
@@ -50,5 +50,33 @@ export default async function DynamicLandingPage({ params }: DynamicLandingPageP
     return notFound();
   }
 
-  return <DynamicLandingPageClient page={page} />;
+  const landingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `https://www.rowellblanca.dev/landing/${page.slug}/#service`,
+    name: page.heroTitle,
+    description: page.heroSubtitle || page.metaDescription,
+    provider: {
+      '@type': 'Person',
+      name: 'Rowell Mark Blanca',
+      url: 'https://www.rowellblanca.dev',
+      jobTitle: 'Senior Full-Stack Engineer & WordPress Architect',
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'United Kingdom',
+    },
+    serviceType: page.serviceSectionType || 'Software Engineering & Web Development',
+    url: `https://www.rowellblanca.dev/landing/${page.slug}`,
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(landingJsonLd) }}
+      />
+      <DynamicLandingPageClient page={page} />
+    </>
+  );
 }

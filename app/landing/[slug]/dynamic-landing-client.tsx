@@ -9,12 +9,16 @@ import {
   CheckCircle2,
   Clock,
   Coins,
-  Code2,
   ShieldCheck,
   Star,
   Quote,
-  Layers,
+  Layout,
+  Cpu,
+  ShoppingBag,
   Zap,
+  Code2,
+  Layers,
+  Building2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PortfolioCard } from '@/components/ui/portfolio-card';
@@ -32,14 +36,83 @@ interface DynamicLandingPageClientProps {
     targetKeyword?: string;
     projectIds: number[];
     testimonialIds: number[];
+    serviceSectionType?: string; // 'wordpress' | 'react' | 'both'
+    ctaTitle?: string;
+    ctaSubtitle?: string;
     active: boolean;
   };
 }
+
+const WP_SERVICES = [
+  {
+    icon: Layout,
+    title: 'Bespoke WordPress Theme & Plugin Dev',
+    description:
+      'Hand-coded custom WordPress themes and custom plugins built to your exact design specifications without reliance on bloated third-party plugins.',
+    features: ['Bespoke PHP Themes', 'ACF Pro & Gutenberg Blocks', 'Custom Plugin Development', 'Clean Code Standards'],
+  },
+  {
+    icon: Cpu,
+    title: 'Headless WordPress + Next.js',
+    description:
+      'Combine the intuitive WordPress content management experience with the lightning speed and security of a modern Next.js React frontend.',
+    features: ['GraphQL & REST API', 'Instant Page Loads', 'Enhanced Security', 'Modern React Components'],
+  },
+  {
+    icon: ShoppingBag,
+    title: 'WooCommerce & E-Commerce Engineering',
+    description:
+      'Custom WooCommerce store builds, bespoke payment gateway integrations, custom checkout flows, and high-volume product database optimization.',
+    features: ['Custom Checkout Flows', 'Stripe & UK Gateways', 'Speed Tuning', 'Inventory Sync'],
+  },
+  {
+    icon: Zap,
+    title: 'Page Speed, Core Web Vitals & UK SEO',
+    description:
+      'Drastic reduction of page load times, image optimization, database cleanup, script deferral, and 95+ Google Lighthouse scores for UK rankings.',
+    features: ['Lighthouse 95+ Scores', 'Database Optimization', 'Schema.org Markup', 'Security Hardening'],
+  },
+];
+
+const REACT_SERVICES = [
+  {
+    icon: Code2,
+    title: 'Next.js 14 App Router & React 19',
+    description:
+      'Enterprise React web application development utilizing Server Components, Streaming SSR, and Next.js App Router for sub-second performance.',
+    features: ['Server Components (RSC)', 'TypeScript & Strict Types', 'Tailwind CSS & Animations', 'SEO & OpenGraph Meta'],
+  },
+  {
+    icon: Layers,
+    title: 'Full-Stack Dashboards & Client Portals',
+    description:
+      'Custom SaaS dashboards, lead pipelines, admin control panels, and financial CRM applications with NeonDB PostgreSQL and Prisma ORM.',
+    features: ['Prisma & NeonDB', 'Role-Based Auth (RBAC)', 'REST & GraphQL APIs', 'Real-Time Updates'],
+  },
+  {
+    icon: Sparkles,
+    title: 'Multi-Provider AI & LLM Integrations',
+    description:
+      'Integrating OpenAI, Gemini 2.5, Claude 3.5, and local Ollama LLMs for RAG knowledge search, lead scoring, and automated workflow agents.',
+    features: ['Vector RAG Knowledge', 'Gemini & OpenAI API', 'Human-in-the-Loop AI', 'Custom AI Widgets'],
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Enterprise Architecture & Refactoring',
+    description:
+      'Refactoring legacy codebases into modular TypeScript components, improving test coverage, and optimizing client-side memory usage.',
+    features: ['Clean Code Standards', 'Performance Audit', 'API Route Optimization', 'GMT/BST Overlap'],
+  },
+];
 
 export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [projects, setProjects] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
+
+  const serviceType = page.serviceSectionType || (page.slug.includes('wordpress') ? 'wordpress' : 'react');
+  const pitchTitle = page.ctaTitle || (serviceType === 'wordpress' ? 'Need a Custom WordPress Architect for Your UK Business?' : 'Need a Senior React & Next.js Engineer for Your UK Business?');
+  const pitchSubtitle = page.ctaSubtitle || "Let's discuss your web project requirement. Enjoy seamless GMT/BST communication, clean code standards, and enterprise-grade delivery.";
 
   const fetchPageData = React.useCallback(async () => {
     try {
@@ -80,11 +153,11 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
 
   return (
     <div className="min-h-screen bg-[#071224] text-slate-100 font-sans selection:bg-brand-amber selection:text-slate-950 overflow-x-hidden">
-      {/* Top Banner */}
+      {/* Top Notification Banner */}
       <div className="bg-gradient-to-r from-amber-500 via-brand-amber to-amber-600 text-slate-950 px-4 py-2 text-center text-xs font-black tracking-wide shadow-md flex items-center justify-center gap-2">
         <Sparkles className="h-4 w-4 shrink-0" />
         <span>Senior Full-Stack & Bespoke Software Engineer</span>
-        <span className="hidden sm:inline">• Available for New Project Engineering</span>
+        <span className="hidden sm:inline">• GMT/BST UK Timezone Overlap</span>
       </div>
 
       {/* Hero Section */}
@@ -182,76 +255,174 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
         </div>
       </section>
 
+      {/* DYNAMIC SERVICES SECTION (WordPress vs React vs Both) */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900/60 border-t border-b border-slate-800/80">
+        <div className="max-w-6xl mx-auto space-y-16">
+          {(serviceType === 'wordpress' || serviceType === 'both') && (
+            <div className="space-y-12">
+              <div className="text-center space-y-3 max-w-2xl mx-auto">
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-3.5 py-1.5 rounded-full border border-amber-500/20">
+                  WordPress Services
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                  Bespoke WordPress Engineering
+                </h2>
+                <p className="text-slate-300 text-sm font-medium">
+                  Custom theme development, headless CMS integrations, WooCommerce, and Lighthouse 95+ speed tuning.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {WP_SERVICES.map((service, idx) => {
+                  const Icon = service.icon;
+                  return (
+                    <div
+                      key={idx}
+                      className="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-xl"
+                    >
+                      <div className="space-y-3">
+                        <div className="h-12 w-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
+                          <Icon className="h-6 w-6" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white">{service.title}</h3>
+                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+                          {service.description}
+                        </p>
+                      </div>
+
+                      <ul className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-800">
+                        {service.features.map((feat, fIdx) => (
+                          <li key={fIdx} className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {(serviceType === 'react' || serviceType === 'both') && (
+            <div className="space-y-12">
+              <div className="text-center space-y-3 max-w-2xl mx-auto">
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3.5 py-1.5 rounded-full border border-indigo-500/20">
+                  React & Next.js Services
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                  Full-Stack React & Next.js Engineering
+                </h2>
+                <p className="text-slate-300 text-sm font-medium">
+                  Next.js 14 App Router, TypeScript, Prisma/NeonDB data models, and multi-provider AI workflow engines.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {REACT_SERVICES.map((service, idx) => {
+                  const Icon = service.icon;
+                  return (
+                    <div
+                      key={idx}
+                      className="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-4 hover:border-indigo-500/40 transition-all flex flex-col justify-between shadow-xl"
+                    >
+                      <div className="space-y-3">
+                        <div className="h-12 w-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                          <Icon className="h-6 w-6" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white">{service.title}</h3>
+                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+                          {service.description}
+                        </p>
+                      </div>
+
+                      <ul className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-800">
+                        {service.features.map((feat, fIdx) => (
+                          <li key={fIdx} className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Client Reviews Section */}
       {testimonials.length > 0 && (
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/60 border-t border-b border-slate-800/80">
+        <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-12">
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify(generateTestimonialsJsonLd(testimonials)),
             }}
           />
-          <div className="max-w-6xl mx-auto space-y-12">
-            <div className="text-center space-y-3">
-              <span className="text-xs font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                Verified Client Reviews
-              </span>
-              <h2 className="text-3xl font-black text-white">Client Feedback & Results</h2>
-            </div>
+          <div className="text-center space-y-3">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+              Verified Client Reviews
+            </span>
+            <h2 className="text-3xl font-black text-white">Client Feedback & Results</h2>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {testimonials.map((t) => (
-                <div
-                  key={t.id}
-                  className={`rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-xl relative transition-all ${
-                    t.featured
-                      ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/30 border-2 border-amber-400/70 shadow-amber-500/10 shadow-2xl ring-1 ring-amber-400/30'
-                      : 'bg-slate-900 border border-slate-800'
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-amber-400">
-                        {Array.from({ length: t.rating || 5 }).map((_, i) => (
-                          <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-
-                      {t.featured && (
-                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                          <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
-                        </span>
-                      )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {testimonials.map((t) => (
+              <div
+                key={t.id}
+                className={`rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-xl relative transition-all ${
+                  t.featured
+                    ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/30 border-2 border-amber-400/70 shadow-amber-500/10 ring-1 ring-amber-400/30'
+                    : 'bg-slate-900 border border-slate-800'
+                }`}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-amber-400">
+                      {Array.from({ length: t.rating || 5 }).map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      ))}
                     </div>
 
-                    <p className="text-slate-200 text-xs sm:text-sm leading-relaxed italic">
-                      "{t.quote}"
-                    </p>
+                    {t.featured && (
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                        <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
+                      </span>
+                    )}
                   </div>
 
-                  <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-                    <div>
-                      <span className="font-extrabold text-white text-sm block">{t.name}</span>
-                      <span className="text-xs text-slate-400 block">
-                        {t.role} {t.company && `• ${t.company}`}
-                      </span>
-                    </div>
+                  <p className="text-slate-200 text-xs sm:text-sm leading-relaxed italic">
+                    "{t.quote}"
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="font-extrabold text-white text-sm block">{t.name}</span>
+                    <span className="text-xs text-slate-400 block">
+                      {t.role} {t.company && `• ${t.company}`}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </section>
       )}
 
-      {/* Final CTA Banner */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8">
-        <div className="bg-gradient-to-br from-slate-900 to-indigo-950 border border-slate-800 rounded-3xl p-8 sm:p-12 space-y-6 shadow-2xl relative overflow-hidden">
-          <h2 className="text-3xl sm:text-4xl font-black text-white">
-            Ready to Build Your Platform with Senior Architecture?
+      {/* FINAL CUSTOM CTA PITCH BANNER SECTION */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+        <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-8 sm:p-12 space-y-6 shadow-2xl relative overflow-hidden">
+          <Sparkles className="h-10 w-10 text-amber-400 mx-auto animate-pulse" />
+          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            {pitchTitle}
           </h2>
-          <p className="text-slate-300 text-base max-w-2xl mx-auto leading-relaxed">
-            Get direct senior engineering support with transparent communication and rapid deployment.
+          <p className="text-slate-300 text-base max-w-2xl mx-auto leading-relaxed font-medium">
+            {pitchSubtitle}
           </p>
 
           <div className="pt-4 flex justify-center">

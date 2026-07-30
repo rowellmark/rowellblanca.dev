@@ -1026,7 +1026,7 @@ export function ProjectDetailPreview({ project }: { project: PortfolioProject })
         size="detail"
       >
         {previewMode === 'desktop' ? (
-          <div className="relative w-full h-[440px] sm:h-[540px] md:h-[620px] overflow-y-auto bg-[#111] scrollbar-thin scrollbar-thumb-amber-500/40 hover:scrollbar-thumb-amber-500 group/scroll">
+          <div className="relative w-full h-[440px] sm:h-[540px] md:h-[797px] overflow-y-auto bg-[#111] scrollbar-thin scrollbar-thumb-amber-500/40 hover:scrollbar-thumb-amber-500 group/scroll">
             <div className="relative w-full min-h-full">
               <Image
                 src={desktopSrc}

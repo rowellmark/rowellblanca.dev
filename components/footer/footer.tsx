@@ -36,6 +36,8 @@ export default function Footer() {
                 <div className="flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-600">
                     <Link href="/about" className="hover:text-brand-amber transition-colors">About</Link>
                     <Link href="/mywork" className="hover:text-brand-amber transition-colors">My Work</Link>
+                    <Link href="/case-studies" className="hover:text-brand-amber transition-colors">Case Studies</Link>
+                    <Link href="/blog" className="hover:text-brand-amber transition-colors">Blog</Link>
                     <Link href="/contact" className="hover:text-brand-amber transition-colors">Contact</Link>
                     <Link href="/privacy" className="hover:text-brand-amber transition-colors">Privacy</Link>
                 </div>

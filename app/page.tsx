@@ -10,7 +10,7 @@ import { MyWork } from "@/components/homepage/my-work";
 import { LandingPagesShowcase } from "@/components/homepage/landing-pages-showcase";
 import WorkHistory from "@/components/homepage/work-history";
 import { TestimonialsSection } from "@/components/homepage/testimonials";
-import { ContactFormSection } from "@/components/footer/contact-form-section";
+import { LatestArticlesSection } from "@/components/homepage/latest-articles";
 import { WelcomeLoading } from "@/components/loading-intro/loading-screen";
 
 export default function Home() {
@@ -24,6 +24,7 @@ export default function Home() {
       <FeaturedProject />
       <MyWork notitle="" />
       <LandingPagesShowcase />
+      <LatestArticlesSection />
       <WorkHistory />
       <TestimonialsSection />
       <ContactSection />

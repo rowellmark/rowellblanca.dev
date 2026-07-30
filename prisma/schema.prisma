@@ -130,20 +130,41 @@ model Setting {
 }
 
 model LandingPage {
-  id              Int      @id @default(autoincrement())
-  slug            String   @unique
-  heroTitle       String
-  heroSubtitle    String   @db.Text
-  badgeText       String?
-  heroCtaText     String?  @default("Book Discovery Call")
-  targetKeyword   String?
-  metaTitle       String?
-  metaDescription String?  @db.Text
-  projectIds      Int[]    @default([])
-  testimonialIds Int[]    @default([])
-  active          Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt @default(now())
+  id                 Int      @id @default(autoincrement())
+  slug               String   @unique
+  heroTitle          String
+  heroSubtitle       String   @db.Text
+  badgeText          String?
+  heroCtaText        String?  @default("Book Discovery Call")
+  targetKeyword      String?
+  metaTitle          String?
+  metaDescription    String?  @db.Text
+  projectIds         Int[]    @default([])
+  testimonialIds    Int[]    @default([])
+  serviceSectionType String?  @default("wordpress")
+  ctaTitle           String?
+  ctaSubtitle        String?
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt @default(now())
+}
+
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  excerpt     String?  @db.Text
+  content     String   @db.Text
+  coverImage  String?
+  category    String?  @default("Engineering")
+  tags        String[] @default([])
+  author      String   @default("Rowell Mark Blanca")
+  readingTime String?  @default("5 min read")
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
 }
 
 

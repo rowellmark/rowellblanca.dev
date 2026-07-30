@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/auth';
 import { hashPassword } from '@/lib/crypto';
+import { INITIAL_BLOG_POSTS } from '@/lib/initial-blog-data';
 
 const SEED_ADMIN_EMAIL = 'admin@rowellblanca.dev';
 const SEED_ADMIN_PASSWORD = 'RowellAdmin2026!';
@@ -143,11 +144,48 @@ export async function POST() {
       importedCount++;
     }
 
+    // 3. Seed Enhanced Blog Articles
+    let seededPostsCount = 0;
+    for (const postData of INITIAL_BLOG_POSTS) {
+      try {
+        await (prisma as any).blogPost.upsert({
+          where: { slug: postData.slug },
+          create: {
+            title: postData.title,
+            slug: postData.slug,
+            excerpt: postData.excerpt,
+            content: postData.content,
+            coverImage: postData.coverImage,
+            category: postData.category,
+            tags: postData.tags,
+            author: postData.author,
+            readingTime: postData.readingTime,
+            featured: postData.featured,
+            published: postData.published,
+            publishedAt: new Date(postData.publishedAt),
+          },
+          update: {
+            title: postData.title,
+            excerpt: postData.excerpt,
+            content: postData.content,
+            category: postData.category,
+            tags: postData.tags,
+            readingTime: postData.readingTime,
+            featured: postData.featured,
+          },
+        });
+        seededPostsCount++;
+      } catch (e) {
+        console.warn(`[SEED-NEONDB] Error seeding blog post ${postData.slug}:`, e);
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message: `Successfully seeded Admin Account (${SEED_ADMIN_EMAIL}) and ${importedCount} projects into NeonDB (PostgreSQL)!`,
+      message: `Successfully seeded Admin Account (${SEED_ADMIN_EMAIL}), ${importedCount} projects, and ${seededPostsCount} blog articles into NeonDB (PostgreSQL)!`,
       adminUser: { id: adminUser.id, email: adminUser.email, name: adminUser.name },
       importedCount,
+      seededPostsCount,
       projects: importedProjects,
     });
   } catch (error: any) {
