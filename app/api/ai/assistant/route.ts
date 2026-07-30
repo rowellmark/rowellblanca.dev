@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { generateAIResponse } from '@/lib/ai-provider';
+import { generateAIResponse, getAISettings } from '@/lib/ai-provider';
+import { prisma } from '@/lib/prisma';
 
 const SYSTEM_KNOWLEDGE = `You are Friday, Rowell Mark Blanca's AI Engineering Assistant on rowellblanca.dev.
 Always introduce yourself as Friday when appropriate (e.g. "Hi! I'm Friday, Rowell's AI Assistant.").
@@ -54,8 +55,27 @@ const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
   },
 ];
 
-function getInteractiveFallbackReply(question: string): string {
+const PROJECT_KEYWORDS = ['project', 'portfolio', 'work', 'case stud', 'client', 'built', 'macmanus', 'tower fire', 'juliette'];
+
+async function getInteractiveFallbackReply(question: string): Promise<string> {
   const lower = question.toLowerCase();
+
+  if (PROJECT_KEYWORDS.some((kw) => lower.includes(kw))) {
+    try {
+      const projects = await prisma.project.findMany({
+        where: { featured: true, active: true },
+        orderBy: { createdAt: 'desc' },
+        take: 4,
+      });
+      if (projects.length > 0) {
+        const list = projects.map((p: any) => p.sitename).join(', ');
+        return `Recent featured work includes: ${list}. See more under "My Work" on this site.`;
+      }
+    } catch (e) {
+      // DB unavailable — fall through to the static list below
+    }
+  }
+
   for (const intent of FALLBACK_INTENTS) {
     if (intent.keywords.some((kw) => lower.includes(kw))) {
       return intent.reply;
@@ -92,6 +112,18 @@ export async function POST(request: Request) {
 User Question: "${userQuestion}"`;
     }
 
+    const aiConfig = await getAISettings();
+
+    if (aiConfig.noAiMode) {
+      const reply = await getInteractiveFallbackReply(userQuestion);
+      return NextResponse.json({
+        success: true,
+        reply,
+        provider: 'content-only',
+        model: 'static',
+      });
+    }
+
     const aiRes = await generateAIResponse({
       prompt: contextualPrompt,
       systemInstruction: SYSTEM_KNOWLEDGE,
@@ -99,7 +131,7 @@ User Question: "${userQuestion}"`;
       temperature: 0.7,
     });
 
-    const reply = aiRes.provider === 'fallback' ? getInteractiveFallbackReply(userQuestion) : aiRes.text;
+    const reply = aiRes.provider === 'fallback' ? await getInteractiveFallbackReply(userQuestion) : aiRes.text;
 
     return NextResponse.json({
       success: true,

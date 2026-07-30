@@ -35,6 +35,7 @@ interface AISettings {
   groqApiKey: string;
   groqHasKey: boolean;
   groqModel: string;
+  noAiMode: boolean;
 }
 
 interface OllamaStatus {
@@ -66,6 +67,7 @@ export default function AISettingsPage() {
     groqApiKey: '',
     groqHasKey: false,
     groqModel: 'llama-3.3-70b-versatile',
+    noAiMode: false,
   });
 
   const [ollamaStatus, setOllamaStatus] = useState<OllamaStatus>({
@@ -212,8 +214,54 @@ export default function AISettingsPage() {
         </button>
       </div>
 
+      {/* 0. No AI Mode Toggle */}
+      <div
+        className={`p-5 rounded-2xl border flex items-center justify-between gap-4 transition-all ${
+          settings.noAiMode
+            ? 'bg-amber-50 border-amber-300'
+            : 'bg-white border-slate-200'
+        }`}
+      >
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 font-black text-sm text-[#0b1a30]">
+            <ShieldCheck className="w-4 h-4 text-amber-600" /> No AI Mode (Content-Only)
+          </div>
+          <p className="text-[11px] text-slate-500 font-medium leading-relaxed max-w-xl">
+            Skip all external AI providers entirely. The chat widget answers only from Rowell's actual site content
+            (projects, tech stack, availability, contact info) with zero external API calls.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={async () => {
+            const next = { ...settings, noAiMode: !settings.noAiMode };
+            setSettings(next);
+            setSaving(true);
+            try {
+              await fetch('/api/admin/ai-settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(next),
+              });
+            } finally {
+              setSaving(false);
+            }
+          }}
+          className={`shrink-0 w-14 h-8 rounded-full relative transition-all cursor-pointer ${
+            settings.noAiMode ? 'bg-amber-500' : 'bg-slate-300'
+          }`}
+        >
+          <span
+            className={`absolute top-1 w-6 h-6 rounded-full bg-white shadow-md transition-all ${
+              settings.noAiMode ? 'left-7' : 'left-1'
+            }`}
+          />
+        </button>
+      </div>
+
       {/* 1. Active Provider Selector Cards */}
-      <div className="space-y-4">
+      <div className={`space-y-4 ${settings.noAiMode ? 'opacity-40 pointer-events-none' : ''}`}>
         <h2 className="text-sm font-black text-[#0b1a30] uppercase tracking-wider flex items-center gap-2">
           <Cpu className="w-4 h-4 text-indigo-600" />
           1. Select Active AI Provider
@@ -261,7 +309,7 @@ export default function AISettingsPage() {
       </div>
 
       {/* 2. Provider API Credentials & Config Form */}
-      <form onSubmit={handleSave} className="space-y-6">
+      <form onSubmit={handleSave} className={`space-y-6 ${settings.noAiMode ? 'opacity-40 pointer-events-none' : ''}`}>
         <h2 className="text-sm font-black text-[#0b1a30] uppercase tracking-wider flex items-center gap-2">
           <Key className="w-4 h-4 text-amber-500" />
           2. Provider API Keys & Model Parameters

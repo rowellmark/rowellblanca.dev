@@ -183,7 +183,7 @@ export default function ChatBubble() {
   // Scroll to bottom when messages update
   useEffect(() => {
     if (isOpen) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [messages, isOpen, loading]);
 

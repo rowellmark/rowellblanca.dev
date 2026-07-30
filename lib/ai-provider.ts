@@ -12,6 +12,7 @@ export interface AIProviderConfig {
   ollamaModel?: string;
   groqApiKey?: string;
   groqModel?: string;
+  noAiMode?: boolean;
 }
 
 export async function getAISettings(): Promise<AIProviderConfig> {
@@ -27,6 +28,7 @@ export async function getAISettings(): Promise<AIProviderConfig> {
     ollamaModel: process.env.OLLAMA_MODEL || 'llama3',
     groqApiKey: process.env.GROQ_API_KEY || '',
     groqModel: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+    noAiMode: process.env.NO_AI_MODE === 'true',
   };
 
   try {
@@ -44,6 +46,7 @@ export async function getAISettings(): Promise<AIProviderConfig> {
       if (map.get('ollama_model')) config.ollamaModel = map.get('ollama_model');
       if (map.get('groq_api_key')) config.groqApiKey = map.get('groq_api_key');
       if (map.get('groq_model')) config.groqModel = map.get('groq_model');
+      if (map.get('no_ai_mode') !== undefined) config.noAiMode = map.get('no_ai_mode') === 'true';
     }
   } catch (e) {
     console.warn('[getAISettings] DB settings lookup fallback to env defaults');
