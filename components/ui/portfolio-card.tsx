@@ -530,10 +530,325 @@ export function ProjectModal({ project, onClose }: { project: PortfolioProject; 
   );
 }
 
+// ─── Blanc Leads Interactive Presentation ────────────────────────────────────
+
+function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'features' | 'ai' | 'integrations' | 'changelog'>('dashboard');
+
+  const tabs = [
+    { id: 'dashboard', label: '📊 Dashboard', color: 'text-teal-400' },
+    { id: 'features', label: '🧲 Features', color: 'text-indigo-400' },
+    { id: 'ai', label: '🤖 AI Suite', color: 'text-purple-400' },
+    { id: 'integrations', label: '🔌 Integrations', color: 'text-amber-400' },
+    { id: 'changelog', label: '📋 Changelog', color: 'text-emerald-400' },
+  ] as const;
+
+  return (
+    <div className="rounded-3xl border border-teal-900/40 bg-gradient-to-b from-[#0d1f24] via-[#091418] to-[#050c10] shadow-2xl overflow-hidden text-white flex flex-col">
+      {/* Top Accent Bar */}
+      <div className="h-1.5 w-full bg-gradient-to-r from-teal-500 via-amber-500 to-teal-400 shrink-0" />
+
+      {/* Chrome header */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-3.5 bg-[#0c1a1f] border-b border-white/8">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-rose-500" />
+          <div className="w-3 h-3 rounded-full bg-amber-400" />
+          <div className="w-3 h-3 rounded-full bg-emerald-400" />
+          <span className="text-xs font-mono text-slate-400 ml-3 font-semibold">blanc-leads — WordPress CRM Plugin</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-black uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+            v2.8.7 Production
+          </span>
+          <span className="text-[10px] font-black uppercase tracking-wider text-indigo-300 bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 rounded-full">
+            WordPress Plugin
+          </span>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="flex overflow-x-auto gap-1 px-5 pt-4 pb-0 border-b border-white/5 scrollbar-none">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex-shrink-0 px-3.5 py-2 text-[11px] font-extrabold rounded-t-xl border-b-2 transition-all cursor-pointer ${
+              activeTab === tab.id
+                ? `${tab.color} border-current bg-white/5`
+                : 'text-slate-500 border-transparent hover:text-slate-300 hover:bg-white/3'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Panels */}
+      <div className="p-5 sm:p-7 space-y-5 overflow-y-auto max-h-[680px] scrollbar-thin scrollbar-thumb-teal-800/50">
+
+        {/* ── DASHBOARD TAB ─────────────────── */}
+        {activeTab === 'dashboard' && (
+          <div className="space-y-5">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-teal-400 mb-1">Dashboard Overview</p>
+              <h3 className="text-lg font-black text-white">Everything in one <span className="text-teal-400">view</span></h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">The All Leads dashboard gives you live stats, AI insights, searchable filtered lists, and direct CRM record access.</p>
+            </div>
+
+            {/* Mock Panel */}
+            <div className="bg-white/3 border border-white/8 rounded-2xl overflow-hidden shadow-2xl">
+              <div className="bg-white/4 border-b border-white/7 px-4 py-3 flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                <span className="text-[10px] font-mono text-slate-500 ml-2">Website Leads — All Leads · blanc-leads</span>
+              </div>
+              <div className="p-4 space-y-4">
+                {/* Stat Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { val: '148', label: 'Total Leads', color: 'text-teal-400' },
+                    { val: '23', label: 'New', color: 'text-amber-400' },
+                    { val: '7', label: 'Follow-ups Due', color: 'text-yellow-400' },
+                    { val: '19', label: 'Converted', color: 'text-indigo-400' },
+                  ].map((s) => (
+                    <div key={s.label} className="bg-white/4 border border-white/7 rounded-xl p-3 text-center">
+                      <span className={`text-2xl font-black ${s.color} block`}>{s.val}</span>
+                      <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500 mt-1 block">{s.label}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Mini table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-[11px]">
+                    <thead>
+                      <tr className="border-b border-white/6">
+                        {['Date', 'Name', 'Contact', 'Form', 'Status', 'Score'].map(h => (
+                          <th key={h} className="text-left py-2 px-2 text-[9px] font-bold uppercase tracking-wider text-slate-500">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { date: '2026-06-01', name: 'Sarah Mitchell', contact: 'sarah@example.com', form: 'Contact Us', status: 'Hot', statusColor: 'bg-amber-500/20 text-amber-400', score: 82, scoreColor: 'bg-teal-500/20 text-teal-400' },
+                        { date: '2026-05-31', name: 'James Okafor', contact: 'j.okafor@biz.au', form: 'Finance Enquiry', status: 'Qualified', statusColor: 'bg-yellow-500/20 text-yellow-400', score: 91, scoreColor: 'bg-teal-500/20 text-teal-400' },
+                        { date: '2026-05-30', name: 'Priya Nair', contact: 'priya.n@gmail.com', form: 'Get a Quote', status: 'New', statusColor: 'bg-teal-500/20 text-teal-400', score: 45, scoreColor: 'bg-yellow-500/20 text-yellow-400' },
+                        { date: '2026-05-29', name: 'Tom Carver', contact: 'tcarver@co.nz', form: 'Kadence Form', status: 'Contacted', statusColor: 'bg-indigo-500/20 text-indigo-400', score: 60, scoreColor: 'bg-yellow-500/20 text-yellow-400' },
+                      ].map((row) => (
+                        <tr key={row.name} className="border-b border-white/4 hover:bg-white/2 transition-colors">
+                          <td className="py-2 px-2 text-slate-500">{row.date}</td>
+                          <td className="py-2 px-2 font-bold text-white">{row.name}</td>
+                          <td className="py-2 px-2 text-slate-400">{row.contact}</td>
+                          <td className="py-2 px-2 text-slate-400">{row.form}</td>
+                          <td className="py-2 px-2"><span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${row.statusColor}`}>{row.status}</span></td>
+                          <td className="py-2 px-2"><span className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ${row.scoreColor}`}>{row.score}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Kanban mini mock */}
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-teal-400 mb-3">Kanban Pipeline View</p>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { col: 'New Lead (4)', leads: ['Priya Nair · Score 45', 'Leo Fontaine · Score 30'] },
+                  { col: 'Discovery (3)', leads: ['Sarah Mitchell · Score 82', 'Ana Torres · Score 68'] },
+                  { col: 'Proposal Sent (2)', leads: ['James Okafor · Score 91', 'Mike Chen · Score 77'] },
+                ].map((c) => (
+                  <div key={c.col} className="bg-white/3 border border-white/6 rounded-xl p-3">
+                    <div className="text-[9px] font-black uppercase tracking-wider text-slate-500 mb-2 pb-1.5 border-b border-white/6">{c.col}</div>
+                    {c.leads.map(l => (
+                      <div key={l} className="bg-white/4 border border-white/7 rounded-lg p-2 mb-1.5 last:mb-0">
+                        <div className="text-[11px] font-semibold text-white/85 truncate">{l.split(' · ')[0]}</div>
+                        <div className="text-[9px] text-slate-500">{l.split(' · ')[1]}</div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── FEATURES TAB ─────────────────── */}
+        {activeTab === 'features' && (
+          <div className="space-y-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-indigo-400 mb-1">Core Features</p>
+              <h3 className="text-lg font-black text-white">Built for real <span className="text-indigo-400">sales workflows</span></h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Every feature is purpose-built for managing website leads through their full lifecycle — from first capture to closed deal.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { icon: '🧲', color: 'border-teal-500/20 bg-teal-500/8', hdr: 'Universal Form Capture', desc: 'Silently intercepts any form plugin or raw POST submission.', items: ['Contact Form 7 · WPForms · Gravity Forms', 'Kadence Blocks & Advanced Forms', 'Any generic HTML POST form', 'Browser, IP, referrer, UTM data captured'] },
+                { icon: '📋', color: 'border-amber-500/20 bg-amber-500/8', hdr: 'Lead CRM Detail Page', desc: 'Full CRM record per lead with scoring, tasks, and follow-up scheduling.', items: ['Status & Kanban stage controls', 'Score (0–100) manual override', 'Next follow-up date picker', 'Notes + manual activity log entries'] },
+                { icon: '📊', color: 'border-yellow-500/20 bg-yellow-500/8', hdr: 'Kanban Pipeline Board', desc: 'Visual stage-based board for team stand-ups and pipeline reviews.', items: ['Columns per nurture stage', 'Lead count & status badge per card', 'Assigned agent visible', 'Direct link to CRM detail page'] },
+                { icon: '✅', color: 'border-indigo-500/20 bg-indigo-500/8', hdr: 'Task Management', desc: 'Create, assign, and track follow-up tasks per lead with notifications.', items: ['Task title, description, due date', 'Assign to any WordPress user', 'Email notification to assignee', 'AI-created nurture plan tasks'] },
+                { icon: '📧', color: 'border-amber-500/20 bg-amber-500/8', hdr: 'Email System', desc: 'Send beautifully branded HTML emails directly from a lead CRM page.', items: ['Branded HTML email builder', 'Logo, colors, footer, social links', 'Template variable substitution', 'AI-drafted content injection'] },
+                { icon: '💬', color: 'border-teal-500/20 bg-teal-500/8', hdr: 'SMS via Twilio', desc: 'Send SMS alongside emails when a lead has a phone number.', items: ['Twilio REST API integration', 'Send with or alongside email', 'SMS history per lead', 'Sent / Failed status tracking'] },
+                { icon: '📅', color: 'border-yellow-500/20 bg-yellow-500/8', hdr: 'Digest Email Reports', desc: 'WP-Cron digest emails summarize leads, scores, and recent submissions.', items: ['Daily or weekly frequency', 'Configurable recipient email', 'Lead count + avg AI score', 'Up to 15 recent leads listed'] },
+                { icon: '🕒', color: 'border-indigo-500/20 bg-indigo-500/8', hdr: 'Activity Timeline', desc: 'Every CRM action auto-logged — emails, SMS, tasks, score changes.', items: ['Auto-logged on every save', 'Actor (user) tracking', 'Typed entries (Status, Kanban, AI)', 'Email + SMS + Task events inline'] },
+              ].map((f) => (
+                <div key={f.hdr} className={`border ${f.color} rounded-2xl p-4 space-y-2 hover:-translate-y-0.5 transition-transform`}>
+                  <div className="text-2xl">{f.icon}</div>
+                  <h4 className="font-black text-white text-sm">{f.hdr}</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">{f.desc}</p>
+                  <ul className="space-y-1 pt-1">
+                    {f.items.map(item => (
+                      <li key={item} className="flex items-start gap-1.5 text-[11px] text-slate-400">
+                        <span className="text-teal-400 mt-0.5 shrink-0">→</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── AI SUITE TAB ─────────────────── */}
+        {activeTab === 'ai' && (
+          <div className="space-y-5">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-purple-400 mb-1">AI Nurturing Suite</p>
+              <h3 className="text-lg font-black text-white"><span className="text-purple-400">AI-powered</span> lead intelligence</h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Connect any major AI provider to unlock summaries, scoring, email drafts, next actions, and full nurture plans — all without leaving WordPress.</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { icon: '📝', name: 'Lead Summary', desc: 'Concise AI overview of the lead for quick context.' },
+                { icon: '🎯', name: 'Next Action', desc: 'Context-aware suggestion for the next follow-up step.' },
+                { icon: '✉️', name: 'Email Draft', desc: 'Personalized email with subject + body, ready to review.' },
+                { icon: '⭐', name: 'Lead Score', desc: 'AI evaluates lead quality 0–100 with explanation.' },
+                { icon: '🗺️', name: 'Nurture Plan', desc: 'Multi-step plan (up to 8 steps) tailored to the lead.' },
+                { icon: '📌', name: 'Create Tasks', desc: 'Convert nurture steps into assigned tasks instantly.' },
+                { icon: '💡', name: 'Dashboard Insights', desc: 'Surface overdue follow-ups and idle hot leads.' },
+                { icon: '🔒', name: 'Human Review Gate', desc: 'AI never sends emails automatically. Manual approval always required.' },
+              ].map((a) => (
+                <div key={a.name} className="bg-teal-500/7 border border-teal-500/20 rounded-xl p-3 space-y-1.5 hover:bg-teal-500/12 hover:scale-[1.02] transition-all">
+                  <span className="text-xl block">{a.icon}</span>
+                  <div className="text-xs font-black text-white">{a.name}</div>
+                  <div className="text-[10px] text-slate-400 leading-relaxed">{a.desc}</div>
+                </div>
+              ))}
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-purple-400 mb-3">Supported AI Providers</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { name: 'OpenAI — GPT-4o mini', local: false },
+                  { name: 'Anthropic Claude — Haiku', local: false },
+                  { name: 'Google Gemini 1.5 Flash', local: false },
+                  { name: 'DeepSeek Chat', local: false },
+                  { name: 'OpenRouter — Llama 3.1', local: false },
+                  { name: 'Ollama — Local / self-hosted', local: true },
+                ].map((p) => (
+                  <div key={p.name} className="flex items-center gap-2 bg-white/4 border border-white/8 rounded-xl px-3 py-2 text-[11px] font-semibold text-white/80 hover:bg-white/8 transition-colors">
+                    <div className={`w-2 h-2 rounded-full ${p.local ? 'bg-amber-400 shadow-amber-400/50' : 'bg-teal-400 shadow-teal-400/50'} shadow-[0_0_6px]`} />
+                    {p.name}
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-slate-500 mt-2">Each provider maintains its own API key and model setting. Ollama requires no API key.</p>
+            </div>
+          </div>
+        )}
+
+        {/* ── INTEGRATIONS TAB ─────────────────── */}
+        {activeTab === 'integrations' && (
+          <div className="space-y-5">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1">Form Integrations</p>
+              <h3 className="text-lg font-black text-white">Works with your <span className="text-amber-400">existing forms</span></h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Blanc Leads integrates silently in the background — no changes needed to existing forms. Just activate and capture.</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {[
+                { icon: '📮', name: 'Contact Form 7', type: 'Form Plugin' },
+                { icon: '📋', name: 'WPForms', type: 'Form Plugin' },
+                { icon: '⚡', name: 'Gravity Forms', type: 'Form Plugin' },
+                { icon: '🎨', name: 'Kadence Blocks', type: 'Page Builder' },
+                { icon: '🔧', name: 'Kadence Advanced', type: 'Page Builder' },
+                { icon: '🌐', name: 'Any HTML POST', type: 'Generic Form' },
+                { icon: '📱', name: 'Twilio SMS', type: 'Messaging' },
+                { icon: '🤖', name: 'OpenAI API', type: 'AI Provider' },
+                { icon: '🤖', name: 'Anthropic Claude', type: 'AI Provider' },
+                { icon: '🤖', name: 'Google Gemini', type: 'AI Provider' },
+                { icon: '🤖', name: 'DeepSeek', type: 'AI Provider' },
+                { icon: '🦙', name: 'Ollama / Llama', type: 'Local AI' },
+                { icon: '🤖', name: 'Blanc Chatbot', type: 'CRM Upgrade', special: 'border-amber-500/35 bg-amber-500/6 text-amber-300' },
+                { icon: '🚀', name: 'Blanc Campaigns', type: 'CRM Upgrade', special: 'border-teal-500/35 bg-teal-500/6 text-teal-300' },
+              ].map((i) => (
+                <div key={i.name} className={`border rounded-xl p-3 text-center transition-all hover:-translate-y-0.5 ${
+                  (i as any).special
+                    ? (i as any).special.includes('amber') ? 'border-amber-500/35 bg-amber-500/6' : 'border-teal-500/35 bg-teal-500/6'
+                    : 'border-white/7 bg-white/3 hover:bg-teal-500/10 hover:border-teal-500/30'
+                }`}>
+                  <div className="text-2xl mb-1.5">{i.icon}</div>
+                  <div className={`text-[11px] font-bold ${
+                    (i as any).special?.includes('amber') ? 'text-amber-300' : (i as any).special?.includes('teal') ? 'text-teal-300' : 'text-white/80'
+                  }`}>{i.name}</div>
+                  <div className="text-[9px] text-slate-500 mt-0.5">{i.type}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* ── CHANGELOG TAB ─────────────────── */}
+        {activeTab === 'changelog' && (
+          <div className="space-y-5">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-emerald-400 mb-1">🚀 What's New</p>
+              <h3 className="text-lg font-black text-white">Version <span className="text-emerald-400">2.8.7</span> Upgrades</h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">A full suite of new features, UI refinements, and bug fixes delivered in this release.</p>
+            </div>
+            {/* Timeline */}
+            <div className="relative pl-6">
+              <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-500 to-teal-500/10 rounded" />
+              {[
+                { ver: 'v2.8.7', title: 'Blanc Leads Campaign Addon', desc: 'A standalone addon plugin that turns your CRM into a full email marketing platform with newsletter composer, segment filtering, AI copywriter, and campaign history log.', color: 'text-amber-400' },
+                { ver: 'v2.8.7', title: 'Mobile App QR Connect', desc: 'Pair the Blanc CRM mobile companion app by scanning a one-time QR code with 5-minute signed auth token via WordPress transients.', color: 'text-teal-400' },
+                { ver: 'v2.8.7', title: 'Mobile Panel Visibility Control', desc: 'Full admin control over when the mobile connect card is shown, with VISIBLE/HIDDEN status badges and an animated green dot indicator.', color: 'text-yellow-400' },
+                { ver: 'v2.8.7', title: 'Premium Stat Cards UI Overhaul', desc: 'Dashboard summary cards received a visual upgrade with color-coded top borders, emoji icon tiles, and conditional color highlighting.', color: 'text-indigo-400' },
+                { ver: 'v2.8.7', title: '🐛 Generic POST Capturer Fix', desc: 'Fixed WordPress Application Password generation being captured as leads. Added URL-based block for /wp-json/ requests and 25+ WordPress internal POST key signatures.', color: 'text-rose-400' },
+                { ver: 'v2.8.6', title: 'Chatbot CRM Integration', desc: 'Blanc Chatbot integration syncing chat transcripts directly into Lead CRM timelines. Auto-capture visitor name, email, phone before chat begins.', color: 'text-teal-400' },
+                { ver: 'v2.8.5', title: 'Upsell Banner Redesign', desc: 'Addon promotion banners redesigned from heavy dark cards to modern glassmorphic light panels with gradient pill CTA buttons and hover lift animations.', color: 'text-amber-400' },
+                { ver: 'v2.8.0', title: 'CSV Export & Security Hardening', desc: 'Export current filtered lead list to CSV with all CRM fields. All queries use $wpdb->prepare() with placeholders. Sensitive field auto-redaction (passwords, CVV, PINs).', color: 'text-emerald-400' },
+              ].map((c, i) => (
+                <div key={i} className="relative mb-6 last:mb-0">
+                  <div className="absolute -left-[26px] top-1.5 w-3 h-3 rounded-full bg-teal-500 border-2 border-[#091418] shadow-[0_0_0_3px_rgba(44,122,117,0.25)]" />
+                  <code className={`text-[10px] font-bold ${c.color} font-mono`}>{c.ver}</code>
+                  <h4 className="text-sm font-black text-white mt-0.5">{c.title}</h4>
+                  <p className="text-[11px] text-slate-400 leading-relaxed mt-1">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
 // ─── WordPress Plugin Detail Preview ─────────────────────────────────────────
 
 export function WordPressPluginDetailPreview({ project }: { project: PortfolioProject }) {
   const [activeSlide, setActiveSlide] = useState(0);
+
+  // Blanc Leads gets the full interactive presentation
+  if (project.permalink === 'blanc-leads-plugin') {
+    return <BlancLeadsPresentation project={project} />;
+  }
 
   const getPluginScreenshots = () => {
     if (project.permalink === 'blanc-login-customizer') {
