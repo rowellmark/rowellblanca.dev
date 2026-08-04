@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/images/logo.png";
+import { AnimatedLogo } from "@/components/ui/animated-logo";
 import { IconPhone } from "@tabler/icons-react";
 import { ContactModal } from "@/components/ui/contact-modal";
 
@@ -47,13 +46,7 @@ export default function Header() {
                 <div className="container mx-auto px-6 max-w-6xl flex justify-between items-center">
                     <Link href="/" className="flex items-center gap-3 group">
                         <div className="relative h-10 w-10 shrink-0 group-hover:scale-105 transition-transform">
-                            <Image
-                                src={logo}
-                                className="object-contain brightness-0"
-                                alt="Rowell Mark Blanca"
-                                fill
-                                priority
-                            />
+                            <AnimatedLogo className="h-full w-full" title="Rowell Mark Blanca" />
                         </div>
                         <div className="flex flex-col">
                             <span className="font-black text-[#0b1a30] text-base tracking-tight leading-none">

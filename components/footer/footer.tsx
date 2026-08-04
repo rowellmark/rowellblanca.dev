@@ -1,6 +1,5 @@
-import logo from "@/assets/images/logo.png";
-import Image from "next/image";
 import Link from "next/link";
+import { AnimatedLogo } from "@/components/ui/animated-logo";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 
 export default function Footer() {
@@ -19,12 +18,7 @@ export default function Footer() {
                 {/* Brand info */}
                 <div className="flex items-center gap-3">
                     <div className="relative h-9 w-9 shrink-0">
-                        <Image
-                            src={logo}
-                            className="object-contain brightness-0"
-                            alt="Rowell Mark Blanca"
-                            fill
-                        />
+                        <AnimatedLogo className="h-full w-full" title="Rowell Mark Blanca" />
                     </div>
                     <div>
                         <span className="font-extrabold text-slate-900 text-sm block">Rowell Mark Blanca</span>
