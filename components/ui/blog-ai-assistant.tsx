@@ -40,7 +40,7 @@ export function BlogAiAssistant({
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: `👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about the technical architecture, stack, or results for "${title}"!`,
+      text: `👋 Hi! I'm Rowell's AI Assistant. Ask me anything about the technical architecture, stack, or results for "${title}"!`,
     },
   ]);
 
@@ -99,7 +99,7 @@ export function BlogAiAssistant({
     lastSavedMessageCount.current = messages.length;
 
     const transcriptText = messages
-      .map((m) => `[${m.sender === 'user' ? 'User' : 'Friday'}] ${m.text}`)
+      .map((m) => `[${m.sender === 'user' ? 'User' : 'AI Assistant'}] ${m.text}`)
       .join('\n\n');
 
     const payload = JSON.stringify({

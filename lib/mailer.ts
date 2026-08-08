@@ -415,7 +415,7 @@ export async function sendChatTranscriptEmail({
     html: buildEmailShell({
       eyebrow: 'Chat Session Completed',
       title: `💬 Completed Chat Transcript from ${safeName}`,
-      intro: `${safeName} (&lt;<a href="mailto:${safeEmail}" style="color: #1d4ed8;">${safeEmail}</a>&gt;) just ended a live chat session with Friday. Below is the full chat conversation history.`,
+      intro: `${safeName} (&lt;<a href="mailto:${safeEmail}" style="color: #1d4ed8;">${safeEmail}</a>&gt;) just ended a live chat session with Rowell's AI Assistant. Below is the full chat conversation history.`,
       content: `
         <div style="padding: 18px 20px; border-radius: 18px; bg-color: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 24px;">
           <div style="font-size: 16px; font-weight: 800; color: #0b1a30;">${safeName}</div>
@@ -428,7 +428,7 @@ export async function sendChatTranscriptEmail({
           <div style="font-size: 13px; line-height: 1.8; font-family: monospace; white-space: pre-wrap; color: rgba(248,250,252,0.92);">${renderParagraph(transcript)}</div>
         </div>
       `,
-      footer: 'Sent via rowellblanca.dev Friday AI & Live Chat · Reply directly to this email to contact the client.',
+      footer: 'Sent via rowellblanca.dev AI & Live Chat · Reply directly to this email to contact the client.',
     }),
   });
 }

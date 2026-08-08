@@ -17,7 +17,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: `👋 Hi! I'm Friday, Rowell's AI Assistant. Have questions about hiring Rowell for ${targetKeyword || pageTitle}? Ask me anything!`,
+      text: `👋 Hi! I'm Rowell's AI Assistant. Have questions about hiring Rowell for ${targetKeyword || pageTitle}? Ask me anything!`,
     },
   ]);
 

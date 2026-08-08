@@ -20,6 +20,18 @@ const QUICK_PROMPTS = [
   'I want to hire Rowell for a project',
 ];
 
+const RANDOM_TEASERS = [
+  'Have a project in mind?',
+  'Wanna build something cool?',
+  'Looking for React & Next.js engineering?',
+  'Need custom WordPress & Gutenberg architecture?',
+  'Want senior dev rates without agency overhead?',
+  'Need full UK/US timezone overlap?',
+  'Want to discuss your project idea?',
+  'Looking for a high-converting web platform?',
+  'Interested in AI & LLM workflow integration?',
+];
+
 export default function ChatBubble() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +47,21 @@ export default function ChatBubble() {
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const [threadId, setThreadId] = useState<number | null>(null);
+  const [activeTeaserIndex, setActiveTeaserIndex] = useState(0);
+  const [isBubbleDismissed, setIsBubbleDismissed] = useState(false);
+
+  useEffect(() => {
+    // Pick a random starting teaser index on mount
+    setActiveTeaserIndex(Math.floor(Math.random() * RANDOM_TEASERS.length));
+
+    // Rotate teaser every 5 minutes (300,000 ms)
+    const interval = setInterval(() => {
+      setActiveTeaserIndex((prev) => (prev + 1) % RANDOM_TEASERS.length);
+      setIsBubbleDismissed(false);
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSaveInitialInfo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +77,7 @@ export default function ChatBubble() {
       {
         id: `sys_${Date.now()}`,
         sender: 'ai',
-        senderName: "Friday (Rowell's AI Assistant)",
+        senderName: "Rowell's AI Assistant",
         text: `Nice to meet you, ${name.trim()}! 👋 I've saved your contact info so Rowell can also connect with you directly. How can I help you today?`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
@@ -62,8 +89,8 @@ export default function ChatBubble() {
     {
       id: '1',
       sender: 'ai',
-      senderName: "Friday (Rowell's AI Assistant)",
-      text: "👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about Rowell's portfolio, UK client projects, tech stack, or booking a call!",
+      senderName: "Rowell's AI Assistant",
+      text: "👋 Hi! I'm Rowell's AI Assistant. Ask me anything about Rowell's portfolio, UK client projects, tech stack, or booking a call!",
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -125,8 +152,8 @@ export default function ChatBubble() {
       {
         id: `sys_${Date.now()}`,
         sender: 'ai',
-        senderName: "Friday (Rowell's AI Assistant)",
-        text: "👋 Hi! I'm Friday, Rowell's AI Assistant. Ask me anything about Rowell's portfolio, UK client projects, tech stack, or booking a call!",
+        senderName: "Rowell's AI Assistant",
+        text: "👋 Hi! I'm Rowell's AI Assistant. Ask me anything about Rowell's portfolio, UK client projects, tech stack, or booking a call!",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);
@@ -302,23 +329,98 @@ export default function ChatBubble() {
 
   return (
     <>
-      {/* Floating Single Hybrid Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#0b1a30] via-slate-900 to-[#1d63ed] text-white shadow-2xl border border-amber-400/40 hover:border-amber-400 cursor-pointer group"
-          title="Chat with Gemini AI & Rowell"
-        >
-          <div className="relative flex items-center gap-1 text-amber-400">
-            <Sparkles className="w-5 h-5 animate-pulse" />
-          </div>
-          <span className="text-xs font-black tracking-wide hidden sm:inline">Have a project in mind?</span>
-          {!isOpen && (
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping absolute -top-1 -right-1" />
+      {/* Floating Circular Trigger Button & Popping Speech Bubble */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
+        {/* Popping Speech Bubble Tooltip */}
+        <AnimatePresence>
+          {!isOpen && !isBubbleDismissed && (
+            <motion.div
+              initial={{ opacity: 0, y: 14, scale: 0.88 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 24 }}
+              onClick={() => {
+                setIsOpen(true);
+                setIsBubbleDismissed(true);
+              }}
+              className="pointer-events-auto relative max-w-[280px] sm:max-w-[320px] bg-slate-950/95 backdrop-blur-xl border border-amber-400/40 hover:border-amber-400 p-3.5 rounded-2xl shadow-2xl cursor-pointer group transition-all"
+            >
+              {/* Header inside popout bubble */}
+              <div className="flex items-center justify-between gap-2 mb-1.5">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  <Bot className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                  Quick Question
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsBubbleDismissed(true);
+                  }}
+                  className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+                  title="Dismiss teaser"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Animated Teaser Text */}
+              <div className="text-xs font-bold text-slate-100 leading-snug">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={activeTeaserIndex}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    "{RANDOM_TEASERS[activeTeaserIndex]}"
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+
+              {/* CTA Hint */}
+              <div className="mt-2 text-[10px] font-extrabold text-amber-400 flex items-center justify-end gap-1 group-hover:translate-x-1 transition-transform">
+                <span>Click to ask Rowell's AI</span>
+                <ArrowRight className="w-3 h-3" />
+              </div>
+
+              {/* Tail pointing to circle robot launcher */}
+              <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-slate-950 border-r border-b border-amber-400/40 rotate-45" />
+            </motion.div>
           )}
-        </motion.button>
+        </AnimatePresence>
+
+        {/* Circular Animated Robot Launcher Button */}
+        <div className="relative pointer-events-auto">
+          {/* Full green pulsing aura around the entire circle button */}
+          {!isOpen && (
+            <span className="absolute -inset-1.5 rounded-full bg-emerald-400/60 animate-ping pointer-events-none opacity-80" />
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={() => {
+              setIsOpen(!isOpen);
+              if (!isOpen) setIsBubbleDismissed(true);
+            }}
+            className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-[#0b1a30] via-slate-900 to-[#1d63ed] text-white shadow-2xl border-2 border-amber-400/60 hover:border-amber-400 flex items-center justify-center cursor-pointer group overflow-hidden"
+            title="Open Rowell's AI Assistant & Chat"
+          >
+            {/* Background glow pulse */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 via-blue-500/20 to-amber-500/10 rounded-full animate-pulse" />
+
+            {/* Animated Robot Icon */}
+            {isOpen ? (
+              <X className="w-6 h-6 text-white relative z-10" />
+            ) : (
+              <div className="relative z-10 flex items-center justify-center">
+                <Bot className="w-7.5 h-7.5 text-amber-300 group-hover:scale-110 transition-transform animate-bounce duration-1000" />
+              </div>
+            )}
+          </motion.button>
+        </div>
       </div>
 
       {/* Main Unified Hybrid Chat Drawer */}
@@ -338,12 +440,12 @@ export default function ChatBubble() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-white flex items-center gap-1.5">
-                    Friday • Rowell's AI Desk
+                    Rowel AI Assistant • AI Desk
                     <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
                       Online
                     </span>
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-medium">Friday AI + Direct Human Support</p>
+                  <p className="text-[10px] text-slate-400 font-medium">Rowel AI Assistant + Direct Support</p>
                 </div>
               </div>
 
@@ -380,9 +482,9 @@ export default function ChatBubble() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <h4 className="text-base font-black text-white">Welcome, I&apos;m FRIDAY — Rowell&apos;s AI Assistant</h4>
+                  <h4 className="text-base font-black text-white">Welcome to Rowel AI Assistant</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Please enter your details to start chatting with Friday & connect with Rowell:
+                    Please enter your details to start chatting & connect with Rowell:
                   </p>
                 </div>
 
@@ -432,7 +534,7 @@ export default function ChatBubble() {
                     type="submit"
                     className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2 mt-2"
                   >
-                    <span>🚀 Start Chatting with Friday</span>
+                    <span>🚀 Start Chatting with Rowel AI Assistant</span>
                   </button>
                 </form>
               </div>

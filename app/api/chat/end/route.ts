@@ -35,9 +35,9 @@ export async function POST(req: NextRequest) {
           contactName: name.trim(),
           email: email.trim(),
           phone: phone && phone.trim() ? phone.trim() : undefined,
-          serviceInterest: 'Completed Friday AI Chat Session',
+          serviceInterest: 'Completed AI Chat Session',
           enquiryDetails: transcript.trim().slice(0, 1000),
-          sourceUrl: sourceUrl || 'Friday AI & Live Chat Widget',
+          sourceUrl: sourceUrl || 'AI & Live Chat Widget',
           status: 'NEW',
         },
       });
@@ -62,8 +62,8 @@ export async function POST(req: NextRequest) {
       await sendAcknowledgmentReceipt({
         name: name.trim(),
         email: email.trim(),
-        subject: 'Friday AI & Live Chat Session Completed',
-        message: `Thank you for chatting with Friday AI on rowellblanca.dev! Below is your chat session summary:\n\n${transcript.trim()}`,
+        subject: 'AI & Live Chat Session Completed',
+        message: `Thank you for chatting with Rowell's AI Assistant on rowellblanca.dev! Below is your chat session summary:\n\n${transcript.trim()}`,
       });
     } catch (receiptErr) {
       console.warn('[API/chat/end] Receipt error:', receiptErr);

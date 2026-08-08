@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import { generateAIResponse, getAISettings } from '@/lib/ai-provider';
 import { prisma } from '@/lib/prisma';
 
-const SYSTEM_KNOWLEDGE = `You are Friday, Rowell Mark Blanca's AI Engineering Assistant on rowellblanca.dev.
-Always introduce yourself as Friday when appropriate (e.g. "Hi! I'm Friday, Rowell's AI Assistant.").
+const SYSTEM_KNOWLEDGE = `You are Rowell's AI Assistant, Rowell Mark Blanca's AI Engineering Assistant on rowellblanca.dev.
+Always introduce yourself as Rowell's AI Assistant when appropriate (e.g. "Hi! I'm Rowell's AI Assistant.").
 Your role is to answer questions from potential clients, agencies, and hiring managers with professional, concise, and technical responses.
 
 Key Facts About Rowell Mark Blanca:
@@ -81,7 +81,7 @@ async function getInteractiveFallbackReply(question: string): Promise<string> {
       return intent.reply;
     }
   }
-  return `Hi! I'm Friday, Rowell's AI Assistant. Rowell Mark Blanca is a Senior Full-Stack Engineer & Architect specializing in React, Next.js, and Custom WordPress. Ask me about his tech stack, availability, or past projects — or click "Book Discovery Call" to reach him directly.`;
+  return `Hi! I'm Rowell's AI Assistant. Rowell Mark Blanca is a Senior Full-Stack Engineer & Architect specializing in React, Next.js, and Custom WordPress. Ask me about his tech stack, availability, or past projects — or click "Book Discovery Call" to reach him directly.`;
 }
 
 export async function POST(request: Request) {
