@@ -41,6 +41,7 @@ export function TestimonialsSection({
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials || []);
   const [loading, setLoading] = useState(!initialTestimonials || initialTestimonials.length === 0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<number>(1);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
@@ -68,23 +69,46 @@ export function TestimonialsSection({
     loadTestimonials();
   }, [initialTestimonials]);
 
-  // Auto-play slider every 4.5 seconds
+  // Auto-play slider every 5.5 seconds with direction awareness
   useEffect(() => {
     if (testimonials.length <= 1 || isPaused) return;
 
     const interval = setInterval(() => {
+      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4500);
+    }, 5500);
 
     return () => clearInterval(interval);
   }, [testimonials.length, isPaused]);
 
   const handleNext = () => {
+    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const handlePrev = () => {
+    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const handleDotClick = (idx: number) => {
+    setDirection(idx > currentIndex ? 1 : -1);
+    setCurrentIndex(idx);
+  };
+
+  const slideVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? '100%' : '-100%',
+      opacity: 0,
+    }),
+    center: {
+      x: '0%',
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir < 0 ? '100%' : '-100%',
+      opacity: 0,
+    }),
   };
 
   const getPhotoUrl = (avatarUrl?: string) => {
@@ -183,15 +207,20 @@ export function TestimonialsSection({
             )}
 
             {/* Testimonial Card Carousel Display */}
-            <div className="overflow-hidden p-2">
-              <AnimatePresence mode="wait">
+            <div className="overflow-hidden p-2 relative">
+              <AnimatePresence mode="popLayout" custom={direction} initial={false}>
                 <motion.div
                   key={currentIndex}
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -40 }}
-                  transition={{ duration: 0.45, ease: 'easeOut' }}
-                  className={`relative rounded-3xl p-8 sm:p-12 flex flex-col justify-between transition-all ${
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: 'spring', stiffness: 260, damping: 28, mass: 0.8 },
+                    opacity: { duration: 0.25 },
+                  }}
+                  className={`relative rounded-3xl p-8 sm:p-12 flex flex-col justify-between transition-shadow duration-500 w-full ${
                     dark
                       ? testimonials[currentIndex]?.featured
                         ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/40 border-2 border-amber-400/70 shadow-amber-500/10 shadow-2xl ring-1 ring-amber-400/30'
@@ -291,10 +320,10 @@ export function TestimonialsSection({
                 {testimonials.map((_, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setCurrentIndex(idx)}
+                    onClick={() => handleDotClick(idx)}
                     className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                       idx === currentIndex
-                        ? 'w-8 bg-brand-amber'
+                        ? 'w-8 bg-brand-amber shadow-sm'
                         : dark
                         ? 'w-2.5 bg-slate-800 hover:bg-slate-700'
                         : 'w-2.5 bg-slate-300 hover:bg-slate-400'
