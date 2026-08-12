@@ -114,7 +114,8 @@ ${fullPrompt}`;
       try {
         await prisma.contactMessage.create({
           data: {
-            contactName: 'Anonymous Chat Visitor',
+            sessionId,
+            name: 'Anonymous Chat Visitor',
             email: `session_${sessionId.slice(-8)}@visitor.local`,
             subject: `[RowBot Conversation] ${userQuestion.slice(0, 40)}...`,
             message: `Visitor: "${userQuestion}"\n\nRowBot Reply: "${reply}"`,
