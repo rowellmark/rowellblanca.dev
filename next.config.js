@@ -2,7 +2,7 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracing: false,
+  outputFileTracing: process.env.VERCEL === '1',
   images: {
     remotePatterns: [
       {

@@ -5,6 +5,8 @@ import { generateCaseStudyMetadata, generateCaseStudyJsonLd } from '@/lib/seo';
 import CaseStudyView from '@/components/case-study/case-study-view';
 import { PortfolioProject } from '@/components/ui/portfolio-card';
 
+import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
+
 interface PageProps {
   params: { projects: string };
 }
@@ -30,6 +32,12 @@ async function getProject(permalink: string): Promise<PortfolioProject | null> {
     const data = await res.json();
     if (data.success && data.project) return data.project;
   } catch (e) {}
+
+  // Local fallback project match if DB and API fetch fail
+  const fallback = FALLBACK_PROJECTS.find((p) => p.permalink === permalink);
+  if (fallback) {
+    return fallback as any;
+  }
 
   return null;
 }
