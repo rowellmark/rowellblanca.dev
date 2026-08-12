@@ -148,6 +148,18 @@ const FALLBACK_PROJECTS = [
     featured: true,
     spotlight: false,
   },
+  {
+    id: 13,
+    sitename: 'BuildForUser Login Customizer — WordPress Plugin',
+    permalink: 'buildforuser-login-customizer-plugin',
+    url: 'wp-content/plugins/buildforuser-login-customizer',
+    image: 'buildforuser.png',
+    mobileImage: '',
+    description: 'Bespoke WordPress login screen customizer featuring a premium split-panel interface, live logo/background/colour-scheme editing, and a secure login URL renaming tool to obscure the default wp-login.php path.\n\nHOW IT WORKS:\n1. Split-Panel Login UI: Replaces the default WordPress login screen with a branded split-panel design — left column shows a customizable hero/branding panel, right column shows the login form.\n2. Live Customizer Settings: Logo upload, background image/colour, accent colours, and tagline are all configurable from the WordPress admin dashboard without touching code.\n3. Secure Login URL Renaming: Registers a custom login slug (e.g. /admin-access) and redirects the default /wp-login.php to a 404 — reducing brute-force attack surface on the login page.\n4. Dashboard Integration: Settings surface is integrated into the BuildForUser Dashboard admin menu, sharing the same branding and UI shell as the rest of the plugin suite.',
+    technologies: ['Wordpress Plugins', 'PHP', 'Security', 'Admin UI', 'JavaScript'],
+    featured: true,
+    spotlight: false,
+  },
 ];
 
 

@@ -107,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
             <Link href="/admin" className="flex items-center gap-3">
               <div className="relative h-8 w-8 shrink-0">
-                <Image src={logo} alt="Rowell Blanca" fill className="object-contain brightness-0 invert" priority />
+                <Image src={logo} alt="Rowell Blanca" fill sizes="32px" className="object-contain brightness-0 invert" priority />
               </div>
               <div className="flex flex-col">
                 <span className="font-black text-white text-sm tracking-tight leading-none">Rowell Blanca</span>

@@ -56,6 +56,7 @@ export default function AdminLogin() {
               src={logo}
               alt="Rowell Blanca Logo"
               fill
+              sizes="56px"
               className="object-contain brightness-0 invert"
               priority
             />

@@ -44,7 +44,7 @@ export function CaseStudiesClient() {
   const [landingPages, setLandingPages] = useState<LandingPageItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'all' | 'landing' | 'projects'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'landing' | 'projects' | 'plugins'>('all');
   const [search, setSearch] = useState('');
   const [isContactOpen, setIsContactOpen] = useState(false);
 
@@ -59,8 +59,8 @@ export function CaseStudiesClient() {
 
         if (lpRes.ok) {
           const lpData = await lpRes.json();
-          if (lpData.success && Array.isArray(lpData.pages)) {
-            setLandingPages(lpData.pages.filter((p: any) => p.active !== false));
+          if (lpData.success && Array.isArray(lpData.landingPages)) {
+            setLandingPages(lpData.landingPages.filter((p: any) => p.active !== false));
           }
         }
 
@@ -88,11 +88,28 @@ export function CaseStudiesClient() {
       lp.slug.toLowerCase().includes(search.toLowerCase())
   );
 
-  const filteredProjects = projects.filter(
+  const wpPluginSlugs = [
+    'blanc-leads-plugin',
+    'blanc-schema-ld-generator',
+    'blanc-chatbot-plugin',
+    'buildforuser-login-customizer-plugin',
+  ];
+
+  const pluginProjects = projects.filter((p) => wpPluginSlugs.includes(p.permalink));
+  const nonPluginProjects = projects.filter((p) => !wpPluginSlugs.includes(p.permalink));
+
+  const filteredPlugins = pluginProjects.filter(
     (p) =>
       p.sitename.toLowerCase().includes(search.toLowerCase()) ||
       p.description.toLowerCase().includes(search.toLowerCase()) ||
-      p.technologies.some((t) => t.toLowerCase().includes(search.toLowerCase()))
+      p.technologies.some((t: string) => t.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const filteredProjects = nonPluginProjects.filter(
+    (p) =>
+      p.sitename.toLowerCase().includes(search.toLowerCase()) ||
+      p.description.toLowerCase().includes(search.toLowerCase()) ||
+      p.technologies.some((t: string) => t.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
@@ -142,11 +159,12 @@ export function CaseStudiesClient() {
               />
             </div>
 
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               {[
                 { id: 'all', label: 'All Solutions' },
                 { id: 'landing', label: `Landing Pages (${landingPages.length})` },
-                { id: 'projects', label: `Production Projects (${projects.length})` },
+                { id: 'projects', label: `Production Projects (${nonPluginProjects.length})` },
+                { id: 'plugins', label: `WP Plugins (${pluginProjects.length})` },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -284,7 +302,7 @@ export function CaseStudiesClient() {
                         {/* Tech Tags */}
                         {proj.technologies && proj.technologies.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 pt-2">
-                            {proj.technologies.map((tech, tIdx) => (
+                            {proj.technologies.map((tech: string, tIdx: number) => (
                               <span
                                 key={tIdx}
                                 className="text-[10px] font-mono text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md"
@@ -305,6 +323,80 @@ export function CaseStudiesClient() {
                           className="inline-flex items-center gap-1 text-xs font-black text-[#0b1a30] group-hover:text-[#1d63ed] transition-colors"
                         >
                           <span>View Architecture</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* SECTION 3: WORDPRESS PLUGIN CASE STUDIES */}
+            {(activeTab === 'all' || activeTab === 'plugins') && filteredPlugins.length > 0 && (
+              <div className="space-y-8">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <div className="space-y-1">
+                    <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+                      Custom WordPress Plugins
+                    </span>
+                    <h2 className="text-2xl sm:text-3xl font-black text-[#0b1a30]">
+                      Bespoke WP Plugin Suite ({filteredPlugins.length})
+                    </h2>
+                    <p className="text-sm text-slate-500 font-medium">
+                      Hand-coded WordPress plugins built and maintained in production.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {filteredPlugins.map((proj, idx) => (
+                    <motion.div
+                      key={proj.id || idx}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: idx * 0.1 }}
+                      className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                            <Code2 className="w-3 h-3" /> WP Plugin
+                          </span>
+                        </div>
+                        <h3 className="text-lg font-black text-[#0b1a30] group-hover:text-amber-600 transition-colors leading-snug">
+                          <Link href={`/mywork/${proj.permalink}`}>{proj.sitename}</Link>
+                        </h3>
+
+                        <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-4">
+                          {proj.description.split('\n\n')[0]}
+                        </p>
+
+                        {/* Tech Tags */}
+                        {proj.technologies && proj.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-2">
+                            {proj.technologies.map((tech: string, tIdx: number) => (
+                              <span
+                                key={tIdx}
+                                className="text-[10px] font-mono text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span className="text-xs font-mono text-slate-400 font-bold">
+                          /mywork/{proj.permalink}
+                        </span>
+                        <Link
+                          href={`/mywork/${proj.permalink}`}
+                          className="inline-flex items-center gap-1 text-xs font-black text-[#0b1a30] group-hover:text-[#1d63ed] transition-colors"
+                        >
+                          <span>View Plugin Docs</span>
                           <ChevronRight className="w-4 h-4" />
                         </Link>
                       </div>

@@ -2,147 +2,140 @@ import { NextResponse } from 'next/server';
 import { generateAIResponse, getAISettings } from '@/lib/ai-provider';
 import { prisma } from '@/lib/prisma';
 
-const SYSTEM_KNOWLEDGE = `You are Rowell's AI Assistant, Rowell Mark Blanca's AI Engineering Assistant on rowellblanca.dev.
-Always introduce yourself as Rowell's AI Assistant when appropriate (e.g. "Hi! I'm Rowell's AI Assistant.").
-Your role is to answer questions from potential clients, agencies, and hiring managers with professional, concise, and technical responses.
+const SYSTEM_KNOWLEDGE = `You are RowBot — Rowell Mark Blanca's AI Engineering Co-Pilot on rowellblanca.dev.
+You speak naturally, warmly, and conversationally, as a direct partner to Rowell Mark Blanca (Senior Full-Stack Software Engineer & Web Architect with 8+ years experience).
 
-Key Facts About Rowell Mark Blanca:
-- Role: Senior Full-Stack Software Engineer & Web Architect with 8+ years of production experience.
-- Specialization: React, Next.js 14 (App Router, Server Components), TypeScript, Node.js, Custom WordPress Themes/Plugins (ACF Pro, Gutenberg, PHP), Headless CMS, and AI/LLM Workflow Integrations.
-- Timezone & Location: Based in the Philippines (PST - Philippine Standard Time, UTC+8 / GMT+8). Provides full afternoon & evening overlap with UK business hours (GMT/BST London time), US EST/PST, and Australia (AEST).
-- Rates & Quality: Cost-effective senior engineering rates with enterprise-grade code quality — eliminating traditional agency overhead.
-- Featured Technical Blog & Articles:
-  Rowell publishes technical articles at /blog covering Next.js vs Custom WordPress, FCA-regulated FinTech portals, and custom RAG AI plugin engineering.
-- Featured UK Client Work:
-  1. Macmanus Asset Finance Portal (UK 🇬🇧): Enterprise asset finance broker & client portal handling automated lead pipelines, status tracking, and finance applications.
-  2. Tower Fire UK (UK 🇬🇧): Bespoke WordPress Gutenberg block engine built for zero bloat, high security, and Lighthouse 95+ speed performance.
-  3. Juliette Hohnen Real Estate: High-converting luxury real estate portal showcasing Beverly Hills properties.
-- Availability: Open for custom web application builds, Next.js/WordPress projects, and ongoing developer retainer engagements.
+Tone & Conversational Guidelines:
+- Conversational & Human: Speak in a natural, friendly, and engaging voice. Use "I" when speaking on Rowell's behalf, or "we" when referring to Rowell's engineering approach.
+- Don't repeat greetings if the conversation is already ongoing. Keep the flow natural like Slack or iMessage.
+- Active Listening & Memory: Reference what the user said in earlier messages in the chat history.
+- Ask Relevant Follow-ups: At the end of answers, ask a natural open question (e.g. "Are you building from scratch or upgrading an existing platform?", "What's your target launch timeline?").
+- Technical Authority: When asked about tech, give clear real-world engineering insights (React 19, Next.js 14 App Router, TypeScript, custom WordPress Gutenberg block plugins, Prisma ORM, NeonDB).
+- Conversational Conversion: Offer helpful next steps like *"If you have a Figma design or spec ready, feel free to request an estimate or leave your email!"*
 
-Guidelines:
-1. Keep answers concise (2-4 sentences max), friendly, and structured with bullet points where helpful.
-2. If asked about pricing or booking a project, encourage them to click the "Book Discovery Call" or "Get in Touch" button on the page.
-3. Be professional, technical when needed, but clear and accessible.`;
+Key Facts:
+- Core Stack: React, Next.js 14, TypeScript, Node.js, Custom WordPress (PHP, Gutenberg, ACF Pro), Tailwind CSS, AI Integrations.
+- Featured UK Clients: MacManus Asset Finance Portal (FCA-compliant finance broker) & Tower Fire UK (custom zero-bloat Gutenberg engine).
+- Timezone & Location: Philippines (PST, UTC+8) with full UK (GMT/BST London time) and US (EST/PST) overlapping working hours.
+- Direct Value: Senior software engineer quality without traditional agency overhead.`;
+
+const LEAD_INTENT_KEYWORDS = [
+  'price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much',
+  'hire', 'available', 'availability', 'retainer', 'contract', 'freelance',
+  'project', 'build', 'estimate', 'proposal', 'scope', 'timeline', 'book', 'call'
+];
+
+function checkLeadIntent(text: string): boolean {
+  const lower = text.toLowerCase();
+  return LEAD_INTENT_KEYWORDS.some((kw) => lower.includes(kw));
+}
 
 const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
   {
     keywords: ['price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much'],
-    reply: `Rowell offers cost-effective senior engineering rates with enterprise-grade code quality — no agency overhead. Exact pricing depends on project scope, so the fastest way to get a number is to click "Book Discovery Call" or "Get in Touch" on this page.`,
+    reply: `Rowell provides senior engineering work at direct developer rates — eliminating traditional agency overhead. Pricing depends on project complexity (e.g., custom Next.js web app vs a bespoke WordPress block plugin). What kind of project are you planning to build?`,
   },
   {
     keywords: ['hire', 'available', 'availability', 'retainer', 'contract', 'freelance'],
-    reply: `Rowell is currently open for custom web application builds, Next.js/WordPress projects, and ongoing developer retainer engagements. Use the "Book Discovery Call" or "Get in Touch" button to check current availability.`,
+    reply: `Rowell is currently accepting select new custom web builds, Next.js/React projects, and developer retainers! Are you looking for a dedicated full-stack engineer for a new project or ongoing support?`,
   },
   {
     keywords: ['stack', 'tech', 'technology', 'react', 'next.js', 'nextjs', 'wordpress', 'php', 'node', 'typescript', 'skill'],
-    reply: `Rowell specializes in React, Next.js 14 (App Router, Server Components), TypeScript, Node.js, and custom WordPress theme/plugin development (ACF Pro, Gutenberg, PHP), plus headless CMS and AI/LLM workflow integrations.`,
+    reply: `Rowell's primary stack is Next.js 14 (App Router & Server Components), React, TypeScript, Node.js, and Tailwind CSS, along with bespoke WordPress plugin architecture (PHP 8+, Gutenberg, ACF Pro). What tech stack are you considering for your build?`,
   },
   {
     keywords: ['timezone', 'time zone', 'location', 'based', 'where', 'philippines', 'overlap'],
-    reply: `Rowell is based in the Philippines (PST, UTC+8) and provides full afternoon/evening overlap with UK business hours (GMT/BST), US EST/PST, and Australia (AEST).`,
-  },
-  {
-    keywords: ['project', 'portfolio', 'work', 'case stud', 'client', 'built', 'macmanus', 'tower fire', 'juliette'],
-    reply: `Featured UK client work includes the MacManus Asset Finance Portal (lead pipelines, application tracking), Tower Fire UK (a bespoke Gutenberg block engine), and a luxury real estate platform for Juliette Hohnen. See more under "My Work" on this site.`,
-  },
-  {
-    keywords: ['blog', 'article', 'write', 'writing'],
-    reply: `Rowell publishes technical articles at /blog covering Next.js vs Custom WordPress, FCA-regulated FinTech portals, and custom RAG AI plugin engineering.`,
-  },
-  {
-    keywords: ['contact', 'email', 'reach', 'talk', 'call', 'book', 'discovery'],
-    reply: `You can reach Rowell directly by clicking "Book Discovery Call" or "Get in Touch" on this page — both go straight to his inbox.`,
+    reply: `Rowell is based in the Philippines (PST, UTC+8) and provides full overlapping working hours for UK (GMT/BST), US EST/PST, and Australian clients. What timezone are you based in?`,
   },
 ];
 
-const PROJECT_KEYWORDS = ['project', 'portfolio', 'work', 'case stud', 'client', 'built', 'macmanus', 'tower fire', 'juliette'];
-
 async function getInteractiveFallbackReply(question: string): Promise<string> {
   const lower = question.toLowerCase();
-
-  if (PROJECT_KEYWORDS.some((kw) => lower.includes(kw))) {
-    try {
-      const projects = await prisma.project.findMany({
-        where: { featured: true, active: true },
-        orderBy: { createdAt: 'desc' },
-        take: 4,
-      });
-      if (projects.length > 0) {
-        const list = projects.map((p: any) => p.sitename).join(', ');
-        return `Recent featured work includes: ${list}. See more under "My Work" on this site.`;
-      }
-    } catch (e) {
-      // DB unavailable — fall through to the static list below
-    }
-  }
-
   for (const intent of FALLBACK_INTENTS) {
     if (intent.keywords.some((kw) => lower.includes(kw))) {
       return intent.reply;
     }
   }
-  return `Hi! I'm Rowell's AI Assistant. Rowell Mark Blanca is a Senior Full-Stack Engineer & Architect specializing in React, Next.js, and Custom WordPress. Ask me about his tech stack, availability, or past projects — or click "Book Discovery Call" to reach him directly.`;
+  return `Hey there! I'm RowBot, Rowell's AI Co-Pilot. I can answer questions about Rowell's work, tech stack, pricing, or help you get a custom project estimate. What are you building?`;
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { message, messages, context } = body;
+    const { message, messages, context, sessionId } = body;
 
     let userQuestion = message;
-    if (!userQuestion && Array.isArray(messages) && messages.length > 0) {
-      userQuestion = messages[messages.length - 1]?.content || messages[messages.length - 1]?.text;
+    let historyContext = '';
+
+    if (Array.isArray(messages) && messages.length > 0) {
+      userQuestion = messages[messages.length - 1]?.content || messages[messages.length - 1]?.text || message;
+      // Build conversation history for natural multi-turn context
+      historyContext = messages
+        .map((m: any) => `${m.role === 'user' ? 'Visitor' : 'RowBot'}: ${m.content || m.text}`)
+        .join('\n');
     }
 
-    if (!userQuestion) {
-      userQuestion = 'Hello';
-    }
+    if (!userQuestion) userQuestion = 'Hello';
 
-    let contextualPrompt = `Question: "${userQuestion}"`;
+    const isLeadIntent = checkLeadIntent(userQuestion);
+
+    let fullPrompt = `Full Conversation History:\n${historyContext || `Visitor: "${userQuestion}"`}\n\nLatest Visitor Message: "${userQuestion}"\nRespond naturally and conversationally as RowBot.`;
+
     if (context && typeof context === 'object') {
-      contextualPrompt = `Project Context:
-- Title: ${context.title || 'N/A'}
-- Category: ${context.category || 'N/A'}
-- Tech Stack: ${Array.isArray(context.technologies) ? context.technologies.join(', ') : 'N/A'}
-- Description: ${context.description || ''}
-- Challenge: ${context.challenge || ''}
-- Solution: ${context.solution || ''}
-- Results: ${context.results || ''}
-
-User Question: "${userQuestion}"`;
+      fullPrompt = `Page Context: Title: ${context.title || 'N/A'}, Tech: ${Array.isArray(context.technologies) ? context.technologies.join(', ') : 'N/A'}
+${fullPrompt}`;
     }
 
     const aiConfig = await getAISettings();
 
+    let reply = '';
+    let provider = 'gemini';
+    let model = 'gemini-1.5-flash';
+
     if (aiConfig.noAiMode) {
-      const reply = await getInteractiveFallbackReply(userQuestion);
-      return NextResponse.json({
-        success: true,
-        reply,
-        provider: 'content-only',
-        model: 'static',
+      reply = await getInteractiveFallbackReply(userQuestion);
+      provider = 'content-only';
+      model = 'static';
+    } else {
+      const aiRes = await generateAIResponse({
+        prompt: fullPrompt,
+        systemInstruction: SYSTEM_KNOWLEDGE,
+        maxTokens: 650,
+        temperature: 0.75, // Slightly higher temperature for warmer, conversational dialogue
       });
+
+      reply = aiRes.provider === 'fallback' ? await getInteractiveFallbackReply(userQuestion) : aiRes.text;
+      provider = aiRes.provider;
+      model = aiRes.model;
     }
 
-    const aiRes = await generateAIResponse({
-      prompt: contextualPrompt,
-      systemInstruction: SYSTEM_KNOWLEDGE,
-      maxTokens: 600,
-      temperature: 0.7,
-    });
-
-    const reply = aiRes.provider === 'fallback' ? await getInteractiveFallbackReply(userQuestion) : aiRes.text;
+    // ── Real-time Visitor Session Lead Auto-Logger ──────────────────────
+    if (sessionId) {
+      try {
+        await prisma.contactMessage.create({
+          data: {
+            contactName: 'Anonymous Chat Visitor',
+            email: `session_${sessionId.slice(-8)}@visitor.local`,
+            subject: `[RowBot Conversation] ${userQuestion.slice(0, 40)}...`,
+            message: `Visitor: "${userQuestion}"\n\nRowBot Reply: "${reply}"`,
+            status: 'UNREAD',
+          },
+        });
+      } catch (logErr) {}
+    }
 
     return NextResponse.json({
       success: true,
       reply,
-      provider: aiRes.provider,
-      model: aiRes.model,
+      isLeadIntent,
+      provider,
+      model,
     });
   } catch (error: any) {
     return NextResponse.json({
       success: true,
-      reply: `Hello! Rowell Mark Blanca is a Senior Software Engineer specializing in React, Next.js, and Custom WordPress. Feel free to use the contact form to discuss your project!`,
+      reply: `Hey! I'm RowBot, Rowell's AI Co-Pilot. Leave your email or project ideas below and Rowell will connect with you!`,
+      isLeadIntent: true,
       provider: 'fallback',
       model: 'static',
     });

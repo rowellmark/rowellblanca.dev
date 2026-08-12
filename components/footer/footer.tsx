@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AnimatedLogo } from "@/components/ui/animated-logo";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
+import { FooterBibleVerse } from "@/components/ui/footer-bible-verse";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -12,9 +13,14 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="bg-[#FAFAF7] border-t border-slate-200/80 py-12 text-brand-slate">
-            <div className="container mx-auto px-6 max-w-6xl flex flex-col md:flex-row items-center justify-between gap-6">
-                
+        <footer className="bg-[#FAFAF7] border-t border-slate-200/80 text-brand-slate">
+
+            {/* ✝ Daily Bible Verse — client component, fetches on mount */}
+            <FooterBibleVerse />
+
+            {/* Main footer row */}
+            <div className="container mx-auto px-6 max-w-6xl py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+
                 {/* Brand info */}
                 <div className="flex items-center gap-3">
                     <div className="relative h-9 w-9 shrink-0">
@@ -48,12 +54,12 @@ export default function Footer() {
                                 title={title}
                                 className="text-slate-400 hover:text-brand-amber transition-colors p-1"
                             >
-                                <Icon size="18" />
+                                <Icon size={18} />
                             </a>
                         ))}
                     </div>
                     <p className="text-xs text-slate-500 font-medium">
-                        © {currentYear} Rowell Mark Blanca. Built with Next.js & Tailwind.
+                        © {currentYear} Rowell Mark Blanca. Built with Next.js &amp; Tailwind.
                     </p>
                 </div>
 

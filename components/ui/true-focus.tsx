@@ -101,9 +101,8 @@ export function TrueFocus({
           opacity: focusRect.width > 0 ? 1 : 0,
         }}
         transition={{
-          type: 'spring',
-          stiffness: 350,
-          damping: 28,
+          duration: animationDuration,
+          ease: 'easeOut',
         }}
         style={{
           boxShadow: `0 0 25px ${glowColor}`,

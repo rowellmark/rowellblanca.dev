@@ -8,6 +8,7 @@ import { WelcomeLoading } from '@/components/loading-intro/loading-screen';
 import ChatBubble from '@/components/ui/chat-bubble';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 
+
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
