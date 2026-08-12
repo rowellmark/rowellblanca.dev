@@ -9,6 +9,7 @@ import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagr
 import { ProjectDetailPreview, ProjectGallery, PortfolioProject } from '@/components/ui/portfolio-card';
 import { ContactModal } from '@/components/ui/contact-modal';
 import { BlogAiAssistant } from '@/components/ui/blog-ai-assistant';
+import { TestimonialsSection } from '@/components/homepage/testimonials';
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', href: 'https://github.com/rowellmark', Icon: IconBrandGithub },
@@ -277,45 +278,13 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
 
           {/* Testimonials on Projects Section */}
           {testimonials.length > 0 && (
-            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
-                    ★ Client Proof & Endorsements
-                  </span>
-                  <h3 className="text-xl font-black text-[#0b1a30]">Client Testimonials</h3>
-                </div>
-                <div className="flex items-center gap-1 text-amber-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {testimonials.slice(0, 2).map((t, idx) => (
-                  <div
-                    key={t.id || idx}
-                    className="p-5 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-3 flex flex-col justify-between"
-                  >
-                    <p className="text-xs text-slate-700 leading-relaxed italic font-medium">
-                      &ldquo;{t.quote}&rdquo;
-                    </p>
-                    <div className="flex items-center gap-3 pt-2 border-t border-slate-200/60">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-black text-xs shrink-0 shadow-xs">
-                        {t.name?.charAt(0) || 'C'}
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-[#0b1a30]">{t.name}</h4>
-                        <p className="text-[10px] text-slate-500 font-medium">
-                          {t.role} {t.company ? `• ${t.company}` : ''}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <TestimonialsSection
+              testimonials={testimonials}
+              badge="★ Client Proof & Endorsements"
+              title="Client Testimonials & Proven Results"
+              subtitle="Endorsements from company leaders, agency partners, and tech stakeholders."
+              className="py-12 bg-white rounded-3xl border border-slate-200/80 shadow-md my-8"
+            />
           )}
         </div>
 

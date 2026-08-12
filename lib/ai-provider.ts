@@ -179,45 +179,49 @@ export async function generateAIResponse(options: {
     }
   }
 
-  // 3. GROQ (OpenAI-compatible endpoint)
+  // 3. GROQ (High-Speed Llama 3.3 Engine)
   if (provider === 'groq') {
-    const apiKey = config.groqApiKey;
-    const model = config.groqModel || 'llama-3.3-70b-versatile';
+    const apiKey = config.groqApiKey || process.env.GROQ_API_KEY || '';
+    const preferredModel = config.groqModel || 'llama-3.3-70b-versatile';
+    const groqFallbackModels = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'llama3-70b-8192', 'mixtral-8x7b-32768'];
+    const modelsToTry = [preferredModel, ...groqFallbackModels.filter((m) => m !== preferredModel)];
 
     if (apiKey) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
+      for (const targetModel of modelsToTry) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-          signal: controller.signal,
-          body: JSON.stringify({
-            model,
-            messages: [
-              ...(options.systemInstruction ? [{ role: 'system', content: options.systemInstruction }] : []),
-              { role: 'user', content: options.prompt },
-            ],
-            temperature,
-            max_tokens: maxTokens,
-          }),
-        });
+          const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+              model: targetModel,
+              messages: [
+                ...(options.systemInstruction ? [{ role: 'system', content: options.systemInstruction }] : []),
+                { role: 'user', content: options.prompt },
+              ],
+              temperature,
+              max_tokens: maxTokens,
+            }),
+          });
 
-        clearTimeout(timeoutId);
+          clearTimeout(timeoutId);
 
-        if (res.ok) {
-          const data = await res.json();
-          const reply = data?.choices?.[0]?.message?.content;
-          if (reply) {
-            return { text: reply.trim(), provider: 'groq', model };
+          if (res.ok) {
+            const data = await res.json();
+            const reply = data?.choices?.[0]?.message?.content;
+            if (reply) {
+              return { text: reply.trim(), provider: 'groq', model: targetModel };
+            }
           }
+        } catch (e) {
+          console.warn(`[AIProvider] Groq request failed for model ${targetModel}, trying fallback...`);
         }
-      } catch (e) {
-        console.warn('[AIProvider] Groq request failed, falling back to Gemini...');
       }
     }
   }

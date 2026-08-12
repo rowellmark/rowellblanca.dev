@@ -64,6 +64,9 @@ export default function ChatBubble() {
   const [activeTeaserIndex, setActiveTeaserIndex] = useState(0);
   const [isBubbleDismissed, setIsBubbleDismissed] = useState(false);
   const [showLeadCard, setShowLeadCard] = useState(false);
+  const [showExitNurture, setShowExitNurture] = useState(false);
+  const [inlineEmail, setInlineEmail] = useState('');
+  const [inlineSaved, setInlineSaved] = useState(false);
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -201,6 +204,70 @@ export default function ChatBubble() {
     }
   };
 
+  const handleInlineEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const targetEmail = inlineEmail.trim() || email.trim();
+    if (!targetEmail) return;
+
+    setEmail(targetEmail);
+    localStorage.setItem('rb_chat_user_email', targetEmail);
+    setIsRegistered(true);
+    setInlineSaved(true);
+    if (showExitNurture) {
+      setShowExitNurture(false);
+      setIsOpen(false);
+    }
+
+    try {
+      await fetch('/api/crm/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contactName: name || 'Chat Prospect',
+          email: targetEmail,
+          serviceInterest: 'Chat Quick Email',
+          notes: `[Chat Quick Email Capture] Visitor provided email for follow-up.`,
+          source: 'AI Chat Widget',
+        }),
+      });
+    } catch (err) {}
+  };
+
+  const handleEmailGateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    const trimmedEmail = email.trim();
+    const trimmedName = name.trim();
+    localStorage.setItem('rb_chat_user_email', trimmedEmail);
+    if (trimmedName) localStorage.setItem('rb_chat_user_name', trimmedName);
+    setIsRegistered(true);
+
+    try {
+      fetch('/api/crm/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contactName: trimmedName || 'Chat Visitor',
+          email: trimmedEmail,
+          serviceInterest: 'Chat Upfront Gate',
+          notes: `[Chat Welcome Email Gate] Visitor submitted email before starting conversation.`,
+          source: 'AI Chat Widget',
+        }),
+      }).catch(() => {});
+    } catch (err) {}
+  };
+
+  const handleCloseChat = () => {
+    if (messages.length > 2 && !isRegistered && !formSubmitted && !showExitNurture) {
+      setShowExitNurture(true);
+      return;
+    }
+    persistChatHistory();
+    setShowExitNurture(false);
+    setIsOpen(false);
+  };
+
   // Send Chat Message
   const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || input;
@@ -264,12 +331,7 @@ export default function ChatBubble() {
         },
       ]);
 
-      // If AI detects lead intent and user hasn't submitted lead form yet, trigger lead card
-      if (data.isLeadIntent && !formSubmitted && !showLeadCard) {
-        setTimeout(() => setShowLeadCard(true), 800);
-      }
-
-      // Log lead to CRM if email detected
+      // Log lead to CRM if email detected in query prose
       if (detectedEmail) {
         fetch('/api/crm/leads', {
           method: 'POST',
@@ -446,7 +508,7 @@ export default function ChatBubble() {
                 )}
                 <button
                   type="button"
-                  onClick={() => { persistChatHistory(); setIsOpen(false); }}
+                  onClick={handleCloseChat}
                   className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
@@ -454,199 +516,245 @@ export default function ChatBubble() {
               </div>
             </div>
 
-            {/* Conversation Stream */}
-            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
-              {messages.map((m) => (
-                <div
-                  key={m.id}
-                  className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
-                >
-                  <div
-                    className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
-                      m.sender === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                    }`}
+            {/* If user has not provided email yet, show upfront Email Gate Screen */}
+            {!isRegistered ? (
+              <div className="flex-1 p-6 flex flex-col justify-center items-center text-center space-y-4">
+                <div className="w-14 h-14 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                  <Bot className="w-8 h-8 animate-bounce text-amber-400" />
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-base font-black text-white">Welcome to RowBot!</h3>
+                  <p className="text-xs text-slate-300 font-medium max-w-xs leading-relaxed">
+                    Rowell Mark Blanca&apos;s AI Co-Pilot. Enter your email to start chatting and get instant technical advice, stack insights, and project estimates.
+                  </p>
+                </div>
+
+                <form onSubmit={handleEmailGateSubmit} className="w-full max-w-xs space-y-3 pt-2">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Your Name (Optional)"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="email"
+                      required
+                      placeholder="Your Email Address *"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500 transition-all"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    {m.sender === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
-                  </div>
-
-                  <div className="max-w-[85%] space-y-0.5">
+                    <span>Start Chatting with RowBot</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <>
+                {/* Conversation Stream */}
+                <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
+                  {messages.map((m) => (
                     <div
-                      className={`p-3.5 rounded-2xl leading-relaxed ${
-                        m.sender === 'user'
-                          ? 'bg-[#1d63ed] text-white font-medium rounded-tr-none'
-                          : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'
-                      }`}
+                      key={m.id}
+                      className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
                     >
-                      <span className="text-[10px] font-extrabold block opacity-75 mb-0.5">
-                        {m.senderName}
-                      </span>
-                      {m.text}
-                    </div>
-                    {m.time && (
-                      <span className="text-[9px] text-slate-500 font-mono block px-1 text-right">
-                        {m.time}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {/* ── INLINE INTERACTIVE LEAD INTAKE CARD ───────────────────── */}
-              {showLeadCard && !formSubmitted && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="bg-gradient-to-b from-slate-900 to-[#0b1a30] border border-amber-500/40 rounded-2xl p-4 space-y-3 shadow-xl"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                        <Calculator className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-black text-white">Request Project Estimate</h4>
-                        <p className="text-[10px] text-slate-400">Direct response within 24 hours</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setShowLeadCard(false)}
-                      className="text-slate-500 hover:text-white text-xs p-1"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <form onSubmit={handleLeadFormSubmit} className="space-y-2.5">
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-300 mb-1">
-                        Project Type
-                      </label>
-                      <select
-                        value={selectedProjectType}
-                        onChange={(e) => setSelectedProjectType(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-amber-500"
+                      <div
+                        className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
+                          m.sender === 'user'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        }`}
                       >
-                        {PROJECT_TYPES.map((t) => (
-                          <option key={t} value={t}>{t}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Your Name *"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500"
-                        />
+                        {m.sender === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
                       </div>
-                      <div>
-                        <input
-                          type="email"
-                          required
-                          placeholder="Your Email *"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500"
-                        />
+
+                      <div className="max-w-[85%] space-y-0.5">
+                        <div
+                          className={`p-3.5 rounded-2xl leading-relaxed ${
+                            m.sender === 'user'
+                              ? 'bg-[#1d63ed] text-white font-medium rounded-tr-none'
+                              : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'
+                          }`}
+                        >
+                          <span className="text-[10px] font-extrabold block opacity-75 mb-0.5">
+                            {m.senderName}
+                          </span>
+                          {m.text}
+                        </div>
+                        {m.time && (
+                          <span className="text-[9px] text-slate-500 font-mono block px-1 text-right">
+                            {m.time}
+                          </span>
+                        )}
                       </div>
                     </div>
+                  ))}
 
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Project Details / Budget (Optional)"
-                        value={projectNotes}
-                        onChange={(e) => setProjectNotes(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={formSubmitting}
-                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                  {/* ── INLINE INTERACTIVE LEAD INTAKE CARD ───────────────────── */}
+                  {showLeadCard && !formSubmitted && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      className="bg-gradient-to-b from-slate-900 to-[#0b1a30] border border-amber-500/40 rounded-2xl p-4 space-y-3 shadow-xl"
                     >
-                      {formSubmitting ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                      ) : (
-                        <>
-                          <Send className="w-3.5 h-3.5" />
-                          <span>Submit Request to Rowell</span>
-                        </>
-                      )}
-                    </button>
-                  </form>
-                </motion.div>
-              )}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                            <Calculator className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <h4 className="text-xs font-black text-white">Request Project Estimate</h4>
+                            <p className="text-[10px] text-slate-400">Direct response within 24 hours</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setShowLeadCard(false)}
+                          className="text-slate-500 hover:text-white text-xs p-1"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
-              {loading && (
-                <div className="flex items-center gap-2 text-slate-400 text-xs italic pl-8">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
-                  <span>Gemini AI is thinking...</span>
+                      <form onSubmit={handleLeadFormSubmit} className="space-y-2.5">
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                            Project Type
+                          </label>
+                          <select
+                            value={selectedProjectType}
+                            onChange={(e) => setSelectedProjectType(e.target.value)}
+                            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-amber-500"
+                          >
+                            {PROJECT_TYPES.map((t) => (
+                              <option key={t} value={t}>{t}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <input
+                              type="text"
+                              required
+                              placeholder="Your Name *"
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="email"
+                              required
+                              placeholder="Your Email *"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            placeholder="Project Details / Budget (Optional)"
+                            value={projectNotes}
+                            onChange={(e) => setProjectNotes(e.target.value)}
+                            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-amber-500"
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={formSubmitting}
+                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          {formSubmitting ? (
+                            <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                          ) : (
+                            <>
+                              <Send className="w-3.5 h-3.5" />
+                              <span>Submit Request to Rowell</span>
+                            </>
+                          )}
+                        </button>
+                      </form>
+                    </motion.div>
+                  )}
+
+                  {loading && (
+                    <div className="flex items-center gap-2 text-slate-400 text-xs italic pl-8">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                      <span>RowBot is thinking...</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Action Chips */}
-            <div className="px-4 pb-2 flex flex-wrap gap-1.5">
-              {!showLeadCard && !formSubmitted && (
-                <button
-                  onClick={() => setShowLeadCard(true)}
-                  className="text-[10px] font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-full px-3 py-1.5 flex items-center gap-1 transition-all"
-                >
-                  <Calculator className="w-3 h-3 text-amber-400" />
-                  <span>Request Custom Estimate</span>
-                </button>
-              )}
-              {QUICK_PROMPTS.filter(p => !p.includes('Estimate')).map((prompt, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSendMessage(prompt)}
-                  className="text-[10px] font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-[200px]"
-                >
-                  💡 {prompt}
-                </button>
-              ))}
-            </div>
+                {/* Action Chips */}
+                <div className="px-4 pb-2 flex flex-wrap gap-1.5">
+                  {!showLeadCard && !formSubmitted && (
+                    <button
+                      onClick={() => setShowLeadCard(true)}
+                      className="text-[10px] font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-full px-3 py-1.5 flex items-center gap-1 transition-all"
+                    >
+                      <Calculator className="w-3 h-3 text-amber-400" />
+                      <span>Request Custom Estimate</span>
+                    </button>
+                  )}
+                  {QUICK_PROMPTS.filter(p => !p.includes('Estimate')).map((prompt, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSendMessage(prompt)}
+                      className="text-[10px] font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-[200px]"
+                    >
+                      💡 {prompt}
+                    </button>
+                  ))}
+                </div>
 
-            {/* Bottom Bar — Book Call CTA */}
-            <div className="px-4 py-2.5 bg-amber-500/10 border-t border-slate-800 flex items-center justify-between">
-              <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> UK / US Timezone Overlap
-              </span>
-              <button
-                onClick={() => setIsContactOpen(true)}
-                className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer"
-              >
-                <Calendar className="w-3 h-3" />
-                <span>Book Call</span>
-              </button>
-            </div>
+                {/* Bottom Bar — Book Call CTA */}
+                <div className="px-4 py-2.5 bg-amber-500/10 border-t border-slate-800 flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> UK / US Timezone Overlap
+                  </span>
+                  <button
+                    onClick={() => setIsContactOpen(true)}
+                    className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer"
+                  >
+                    <Calendar className="w-3 h-3" />
+                    <span>Book Call</span>
+                  </button>
+                </div>
 
-            {/* Input Box */}
-            <div className="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Ask AI or type a message..."
-                className="flex-1 px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
-              />
-              <button
-                onClick={() => handleSendMessage()}
-                disabled={loading || !input.trim()}
-                className="p-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-600 disabled:opacity-40 text-white transition-all cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
+                {/* Input Box */}
+                <div className="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Ask RowBot or type a message..."
+                    className="flex-1 px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
+                  />
+                  <button
+                    onClick={() => handleSendMessage()}
+                    disabled={loading || !input.trim()}
+                    className="p-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-600 disabled:opacity-40 text-white transition-all cursor-pointer"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

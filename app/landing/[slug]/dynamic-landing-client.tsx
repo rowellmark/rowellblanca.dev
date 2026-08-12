@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { TestimonialsSection } from '@/components/homepage/testimonials';
 import {
   Sparkles,
   ArrowRight,
@@ -363,54 +364,13 @@ export function DynamicLandingPageClient({ page }: DynamicLandingPageClientProps
               __html: JSON.stringify(generateTestimonialsJsonLd(testimonials)),
             }}
           />
-          <div className="text-center space-y-3">
-            <span className="text-xs font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              Verified Client Reviews
-            </span>
-            <h2 className="text-3xl font-black text-white">Client Feedback & Results</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((t) => (
-              <div
-                key={t.id}
-                className={`rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-xl relative transition-all ${
-                  t.featured
-                    ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/30 border-2 border-amber-400/70 shadow-amber-500/10 ring-1 ring-amber-400/30'
-                    : 'bg-slate-900 border border-slate-800'
-                }`}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1 text-amber-400">
-                      {Array.from({ length: t.rating || 5 }).map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-
-                    {t.featured && (
-                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                        <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="text-slate-200 text-xs sm:text-sm leading-relaxed italic">
-                    "{t.quote}"
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="font-extrabold text-white text-sm block">{t.name}</span>
-                    <span className="text-xs text-slate-400 block">
-                      {t.role} {t.company && `• ${t.company}`}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <TestimonialsSection
+            testimonials={testimonials}
+            dark={true}
+            badge="Verified Client Reviews"
+            title="Client Feedback & Results"
+            subtitle="Real feedback from company founders, agency partners, and product managers."
+          />
         </section>
       )}
 

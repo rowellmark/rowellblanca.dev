@@ -95,12 +95,12 @@ export function AiAssistant() {
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#0b1a30] via-slate-900 to-[#1d63ed] text-white shadow-2xl border border-amber-400/30 hover:border-amber-400 cursor-pointer group"
-          title="Chat with Gemini AI Assistant"
+          title="Chat with RowBot AI Assistant"
         >
           <div className="relative">
             <Sparkles className="w-5 h-5 text-amber-400 animate-pulse" />
           </div>
-          <span className="text-xs font-black tracking-wide hidden sm:inline">Ask Gemini AI</span>
+          <span className="text-xs font-black tracking-wide hidden sm:inline">Ask RowBot</span>
           {!isOpen && (
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping absolute -top-1 -right-1" />
           )}
@@ -124,12 +124,12 @@ export function AiAssistant() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-white flex items-center gap-1.5">
-                    Gemini AI Assistant
+                    RowBot
                     <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
                       Online
                     </span>
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-medium">Rowell Mark Blanca Portfolio Expert</p>
+                  <p className="text-[10px] text-slate-400 font-medium">Rowell Mark Blanca's AI Assistant</p>
                 </div>
               </div>
 
@@ -173,7 +173,7 @@ export function AiAssistant() {
               {loading && (
                 <div className="flex items-center gap-2 text-slate-400 text-xs italic pl-8">
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
-                  <span>Gemini is thinking...</span>
+                  <span>RowBot is thinking...</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
@@ -215,7 +215,7 @@ export function AiAssistant() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="Ask Gemini AI anything..."
+                placeholder="Ask RowBot anything..."
                 className="flex-1 px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-amber-500 transition-all"
               />
               <button

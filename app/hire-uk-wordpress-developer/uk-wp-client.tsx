@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TestimonialsSection } from "@/components/homepage/testimonials";
 import {
   Clock,
   ShieldCheck,
@@ -435,92 +436,13 @@ export function UkWpLandingClient() {
         </div>
       </section>
 
-      {/* Testimonials Carousel */}
-      <section className="py-24 bg-white border-y border-slate-200/80">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-amber bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200/80">
-              UK Feedback
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-brand-navy tracking-tight">
-              What UK Clients & Agencies Say
-            </h2>
-          </div>
-
-          <div className="relative max-w-3xl mx-auto">
-            <div className="absolute top-1/2 -left-4 sm:-left-12 -translate-y-1/2 z-20">
-              <button
-                onClick={handlePrevTestimonial}
-                className="h-11 w-11 rounded-full bg-white border border-slate-200 shadow-md hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all hover:scale-105"
-                title="Previous Testimonial"
-              >
-                <ChevronLeft className="h-5 w-5 text-brand-navy" />
-              </button>
-            </div>
-
-            <div className="absolute top-1/2 -right-4 sm:-right-12 -translate-y-1/2 z-20">
-              <button
-                onClick={handleNextTestimonial}
-                className="h-11 w-11 rounded-full bg-white border border-slate-200 shadow-md hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all hover:scale-105"
-                title="Next Testimonial"
-              >
-                <ChevronRight className="h-5 w-5 text-brand-navy" />
-              </button>
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={testimonialIndex}
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -30 }}
-                transition={{ duration: 0.4 }}
-                className="bg-[#FAFAF7] rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-lg space-y-6 relative"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: testimonials[testimonialIndex]?.rating || 5 }).map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <Quote className="h-10 w-10 text-indigo-200" />
-                </div>
-
-                <p className="text-base sm:text-lg text-slate-800 font-medium leading-relaxed italic">
-                  "{testimonials[testimonialIndex]?.quote}"
-                </p>
-
-                <div className="pt-6 border-t border-slate-200/80 flex items-center justify-between">
-                  <div>
-                    <h4 className="text-base font-extrabold text-brand-navy">
-                      {testimonials[testimonialIndex]?.author}
-                    </h4>
-                    <p className="text-xs text-slate-500 font-medium">
-                      {testimonials[testimonialIndex]?.role} ·{" "}
-                      <span className="text-brand-amber font-extrabold">
-                        {testimonials[testimonialIndex]?.company}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            <div className="flex items-center justify-center gap-2 mt-8">
-              {testimonials.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setTestimonialIndex(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    idx === testimonialIndex ? "w-8 bg-indigo-600" : "w-2.5 bg-slate-300"
-                  }`}
-                  title={`Go to testimonial ${idx + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* UK Testimonials Section */}
+      <TestimonialsSection
+        testimonials={testimonials}
+        badge="UK Feedback"
+        title="What UK Clients & Agencies Say"
+        subtitle="Endorsements from UK business leaders, agency partners, and tech directors."
+      />
 
       {/* WordPress Services Offered */}
       <section className="py-24 bg-[#FAFAF7]">
