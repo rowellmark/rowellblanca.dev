@@ -40,7 +40,7 @@ export function BlogAiAssistant({
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: `👋 Hi! I'm Rowell's AI Assistant. Ask me anything about the technical architecture, stack, or results for "${title}"!`,
+      text: `👋 Hi! I'm RowBot, Rowell's AI Assistant. Ask me anything about the technical architecture, stack, or results for "${title}"!`,
     },
   ]);
 
@@ -220,7 +220,7 @@ export function BlogAiAssistant({
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
-                AI Engineering Assistant
+                RowBot — AI Engineering Assistant
               </h3>
               <span className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                 <Cpu className="w-3 h-3 text-emerald-400" />

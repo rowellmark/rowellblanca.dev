@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { MyWork } from "@/components/homepage/my-work";
 import { LandingPagesShowcase } from "@/components/homepage/landing-pages-showcase";
+import { BlogAiAssistant } from "@/components/ui/blog-ai-assistant";
 import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
@@ -25,6 +26,16 @@ export default function MyWorkPage() {
                         </Link>
                     </div>
                     <MyWork notitle="true" />
+
+                    {/* RowBot AI Assistant Section */}
+                    <div className="mt-16">
+                        <BlogAiAssistant
+                            title="Selected Portfolio Projects & Engineering Architecture"
+                            category="Full-Stack Portfolio"
+                            technologies={["React / Next.js 14", "Custom WordPress", "Prisma & NeonDB", "AI & LLM Integration"]}
+                            description="Interactive AI Assistant for exploring Rowell Mark Blanca's project portfolio, full-stack architecture, UK client builds, and custom engineering capabilities."
+                        />
+                    </div>
                 </div>
             </div>
             <LandingPagesShowcase />

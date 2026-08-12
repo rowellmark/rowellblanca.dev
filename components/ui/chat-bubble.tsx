@@ -189,7 +189,7 @@ export default function ChatBubble() {
         {
           id: `sys_confirm_${Date.now()}`,
           sender: 'ai',
-          senderName: "Rowell's AI Assistant",
+          senderName: "RowBot",
           text: `🎉 Thank you ${name.trim()}! Your project inquiry for "${selectedProjectType}" has been logged into Rowell's CRM. He will review your request and get back to you at ${email.trim()} within 24 hours!`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
@@ -319,8 +319,8 @@ export default function ChatBubble() {
       {
         id: `sys_${Date.now()}`,
         sender: 'ai',
-        senderName: "Rowell's AI Assistant",
-        text: "👋 Hi! I'm Rowell's AI Assistant. Ask me anything about Rowell's portfolio, tech stack, rates, or request a quick project estimate!",
+        senderName: "RowBot",
+        text: "👋 Hi! I'm RowBot, Rowell's Gemini AI Assistant. Ask me anything about Rowell's portfolio, case studies, tech stack, rates, or request a quick project estimate!",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);

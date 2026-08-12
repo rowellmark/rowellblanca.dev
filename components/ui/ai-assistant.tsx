@@ -27,7 +27,7 @@ export function AiAssistant() {
     {
       id: '1',
       sender: 'bot',
-      text: "👋 Hi! I'm Rowell's Gemini AI Assistant. How can I help with your web development or software engineering project today?",
+      text: "👋 Hi! I'm RowBot, Rowell's Gemini AI Assistant. How can I help with your web development or software engineering project today?",
     },
   ]);
 

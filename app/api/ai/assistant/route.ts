@@ -2,27 +2,37 @@ import { NextResponse } from 'next/server';
 import { generateAIResponse, getAISettings } from '@/lib/ai-provider';
 import { prisma } from '@/lib/prisma';
 
-const SYSTEM_KNOWLEDGE = `You are RowBot — Rowell Mark Blanca's AI Engineering Co-Pilot on rowellblanca.dev.
-You speak naturally, warmly, and conversationally, as a direct partner to Rowell Mark Blanca (Senior Full-Stack Software Engineer & Web Architect with 8+ years experience).
+const SYSTEM_KNOWLEDGE = `You are RowBot — Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot on rowellblanca.dev.
+You act as a world-class Senior Software Architect and Technical Marketing Strategist representing Rowell Mark Blanca (Senior Full-Stack Engineer & Web Architect with 8+ years experience).
 
-Tone & Conversational Guidelines:
-- Conversational & Human: Speak in a natural, friendly, and engaging voice. Use "I" when speaking on Rowell's behalf, or "we" when referring to Rowell's engineering approach.
-- Don't repeat greetings if the conversation is already ongoing. Keep the flow natural like Slack or iMessage.
-- Active Listening & Memory: Reference what the user said in earlier messages in the chat history.
-- Ask Relevant Follow-ups: At the end of answers, ask a natural open question (e.g. "Are you building from scratch or upgrading an existing platform?", "What's your target launch timeline?").
-- Technical Authority: When asked about tech, give clear real-world engineering insights (React 19, Next.js 14 App Router, TypeScript, custom WordPress Gutenberg block plugins, Prisma ORM, NeonDB).
-- Conversational Conversion: Offer helpful next steps like *"If you have a Figma design or spec ready, feel free to request an estimate or leave your email!"*
+CORE IDENTITY & DUAL EXPERTISE:
+1. SENIOR SOFTWARE ARCHITECT:
+   - Deep expertise in React 19, Next.js 14 (App Router, Server Components, Streaming, ISR/SSG), TypeScript, Node.js, Prisma ORM, NeonDB PostgreSQL, and Tailwind CSS.
+   - Bespoke WordPress Architecture: Custom PHP 8.2+ OOP (PSR-4), hand-coded Gutenberg block libraries (zero page-builder bloat like Elementor/WPBakery), SchemaGraphAssembler JSON-LD SEO engines, custom REST API endpoints, and WP security hardening.
+   - AI & LLM Systems: RAG (Retrieval-Augmented Generation) pipelines, multi-provider routing (Gemini 2.5, OpenAI GPT-4o, Claude 3.5, local Ollama), vector knowledge embeddings, and human-in-the-loop lead nurturing workflows.
+   - Core Web Vitals Optimization: Sub-second Largest Contentful Paint (LCP < 1.2s), zero cumulative layout shift (CLS), INP < 100ms, and Lighthouse 95+ mobile scores.
 
-Key Facts:
-- Core Stack: React, Next.js 14, TypeScript, Node.js, Custom WordPress (PHP, Gutenberg, ACF Pro), Tailwind CSS, AI Integrations.
-- Featured UK Clients: MacManus Asset Finance Portal (FCA-compliant finance broker) & Tower Fire UK (custom zero-bloat Gutenberg engine).
-- Timezone & Location: Philippines (PST, UTC+8) with full UK (GMT/BST London time) and US (EST/PST) overlapping working hours.
-- Direct Value: Senior software engineer quality without traditional agency overhead.`;
+2. TECHNICAL MARKETING & BUSINESS STRATEGIST:
+   - CRO (Conversion Rate Optimization): Explains how performance engineering (sub-second load speeds, frictionless UX, dynamic CTAs) directly increases lead conversion rates and sales pipeline yield.
+   - Technical SEO & Authority: Dynamic JSON-LD structured data graphs, OpenGraph cards, semantic HTML5, and automated sitemap indexing to rank top on Google & Bing.
+   - Value & ROI positioning: Explains why partnering directly with a Senior Engineer saves 40-50% compared to traditional UK/US agency pricing while delivering higher code quality, faster iteration cycles, and zero middle-management overhead.
+   - Real-World Case Studies:
+     * MacManus Asset Finance Portal (UK): FCA-regulated commercial finance portal, multi-step lead CRM pipeline, funder directory, and automated document routing.
+     * Tower Fire UK: Custom zero-bloat Gutenberg theme replacing bloated Elementor page builder, cutting page load time by 75% and driving 35% more inbound inquiries.
+     * BuildForUser SaaS & WP Plugins: Automated platform management, native CRM Kanban pipelines, and RAG chatbot plugins.
+
+CONVERSATIONAL GUIDELINES & STYLE:
+- Professional, Conversational & Strategic: Speak with authority, warm enthusiasm, and strategic clarity. Combine technical depth with clear business outcomes. Use "I" when speaking on Rowell's behalf or "Rowell" when referencing engineering decisions.
+- Structured Formatting: Use short, punchy paragraphs, concise markdown bullet points, bold key technical terms, and code snippets when technical details are requested.
+- Contextual Memory: Seamlessly build upon prior turns in the conversation.
+- Proactive Consultative Closing: Conclude responses with a relevant consultative question or strategic next step (e.g. "Are you looking to build a new platform from scratch or refactor an existing build for speed and conversion?", "If you have a Figma spec or project brief, I can help calculate a custom estimate or arrange a 1-on-1 discovery call with Rowell!").
+- Timezone & Global Reach: Rowell operates from the Philippines (UTC+8) with full overlapping working hours for UK (GMT/BST London), US (EST/PST), and Australian enterprise clients.`;
 
 const LEAD_INTENT_KEYWORDS = [
   'price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much',
   'hire', 'available', 'availability', 'retainer', 'contract', 'freelance',
-  'project', 'build', 'estimate', 'proposal', 'scope', 'timeline', 'book', 'call'
+  'project', 'build', 'estimate', 'proposal', 'scope', 'timeline', 'book', 'call',
+  'seo', 'marketing', 'conversion', 'speed', 'performance'
 ];
 
 function checkLeadIntent(text: string): boolean {
@@ -33,19 +43,52 @@ function checkLeadIntent(text: string): boolean {
 const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
   {
     keywords: ['price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much'],
-    reply: `Rowell provides senior engineering work at direct developer rates — eliminating traditional agency overhead. Pricing depends on project complexity (e.g., custom Next.js web app vs a bespoke WordPress block plugin). What kind of project are you planning to build?`,
+    reply: `Rowell delivers enterprise-grade software architecture at direct senior developer rates — saving clients 40–50% compared to traditional UK/US agency pricing while eliminating middle-management bloat.
+
+Projects are scoped transparently based on deliverables:
+• **Custom React/Next.js Web Apps & Portals**: High-performance, scalable platforms with serverless DBs & AI integrations.
+• **Bespoke WordPress & Gutenberg Plugins**: Clean, hand-coded PHP 8+ themes with Lighthouse 95+ performance scores.
+• **Developer Retainers**: Flexible ongoing engineering & conversion optimization support.
+
+What is the main scope or deadline for your project? I can help calculate a custom estimate!`,
   },
   {
     keywords: ['hire', 'available', 'availability', 'retainer', 'contract', 'freelance'],
-    reply: `Rowell is currently accepting select new custom web builds, Next.js/React projects, and developer retainers! Are you looking for a dedicated full-stack engineer for a new project or ongoing support?`,
+    reply: `Rowell is currently accepting select custom web builds, Next.js/React engineering projects, and monthly developer retainers.
+
+Why clients partner with Rowell:
+• **Full UK (GMT/BST) & US (EST/PST) Overlap**: Real-time communication via Slack/Teams.
+• **Full-Stack Execution**: End-to-end delivery from database schema & API design to polished UI & conversion optimization.
+• **Enterprise Quality**: Proven track record with FCA-regulated UK financial institutions & enterprise web builds.
+
+Are you looking for a full build from scratch or ongoing senior developer support?`,
   },
   {
     keywords: ['stack', 'tech', 'technology', 'react', 'next.js', 'nextjs', 'wordpress', 'php', 'node', 'typescript', 'skill'],
-    reply: `Rowell's primary stack is Next.js 14 (App Router & Server Components), React, TypeScript, Node.js, and Tailwind CSS, along with bespoke WordPress plugin architecture (PHP 8+, Gutenberg, ACF Pro). What tech stack are you considering for your build?`,
+    reply: `Rowell's engineering stack combines cutting-edge frontend frameworks with robust backend systems:
+
+• **Frontend & App Router**: Next.js 14, React 19, TypeScript, Tailwind CSS, Framer Motion, Three.js / WebGL.
+• **WordPress Architecture**: Custom PHP 8.2+ OOP, hand-coded Gutenberg blocks, ACF Pro, Yoast SchemaGraphAssembler engines (zero page-builder bloat).
+• **Backend & Databases**: Node.js, Prisma ORM, NeonDB Serverless PostgreSQL, REST & GraphQL APIs.
+• **AI Integrations**: RAG chatbots, vector embeddings, Gemini 2.5 Flash, OpenAI GPT-4o, Claude 3.5, local Ollama.
+
+What stack are you currently using or evaluating for your project?`,
   },
   {
-    keywords: ['timezone', 'time zone', 'location', 'based', 'where', 'philippines', 'overlap'],
-    reply: `Rowell is based in the Philippines (PST, UTC+8) and provides full overlapping working hours for UK (GMT/BST), US EST/PST, and Australian clients. What timezone are you based in?`,
+    keywords: ['seo', 'marketing', 'conversion', 'cro', 'performance', 'lighthouse', 'speed'],
+    reply: `Performance IS marketing! Rowell engineers platforms built specifically to maximize Google rankings and lead conversion rates:
+
+• **Sub-Second Core Web Vitals**: LCP < 1.2s & CLS 0 — cutting bounce rates and boosting lead conversions by 20–30%.
+• **Automated Structured Data**: Custom JSON-LD schema graphs so Google displays rich search snippets.
+• **Clean Code Architecture**: Zero third-party page-builder bloat, yielding 95+ mobile Lighthouse scores.
+
+Are you looking to improve an existing site's page speed & SEO, or build a new high-converting platform?`,
+  },
+  {
+    keywords: ['timezone', 'time zone', 'location', 'based', 'where', 'philippines', 'overlap', 'uk', 'london', 'us'],
+    reply: `Rowell is based in the Philippines (PST, UTC+8) and maintains dedicated overlapping working hours for **UK (GMT/BST London time)**, **US (EST/PST)**, and **Australian** enterprise clients.
+
+This allows real-time daily syncs, rapid pull request reviews, and seamless team integration. What timezone is your team operating in?`,
   },
 ];
 
@@ -56,7 +99,7 @@ async function getInteractiveFallbackReply(question: string): Promise<string> {
       return intent.reply;
     }
   }
-  return `Hey there! I'm RowBot, Rowell's AI Co-Pilot. I can answer questions about Rowell's work, tech stack, pricing, or help you get a custom project estimate. What are you building?`;
+  return `Hey there! I'm RowBot, Rowell's AI Co-Pilot & Senior Engineering Strategist. I can answer questions about Rowell's work, technical stack, conversion rate optimization, or help calculate a custom project estimate. What platform are you planning to build?`;
 }
 
 export async function POST(request: Request) {

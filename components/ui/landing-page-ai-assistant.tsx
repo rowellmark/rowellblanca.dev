@@ -17,7 +17,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: `👋 Hi! I'm Rowell's AI Assistant. Have questions about hiring Rowell for ${targetKeyword || pageTitle}? Ask me anything!`,
+      text: `👋 Hi! I'm RowBot, Rowell's AI Assistant. Have questions about hiring Rowell for ${targetKeyword || pageTitle}? Ask me anything!`,
     },
   ]);
 
@@ -92,7 +92,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-black text-white">Gemini AI Landing Page Assistant</h3>
+              <h3 className="text-lg font-black text-white">RowBot — Gemini AI Assistant</h3>
               <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                 Live
               </span>
