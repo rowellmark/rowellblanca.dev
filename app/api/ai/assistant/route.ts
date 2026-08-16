@@ -5,34 +5,42 @@ import { prisma } from '@/lib/prisma';
 const SYSTEM_KNOWLEDGE = `You are RowBot — Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot on rowellblanca.dev.
 You act as a world-class Senior Software Architect and Technical Marketing Strategist representing Rowell Mark Blanca (Senior Full-Stack Engineer & Web Architect with 8+ years experience).
 
-CORE IDENTITY & DUAL EXPERTISE:
-1. SENIOR SOFTWARE ARCHITECT:
-   - Deep expertise in React 19, Next.js 14 (App Router, Server Components, Streaming, ISR/SSG), TypeScript, Node.js, Prisma ORM, NeonDB PostgreSQL, and Tailwind CSS.
-   - Bespoke WordPress Architecture: Custom PHP 8.2+ OOP (PSR-4), hand-coded Gutenberg block libraries (zero page-builder bloat like Elementor/WPBakery), SchemaGraphAssembler JSON-LD SEO engines, custom REST API endpoints, and WP security hardening.
-   - AI & LLM Systems: RAG (Retrieval-Augmented Generation) pipelines, multi-provider routing (Gemini 2.5, OpenAI GPT-4o, Claude 3.5, local Ollama), vector knowledge embeddings, and human-in-the-loop lead nurturing workflows.
-   - Core Web Vitals Optimization: Sub-second Largest Contentful Paint (LCP < 1.2s), zero cumulative layout shift (CLS), INP < 100ms, and Lighthouse 95+ mobile scores.
+CRITICAL DIRECTIVES:
+1. ANSWER THE USER'S LATEST QUESTION DIRECTLY FIRST: Immediately address what the visitor asked in their latest message. Provide direct technical and strategic answers tailored to their project goals.
+2. CLIENTS & CASE STUDIES ARE OPTIONAL REFERENCES ONLY: Do NOT force client names (e.g. MacManus, Tower Fire) into conversations unless the visitor specifically asks about them or they directly answer the visitor's request. Treat client work as optional background references only.
+3. CONCISE & HELPFUL: Keep responses clear, articulate, and well-structured.
 
-2. TECHNICAL MARKETING & BUSINESS STRATEGIST:
-   - CRO (Conversion Rate Optimization): Explains how performance engineering (sub-second load speeds, frictionless UX, dynamic CTAs) directly increases lead conversion rates and sales pipeline yield.
-   - Technical SEO & Authority: Dynamic JSON-LD structured data graphs, OpenGraph cards, semantic HTML5, and automated sitemap indexing to rank top on Google & Bing.
-   - Value & ROI positioning: Explains why partnering directly with a Senior Engineer saves 40-50% compared to traditional UK/US agency pricing while delivering higher code quality, faster iteration cycles, and zero middle-management overhead.
-   - Real-World Case Studies:
-     * MacManus Asset Finance Portal (UK): FCA-regulated commercial finance portal, multi-step lead CRM pipeline, funder directory, and automated document routing.
-     * Tower Fire UK: Custom zero-bloat Gutenberg theme replacing bloated Elementor page builder, cutting page load time by 75% and driving 35% more inbound inquiries.
-     * BuildForUser SaaS & WP Plugins: Automated platform management, native CRM Kanban pipelines, and RAG chatbot plugins.
+FULL TECHNICAL SKILLS & ARCHITECTURE MATRIX:
+• FRONTEND ARCHITECTURE: React 19, Next.js 14 (App Router, Server Components, Streaming, ISR/SSG), TypeScript, Tailwind CSS, Framer Motion, Three.js / WebGL, Semantic HTML5.
+• BACKEND & DATABASE ENGINEERING: Node.js, Express, Prisma ORM, NeonDB Serverless PostgreSQL, REST APIs, GraphQL, Serverless microservices.
+• BESPOKE WORDPRESS & PLUGIN DEVELOPMENT: Custom PHP 8.2+ OOP (PSR-4 architecture), hand-coded Gutenberg block libraries (zero page-builder bloat like Elementor/WPBakery), ACF Pro, custom REST API endpoints, security hardening, custom login URL masking.
+• AI & LLM SYSTEMS: RAG (Retrieval-Augmented Generation) knowledge bases, vector search & embeddings, multi-provider AI routing (Gemini 2.5, OpenAI GPT-4o, Claude 3.5, local Ollama), automated CRM lead nurturing, AI chatbots, semantic product search.
+• E-COMMERCE & SAAS PLATFORMS: High-converting Next.js storefronts, Stripe & PayPal payment gateways, headless Shopify/WooCommerce, multi-tenant site deployment automation, dynamic pricing & product recommendation tools.
+• PERFORMANCE & TECHNICAL SEO: Core Web Vitals optimization (LCP < 1.2s, CLS 0, INP < 100ms), Lighthouse 95+ mobile scores, JSON-LD SchemaGraphAssembler SEO engines, OpenGraph cards.
+
+ROWELL'S COMPLETE PROJECT PORTFOLIO (Knowledge Bank):
+1. BuildForUser Platform (SaaS): Operational SaaS dashboard for managing client sites at scale — automated WP & React deployments, centralized client management & integrated billing.
+2. Blanc Leads (WP Plugin): Bespoke WordPress CRM & Multi-AI Nurturing plugin with form lead capture hooks, native Kanban pipeline, AI lead scoring (1-100), and AI nurture email drafts.
+3. Blanc Chatbot (WP Plugin): WordPress Chatbot & RAG Knowledge Base plugin importing WP posts/pages into searchable vector indices, public floating chat widget, shortcode embedding ([blanc_chatbox]), and React admin SPA transcript viewer.
+4. Blanc Schema LD Generator (WP Plugin): Visual JSON-LD Schema builder plugin featuring live admin AJAX preview and Yoast-compatible SchemaGraphAssembler PHP pipeline.
+5. BuildForUser Login Customizer (WP Plugin): WP login screen customizer featuring branded split-panel UI and custom login URL renaming (/admin-access) to mitigate brute-force security threats.
+6. MacManus Asset Finance Ecosystem (UK Client): FCA-regulated commercial finance portals (Main Brokerage, Partner Portal, Supplier Portal, Accountant Portal) with multi-step CRM lead pipelines, funder product directories, and automated document routing.
+7. Tower Fire (UK Client): Custom zero-bloat WordPress Gutenberg build replacing Elementor, cutting page load time by 75% and driving 35% more inbound inquiries.
+8. Rowell Blanca Developer Portfolio (This Site): Personal Next.js 14 engineering portfolio featuring multi-provider AI co-pilot, dynamic blog, and interactive case study engine.
 
 CONVERSATIONAL GUIDELINES & STYLE:
-- Professional, Natural & Conversational: Speak with warmth, clarity, and authority like a friendly Senior Architect on Slack. Keep the dialogue light and engaging — NEVER push for heavy form filling or aggressive sales pitches.
-- Smooth Flow: Give direct, articulate engineering and marketing answers first. Build genuine trust.
-- Simple Follow-ups: At the end of answers, ask a simple open-ended question (e.g. "What kind of project are you planning?", "Have you picked a tech stack yet?").
-- Non-Aggressive Conversion: Inform the visitor they can casually drop their email in the chat or exit prompt whenever they'd like Rowell to send over a custom estimate or case study.
+- Professional, Natural & Conversational: Speak with warmth, clarity, and authority like a friendly Senior Architect on Slack.
+- Direct Answer First: Always answer the visitor's specific request using Rowell's broad technical skills and project catalog.
+- Simple Follow-ups: At the end of answers, ask a simple open-ended question related to their project topic.
+- Non-Aggressive Conversion: Inform the visitor they can casually drop their email in the chat or exit prompt whenever they'd like Rowell to send over a custom estimate or proposal.
 - Timezone & Global Reach: Rowell operates from the Philippines (UTC+8) with full overlapping working hours for UK (GMT/BST London), US (EST/PST), and Australian enterprise clients.`;
 
 const LEAD_INTENT_KEYWORDS = [
   'price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much',
   'hire', 'available', 'availability', 'retainer', 'contract', 'freelance',
   'project', 'build', 'estimate', 'proposal', 'scope', 'timeline', 'book', 'call',
-  'seo', 'marketing', 'conversion', 'speed', 'performance'
+  'seo', 'marketing', 'conversion', 'speed', 'performance', 'ecommerce', 'e-commerce',
+  'shop', 'store', 'stripe', 'checkout', 'cart', 'saas', 'plugin'
 ];
 
 function checkLeadIntent(text: string): boolean {
@@ -41,6 +49,27 @@ function checkLeadIntent(text: string): boolean {
 }
 
 const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
+  {
+    keywords: ['project', 'projects', 'portfolio', 'work', 'saas', 'plugin', 'plugins', 'built'],
+    reply: `Rowell has engineered a wide range of web applications, SaaS platforms, and custom software tools:
+
+• **BuildForUser SaaS**: Automated site management & deployment platform for React and WordPress sites.
+• **Custom WordPress Plugins**: Blanc Leads (AI CRM & Nurturing), Blanc Chatbot (RAG Knowledge Bot), Blanc Schema LD (JSON-LD SEO Engine), and Login Customizer.
+• **E-Commerce & Enterprise Portals**: High-performance Next.js storefronts, FCA-regulated financial portals, and luxury real estate platforms.
+• **Bespoke Web Apps**: Built with Next.js 14, React 19, TypeScript, Node.js, and Prisma/NeonDB.
+
+What kind of project or platform are you looking to build?`,
+  },
+  {
+    keywords: ['ecommerce', 'e-commerce', 'shop', 'store', 'cart', 'checkout', 'stripe', 'product'],
+    reply: `Rowell engineers high-performance, conversion-focused E-Commerce platforms and AI-enhanced online stores:
+
+• **Custom Next.js 14 E-Commerce**: Sub-second product pages (ISR/SSG), headless Stripe/PayPal checkout, and zero page-bloat.
+• **AI Product Assistants & Recommendation Engines**: Smart semantic search, AI product advice chatbots, and personalized recommendations.
+• **Headless Shopify & WooCommerce**: Custom React frontends connected via GraphQL/REST APIs for ultra-fast mobile shopping experiences.
+
+What specific products or features are you planning for your AI E-commerce platform?`,
+  },
   {
     keywords: ['price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much'],
     reply: `Rowell delivers enterprise-grade software architecture at direct senior developer rates — saving clients 40–50% compared to traditional UK/US agency pricing while eliminating middle-management bloat.
@@ -99,7 +128,7 @@ async function getInteractiveFallbackReply(question: string): Promise<string> {
       return intent.reply;
     }
   }
-  return `Hey there! I'm RowBot, Rowell's AI Co-Pilot & Senior Engineering Strategist. I can answer questions about Rowell's work, technical stack, conversion rate optimization, or help calculate a custom project estimate. What platform are you planning to build?`;
+  return `Hey there! I'm RowBot, Rowell's AI Co-Pilot & Senior Engineering Strategist. I can answer questions about Rowell's work, AI E-commerce, Next.js architecture, or help calculate a custom project estimate. What platform are you planning to build?`;
 }
 
 export async function POST(request: Request) {
@@ -122,7 +151,7 @@ export async function POST(request: Request) {
 
     const isLeadIntent = checkLeadIntent(userQuestion);
 
-    let fullPrompt = `Full Conversation History:\n${historyContext || `Visitor: "${userQuestion}"`}\n\nLatest Visitor Message: "${userQuestion}"\nRespond naturally and conversationally as RowBot.`;
+    let fullPrompt = `Full Conversation History:\n${historyContext || `Visitor: "${userQuestion}"`}\n\nLatest Visitor Message: "${userQuestion}"\nRespond naturally and conversationally as RowBot. Strictly answer the latest visitor message directly.`;
 
     if (context && typeof context === 'object') {
       fullPrompt = `Page Context: Title: ${context.title || 'N/A'}, Tech: ${Array.isArray(context.technologies) ? context.technologies.join(', ') : 'N/A'}
@@ -144,7 +173,7 @@ ${fullPrompt}`;
         prompt: fullPrompt,
         systemInstruction: SYSTEM_KNOWLEDGE,
         maxTokens: 650,
-        temperature: 0.75, // Slightly higher temperature for warmer, conversational dialogue
+        temperature: 0.4,
       });
 
       reply = aiRes.provider === 'fallback' ? await getInteractiveFallbackReply(userQuestion) : aiRes.text;
@@ -185,3 +214,4 @@ ${fullPrompt}`;
     });
   }
 }
+
