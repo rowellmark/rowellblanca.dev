@@ -21,17 +21,17 @@ interface ChatMessage {
 const QUICK_PROMPTS = [
   '⚡ Request a Custom Project Estimate',
   'What are your React & Next.js capabilities?',
-  'Tell me about your UK client work (Macmanus / Towerfire)',
-  'What are your rates & timezone overlap?',
+  'How do sub-second Web Vitals boost conversions?',
+  'What are your senior dev rates & timezone overlap?',
 ];
 
 const RANDOM_TEASERS = [
   'Have a project in mind? Get an instant estimate!',
-  'Looking for React & Next.js engineering?',
-  'Need custom WordPress & Gutenberg architecture?',
-  'Want senior dev rates without agency overhead?',
-  'Need full UK/US timezone overlap?',
-  'Interested in AI & LLM workflow integration?',
+  'Need senior Next.js & React 19 architecture?',
+  'Want custom WordPress & Gutenberg block systems?',
+  'Save 40–50% vs agency bloat with direct senior dev rates!',
+  'Need full UK (GMT/BST) & US (EST/PST) timezone overlap?',
+  'Looking for high-converting AI & RAG system integration?',
 ];
 
 const PROJECT_TYPES = [
@@ -42,11 +42,14 @@ const PROJECT_TYPES = [
   'Other Custom Project',
 ];
 
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes idle timeout
+
 export default function ChatBubble() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isSessionEnded, setIsSessionEnded] = useState(false);
 
   // User details
   const [name, setName] = useState('');
@@ -72,14 +75,20 @@ export default function ChatBubble() {
     {
       id: '1',
       sender: 'ai',
-      senderName: "RowBot",
-      text: "👋 Hi! I'm RowBot, Rowell's AI Co-Pilot. Ask me anything about Rowell's portfolio, tech stack, rates, or request a custom project estimate!",
+      senderName: 'RowBot',
+      text: "👋 Hi! I'm RowBot, Rowell's AI Engineering & Strategic Marketing Co-Pilot. Ask me anything about custom Next.js apps, bespoke WordPress architecture, project pricing, or request a custom project estimate!",
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastSavedMessageCount = useRef(0);
+  const lastActivityRef = useRef<number>(Date.now());
+
+  // Reset idle inactivity timer on user actions
+  const resetActivityTimer = () => {
+    lastActivityRef.current = Date.now();
+  };
 
   useEffect(() => {
     setActiveTeaserIndex(Math.floor(Math.random() * RANDOM_TEASERS.length));
@@ -92,9 +101,15 @@ export default function ChatBubble() {
 
   useEffect(() => {
     setMounted(true);
+    lastActivityRef.current = Date.now();
+
+    const lastActiveStr = localStorage.getItem('rb_chat_last_active');
+    const now = Date.now();
+
+    // Auto-reset expired session if user returns after closing tab / 5+ min inactivity
     let id = localStorage.getItem('rb_chat_session_id');
-    if (!id) {
-      id = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+    if (!id || (lastActiveStr && now - parseInt(lastActiveStr, 10) > INACTIVITY_TIMEOUT_MS)) {
+      id = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + now;
       localStorage.setItem('rb_chat_session_id', id);
     }
     setSessionId(id);
@@ -118,7 +133,7 @@ export default function ChatBubble() {
     }
   }, [messages, isOpen, loading, showLeadCard]);
 
-  // Persist transcript to CRM
+  // Persist transcript to CRM API (/api/chat/end)
   const persistChatHistory = () => {
     if (messages.length <= 1 || !email.trim()) return;
     if (messages.length === lastSavedMessageCount.current) return;
@@ -149,11 +164,52 @@ export default function ChatBubble() {
     }
   };
 
+  // Browser / Tab Closure Session Ending Listener (beforeunload, pagehide, visibilitychange)
   useEffect(() => {
-    const handler = () => persistChatHistory();
-    window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
+    const handleTabUnloadOrHide = () => {
+      if (document.visibilityState === 'hidden') {
+        persistChatHistory();
+        localStorage.setItem('rb_chat_last_active', Date.now().toString());
+      }
+    };
+
+    window.addEventListener('beforeunload', handleTabUnloadOrHide);
+    window.addEventListener('pagehide', handleTabUnloadOrHide);
+    document.addEventListener('visibilitychange', handleTabUnloadOrHide);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleTabUnloadOrHide);
+      window.removeEventListener('pagehide', handleTabUnloadOrHide);
+      document.removeEventListener('visibilitychange', handleTabUnloadOrHide);
+    };
   }, [messages, name, email, sessionId]);
+
+  // Inactivity Idle Timeout Monitor (5 Minutes of user not answering)
+  useEffect(() => {
+    const idleCheckInterval = setInterval(() => {
+      if (isSessionEnded || messages.length <= 1) return;
+
+      const idleDuration = Date.now() - lastActivityRef.current;
+      if (idleDuration >= INACTIVITY_TIMEOUT_MS) {
+        // Session Auto-End triggered due to 5 mins of user inactivity
+        persistChatHistory();
+        setIsSessionEnded(true);
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `sys_idle_${Date.now()}`,
+            sender: 'ai',
+            senderName: 'RowBot',
+            text: '⏱️ Session ended due to 5 minutes of inactivity. Your conversation history has been saved! Click "Reset" or type below to start a new session.',
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          },
+        ]);
+      }
+    }, 15000); // Check every 15 seconds
+
+    return () => clearInterval(idleCheckInterval);
+  }, [messages, isSessionEnded, email, name, sessionId]);
 
   // Handle Lead Form Submission
   const handleLeadFormSubmit = async (e: React.FormEvent) => {
@@ -273,6 +329,17 @@ export default function ChatBubble() {
     const query = textToSend || input;
     if (!query.trim() || loading) return;
 
+    resetActivityTimer();
+
+    // If session was ended due to idle timeout, auto-start a fresh session ID
+    if (isSessionEnded) {
+      setIsSessionEnded(false);
+      const newSid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+      localStorage.setItem('rb_chat_session_id', newSid);
+      setSessionId(newSid);
+      lastSavedMessageCount.current = 0;
+    }
+
     // Check if user clicked custom estimate prompt
     if (query.includes('Request a Custom Project Estimate') || query.includes('Estimate')) {
       setShowLeadCard(true);
@@ -318,7 +385,7 @@ export default function ChatBubble() {
       });
 
       const data = await aiRes.json();
-      const aiReply = data.reply || `I'm a Senior Full-Stack Engineer with full UK (GMT/BST) & US overlap. Would you like an estimate for your project?`;
+      const aiReply = data.reply || `I'm RowBot, Rowell's AI Engineering & Strategic Marketing Co-Pilot. Rowell delivers senior Next.js 14, React 19, and custom WordPress architecture with full UK/US overlap. Would you like an estimate for your project?`;
 
       setMessages((prev) => [
         ...prev,
@@ -351,8 +418,8 @@ export default function ChatBubble() {
         {
           id: `ai_${Date.now()}`,
           sender: 'ai',
-          senderName: 'Gemini AI Assistant',
-          text: "Rowell is a Senior Software Engineer specializing in React, Next.js, and Custom WordPress. Click 'Request Estimate' below to connect directly!",
+          senderName: 'RowBot',
+          text: "Rowell is a Senior Full-Stack Engineer & Strategic Marketing Architect specializing in React 19, Next.js 14, and Custom WordPress. Click 'Request Custom Estimate' below to connect directly!",
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -363,6 +430,7 @@ export default function ChatBubble() {
 
   const handleEndChat = () => {
     persistChatHistory();
+    resetActivityTimer();
     const newSid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
     localStorage.setItem('rb_chat_session_id', newSid);
     localStorage.removeItem('rb_chat_user_name');
@@ -373,6 +441,7 @@ export default function ChatBubble() {
     setEmail('');
     setPhone('');
     setIsRegistered(false);
+    setIsSessionEnded(false);
     setFormSubmitted(false);
     setShowLeadCard(false);
     setInput('');
@@ -381,8 +450,8 @@ export default function ChatBubble() {
       {
         id: `sys_${Date.now()}`,
         sender: 'ai',
-        senderName: "RowBot",
-        text: "👋 Hi! I'm RowBot, Rowell's Gemini AI Assistant. Ask me anything about Rowell's portfolio, case studies, tech stack, rates, or request a quick project estimate!",
+        senderName: 'RowBot',
+        text: "👋 Hi! I'm RowBot, Rowell's AI Engineering & Strategic Marketing Co-Pilot. Ask me anything about custom Next.js apps, bespoke WordPress architecture, project pricing, or request a custom project estimate!",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);

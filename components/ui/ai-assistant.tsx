@@ -27,7 +27,7 @@ export function AiAssistant() {
     {
       id: '1',
       sender: 'bot',
-      text: "👋 Hi! I'm RowBot, Rowell's Gemini AI Assistant. How can I help with your web development or software engineering project today?",
+      text: "👋 Hi! I'm RowBot, Rowell's AI Engineering & Strategic Marketing Co-Pilot. Ask me about custom Next.js apps, bespoke WordPress architecture, project pricing, or request a custom estimate!",
     },
   ]);
 
@@ -69,7 +69,7 @@ export function AiAssistant() {
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'bot',
-        text: data.reply || "I'm available to answer any questions about Rowell's portfolio and technical background!",
+        text: data.reply || "Rowell is a Senior Full-Stack Engineer & Strategic Marketing Architect. Ask me about Next.js 14, React 19, or project pricing!",
       };
       setMessages((prev) => [...prev, botMsg]);
     } catch (e) {
@@ -129,7 +129,7 @@ export function AiAssistant() {
                       Online
                     </span>
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-medium">Rowell Mark Blanca's AI Assistant</p>
+                  <p className="text-[10px] text-slate-400 font-medium">Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot</p>
                 </div>
               </div>
 

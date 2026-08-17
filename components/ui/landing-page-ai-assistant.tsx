@@ -17,7 +17,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
   const [messages, setMessages] = useState<Array<{ sender: 'bot' | 'user'; text: string }>>([
     {
       sender: 'bot',
-      text: `👋 Hi! I'm RowBot, Rowell's AI Assistant. Have questions about hiring Rowell for ${targetKeyword || pageTitle}? Ask me anything!`,
+      text: `👋 Hi! I'm RowBot, Rowell's AI Engineering & Strategic Marketing Co-Pilot. Have questions about hiring Rowell for ${targetKeyword || pageTitle}? Ask me about technical architecture, performance CRO, or custom estimates!`,
     },
   ]);
 
@@ -25,9 +25,9 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
 
   const QUICK_PROMPTS = [
     `Why hire Rowell for ${topic}?`,
-    `What are the rates & UK timezone (GMT/BST) overlap?`,
-    `What featured client projects has Rowell delivered?`,
-    `How do I book a discovery call or get a proposal?`,
+    `What are the senior dev rates & UK/US timezone overlap?`,
+    `How do sub-second Web Vitals boost conversions?`,
+    `How do I book a discovery call or request a proposal?`,
   ];
 
   const handleSend = async (queryText?: string) => {
@@ -47,7 +47,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
           messages: [
             {
               role: 'system',
-              content: `You are Rowell's Gemini AI Landing Page Assistant on rowellblanca.dev. The user is visiting the landing page: "${pageTitle}" focusing on ${topic}.`,
+              content: `You are Rowell's AI Engineering & Strategic Marketing Co-Pilot on rowellblanca.dev. The user is visiting the landing page: "${pageTitle}" focusing on ${topic}.`,
             },
             ...messages.map((m) => ({
               role: m.sender === 'user' ? 'user' : 'assistant',
@@ -63,7 +63,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
         sender: 'bot' as const,
         text:
           data.reply ||
-          `Rowell is a Senior Full-Stack Engineer specializing in ${topic}. Based in the Philippines (PST, GMT+8), he offers seamless overlap with UK (GMT/BST), US, and Australian business hours at cost-effective rates.`,
+          `Rowell is a Senior Full-Stack Engineer & Strategic Marketing Architect specializing in ${topic}. Based in the Philippines (PST, GMT+8), he offers seamless overlap with UK (GMT/BST), US, and Australian business hours at direct senior developer rates.`,
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (e) {
@@ -92,7 +92,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-black text-white">RowBot — AI Assistant</h3>
+              <h3 className="text-lg font-black text-white">RowBot — AI Engineering & Marketing Co-Pilot</h3>
               <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                 Live
               </span>

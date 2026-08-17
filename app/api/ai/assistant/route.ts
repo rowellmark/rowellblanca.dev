@@ -3,12 +3,17 @@ import { generateAIResponse, getAISettings } from '@/lib/ai-provider';
 import { prisma } from '@/lib/prisma';
 
 const SYSTEM_KNOWLEDGE = `You are RowBot — Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot on rowellblanca.dev.
-You act as a world-class Senior Software Architect and Technical Marketing Strategist representing Rowell Mark Blanca (Senior Full-Stack Engineer & Web Architect with 8+ years experience).
+You act as a world-class Senior Full-Stack Engineer, Web Architect, and Technical Marketing Strategist representing Rowell Mark Blanca (Senior Engineer with 8+ years experience).
+
+CORE HYBRID PERSONA & TONE:
+• DEVELOPER MINDSET: Speak with deep engineering authority, technical precision, and architectural clarity. Reference exact modern tech stacks (React 19, Next.js 14 App Router, Server Components, TypeScript, custom PHP Gutenberg block architecture, Prisma ORM, NeonDB Serverless PostgreSQL, REST & GraphQL APIs, RAG vector search).
+• STRATEGIC MARKETING MINDSET: Frame technical capabilities around tangible business outcomes — ROI, Conversion Rate Optimization (CRO), Core Web Vitals performance as a marketing weapon (LCP < 1.2s, CLS 0 boosting lead conversions by 20–30%), senior developer cost efficiency (saving 40–50% vs US/UK agency bloat), and Google JSON-LD rich snippet SEO dominance.
 
 CRITICAL DIRECTIVES:
-1. ANSWER THE USER'S LATEST QUESTION DIRECTLY FIRST: Immediately address what the visitor asked in their latest message. Provide direct technical and strategic answers tailored to their project goals.
+1. ANSWER THE USER'S LATEST QUESTION DIRECTLY FIRST: Provide direct technical and strategic answers tailored to their project goals. Combine developer execution with marketing business value.
 2. CLIENTS & CASE STUDIES ARE OPTIONAL REFERENCES ONLY: Do NOT force client names (e.g. MacManus, Tower Fire) into conversations unless the visitor specifically asks about them or they directly answer the visitor's request. Treat client work as optional background references only.
-3. CONCISE & HELPFUL: Keep responses clear, articulate, and well-structured.
+3. CONCISE, STRUCTURED & HIGH IMPACT: Keep responses clear, articulate, and well-structured using bullet points, bold key technical terms, and concrete metrics. Avoid fluff or generic AI phrases.
+4. HIGH-CONVERTING FOLLOW-UP: End answers with a developer-marketer strategic follow-up question or invite the visitor to request a custom project estimate or book a discovery call.
 
 FULL TECHNICAL SKILLS & ARCHITECTURE MATRIX:
 • FRONTEND ARCHITECTURE: React 19, Next.js 14 (App Router, Server Components, Streaming, ISR/SSG), TypeScript, Tailwind CSS, Framer Motion, Three.js / WebGL, Semantic HTML5.
@@ -29,10 +34,8 @@ ROWELL'S COMPLETE PROJECT PORTFOLIO (Knowledge Bank):
 8. Rowell Blanca Developer Portfolio (This Site): Personal Next.js 14 engineering portfolio featuring multi-provider AI co-pilot, dynamic blog, and interactive case study engine.
 
 CONVERSATIONAL GUIDELINES & STYLE:
-- Professional, Natural & Conversational: Speak with warmth, clarity, and authority like a friendly Senior Architect on Slack.
-- Direct Answer First: Always answer the visitor's specific request using Rowell's broad technical skills and project catalog.
-- Simple Follow-ups: At the end of answers, ask a simple open-ended question related to their project topic.
-- Non-Aggressive Conversion: Inform the visitor they can casually drop their email in the chat or exit prompt whenever they'd like Rowell to send over a custom estimate or proposal.
+- Strategic Developer Voice: Speak with warmth, technical precision, and business insight like a Senior Full-Stack Lead & Marketing Strategist on Slack.
+- Direct Technical & Marketing Answer: Answer the visitor's specific request connecting full-stack architecture with conversion goals.
 - Timezone & Global Reach: Rowell operates from the Philippines (UTC+8) with full overlapping working hours for UK (GMT/BST London), US (EST/PST), and Australian enterprise clients.`;
 
 const LEAD_INTENT_KEYWORDS = [
@@ -51,73 +54,73 @@ function checkLeadIntent(text: string): boolean {
 const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
   {
     keywords: ['project', 'projects', 'portfolio', 'work', 'saas', 'plugin', 'plugins', 'built'],
-    reply: `Rowell has engineered a wide range of web applications, SaaS platforms, and custom software tools:
+    reply: `Rowell engineers high-performance web applications and custom platforms designed for maximum speed and lead conversion:
 
 • **BuildForUser SaaS**: Automated site management & deployment platform for React and WordPress sites.
-• **Custom WordPress Plugins**: Blanc Leads (AI CRM & Nurturing), Blanc Chatbot (RAG Knowledge Bot), Blanc Schema LD (JSON-LD SEO Engine), and Login Customizer.
-• **E-Commerce & Enterprise Portals**: High-performance Next.js storefronts, FCA-regulated financial portals, and luxury real estate platforms.
-• **Bespoke Web Apps**: Built with Next.js 14, React 19, TypeScript, Node.js, and Prisma/NeonDB.
+• **Custom WordPress Architecture**: Blanc Leads (AI CRM & Nurturing), Blanc Chatbot (RAG Knowledge Bot), Blanc Schema LD (JSON-LD SEO Engine), and Login Customizer.
+• **E-Commerce & Portals**: High-converting Next.js storefronts, FCA-regulated financial portals, and luxury real estate platforms.
+• **Core Engineering Stack**: Next.js 14, React 19, TypeScript, Node.js, and Prisma/NeonDB Serverless PostgreSQL.
 
-What kind of project or platform are you looking to build?`,
+What kind of web application or SaaS platform are you looking to engineer and market?`,
   },
   {
     keywords: ['ecommerce', 'e-commerce', 'shop', 'store', 'cart', 'checkout', 'stripe', 'product'],
-    reply: `Rowell engineers high-performance, conversion-focused E-Commerce platforms and AI-enhanced online stores:
+    reply: `Rowell builds sub-second Next.js E-Commerce platforms optimized specifically for search rankings and checkout conversions:
 
-• **Custom Next.js 14 E-Commerce**: Sub-second product pages (ISR/SSG), headless Stripe/PayPal checkout, and zero page-bloat.
-• **AI Product Assistants & Recommendation Engines**: Smart semantic search, AI product advice chatbots, and personalized recommendations.
-• **Headless Shopify & WooCommerce**: Custom React frontends connected via GraphQL/REST APIs for ultra-fast mobile shopping experiences.
+• **Next.js 14 Frontend**: Sub-second rendering (ISR/SSG), headless Stripe/PayPal checkout, and zero page-builder bloat.
+• **AI Product Assistants & CRO**: RAG vector search, AI product advice chatbots, and automated upsell recommendation engines.
+• **Headless Shopify/WooCommerce**: Custom React frontends connected via GraphQL/REST APIs for maximum mobile speed.
 
-What specific products or features are you planning for your AI E-commerce platform?`,
+What specific products or conversion goals are you targeting for your store?`,
   },
   {
     keywords: ['price', 'pricing', 'cost', 'rate', 'budget', 'quote', 'how much'],
-    reply: `Rowell delivers enterprise-grade software architecture at direct senior developer rates — saving clients 40–50% compared to traditional UK/US agency pricing while eliminating middle-management bloat.
+    reply: `Rowell delivers enterprise-grade full-stack architecture at direct senior developer rates — saving clients **40–50%** compared to traditional UK/US agency pricing while eliminating middle-management bloat.
 
-Projects are scoped transparently based on deliverables:
-• **Custom React/Next.js Web Apps & Portals**: High-performance, scalable platforms with serverless DBs & AI integrations.
-• **Bespoke WordPress & Gutenberg Plugins**: Clean, hand-coded PHP 8+ themes with Lighthouse 95+ performance scores.
-• **Developer Retainers**: Flexible ongoing engineering & conversion optimization support.
+Projects are scoped transparently based on business outcomes:
+• **Custom Next.js/React Web Apps & Portals**: High-performance platforms with serverless DBs & AI integrations.
+• **Bespoke WordPress & Gutenberg Plugins**: Clean PHP 8+ custom architecture with 95+ mobile Lighthouse scores.
+• **Developer Retainers**: Flexible senior engineering & conversion optimization support.
 
-What is the main scope or deadline for your project? I can help calculate a custom estimate!`,
+What is the main scope or deadline for your project? Click 'Request Custom Estimate' to get a detailed proposal!`,
   },
   {
     keywords: ['hire', 'available', 'availability', 'retainer', 'contract', 'freelance'],
     reply: `Rowell is currently accepting select custom web builds, Next.js/React engineering projects, and monthly developer retainers.
 
-Why clients partner with Rowell:
+Why founders & agencies partner with Rowell:
 • **Full UK (GMT/BST) & US (EST/PST) Overlap**: Real-time communication via Slack/Teams.
-• **Full-Stack Execution**: End-to-end delivery from database schema & API design to polished UI & conversion optimization.
-• **Enterprise Quality**: Proven track record with FCA-regulated UK financial institutions & enterprise web builds.
+• **Full-Stack & Marketing Execution**: End-to-end delivery from database schema & API design to sub-second UI & conversion rate optimization.
+• **Enterprise Track Record**: Proven builds for FCA-regulated UK financial institutions & enterprise platforms.
 
-Are you looking for a full build from scratch or ongoing senior developer support?`,
+Are you looking for a custom full build or ongoing senior developer support?`,
   },
   {
     keywords: ['stack', 'tech', 'technology', 'react', 'next.js', 'nextjs', 'wordpress', 'php', 'node', 'typescript', 'skill'],
-    reply: `Rowell's engineering stack combines cutting-edge frontend frameworks with robust backend systems:
+    reply: `Rowell's stack pairs high-speed modern frontend architecture with robust backend systems built for SEO and scaling:
 
-• **Frontend & App Router**: Next.js 14, React 19, TypeScript, Tailwind CSS, Framer Motion, Three.js / WebGL.
-• **WordPress Architecture**: Custom PHP 8.2+ OOP, hand-coded Gutenberg blocks, ACF Pro, Yoast SchemaGraphAssembler engines (zero page-builder bloat).
-• **Backend & Databases**: Node.js, Prisma ORM, NeonDB Serverless PostgreSQL, REST & GraphQL APIs.
-• **AI Integrations**: RAG chatbots, vector embeddings, Gemini 2.5 Flash, OpenAI GPT-4o, Claude 3.5, local Ollama.
+• **Frontend & App Router**: Next.js 14, React 19, TypeScript, Tailwind CSS, Framer Motion, WebGL.
+• **WordPress Architecture**: Custom PHP 8.2+ OOP, hand-coded Gutenberg blocks, ACF Pro, Yoast SchemaGraphAssembler engines (zero Elementor bloat).
+• **Backend & DBs**: Node.js, Prisma ORM, NeonDB Serverless PostgreSQL, REST & GraphQL APIs.
+• **AI & LLM Integration**: RAG knowledge chatbots, vector embeddings, Gemini 2.5 Flash, OpenAI GPT-4o, Claude 3.5.
 
-What stack are you currently using or evaluating for your project?`,
+What technology stack are you currently building on or evaluating?`,
   },
   {
     keywords: ['seo', 'marketing', 'conversion', 'cro', 'performance', 'lighthouse', 'speed'],
-    reply: `Performance IS marketing! Rowell engineers platforms built specifically to maximize Google rankings and lead conversion rates:
+    reply: `Performance IS marketing! Rowell engineers platforms specifically engineered to rank on Google and maximize lead conversions:
 
-• **Sub-Second Core Web Vitals**: LCP < 1.2s & CLS 0 — cutting bounce rates and boosting lead conversions by 20–30%.
-• **Automated Structured Data**: Custom JSON-LD schema graphs so Google displays rich search snippets.
-• **Clean Code Architecture**: Zero third-party page-builder bloat, yielding 95+ mobile Lighthouse scores.
+• **Sub-Second Core Web Vitals**: LCP < 1.2s & CLS 0 — dropping bounce rates and raising conversions by 20–30%.
+• **JSON-LD Schema Automation**: Dynamic structured data engines so Google displays rich search cards.
+• **Zero-Bloat Engineering**: Hand-coded components delivering 95+ mobile Lighthouse performance.
 
-Are you looking to improve an existing site's page speed & SEO, or build a new high-converting platform?`,
+Would you like an audit of your current site speed & conversion pipeline, or are you building a new platform?`,
   },
   {
     keywords: ['timezone', 'time zone', 'location', 'based', 'where', 'philippines', 'overlap', 'uk', 'london', 'us'],
-    reply: `Rowell is based in the Philippines (PST, UTC+8) and maintains dedicated overlapping working hours for **UK (GMT/BST London time)**, **US (EST/PST)**, and **Australian** enterprise clients.
+    reply: `Rowell operates from the Philippines (UTC+8) and maintains dedicated overlapping working hours for **UK (GMT/BST London time)**, **US (EST/PST)**, and **Australian** enterprise clients.
 
-This allows real-time daily syncs, rapid pull request reviews, and seamless team integration. What timezone is your team operating in?`,
+This guarantees real-time daily Slack communication, fast PR turnarounds, and seamless team integration. What timezone is your team in?`,
   },
 ];
 
@@ -128,7 +131,7 @@ async function getInteractiveFallbackReply(question: string): Promise<string> {
       return intent.reply;
     }
   }
-  return `Hey there! I'm RowBot, Rowell's AI Co-Pilot & Senior Engineering Strategist. I can answer questions about Rowell's work, AI E-commerce, Next.js architecture, or help calculate a custom project estimate. What platform are you planning to build?`;
+  return `Hey there! I'm RowBot, Rowell's AI Engineering & Strategic Marketing Co-Pilot. I can answer technical stack questions, break down custom architecture, or calculate a project estimate for your web application. What platform are you planning to build?`;
 }
 
 export async function POST(request: Request) {
