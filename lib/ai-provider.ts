@@ -179,11 +179,39 @@ export async function generateAIResponse(options: {
     }
   }
 
-  // 3. GROQ (High-Speed Llama 3.3 Engine)
+  // 3. GROQ (High-Speed LPU Engine)
   if (provider === 'groq') {
     const apiKey = config.groqApiKey || process.env.GROQ_API_KEY || '';
-    const preferredModel = config.groqModel || 'llama-3.3-70b-versatile';
-    const groqFallbackModels = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'llama3-70b-8192', 'mixtral-8x7b-32768'];
+    
+    // Sanitize Groq model names (Support namespaced preview models like qwen/qwen3.6-27b)
+    const sanitizeGroqModel = (name?: string): string => {
+      if (!name) return 'llama-3.3-70b-versatile';
+      const clean = name.trim();
+      const lower = clean.toLowerCase();
+
+      // Normalize Qwen preview models on Groq
+      if (lower === 'qwen3.6-27b' || lower === 'qwen/qwen3.6-27b' || lower.includes('qwen3.6')) {
+        return 'qwen/qwen3.6-27b';
+      }
+      if (lower.includes('qwen-2.5') || lower === 'qwen2.5-32b') {
+        return 'qwen-2.5-32b';
+      }
+      if (lower.includes('3.3') || lower.includes('70b-versatile')) return 'llama-3.3-70b-versatile';
+      if (lower.includes('3.1') || lower.includes('8b-instant') || lower === '8b') return 'llama-3.1-8b-instant';
+      if (lower.includes('deepseek') || lower.includes('r1')) return 'deepseek-r1-distill-llama-70b';
+      if (lower.includes('mixtral')) return 'mixtral-8x7b-32768';
+      return clean;
+    };
+
+    const preferredModel = sanitizeGroqModel(config.groqModel);
+    const groqFallbackModels = [
+      'qwen/qwen3.6-27b',
+      'llama-3.3-70b-versatile',
+      'llama-3.1-8b-instant',
+      'qwen-2.5-32b',
+      'deepseek-r1-distill-llama-70b',
+      'mixtral-8x7b-32768',
+    ];
     const modelsToTry = [preferredModel, ...groqFallbackModels.filter((m) => m !== preferredModel)];
 
     if (apiKey) {

@@ -139,6 +139,38 @@ export function CodeDuelGame() {
   const [p1AutoPilot, setP1AutoPilot] = useState(false);
   const [combatLog, setCombatLog] = useState<string[]>([]);
   const [showRewardModal, setShowRewardModal] = useState(false);
+  const [isGeneratingCard, setIsGeneratingCard] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState('');
+
+  // Forge Custom AI Card via Groq LPU
+  const forgeAiCard = async (themePrompt?: string) => {
+    if (isGeneratingCard) return;
+    setIsGeneratingCard(true);
+    try {
+      const promptToUse = themePrompt || customPrompt || 'Redis Cache Leak Attack';
+      const res = await fetch('/api/games/ai-master', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'generate_card',
+          prompt: promptToUse,
+        }),
+      });
+      const data = await res.json();
+      if (data.card) {
+        setP1Hand((prev) => [...prev.slice(0, 4), data.card]);
+        setCombatLog((prev) => [
+          `✨ [Groq AI Forge] Created wildcard card: [${data.card.name}]!`,
+          ...prev.slice(0, 5),
+        ]);
+        setCustomPrompt('');
+      }
+    } catch (e) {
+      console.error('Failed to forge AI card', e);
+    } finally {
+      setIsGeneratingCard(false);
+    }
+  };
 
   // Audio synthesizer
   const playSound = useCallback((type: 'attack' | 'shield' | 'buff' | 'win') => {
@@ -612,8 +644,38 @@ export function CodeDuelGame() {
             </div>
           </div>
 
-          {/* Player Hand Cards Grid */}
-          <div className="space-y-2">
+          {/* Groq AI Card Forge & Player Hand */}
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-black uppercase tracking-wider text-white">
+                  Groq AI Wildcard Forge
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 flex-1 max-w-md">
+                <input
+                  type="text"
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  placeholder="e.g. Memory leak attack or Redis cache shield..."
+                  className="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-hidden focus:border-amber-400"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') forgeAiCard();
+                  }}
+                />
+                <button
+                  onClick={() => forgeAiCard()}
+                  disabled={isGeneratingCard}
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{isGeneratingCard ? 'Forging...' : 'Forge'}</span>
+                </button>
+              </div>
+            </div>
+
             <span className="text-xs font-black uppercase tracking-wider text-slate-400 block px-1">
               Your Infrastructure Hand (Click Card to Deploy)
             </span>

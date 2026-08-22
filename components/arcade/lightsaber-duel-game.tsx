@@ -81,6 +81,37 @@ export function LightsaberDuelGame() {
   const [p1ForceDisplay, setP1ForceDisplay] = useState(100);
   const [p2ForceDisplay, setP2ForceDisplay] = useState(100);
   const [clashCount, setClashCount] = useState(0);
+  const [bossBanter, setBossBanter] = useState('Your uptime falters before the Dark Side of unhandled exceptions!');
+
+  // Groq LPU Real-Time Sith Lord Banter Fetcher
+  const fetchBossBanter = useCallback(async () => {
+    try {
+      const res = await fetch('/api/games/ai-master', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'boss_banter',
+          gameState: {
+            p1Hp: gameStateRef.current.p1.hp,
+            p2Hp: gameStateRef.current.p2.hp,
+            clashes: gameStateRef.current.clashes,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.banter) setBossBanter(data.banter);
+    } catch (e) {}
+  }, []);
+
+  // Trigger banter on clashes or HP milestones
+  useEffect(() => {
+    if (isPlaying && (clashCount > 0 || p1HpDisplay < 70 || p2HpDisplay < 70)) {
+      const timer = setTimeout(() => {
+        fetchBossBanter();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isPlaying, clashCount, fetchBossBanter, p1HpDisplay, p2HpDisplay]);
 
   // Audio synthesizer helper (Self-contained Web Audio API)
   const playSound = useCallback(
@@ -954,6 +985,17 @@ export function LightsaberDuelGame() {
               </div>
 
             </div>
+
+            {/* Groq Live Sith Lord Combat Banter */}
+            {isPlaying && (
+              <div className="mb-2.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-rose-500/30 flex items-center gap-2.5 text-xs text-rose-300 shadow-lg">
+                <span className="text-base shrink-0">👑</span>
+                <p className="font-mono text-[11px] leading-tight truncate">
+                  <strong className="text-rose-400 uppercase font-black mr-1">Sith Architect:</strong>
+                  &ldquo;{bossBanter}&rdquo;
+                </p>
+              </div>
+            )}
 
             {/* Canvas Viewport */}
             <div 

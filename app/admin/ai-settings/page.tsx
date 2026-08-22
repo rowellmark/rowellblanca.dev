@@ -478,16 +478,36 @@ export default function AISettingsPage() {
 
             <div>
               <label className="block text-xs font-extrabold text-slate-700 mb-1">Groq Model</label>
-              <input
-                type="text"
-                value={settings.groqModel}
-                onChange={(e) => setSettings({ ...settings, groqModel: e.target.value })}
-                placeholder="e.g. llama-3.3-70b-versatile"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-mono font-bold"
-              />
+              <div className="flex gap-2">
+                <select
+                  value={['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'qwen/qwen3.6-27b', 'deepseek-r1-distill-llama-70b', 'qwen-2.5-32b', 'mixtral-8x7b-32768', 'gemma2-9b-it'].includes(settings.groqModel) ? settings.groqModel : 'custom'}
+                  onChange={(e) => {
+                    if (e.target.value !== 'custom') {
+                      setSettings({ ...settings, groqModel: e.target.value });
+                    }
+                  }}
+                  className="px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-800"
+                >
+                  <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Recommended)</option>
+                  <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fastest ~800 tok/s)</option>
+                  <option value="qwen/qwen3.6-27b">qwen/qwen3.6-27b (Preview — 500 T/s)</option>
+                  <option value="deepseek-r1-distill-llama-70b">deepseek-r1-distill-llama-70b</option>
+                  <option value="qwen-2.5-32b">qwen-2.5-32b (Qwen 2.5)</option>
+                  <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+                  <option value="gemma2-9b-it">gemma2-9b-it</option>
+                  <option value="custom">Custom Model ID...</option>
+                </select>
+                <input
+                  type="text"
+                  value={settings.groqModel}
+                  onChange={(e) => setSettings({ ...settings, groqModel: e.target.value })}
+                  placeholder="e.g. llama-3.3-70b-versatile"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-mono font-bold"
+                />
+              </div>
             </div>
 
-            <p className="text-[11px] text-slate-500">Free tier, no credit card required. Get a key at console.groq.com.</p>
+            <p className="text-[11px] text-slate-500">Free tier, no credit card required. Get a key at console.groq.com. Valid models: llama-3.3-70b-versatile, llama-3.1-8b-instant, qwen-2.5-32b.</p>
           </div>
         </div>
 
