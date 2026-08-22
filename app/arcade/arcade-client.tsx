@@ -22,12 +22,14 @@ import { LightsaberDuelGame } from '@/components/arcade/lightsaber-duel-game';
 import { CyberRacingGame } from '@/components/arcade/cyber-racing-game';
 import { CyberPongGame } from '@/components/arcade/cyber-pong-game';
 import { CodeDuelGame } from '@/components/arcade/code-duel-game';
+import { CyberSnakeGame } from '@/components/arcade/cyber-snake-game';
+import { SpaceImpactGame } from '@/components/arcade/space-impact-game';
 import { SpeedRacerGame } from '@/components/interactive/speed-racer-game';
 import { ProjectEstimator } from '@/components/homepage/project-estimator';
 import { EngagementModels } from '@/components/homepage/engagement-models';
 import { ContactModal } from '@/components/ui/contact-modal';
 
-type ActiveGame = 'racing' | 'saber' | 'pong' | 'duel' | 'racer';
+type ActiveGame = 'racing' | 'saber' | 'snake' | 'space' | 'pong' | 'duel' | 'racer';
 
 export function ArcadeClient() {
   const [activeGame, setActiveGame] = useState<ActiveGame>('racing');
@@ -52,26 +54,26 @@ export function ArcadeClient() {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
-            2-Player & vs AI multiplayer games: Neon Grand Prix Racing, Lightsaber Fighting, Cyber Pong, and Code Duel!
+            7 retro arcade & multiplayer games: Grand Prix Racing, Lightsaber Fighting, Cyber Snake, Space Impact, and Code Duel!
           </p>
 
           {/* Game Switcher Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-4">
             <button
               onClick={() => setActiveGame('racing')}
-              className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeGame === 'racing'
                   ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 shadow-lg shadow-amber-500/25 scale-105'
                   : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
               }`}
             >
               <Gauge className="w-4 h-4" />
-              <span>Grand Prix 2P Racing 🏎️</span>
+              <span>Grand Prix 2P 🏎️</span>
             </button>
 
             <button
               onClick={() => setActiveGame('saber')}
-              className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeGame === 'saber'
                   ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-lg shadow-cyan-500/25 scale-105'
                   : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
@@ -82,39 +84,63 @@ export function ArcadeClient() {
             </button>
 
             <button
-              onClick={() => setActiveGame('pong')}
-              className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
-                activeGame === 'pong'
-                  ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/25 scale-105'
+              onClick={() => setActiveGame('snake')}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeGame === 'snake'
+                  ? 'bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 shadow-lg shadow-emerald-500/25 scale-105'
                   : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
               }`}
             >
               <Zap className="w-4 h-4" />
-              <span>Cyber Pong (High-RPS)</span>
+              <span>Cyber Snake 🐍</span>
+            </button>
+
+            <button
+              onClick={() => setActiveGame('space')}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeGame === 'space'
+                  ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/25 scale-105'
+                  : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              <Rocket className="w-4 h-4" />
+              <span>Space Impact 🚀</span>
             </button>
 
             <button
               onClick={() => setActiveGame('duel')}
-              className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeGame === 'duel'
                   ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/25 scale-105'
                   : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
               }`}
             >
               <Activity className="w-4 h-4" />
-              <span>Code Duel (1v1 Cards)</span>
+              <span>Code Duel 🃏</span>
+            </button>
+
+            <button
+              onClick={() => setActiveGame('pong')}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeGame === 'pong'
+                  ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/25 scale-105'
+                  : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              <Flame className="w-4 h-4" />
+              <span>Cyber Pong 🏓</span>
             </button>
 
             <button
               onClick={() => setActiveGame('racer')}
-              className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeGame === 'racer'
-                  ? 'bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/25 scale-105'
+                  ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 scale-105'
                   : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
               }`}
             >
-              <Rocket className="w-4 h-4" />
-              <span>Speed Runner</span>
+              <Gauge className="w-4 h-4" />
+              <span>Speed Runner ⚡</span>
             </button>
           </div>
         </div>
@@ -125,8 +151,10 @@ export function ArcadeClient() {
         <div className="container mx-auto px-6 max-w-6xl">
           {activeGame === 'racing' && <CyberRacingGame />}
           {activeGame === 'saber' && <LightsaberDuelGame />}
-          {activeGame === 'pong' && <CyberPongGame />}
+          {activeGame === 'snake' && <CyberSnakeGame />}
+          {activeGame === 'space' && <SpaceImpactGame />}
           {activeGame === 'duel' && <CodeDuelGame />}
+          {activeGame === 'pong' && <CyberPongGame />}
           {activeGame === 'racer' && <SpeedRacerGame />}
         </div>
       </section>
