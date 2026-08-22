@@ -18,6 +18,12 @@ const Contact: React.FC = () => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [gdprConsent, setGdprConsent] = useState(false);
+    const [formLoadedAt, setFormLoadedAt] = useState<number>(() => Date.now());
+    const [honeypot, setHoneypot] = useState({ website: '', hp_field: '' });
+
+    React.useEffect(() => {
+        setFormLoadedAt(Date.now());
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -41,6 +47,11 @@ const Contact: React.FC = () => {
             return;
         }
 
+        // Determine current page URL source
+        const currentSource = typeof window !== 'undefined'
+            ? `${window.location.pathname}${window.location.search || ''}`
+            : '/contact';
+
         try {
             // Post to API route (NeonDB DB record + email delivery)
             const response = await fetch("/api/contact", {
@@ -54,6 +65,10 @@ const Contact: React.FC = () => {
                     service: form.service,
                     subject: `Inquiry: ${form.service}`,
                     message: form.message,
+                    sourceUrl: currentSource,
+                    website: honeypot.website,
+                    hp_field: honeypot.hp_field,
+                    formLoadedAt,
                     gdprConsent: true,
                     gdprTimestamp: new Date().toISOString(),
                 }),
@@ -76,6 +91,30 @@ const Contact: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Anti-spam honeypot bot trap (invisible to human visitors) */}
+            <div aria-hidden="true" style={{ opacity: 0, position: 'absolute', top: 0, left: '-9999px', height: 0, width: 0, zIndex: -1, pointerEvents: 'none' }}>
+                <label htmlFor="form_website_hp">Website URL</label>
+                <input
+                    type="text"
+                    id="form_website_hp"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot.website}
+                    onChange={(e) => setHoneypot({ ...honeypot, website: e.target.value })}
+                />
+                <label htmlFor="form_extra_hp">Leave empty</label>
+                <input
+                    type="text"
+                    id="form_extra_hp"
+                    name="hp_field"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot.hp_field}
+                    onChange={(e) => setHoneypot({ ...honeypot, hp_field: e.target.value })}
+                />
+            </div>
+
             {errors.general && (
                 <div className="p-3.5 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl">
                     {errors.general}

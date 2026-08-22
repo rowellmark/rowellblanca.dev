@@ -6,10 +6,13 @@ import { CVDownloadButton } from "@/components/ui/cv-download-button";
 import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
 import { Mail, Phone, MapPin, CheckCircle2, Award, Briefcase, Sparkles, Send, Globe } from "lucide-react";
+import { ProjectEstimator } from "@/components/homepage/project-estimator";
+import { EngagementModels } from "@/components/homepage/engagement-models";
+import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
 
 export const metadata: Metadata = {
-    title: "About Rowell Mark Blanca — Senior Software Engineer",
-    description: "Learn more about Rowell Mark Blanca — Software Engineer with 12+ years experience in React, Next.js, Node.js, PHP, and custom WordPress systems.",
+    title: "About Rowell Mark Blanca — Senior Full-Stack Software Engineer",
+    description: "Learn more about Rowell Mark Blanca — Senior Full-Stack Engineer with 12+ years experience in React, Next.js, TypeScript, and custom WordPress architecture for UK, US & Australian clients.",
 };
 
 export default function AboutPage() {
@@ -23,29 +26,29 @@ export default function AboutPage() {
     const stats = [
         { label: "Years Experience", value: "12+", icon: Award },
         { label: "Job Success Rate", value: "100%", icon: Sparkles },
-        { label: "Web Builds Delivered", value: "50+", icon: Briefcase },
-        { label: "Global Regions", value: "US, UK, HK, PH", icon: Globe },
+        { label: "Production Builds", value: "50+", icon: Briefcase },
+        { label: "Global Overlap", value: "UK · US · AU", icon: Globe },
     ];
 
     const coreCapabilities = [
         {
-            title: "Full-Stack Web Engineering",
-            description: "Building fast, SEO-driven Next.js and React applications using modern TypeScript architectures, Tailwind CSS, and scalable APIs.",
+            title: "Full-Stack Web & SaaS Engineering",
+            description: "Architecting sub-second Next.js 14 and React applications using strict TypeScript, Tailwind CSS, PostgreSQL (NeonDB), and Prisma ORM.",
             icon: IconCode,
         },
         {
-            title: "WordPress & Plugin Development",
-            description: "Architecting custom WordPress plugins, headless integrations, Bedrock/Sage setups, and Gutenberg blocks without bloated page builders.",
+            title: "Bespoke WordPress & Gutenberg Architecture",
+            description: "Engineering custom Gutenberg block plugins, headless WordPress setups, and scalable themes without third-party page builder bloat.",
             icon: IconCpu,
         },
         {
-            title: "AI Integration & Automation",
-            description: "Connecting LLMs (OpenAI, Gemini, Ollama), vector RAG bases, n8n automation workflows, and CRM lead nurturing plugins.",
+            title: "AI Workflows & LLM Copilots",
+            description: "Integrating multi-provider AI solutions (OpenAI, Google Gemini, Ollama), vector RAG pipelines, n8n automations, and intelligent chatbot systems.",
             icon: IconRocket,
         },
         {
-            title: "Security & Optimization",
-            description: "Enforcing web accessibility standards, security hardening, automated CI/CD pipelines, and high Lighthouse speed scores.",
+            title: "Performance CRO & Security Hardening",
+            description: "Enforcing 98+ Lighthouse Core Web Vitals, automated CI/CD pipelines, strict anti-spam defenses, and enterprise security standards.",
             icon: IconShieldCheck,
         },
     ];
@@ -234,6 +237,17 @@ export default function AboutPage() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Interactive Scope & Architecture Estimator */}
+                    <div id="project-estimator" className="pt-4">
+                        <ProjectEstimator />
+                    </div>
+
+                    {/* How We Can Work Together (Engagement Models) */}
+                    <EngagementModels />
+
+                    {/* Interactive Speed Racer Game */}
+                    <SpeedRacerGame />
 
                     {/* Bottom CTA Card */}
                     <div className="p-8 sm:p-12 rounded-3xl bg-slate-900 text-white shadow-2xl relative overflow-hidden border border-slate-800 text-center space-y-5">

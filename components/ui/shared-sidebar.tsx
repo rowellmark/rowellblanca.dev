@@ -219,7 +219,7 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
           </div>
 
           <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            Senior Full-Stack Engineer & WordPress Architect with 8+ years of experience building high-performance platforms.
+            Senior Full-Stack Engineer & WordPress Architect with 12+ years of experience building high-performance platforms.
           </p>
         </div>
       </div>

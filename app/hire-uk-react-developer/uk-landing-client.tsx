@@ -21,6 +21,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { ProjectEstimator } from "@/components/homepage/project-estimator";
+import { EngagementModels } from "@/components/homepage/engagement-models";
+import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
 
 import { PortfolioCard, PortfolioProject } from "@/components/ui/portfolio-card";
 
@@ -447,6 +450,17 @@ export function UkLandingClient() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Scope & Architecture Estimator */}
+      <div id="project-estimator" className="border-t border-slate-200">
+        <ProjectEstimator />
+      </div>
+
+      {/* Transparent Engagement Models */}
+      <EngagementModels />
+
+      {/* Interactive Speed Racer Game */}
+      <SpeedRacerGame />
 
       {/* Contact Modal Trigger */}
       <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />

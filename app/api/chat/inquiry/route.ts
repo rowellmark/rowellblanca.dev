@@ -49,14 +49,28 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { sessionId, name, email, message, subject, website, hp_field } = body;
+    const { sessionId, name, email, message, subject, website, hp_field, bot_trap, formLoadedAt, sourceUrl: explicitSourceUrl } = body;
 
-    // Anti-spam honeypot, disposable email, and keyword filter
+    const refererHeader = req.headers.get('referer');
+    let derivedSourceUrl = explicitSourceUrl;
+    if (!derivedSourceUrl && refererHeader) {
+      try {
+        const parsedUrl = new URL(refererHeader);
+        derivedSourceUrl = `Live Chat (${parsedUrl.pathname}${parsedUrl.search || ''})`;
+      } catch {
+        derivedSourceUrl = `Live Chat (${refererHeader})`;
+      }
+    }
+    const finalSourceUrl = derivedSourceUrl || 'Live Chat Widget';
+
+    // Anti-spam honeypot, time trap, disposable email, and keyword filter
     const spamCheck = checkSpamPayload({
-      honeypot: website || hp_field,
+      honeypot: [website, hp_field, bot_trap].filter(Boolean),
       email,
       message,
       name,
+      formLoadedAt,
+      minSubmissionTimeMs: 1500,
     });
 
     if (spamCheck.isSpam) {
@@ -113,7 +127,7 @@ export async function POST(req: NextRequest) {
             email,
             serviceInterest: formattedSubject,
             enquiryDetails: message,
-            sourceUrl: 'Live Chat Widget',
+            sourceUrl: finalSourceUrl,
             status: 'NEW',
           },
         });
@@ -128,6 +142,7 @@ export async function POST(req: NextRequest) {
           email,
           subject: formattedSubject,
           message,
+          sourceUrl: finalSourceUrl,
         });
       } catch (mailErr) {
         console.error('[API/chat/inquiry] Mailtrap error:', mailErr);

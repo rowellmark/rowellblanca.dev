@@ -177,9 +177,10 @@ interface SendMailParams {
   company?: string;
   service?: string;
   budget?: string;
+  sourceUrl?: string;
 }
 
-export async function sendContactEmail({ name, email, subject, message, phone, company, service, budget }: SendMailParams) {
+export async function sendContactEmail({ name, email, subject, message, phone, company, service, budget, sourceUrl }: SendMailParams) {
   const config = getMailTransportConfig();
 
   if (!config) {
@@ -194,7 +195,7 @@ export async function sendContactEmail({ name, email, subject, message, phone, c
     to: config.toEmail,
     replyTo: email,
     subject: subject ? `[Portfolio Inquiry] ${subject}` : `New Inquiry from ${name}`,
-    text: `Name: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${company ? `\nCompany: ${company}` : ''}${service ? `\nService: ${service}` : ''}${budget ? `\nBudget: ${budget}` : ''}\n\nMessage:\n${message}`,
+    text: `Name: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${company ? `\nCompany: ${company}` : ''}${service ? `\nService: ${service}` : ''}${budget ? `\nBudget: ${budget}` : ''}${sourceUrl ? `\nLead Source Page: ${sourceUrl}` : ''}\n\nMessage:\n${message}`,
     html: buildEmailShell({
       eyebrow: 'New Inquiry',
       title: 'A new project request just came in',
@@ -205,6 +206,7 @@ export async function sendContactEmail({ name, email, subject, message, phone, c
           <div style="margin-top: 6px; font-size: 14px; color: #475569;">&lt;<a href="mailto:${safeEmail}" style="color: #1d4ed8; text-decoration: none;">${safeEmail}</a>&gt;</div>
         </div>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;"> 
+          ${renderDetailRow('Lead Source / Page', sourceUrl, true)}
           ${renderDetailRow('Subject', subject)}
           ${renderDetailRow('Phone', phone)}
           ${renderDetailRow('Company', company)}
@@ -216,7 +218,7 @@ export async function sendContactEmail({ name, email, subject, message, phone, c
           <div style="font-size: 15px; line-height: 1.8; color: rgba(248,250,252,0.92);">${renderParagraph(message)}</div>
         </div>
       `,
-      footer: 'Sent via rowellblanca.dev contact form · Reply directly to this email to continue the conversation.',
+      footer: `Sent via rowellblanca.dev contact form${sourceUrl ? ` (${sourceUrl})` : ''} · Reply directly to this email to continue the conversation.`,
     }),
   });
 }

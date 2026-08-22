@@ -1,11 +1,35 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendTestimonialNotification } from '@/lib/mailer';
+import { checkRateLimit, checkSpamPayload, createSilentSpamResponse, getClientIp } from '@/lib/anti-spam';
 
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request);
+    const rateLimit = checkRateLimit(ip, 5, 60 * 1000);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, message: `Too many requests. Please wait ${rateLimit.retryAfter || 60} seconds.` },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
-    const { name, role, company, companyUrl, photoUrl, quote, rating, avatarUrl } = body;
+    const { name, role, company, companyUrl, photoUrl, quote, rating, avatarUrl, website, hp_field, formLoadedAt } = body;
+
+    // Check spam
+    const spamCheck = checkSpamPayload({
+      honeypot: [website, hp_field].filter(Boolean),
+      name,
+      message: quote,
+      formLoadedAt,
+      minSubmissionTimeMs: 1800,
+    });
+
+    if (spamCheck.isSpam) {
+      console.warn(`[API/testimonials/submit] Blocked spam testimonial from IP ${ip}: ${spamCheck.reason}`);
+      return createSilentSpamResponse('Review submitted successfully!');
+    }
 
     if (!name?.trim() || !quote?.trim()) {
       return NextResponse.json(

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendAcknowledgmentReceipt, sendContactEmail } from '@/lib/mailer';
-
-import { checkRateLimit, checkSpamPayload, getClientIp } from '@/lib/anti-spam';
+import { checkRateLimit, checkSpamPayload, createSilentSpamResponse, getClientIp } from '@/lib/anti-spam';
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,25 +15,50 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, email, message, subject, phone, company, service, budget, website, hp_field } = body;
+    const {
+      name,
+      email,
+      message,
+      subject,
+      phone,
+      company,
+      service,
+      budget,
+      website,
+      hp_field,
+      bot_trap,
+      formLoadedAt,
+      sourceUrl: explicitSourceUrl,
+    } = body;
+
     let savedToCrm = false;
 
-    // Anti-spam check
+    // Detect referrer / source URL if not explicitly sent from client
+    const refererHeader = req.headers.get('referer');
+    let derivedSourceUrl = explicitSourceUrl;
+    if (!derivedSourceUrl && refererHeader) {
+      try {
+        const parsedUrl = new URL(refererHeader);
+        derivedSourceUrl = `${parsedUrl.pathname}${parsedUrl.search || ''}`;
+      } catch {
+        derivedSourceUrl = refererHeader;
+      }
+    }
+    const finalSourceUrl = derivedSourceUrl || 'Web Contact Form';
+
+    // Anti-spam check (honeypots + time-trap + keyword filter + disposable emails)
     const spamCheck = checkSpamPayload({
-      honeypot: website || hp_field,
+      honeypot: [website, hp_field, bot_trap].filter(Boolean),
       email,
       message,
       name,
+      formLoadedAt,
+      minSubmissionTimeMs: 1800,
     });
 
     if (spamCheck.isSpam) {
       console.warn(`[API/contact] Blocked spam request from IP ${ip}: ${spamCheck.reason}`);
-      return NextResponse.json({
-        success: true,
-        message: 'Thank you! Your message has been received.',
-        savedToCrm: false,
-        mailSent: true,
-      });
+      return createSilentSpamResponse('Thank you! Your message has been received.');
     }
 
     if (!name || !email || !message) {
@@ -56,7 +80,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        await prisma.lead.create({
+        const createdLead = await prisma.lead.create({
           data: {
             contactName: name,
             email,
@@ -65,12 +89,53 @@ export async function POST(req: NextRequest) {
             serviceInterest: service || subject || 'General Inquiry',
             budget: budget || null,
             enquiryDetails: message,
-            sourceUrl: 'Web Contact Form (GDPR Verified)',
+            sourceUrl: finalSourceUrl,
             status: 'NEW',
           },
         });
 
         savedToCrm = true;
+
+        // Asynchronously classify lead with AI & tag spam / intent score
+        (async () => {
+          try {
+            const { classifyLeadWithAI } = await import('@/lib/ai-lead-classifier');
+            const analysis = await classifyLeadWithAI({
+              id: createdLead.id,
+              contactName: name,
+              companyName: company,
+              email,
+              phone,
+              serviceInterest: service || subject,
+              budget,
+              enquiryDetails: message,
+              sourceUrl: finalSourceUrl,
+            });
+
+            if (analysis.isSpam) {
+              await prisma.lead.update({
+                where: { id: createdLead.id },
+                data: { status: 'SPAM' },
+              });
+            }
+
+            const noteContent = `[AI SPAM & INTENT ANALYSIS]
+• Classification: ${analysis.classification} (Score: ${analysis.leadQualityScore}/100 | Confidence: ${Math.round(analysis.confidence * 100)}%)
+• Is Spam: ${analysis.isSpam ? `YES (${analysis.spamReason || 'Bot/Spam pattern'})` : 'NO (Legitimate Inquiry)'}
+• Intent: ${analysis.keyIntent}
+• Summary: ${analysis.summary}
+• Suggested Next Action: ${analysis.suggestedNextAction}`;
+
+            await prisma.leadNote.create({
+              data: {
+                leadId: createdLead.id,
+                content: noteContent,
+              },
+            });
+          } catch (aiErr) {
+            console.warn('[API/contact] Background AI lead classification warning:', aiErr);
+          }
+        })();
       }
     } catch (dbError) {
       console.error('[API/contact] Database CRM lead save warning:', dbError);
@@ -88,6 +153,7 @@ export async function POST(req: NextRequest) {
         company,
         service,
         budget,
+        sourceUrl: finalSourceUrl,
       });
     } catch (mailError: any) {
       console.error('[API/contact] Admin notification email error:', mailError);
@@ -128,6 +194,7 @@ export async function POST(req: NextRequest) {
       message: 'Thank you! Your message has been received.',
       savedToCrm,
       mailSent: mailResult.success,
+      sourceUrl: finalSourceUrl,
     });
   } catch (error: any) {
     console.error('[API/contact] Handler error:', error);

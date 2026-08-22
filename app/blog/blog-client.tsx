@@ -15,6 +15,9 @@ import {
 import { motion } from 'framer-motion';
 import { ContactModal } from '@/components/ui/contact-modal';
 import { SharedSidebar } from '@/components/ui/shared-sidebar';
+import { ProjectEstimator } from '@/components/homepage/project-estimator';
+import { EngagementModels } from '@/components/homepage/engagement-models';
+import { SpeedRacerGame } from '@/components/interactive/speed-racer-game';
 
 interface BlogPost {
   id: number;
@@ -269,6 +272,17 @@ export function BlogClient() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Scope & Architecture Estimator */}
+      <div id="project-estimator" className="border-t border-slate-200">
+        <ProjectEstimator />
+      </div>
+
+      {/* Transparent Engagement Models */}
+      <EngagementModels />
+
+      {/* Interactive Speed Racer Game */}
+      <SpeedRacerGame />
 
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </div>

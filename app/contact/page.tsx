@@ -1,19 +1,53 @@
 import { Metadata } from "next";
-import Banner from "@/components/banner/banner";
-import { ContactFormSection } from "@/components/footer/contact-form-section";
+import { ContactPageClient } from "./contact-page-client";
 
 export const metadata: Metadata = {
-    title: "Contact & Hire Me",
-    description: "Get in touch with Rowell Mark Blanca for full-stack software development, React applications, and WordPress engineering projects.",
+    metadataBase: new URL("https://www.rowellblanca.dev"),
+    title: "Contact & Hire Rowell Mark Blanca — Senior Full-Stack Engineer",
+    description: "Get in touch with Senior Full-Stack Software Engineer Rowell Mark Blanca for Next.js web applications, custom WordPress engineering, and dedicated developer retainers.",
+    keywords: [
+        "Contact Rowell Mark Blanca",
+        "Hire Next.js Developer",
+        "Hire WordPress Developer UK US AU",
+        "Senior Software Engineer Contact",
+        "Book Discovery Call",
+    ],
+    openGraph: {
+        type: "website",
+        url: "https://www.rowellblanca.dev/contact",
+        title: "Contact & Hire Rowell Mark Blanca — Senior Full-Stack Engineer",
+        description: "Get in touch for custom React, Next.js, and WordPress engineering projects.",
+        siteName: "Rowell Mark Blanca Portfolio",
+    },
+    alternates: {
+        canonical: "https://www.rowellblanca.dev/contact",
+    },
 };
 
-export default function ContactUs() {
+const contactJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": "https://www.rowellblanca.dev/contact/#contact",
+    url: "https://www.rowellblanca.dev/contact",
+    name: "Contact & Hire Rowell Mark Blanca",
+    description: "Get in touch with Senior Full-Stack Software Engineer Rowell Mark Blanca for Next.js web applications and WordPress engineering.",
+    mainEntity: {
+        "@type": "Person",
+        name: "Rowell Mark Blanca",
+        jobTitle: "Senior Full-Stack Engineer",
+        email: "rowellblanca94@gmail.com",
+        url: "https://www.rowellblanca.dev",
+    },
+};
+
+export default function ContactPage() {
     return (
-        <div className="bg-brand-bg min-h-screen">
-            <Banner title="Get In Touch" subtitle="Contact" />
-            <div>
-                <ContactFormSection />
-            </div>
-        </div>
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
+            />
+            <ContactPageClient />
+        </>
     );
 }

@@ -211,6 +211,13 @@ export default function ChatBubble() {
     return () => clearInterval(idleCheckInterval);
   }, [messages, isSessionEnded, email, name, sessionId]);
 
+  const getChatLeadSource = () => {
+    const path = typeof window !== 'undefined'
+      ? `${window.location.pathname}${window.location.search || ''}`
+      : '/';
+    return `Live Chat (${path})`;
+  };
+
   // Handle Lead Form Submission
   const handleLeadFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -221,6 +228,8 @@ export default function ChatBubble() {
     localStorage.setItem('rb_chat_user_email', email.trim());
     if (phone.trim()) localStorage.setItem('rb_chat_user_phone', phone.trim());
     setIsRegistered(true);
+
+    const sourceUrl = getChatLeadSource();
 
     try {
       // 1. Submit lead to CRM API
@@ -233,7 +242,9 @@ export default function ChatBubble() {
           phone: phone.trim() || undefined,
           serviceInterest: selectedProjectType,
           notes: projectNotes ? `[Chat Lead Intake] ${projectNotes}` : `[Chat Lead Intake] Interested in ${selectedProjectType}`,
-          source: 'AI Chat Widget',
+          sourceUrl,
+          source: sourceUrl,
+          formLoadedAt: Date.now() - 3000,
         }),
       });
 
@@ -274,6 +285,8 @@ export default function ChatBubble() {
       setIsOpen(false);
     }
 
+    const sourceUrl = getChatLeadSource();
+
     try {
       await fetch('/api/crm/leads', {
         method: 'POST',
@@ -283,7 +296,9 @@ export default function ChatBubble() {
           email: targetEmail,
           serviceInterest: 'Chat Quick Email',
           notes: `[Chat Quick Email Capture] Visitor provided email for follow-up.`,
-          source: 'AI Chat Widget',
+          sourceUrl,
+          source: sourceUrl,
+          formLoadedAt: Date.now() - 3000,
         }),
       });
     } catch (err) {}
@@ -299,6 +314,8 @@ export default function ChatBubble() {
     if (trimmedName) localStorage.setItem('rb_chat_user_name', trimmedName);
     setIsRegistered(true);
 
+    const sourceUrl = getChatLeadSource();
+
     try {
       fetch('/api/crm/leads', {
         method: 'POST',
@@ -308,7 +325,9 @@ export default function ChatBubble() {
           email: trimmedEmail,
           serviceInterest: 'Chat Upfront Gate',
           notes: `[Chat Welcome Email Gate] Visitor submitted email before starting conversation.`,
-          source: 'AI Chat Widget',
+          sourceUrl,
+          source: sourceUrl,
+          formLoadedAt: Date.now() - 3000,
         }),
       }).catch(() => {});
     } catch (err) {}

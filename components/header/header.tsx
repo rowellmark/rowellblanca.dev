@@ -24,6 +24,7 @@ export default function Header() {
         { name: 'My Work', link: '/mywork' },
         { name: 'Case Studies', link: '/case-studies' },
         { name: 'Blog', link: '/blog' },
+        { name: 'Arcade 🎮', link: '/arcade' },
     ];
 
     const toggleMobileNav = () => {

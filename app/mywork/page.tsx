@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import { MyWork } from "@/components/homepage/my-work";
 import { LandingPagesShowcase } from "@/components/homepage/landing-pages-showcase";
 import { BlogAiAssistant } from "@/components/ui/blog-ai-assistant";
+import { ProjectEstimator } from "@/components/homepage/project-estimator";
+import { EngagementModels } from "@/components/homepage/engagement-models";
+import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
 import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
@@ -39,6 +42,17 @@ export default function MyWorkPage() {
                 </div>
             </div>
             <LandingPagesShowcase />
+
+            {/* Interactive Scope & Architecture Estimator */}
+            <div id="project-estimator" className="border-t border-slate-200">
+                <ProjectEstimator />
+            </div>
+
+            {/* Transparent Engagement Models */}
+            <EngagementModels />
+
+            {/* Interactive Speed Racer Game */}
+            <SpeedRacerGame />
         </div>
     );
 }

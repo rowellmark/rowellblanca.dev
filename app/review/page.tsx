@@ -13,11 +13,17 @@ export default function SubmitReviewPage() {
     rating: 5,
     quote: '',
   });
+  const [formLoadedAt, setFormLoadedAt] = useState<number>(Date.now());
+  const [honeypot, setHoneypot] = useState({ website: '', hp_field: '' });
 
   const [hoverRating, setHoverRating] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  React.useEffect(() => {
+    setFormLoadedAt(Date.now());
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +39,12 @@ export default function SubmitReviewPage() {
       const res = await fetch('/api/testimonials/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          website: honeypot.website,
+          hp_field: honeypot.hp_field,
+          formLoadedAt,
+        }),
       });
 
       const data = await res.json();
@@ -141,6 +152,29 @@ export default function SubmitReviewPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Anti-spam honeypot bot trap (invisible to human visitors) */}
+              <div aria-hidden="true" style={{ opacity: 0, position: 'absolute', top: 0, left: '-9999px', height: 0, width: 0, zIndex: -1, pointerEvents: 'none' }}>
+                <label htmlFor="review_website_hp">Website URL</label>
+                <input
+                  type="text"
+                  id="review_website_hp"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot.website}
+                  onChange={(e) => setHoneypot({ ...honeypot, website: e.target.value })}
+                />
+                <label htmlFor="review_extra_hp">Leave empty</label>
+                <input
+                  type="text"
+                  id="review_extra_hp"
+                  name="hp_field"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot.hp_field}
+                  onChange={(e) => setHoneypot({ ...honeypot, hp_field: e.target.value })}
+                />
+              </div>
               
               {/* Star Rating Selector */}
               <div className="space-y-2 text-center bg-slate-50/80 p-5 rounded-2xl border border-slate-200/60">

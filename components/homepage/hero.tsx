@@ -80,7 +80,7 @@ export function Hero() {
                                 </span>
                             </motion.div>
 
-                            <Link href="/hire-uk-react-developer">
+                            <Link href="/case-studies">
                                 <motion.div
                                     initial={{ y: -15, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
@@ -89,7 +89,7 @@ export function Hero() {
                                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-900 shadow-xs cursor-pointer hover:bg-amber-500/20 transition-all"
                                 >
                                     <span className="text-xs font-bold text-slate-800 tracking-wide">
-                                        Trusted by UK Clients: <span className="font-extrabold text-amber-700">Towerfire</span> & <span className="font-extrabold text-amber-700">Macmanus</span>
+                                        Trusted by Global Clients: <span className="font-extrabold text-amber-700">UK</span> · <span className="font-extrabold text-amber-700">US</span> · <span className="font-extrabold text-amber-700">AU</span>
                                     </span>
                                 </motion.div>
                             </Link>
@@ -138,30 +138,37 @@ export function Hero() {
                             transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
                             className="text-base sm:text-lg text-brand-slate font-medium leading-relaxed max-w-xl"
                         >
-                            I turn ideas into reliable, high-performing digital products—from custom WordPress platforms to scalable React and Next.js applications—built to solve real business challenges, improve user experiences, and support long-term growth.
+                            Senior Full-Stack & Next.js Engineer helping funded startups, agencies, and UK, US & Australian (AU) businesses build high-performance digital products and custom WordPress engines—without the 50% agency overhead.
                         </motion.p>
 
-                        {/* Dual CTA */}
+                        {/* Dual Conversion CTAs */}
                         <motion.div
                             initial={{ y: 15, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                            className="pt-2 flex flex-wrap items-center gap-4"
+                            className="pt-2 flex flex-wrap items-center gap-3.5"
                         >
                             <button
                                 onClick={() => setIsContactModalOpen(true)}
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-amber hover:bg-slate-900 text-brand-navy hover:text-white font-extrabold text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
+                                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-brand-amber hover:bg-slate-900 text-brand-navy hover:text-white font-extrabold text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
                             >
                                 <Sparkles className="h-4 w-4 text-brand-navy group-hover:text-amber-400 transition-colors" />
-                                <span>Let's Build Your Project</span>
+                                <span>Book Discovery Call</span>
                             </button>
 
-                            <Link
-                                href="/mywork"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white border border-slate-200 hover:border-slate-800 hover:bg-slate-900 text-brand-navy hover:text-white font-bold text-sm shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+                            <a
+                                href="#project-estimator"
+                                className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-white border border-slate-300 hover:border-slate-800 hover:bg-slate-900 text-brand-navy hover:text-white font-extrabold text-sm shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
                             >
-                                <span>View My Work</span>
+                                <span>Estimate Scope</span>
                                 <ArrowRight className="h-4 w-4 text-brand-amber group-hover:text-amber-400 transition-colors" />
+                            </a>
+
+                            <Link
+                                href="/case-studies"
+                                className="inline-flex items-center justify-center gap-1.5 px-4 py-4 text-xs font-bold text-slate-600 hover:text-[#0b1a30] transition-colors"
+                            >
+                                <span>Case Studies & ROI →</span>
                             </Link>
                         </motion.div>
                     </div>

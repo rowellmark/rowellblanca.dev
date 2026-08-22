@@ -10,6 +10,9 @@ import { ProjectDetailPreview, ProjectGallery, PortfolioProject } from '@/compon
 import { ContactModal } from '@/components/ui/contact-modal';
 import { BlogAiAssistant } from '@/components/ui/blog-ai-assistant';
 import { TestimonialsSection } from '@/components/homepage/testimonials';
+import { ProjectEstimator } from '@/components/homepage/project-estimator';
+import { EngagementModels } from '@/components/homepage/engagement-models';
+import { SpeedRacerGame } from '@/components/interactive/speed-racer-game';
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', href: 'https://github.com/rowellmark', Icon: IconBrandGithub },
@@ -362,6 +365,17 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
           </div>
         </div>
       </div>
+
+      {/* Interactive Scope & Architecture Estimator */}
+      <div id="project-estimator" className="border-t border-slate-200 mt-16">
+        <ProjectEstimator />
+      </div>
+
+      {/* Transparent Engagement Models */}
+      <EngagementModels />
+
+      {/* Interactive Speed Racer Game */}
+      <SpeedRacerGame />
 
       <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
     </div>

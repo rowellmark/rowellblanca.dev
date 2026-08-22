@@ -18,6 +18,9 @@ import {
 import { motion } from 'framer-motion';
 import { ContactModal } from '@/components/ui/contact-modal';
 import { SharedSidebar } from '@/components/ui/shared-sidebar';
+import { ProjectEstimator } from '@/components/homepage/project-estimator';
+import { EngagementModels } from '@/components/homepage/engagement-models';
+import { SpeedRacerGame } from '@/components/interactive/speed-racer-game';
 
 interface LandingPageItem {
   id: number;
@@ -188,6 +191,67 @@ export function CaseStudiesClient() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* MAIN SOLUTIONS COLUMN (8 Cols) */}
           <div className="lg:col-span-8 space-y-16">
+            {/* FEATURED CASE STUDY SPOTLIGHT CARD */}
+            {!search && (activeTab === 'all' || activeTab === 'projects') && (
+              <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0b1a30] via-slate-900 to-[#0b1a30] text-white border border-slate-800 shadow-2xl space-y-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="flex items-center justify-between gap-2 flex-wrap relative z-10">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/20 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> Featured Architecture Spotlight
+                  </span>
+                  <span className="text-[11px] font-extrabold text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                    98/100 Core Web Vitals
+                  </span>
+                </div>
+
+                <div className="space-y-3 relative z-10">
+                  <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+                    MacManus Asset Finance Portal — Enterprise FinTech Platform
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
+                    End-to-end asset finance platform engineered for a regulated UK lender — featuring a custom CRM lead pipeline, multi-funder product directory, document hub, and support ticketing unified in a sub-second Next.js and NeonDB architecture.
+                  </p>
+                </div>
+
+                {/* Architecture Highlights Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 text-xs font-bold relative z-10">
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5">
+                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">Tech Stack</span>
+                    <span className="text-white text-xs">Next.js 14 · NeonDB · Prisma</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5">
+                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">Performance</span>
+                    <span className="text-amber-400 text-xs">Sub-Second SSR & RSC</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5 col-span-2 sm:col-span-1">
+                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">Security</span>
+                    <span className="text-emerald-400 text-xs">FCA Compliance Hardened</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between flex-wrap gap-4 relative z-10">
+                  <Link
+                    href="/mywork/macmanus-portal"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg transition-all"
+                  >
+                    <span>Read Full Case Study</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+
+                  <a
+                    href="https://macmanusfd.finance"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-extrabold text-slate-300 hover:text-white transition-colors"
+                  >
+                    <span>Visit Live Platform</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                  </a>
+                </div>
+              </div>
+            )}
+
             {/* SECTION 1: TARGETED LANDING PAGES */}
             {(activeTab === 'all' || activeTab === 'landing') && filteredLandingPages.length > 0 && (
               <div className="space-y-8">
@@ -197,7 +261,7 @@ export function CaseStudiesClient() {
                       Targeted Service Pages
                     </span>
                     <h2 className="text-2xl sm:text-3xl font-black text-[#0b1a30]">
-                      Specialized Landing Pages ({filteredLandingPages.length})
+                      Specialized Solutions ({filteredLandingPages.length})
                     </h2>
                   </div>
                 </div>
@@ -243,7 +307,7 @@ export function CaseStudiesClient() {
                           href={`/landing/${lp.slug}`}
                           className="inline-flex items-center gap-1 text-xs font-black text-[#0b1a30] group-hover:text-[#1d63ed] transition-colors"
                         >
-                          <span>Explore Page</span>
+                          <span>Explore Solution</span>
                           <ChevronRight className="w-4 h-4" />
                         </Link>
                       </div>
@@ -413,6 +477,17 @@ export function CaseStudiesClient() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Scope & Architecture Estimator */}
+      <div id="project-estimator" className="border-t border-slate-200">
+        <ProjectEstimator />
+      </div>
+
+      {/* Transparent Engagement Models */}
+      <EngagementModels />
+
+      {/* Interactive Speed Racer Game */}
+      <SpeedRacerGame />
 
       <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </div>

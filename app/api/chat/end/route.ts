@@ -1,11 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendChatTranscriptEmail, sendAcknowledgmentReceipt } from '@/lib/mailer';
+import { checkRateLimit, checkSpamPayload, createSilentSpamResponse, getClientIp } from '@/lib/anti-spam';
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rateLimit = checkRateLimit(ip, 8, 60 * 1000);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Too many requests. Please wait a moment.' },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
-    const { sessionId, name, email, phone, transcript, sourceUrl } = body;
+    const { sessionId, name, email, phone, transcript, sourceUrl, website, hp_field } = body;
+
+    // Check spam payload
+    const spamCheck = checkSpamPayload({
+      honeypot: [website, hp_field].filter(Boolean),
+      email,
+      name,
+      message: transcript,
+    });
+
+    if (spamCheck.isSpam) {
+      console.warn(`[API/chat/end] Blocked spam transcript from IP ${ip}: ${spamCheck.reason}`);
+      return createSilentSpamResponse('Chat transcript recorded.');
+    }
 
     if (!name || !email || !transcript) {
       return NextResponse.json(

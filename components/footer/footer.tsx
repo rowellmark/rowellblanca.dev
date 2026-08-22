@@ -38,6 +38,7 @@ export default function Footer() {
                     <Link href="/mywork" className="hover:text-brand-amber transition-colors">My Work</Link>
                     <Link href="/case-studies" className="hover:text-brand-amber transition-colors">Case Studies</Link>
                     <Link href="/blog" className="hover:text-brand-amber transition-colors">Blog</Link>
+                    <Link href="/arcade" className="hover:text-amber-500 text-amber-600 transition-colors">Arcade 🎮</Link>
                     <Link href="/contact" className="hover:text-brand-amber transition-colors">Contact</Link>
                     <Link href="/privacy" className="hover:text-brand-amber transition-colors">Privacy</Link>
                 </div>
