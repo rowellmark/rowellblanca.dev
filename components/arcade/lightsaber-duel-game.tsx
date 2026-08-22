@@ -34,15 +34,15 @@ interface Fighter {
   maxHp: number;
   force: number;
   maxForce: number;
-  state: 'idle' | 'run' | 'jump' | 'attack' | 'parry' | 'hit' | 'special';
+  state: 'idle' | 'run' | 'jump' | 'attack' | 'parry' | 'hit';
   attackTimer: number;
   parryTimer: number;
   hitTimer: number;
+  hasHit: boolean;
   facing: 1 | -1; // 1 = right, -1 = left
   color: string;
   saberColor: string;
   saberGlow: string;
-  combo: number;
 }
 
 interface Spark {
@@ -98,62 +98,62 @@ export function LightsaberDuelGame() {
 
         if (type === 'swing') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(180, now);
-          osc.frequency.exponentialRampToValueAtTime(360, now + 0.12);
-          gain.gain.setValueAtTime(0.15, now);
+          osc.frequency.setValueAtTime(200, now);
+          osc.frequency.exponentialRampToValueAtTime(420, now + 0.12);
+          gain.gain.setValueAtTime(0.2, now);
           gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
           osc.start(now);
           osc.stop(now + 0.12);
         } else if (type === 'clash') {
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(800, now);
-          osc.frequency.linearRampToValueAtTime(160, now + 0.15);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+          osc.frequency.setValueAtTime(880, now);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.18);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
           osc.start(now);
-          osc.stop(now + 0.15);
+          osc.stop(now + 0.18);
         } else if (type === 'parry') {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(980, now);
-          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.2);
-          gain.gain.setValueAtTime(0.2, now);
+          osc.frequency.exponentialRampToValueAtTime(1500, now + 0.2);
+          gain.gain.setValueAtTime(0.22, now);
           gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
           osc.start(now);
           osc.stop(now + 0.2);
         } else if (type === 'force') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(120, now);
-          osc.frequency.linearRampToValueAtTime(480, now + 0.25);
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.linearRampToValueAtTime(540, now + 0.25);
           gain.gain.setValueAtTime(0.25, now);
           gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
           osc.start(now);
           osc.stop(now + 0.25);
         } else if (type === 'hit') {
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.setValueAtTime(180, now);
           osc.frequency.linearRampToValueAtTime(60, now + 0.2);
-          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.setValueAtTime(0.25, now);
           gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
           osc.start(now);
           osc.stop(now + 0.2);
         } else if (type === 'ignite') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(100, now);
-          osc.frequency.exponentialRampToValueAtTime(440, now + 0.25);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+          osc.frequency.setValueAtTime(120, now);
+          osc.frequency.exponentialRampToValueAtTime(520, now + 0.3);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
           osc.start(now);
-          osc.stop(now + 0.3);
+          osc.stop(now + 0.35);
         } else if (type === 'win') {
           osc.type = 'sine';
           osc.frequency.setValueAtTime(440, now);
-          osc.frequency.setValueAtTime(554, now + 0.1);
-          osc.frequency.setValueAtTime(659, now + 0.2);
-          osc.frequency.setValueAtTime(880, now + 0.3);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+          osc.frequency.setValueAtTime(554, now + 0.12);
+          osc.frequency.setValueAtTime(659, now + 0.24);
+          osc.frequency.setValueAtTime(880, now + 0.36);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.55);
           osc.start(now);
-          osc.stop(now + 0.5);
+          osc.stop(now + 0.55);
         }
       } catch (e) {}
     },
@@ -168,24 +168,18 @@ export function LightsaberDuelGame() {
     waves: SlashWave[];
     clashes: number;
     keys: {
-      a: boolean;
-      d: boolean;
-      w: boolean;
-      j: boolean;
-      k: boolean;
-      l: boolean;
       left: boolean;
       right: boolean;
-      up: boolean;
-      num1: boolean;
-      num2: boolean;
-      num3: boolean;
+      jump: boolean;
+      p2Left: boolean;
+      p2Right: boolean;
+      p2Jump: boolean;
     };
     animationId: number;
   }>({
     p1: {
       x: 120,
-      y: 260,
+      y: 270,
       vx: 0,
       vy: 0,
       width: 36,
@@ -199,15 +193,15 @@ export function LightsaberDuelGame() {
       attackTimer: 0,
       parryTimer: 0,
       hitTimer: 0,
+      hasHit: false,
       facing: 1,
       color: '#38bdf8',
       saberColor: '#00f0ff',
-      saberGlow: 'rgba(0, 240, 255, 0.8)',
-      combo: 0,
+      saberGlow: 'rgba(0, 240, 255, 0.9)',
     },
     p2: {
       x: 520,
-      y: 260,
+      y: 270,
       vx: 0,
       vy: 0,
       width: 36,
@@ -221,31 +215,98 @@ export function LightsaberDuelGame() {
       attackTimer: 0,
       parryTimer: 0,
       hitTimer: 0,
+      hasHit: false,
       facing: -1,
       color: '#f43f5e',
       saberColor: '#ff0055',
-      saberGlow: 'rgba(255, 0, 85, 0.8)',
-      combo: 0,
+      saberGlow: 'rgba(255, 0, 85, 0.9)',
     },
     sparks: [],
     waves: [],
     clashes: 0,
     keys: {
-      a: false,
-      d: false,
-      w: false,
-      j: false,
-      k: false,
-      l: false,
       left: false,
       right: false,
-      up: false,
-      num1: false,
-      num2: false,
-      num3: false,
+      jump: false,
+      p2Left: false,
+      p2Right: false,
+      p2Jump: false,
     },
     animationId: 0,
   });
+
+  // Action methods (Invoked by keyboard, touch, or click)
+  const triggerP1Slash = useCallback(() => {
+    const p1 = gameStateRef.current.p1;
+    if (p1.attackTimer <= 0 && p1.parryTimer <= 0) {
+      p1.state = 'attack';
+      p1.attackTimer = 18;
+      p1.hasHit = false;
+      playSound('swing');
+    }
+  }, [playSound]);
+
+  const triggerP1Parry = useCallback(() => {
+    const p1 = gameStateRef.current.p1;
+    if (p1.parryTimer <= 0) {
+      p1.state = 'parry';
+      p1.parryTimer = 24;
+      playSound('parry');
+    }
+  }, [playSound]);
+
+  const triggerP1Force = useCallback(() => {
+    const p1 = gameStateRef.current.p1;
+    if (p1.force >= 30) {
+      p1.force -= 30;
+      gameStateRef.current.waves.push({
+        x: p1.x + (p1.facing === 1 ? p1.width + 10 : -10),
+        y: p1.y + p1.height / 2,
+        vx: p1.facing * 7.5,
+        radius: 14,
+        color: p1.saberColor,
+        damage: 22,
+        owner: 'p1',
+      });
+      playSound('force');
+    }
+  }, [playSound]);
+
+  const triggerP2Slash = useCallback(() => {
+    const p2 = gameStateRef.current.p2;
+    if (p2.attackTimer <= 0 && p2.parryTimer <= 0) {
+      p2.state = 'attack';
+      p2.attackTimer = 18;
+      p2.hasHit = false;
+      playSound('swing');
+    }
+  }, [playSound]);
+
+  const triggerP2Parry = useCallback(() => {
+    const p2 = gameStateRef.current.p2;
+    if (p2.parryTimer <= 0) {
+      p2.state = 'parry';
+      p2.parryTimer = 24;
+      playSound('parry');
+    }
+  }, [playSound]);
+
+  const triggerP2Force = useCallback(() => {
+    const p2 = gameStateRef.current.p2;
+    if (p2.force >= 30) {
+      p2.force -= 30;
+      gameStateRef.current.waves.push({
+        x: p2.x + (p2.facing === 1 ? p2.width + 10 : -10),
+        y: p2.y + p2.height / 2,
+        vx: p2.facing * 7.5,
+        radius: 14,
+        color: p2.saberColor,
+        damage: 22,
+        owner: 'p2',
+      });
+      playSound('force');
+    }
+  }, [playSound]);
 
   const startDuel = () => {
     setIsPlaying(true);
@@ -262,7 +323,7 @@ export function LightsaberDuelGame() {
     const floorY = 270;
 
     gameStateRef.current.p1 = {
-      x: width * 0.2,
+      x: width * 0.22,
       y: floorY,
       vx: 0,
       vy: 0,
@@ -277,15 +338,15 @@ export function LightsaberDuelGame() {
       attackTimer: 0,
       parryTimer: 0,
       hitTimer: 0,
+      hasHit: false,
       facing: 1,
       color: '#38bdf8',
       saberColor: '#00f0ff',
       saberGlow: 'rgba(0, 240, 255, 0.9)',
-      combo: 0,
     };
 
     gameStateRef.current.p2 = {
-      x: width * 0.8 - 36,
+      x: width * 0.78 - 36,
       y: floorY,
       vx: 0,
       vy: 0,
@@ -300,11 +361,11 @@ export function LightsaberDuelGame() {
       attackTimer: 0,
       parryTimer: 0,
       hitTimer: 0,
+      hasHit: false,
       facing: -1,
       color: '#f43f5e',
       saberColor: '#ff0055',
       saberGlow: 'rgba(255, 0, 85, 0.9)',
-      combo: 0,
     };
 
     gameStateRef.current.sparks = [];
@@ -318,36 +379,43 @@ export function LightsaberDuelGame() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const k = gameStateRef.current.keys;
-      if (['KeyA', 'a', 'A'].includes(e.key) || e.code === 'KeyA') k.a = true;
-      if (['KeyD', 'd', 'D'].includes(e.key) || e.code === 'KeyD') k.d = true;
-      if (['KeyW', 'w', 'W'].includes(e.key) || e.code === 'KeyW') k.w = true;
-      if (['KeyJ', 'j', 'J'].includes(e.key) || e.code === 'KeyJ') k.j = true;
-      if (['KeyK', 'k', 'K'].includes(e.key) || e.code === 'KeyK') k.k = true;
-      if (['KeyL', 'l', 'L'].includes(e.key) || e.code === 'KeyL') k.l = true;
 
-      if (e.key === 'ArrowLeft' || e.code === 'ArrowLeft') k.left = true;
-      if (e.key === 'ArrowRight' || e.code === 'ArrowRight') k.right = true;
-      if (e.key === 'ArrowUp' || e.code === 'ArrowUp') k.up = true;
-      if (['Digit1', 'Numpad1', '1'].includes(e.key)) k.num1 = true;
-      if (['Digit2', 'Numpad2', '2'].includes(e.key)) k.num2 = true;
-      if (['Digit3', 'Numpad3', '3'].includes(e.key)) k.num3 = true;
+      // Player 1 Movement
+      if (['KeyA', 'a', 'A'].includes(e.key) || e.code === 'KeyA') k.left = true;
+      if (['KeyD', 'd', 'D'].includes(e.key) || e.code === 'KeyD') k.right = true;
+      if (['KeyW', 'w', 'W'].includes(e.key) || e.code === 'KeyW') k.jump = true;
+
+      // Player 1 Actions
+      if (['KeyJ', 'j', 'J', 'KeyZ', 'z', 'Z'].includes(e.key) || e.code === 'KeyJ') {
+        triggerP1Slash();
+      }
+      if (['KeyK', 'k', 'K', 'KeyX', 'x', 'X'].includes(e.key) || e.code === 'KeyK') {
+        triggerP1Parry();
+      }
+      if (['KeyL', 'l', 'L', 'KeyC', 'c', 'C'].includes(e.key) || e.code === 'KeyL') {
+        triggerP1Force();
+      }
+
+      // Player 2 Movement
+      if (e.key === 'ArrowLeft' || e.code === 'ArrowLeft') k.p2Left = true;
+      if (e.key === 'ArrowRight' || e.code === 'ArrowRight') k.p2Right = true;
+      if (e.key === 'ArrowUp' || e.code === 'ArrowUp') k.p2Jump = true;
+
+      // Player 2 Actions
+      if (['Digit1', 'Numpad1', '1'].includes(e.key)) triggerP2Slash();
+      if (['Digit2', 'Numpad2', '2'].includes(e.key)) triggerP2Parry();
+      if (['Digit3', 'Numpad3', '3'].includes(e.key)) triggerP2Force();
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
       const k = gameStateRef.current.keys;
-      if (['KeyA', 'a', 'A'].includes(e.key) || e.code === 'KeyA') k.a = false;
-      if (['KeyD', 'd', 'D'].includes(e.key) || e.code === 'KeyD') k.d = false;
-      if (['KeyW', 'w', 'W'].includes(e.key) || e.code === 'KeyW') k.w = false;
-      if (['KeyJ', 'j', 'J'].includes(e.key) || e.code === 'KeyJ') k.j = false;
-      if (['KeyK', 'k', 'K'].includes(e.key) || e.code === 'KeyK') k.k = false;
-      if (['KeyL', 'l', 'L'].includes(e.key) || e.code === 'KeyL') k.l = false;
+      if (['KeyA', 'a', 'A'].includes(e.key) || e.code === 'KeyA') k.left = false;
+      if (['KeyD', 'd', 'D'].includes(e.key) || e.code === 'KeyD') k.right = false;
+      if (['KeyW', 'w', 'W'].includes(e.key) || e.code === 'KeyW') k.jump = false;
 
-      if (e.key === 'ArrowLeft' || e.code === 'ArrowLeft') k.left = false;
-      if (e.key === 'ArrowRight' || e.code === 'ArrowRight') k.right = false;
-      if (e.key === 'ArrowUp' || e.code === 'ArrowUp') k.up = false;
-      if (['Digit1', 'Numpad1', '1'].includes(e.key)) k.num1 = false;
-      if (['Digit2', 'Numpad2', '2'].includes(e.key)) k.num2 = false;
-      if (['Digit3', 'Numpad3', '3'].includes(e.key)) k.num3 = false;
+      if (e.key === 'ArrowLeft' || e.code === 'ArrowLeft') k.p2Left = false;
+      if (e.key === 'ArrowRight' || e.code === 'ArrowRight') k.p2Right = false;
+      if (e.key === 'ArrowUp' || e.code === 'ArrowUp') k.p2Jump = false;
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -356,7 +424,7 @@ export function LightsaberDuelGame() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
+  }, [triggerP1Slash, triggerP1Parry, triggerP1Force, triggerP2Slash, triggerP2Parry, triggerP2Force]);
 
   // Main Canvas Render & Combat Loop
   useEffect(() => {
@@ -368,7 +436,7 @@ export function LightsaberDuelGame() {
     if (!ctx) return;
 
     let isRunning = true;
-    const gravity = 0.55;
+    const gravity = 0.6;
     const floorY = 270;
 
     const loop = () => {
@@ -411,165 +479,85 @@ export function LightsaberDuelGame() {
       ctx.shadowBlur = 0;
 
       // 2. Recharge Force Energy over time
-      p1.force = Math.min(p1.maxForce, p1.force + 0.15);
-      p2.force = Math.min(p2.maxForce, p2.force + 0.15);
+      p1.force = Math.min(p1.maxForce, p1.force + 0.18);
+      p2.force = Math.min(p2.maxForce, p2.force + 0.18);
 
       // 3. Handle Player 1 Controls (Manual or AI Auto-Pilot)
-      const moveSpeed = 4.2;
+      const moveSpeed = 4.4;
       if (p1AutoPilot) {
         // AI Auto-Pilot algorithm for Player 1
         const dist = Math.abs(p2.x - p1.x);
         p1.facing = p2.x > p1.x ? 1 : -1;
 
-        if (dist > 75) {
+        if (dist > 70) {
           p1.vx = p1.facing * moveSpeed;
         } else {
           p1.vx = 0;
           if (p2.state === 'attack' && Math.random() < 0.7) {
-            p1.state = 'parry';
-            p1.parryTimer = 18;
+            triggerP1Parry();
           } else if (p1.attackTimer <= 0) {
-            p1.state = 'attack';
-            p1.attackTimer = 16;
-            playSound('swing');
+            triggerP1Slash();
           }
         }
         if (p1.force >= 35 && dist > 140 && Math.random() < 0.04) {
-          p1.force -= 35;
-          state.waves.push({
-            x: p1.x + (p1.facing === 1 ? p1.width + 10 : -10),
-            y: p1.y + p1.height / 2,
-            vx: p1.facing * 7,
-            radius: 14,
-            color: p1.saberColor,
-            damage: 22,
-            owner: 'p1',
-          });
-          playSound('force');
+          triggerP1Force();
         }
       } else {
         // Manual controls
-        if (keys.a) {
+        if (keys.left) {
           p1.vx = -moveSpeed;
           p1.facing = -1;
-        } else if (keys.d) {
+        } else if (keys.right) {
           p1.vx = moveSpeed;
           p1.facing = 1;
         } else {
           p1.vx = 0;
         }
 
-        if (keys.w && p1.isGrounded) {
-          p1.vy = -12;
+        if (keys.jump && p1.isGrounded) {
+          p1.vy = -12.5;
           p1.isGrounded = false;
-        }
-
-        // Attacks & Parries
-        if (keys.j && p1.attackTimer <= 0 && p1.parryTimer <= 0) {
-          p1.state = 'attack';
-          p1.attackTimer = 16;
-          playSound('swing');
-        }
-
-        if (keys.k && p1.parryTimer <= 0) {
-          p1.state = 'parry';
-          p1.parryTimer = 22;
-        }
-
-        // Force Blast
-        if (keys.l && p1.force >= 35) {
-          p1.force -= 35;
-          keys.l = false;
-          state.waves.push({
-            x: p1.x + (p1.facing === 1 ? p1.width + 10 : -10),
-            y: p1.y + p1.height / 2,
-            vx: p1.facing * 7,
-            radius: 14,
-            color: p1.saberColor,
-            damage: 22,
-            owner: 'p1',
-          });
-          playSound('force');
         }
       }
 
       // 4. Handle Player 2 Controls (Local or AI Opponent)
       if (gameMode === 'local') {
-        if (keys.left) {
+        if (keys.p2Left) {
           p2.vx = -moveSpeed;
           p2.facing = -1;
-        } else if (keys.right) {
+        } else if (keys.p2Right) {
           p2.vx = moveSpeed;
           p2.facing = 1;
         } else {
           p2.vx = 0;
         }
 
-        if (keys.up && p2.isGrounded) {
-          p2.vy = -12;
+        if (keys.p2Jump && p2.isGrounded) {
+          p2.vy = -12.5;
           p2.isGrounded = false;
-        }
-
-        if (keys.num1 && p2.attackTimer <= 0 && p2.parryTimer <= 0) {
-          p2.state = 'attack';
-          p2.attackTimer = 16;
-          playSound('swing');
-        }
-
-        if (keys.num2 && p2.parryTimer <= 0) {
-          p2.state = 'parry';
-          p2.parryTimer = 22;
-        }
-
-        if (keys.num3 && p2.force >= 35) {
-          p2.force -= 35;
-          keys.num3 = false;
-          state.waves.push({
-            x: p2.x + (p2.facing === 1 ? p2.width + 10 : -10),
-            y: p2.y + p2.height / 2,
-            vx: p2.facing * 7,
-            radius: 14,
-            color: p2.saberColor,
-            damage: 22,
-            owner: 'p2',
-          });
-          playSound('force');
         }
       } else if (gameMode === 'ai') {
         // Advanced Combat AI Behavior
         const dist = Math.abs(p1.x - p2.x);
         p2.facing = p1.x > p2.x ? 1 : -1;
 
-        const aiSpeed = aiRank === 'master' ? 4.5 : aiRank === 'knight' ? 3.6 : 2.5;
-        const parryChance = aiRank === 'master' ? 0.75 : aiRank === 'knight' ? 0.45 : 0.2;
+        const aiSpeed = aiRank === 'master' ? 4.6 : aiRank === 'knight' ? 3.6 : 2.6;
+        const parryChance = aiRank === 'master' ? 0.78 : aiRank === 'knight' ? 0.45 : 0.2;
 
-        if (dist > 75) {
+        if (dist > 70) {
           p2.vx = p2.facing * aiSpeed;
         } else {
           p2.vx = 0;
           if (p1.state === 'attack' && Math.random() < parryChance) {
-            p2.state = 'parry';
-            p2.parryTimer = 18;
+            triggerP2Parry();
           } else if (p2.attackTimer <= 0) {
-            p2.state = 'attack';
-            p2.attackTimer = 16;
-            playSound('swing');
+            triggerP2Slash();
           }
         }
 
         // AI Force Wave Cast
-        if (p2.force >= 40 && dist > 150 && Math.random() < 0.035) {
-          p2.force -= 40;
-          state.waves.push({
-            x: p2.x + (p2.facing === 1 ? p2.width + 10 : -10),
-            y: p2.y + p2.height / 2,
-            vx: p2.facing * 7,
-            radius: 14,
-            color: p2.saberColor,
-            damage: 22,
-            owner: 'p2',
-          });
-          playSound('force');
+        if (p2.force >= 35 && dist > 140 && Math.random() < 0.035) {
+          triggerP2Force();
         }
       }
 
@@ -595,7 +583,10 @@ export function LightsaberDuelGame() {
         // Timers update
         if (f.attackTimer > 0) {
           f.attackTimer--;
-          if (f.attackTimer <= 0) f.state = 'idle';
+          if (f.attackTimer <= 0) {
+            f.state = 'idle';
+            f.hasHit = false;
+          }
         }
         if (f.parryTimer > 0) {
           f.parryTimer--;
@@ -606,11 +597,13 @@ export function LightsaberDuelGame() {
 
       // 6. Blade Clash & Hit Box Collision Logic
       const dist = Math.abs((p1.x + p1.width / 2) - (p2.x + p2.width / 2));
-      const inRange = dist < 72;
+      const inRange = dist < 76;
 
       if (inRange) {
-        // Scenario A: Both attack at same time -> BLADE CLASH!
-        if (p1.attackTimer === 10 && p2.attackTimer === 10) {
+        // Scenario A: Both attacking at the same time -> CLASH!
+        if (p1.state === 'attack' && p2.state === 'attack' && !p1.hasHit && !p2.hasHit) {
+          p1.hasHit = true;
+          p2.hasHit = true;
           state.clashes++;
           setClashCount(state.clashes);
           p1.vx = -p1.facing * 5;
@@ -631,7 +624,8 @@ export function LightsaberDuelGame() {
           }
         }
         // Scenario B: P1 attacks P2
-        else if (p1.attackTimer === 10) {
+        else if (p1.state === 'attack' && !p1.hasHit && p1.attackTimer > 4) {
+          p1.hasHit = true;
           if (p2.state === 'parry') {
             // P2 successfully Parried P1
             p1.hitTimer = 15;
@@ -668,7 +662,8 @@ export function LightsaberDuelGame() {
           }
         }
         // Scenario C: P2 attacks P1
-        else if (p2.attackTimer === 10) {
+        else if (p2.state === 'attack' && !p2.hasHit && p2.attackTimer > 4) {
+          p2.hasHit = true;
           if (p1.state === 'parry') {
             // P1 successfully Parried P2
             p2.hitTimer = 15;
@@ -840,13 +835,14 @@ export function LightsaberDuelGame() {
       state.animationId = requestAnimationFrame(loop);
     };
 
+    gameStateRef.current.animationId = requestAnimationFrame(loop);
     const animId = gameStateRef.current.animationId;
 
     return () => {
       isRunning = false;
       cancelAnimationFrame(animId);
     };
-  }, [isPlaying, gameMode, aiRank, playSound, p1AutoPilot]);
+  }, [isPlaying, gameMode, aiRank, playSound, p1AutoPilot, triggerP1Slash, triggerP1Parry, triggerP1Force, triggerP2Slash, triggerP2Parry, triggerP2Force]);
 
   return (
     <div className="w-full rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-2xl text-white font-sans space-y-6">
@@ -860,7 +856,7 @@ export function LightsaberDuelGame() {
             <h3 className="text-xl sm:text-2xl font-black text-white">Lightsaber Duel: Cyber Blade Arena</h3>
           </div>
           <p className="text-xs text-slate-400 font-medium">
-            Real-time fighting game. Execute blade strikes, parry incoming attacks, and unleash Force blasts!
+            Real-time fighting game. Strike with J (or Click), Parry with K, and Blast with L!
           </p>
         </div>
 
@@ -960,7 +956,16 @@ export function LightsaberDuelGame() {
             </div>
 
             {/* Canvas Viewport */}
-            <div className="relative w-full aspect-[16/9.2] rounded-xl overflow-hidden bg-[#060a12] border border-slate-800 flex items-center justify-center">
+            <div 
+              className="relative w-full aspect-[16/9.2] rounded-xl overflow-hidden bg-[#060a12] border border-slate-800 flex items-center justify-center cursor-crosshair"
+              onClick={isPlaying ? triggerP1Slash : undefined}
+              onContextMenu={(e) => {
+                if (isPlaying) {
+                  e.preventDefault();
+                  triggerP1Parry();
+                }
+              }}
+            >
               <canvas
                 ref={canvasRef}
                 width={660}
@@ -978,7 +983,7 @@ export function LightsaberDuelGame() {
                     <h4 className="text-2xl font-black text-white">IGNITE YOUR LIGHTSABER</h4>
                     <p className="text-xs text-slate-300 font-medium max-w-sm">
                       {gameMode === 'ai'
-                        ? 'Duel the Senior AI Sith Architect! Strike with J, Parry with K, and Blast with L.'
+                        ? 'Duel the Senior AI Sith Architect! Strike with J (or Click), Parry with K, and Blast with L.'
                         : 'Player 1: A/D Move · J Slash · K Parry · L Force | Player 2: Arrows Move · 1 Slash · 2 Parry · 3 Force'}
                     </p>
                   </div>
@@ -1062,19 +1067,19 @@ export function LightsaberDuelGame() {
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div className="flex gap-2">
                 <button
-                  onMouseDown={() => (gameStateRef.current.keys.a = true)}
-                  onMouseUp={() => (gameStateRef.current.keys.a = false)}
-                  onTouchStart={() => (gameStateRef.current.keys.a = true)}
-                  onTouchEnd={() => (gameStateRef.current.keys.a = false)}
+                  onMouseDown={() => (gameStateRef.current.keys.left = true)}
+                  onMouseUp={() => (gameStateRef.current.keys.left = false)}
+                  onTouchStart={() => (gameStateRef.current.keys.left = true)}
+                  onTouchEnd={() => (gameStateRef.current.keys.left = false)}
                   className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-cyan-500 active:text-slate-950 rounded-xl text-xs font-black select-none text-cyan-300"
                 >
                   ← MOVE
                 </button>
                 <button
-                  onMouseDown={() => (gameStateRef.current.keys.d = true)}
-                  onMouseUp={() => (gameStateRef.current.keys.d = false)}
-                  onTouchStart={() => (gameStateRef.current.keys.d = true)}
-                  onTouchEnd={() => (gameStateRef.current.keys.d = false)}
+                  onMouseDown={() => (gameStateRef.current.keys.right = true)}
+                  onMouseUp={() => (gameStateRef.current.keys.right = false)}
+                  onTouchStart={() => (gameStateRef.current.keys.right = true)}
+                  onTouchEnd={() => (gameStateRef.current.keys.right = false)}
                   className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-cyan-500 active:text-slate-950 rounded-xl text-xs font-black select-none text-cyan-300"
                 >
                   MOVE →
@@ -1083,22 +1088,23 @@ export function LightsaberDuelGame() {
 
               <div className="flex gap-2">
                 <button
-                  onMouseDown={() => (gameStateRef.current.keys.j = true)}
-                  onMouseUp={() => (gameStateRef.current.keys.j = false)}
-                  onTouchStart={() => (gameStateRef.current.keys.j = true)}
-                  onTouchEnd={() => (gameStateRef.current.keys.j = false)}
-                  className="flex-1 py-2.5 bg-rose-600/80 hover:bg-rose-500 active:bg-rose-400 rounded-xl text-xs font-black select-none text-white shadow-md"
+                  onClick={triggerP1Slash}
+                  className="flex-1 py-2.5 bg-rose-600/80 hover:bg-rose-500 active:bg-rose-400 rounded-xl text-xs font-black select-none text-white shadow-md cursor-pointer"
                 >
                   ⚔️ SLASH
                 </button>
                 <button
-                  onMouseDown={() => (gameStateRef.current.keys.k = true)}
-                  onMouseUp={() => (gameStateRef.current.keys.k = false)}
-                  onTouchStart={() => (gameStateRef.current.keys.k = true)}
-                  onTouchEnd={() => (gameStateRef.current.keys.k = false)}
-                  className="flex-1 py-2.5 bg-cyan-600/80 hover:bg-cyan-500 active:bg-cyan-400 rounded-xl text-xs font-black select-none text-white shadow-md"
+                  onClick={triggerP1Parry}
+                  className="flex-1 py-2.5 bg-cyan-600/80 hover:bg-cyan-500 active:bg-cyan-400 rounded-xl text-xs font-black select-none text-white shadow-md cursor-pointer"
                 >
                   🛡️ PARRY
+                </button>
+                <button
+                  onClick={triggerP1Force}
+                  className="px-3 py-2.5 bg-blue-600/80 hover:bg-blue-500 active:bg-blue-400 rounded-xl text-xs font-black select-none text-white shadow-md cursor-pointer"
+                  title="Force Blast"
+                >
+                  ⚡
                 </button>
               </div>
             </div>
@@ -1120,11 +1126,11 @@ export function LightsaberDuelGame() {
               </div>
               <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                 <span className="text-rose-300">Saber Slash:</span>
-                <span className="font-mono text-white font-bold"><kbd className="px-1.5 py-0.5 bg-slate-800 rounded">J</kbd> (Inflicts -14 HP)</span>
+                <span className="font-mono text-white font-bold"><kbd className="px-1.5 py-0.5 bg-slate-800 rounded">J</kbd> or <kbd className="px-1.5 py-0.5 bg-slate-800 rounded">Click</kbd></span>
               </div>
               <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                 <span className="text-amber-300">Saber Parry:</span>
-                <span className="font-mono text-white font-bold"><kbd className="px-1.5 py-0.5 bg-slate-800 rounded">K</kbd> (Staggers Foe)</span>
+                <span className="font-mono text-white font-bold"><kbd className="px-1.5 py-0.5 bg-slate-800 rounded">K</kbd> or <kbd className="px-1.5 py-0.5 bg-slate-800 rounded">Right-Click</kbd></span>
               </div>
               <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
                 <span className="text-blue-300">Force Blast:</span>
@@ -1141,15 +1147,15 @@ export function LightsaberDuelGame() {
             <ul className="space-y-1.5 text-[11px] leading-relaxed">
               <li className="flex items-center gap-1.5">
                 <span className="text-cyan-400">✦</span>
-                <span><strong>Simultaneous Strikes:</strong> Causes sparks & blade clash!</span>
+                <span><strong>Simultaneous Strikes:</strong> Sparks a blade clash and knockback!</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-amber-400">✦</span>
-                <span><strong>Timed Parry:</strong> Deflects attacks & pushes opponent back.</span>
+                <span><strong>Timed Parry:</strong> Deflects attacks & staggers the opponent.</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-blue-400">✦</span>
-                <span><strong>Force Wave:</strong> Uses 35% Force bar for long-range poke.</span>
+                <span><strong>Force Wave:</strong> Uses 30% Force bar for long-range poke.</span>
               </li>
             </ul>
           </div>
