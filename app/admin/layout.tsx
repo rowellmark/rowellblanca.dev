@@ -20,6 +20,7 @@ import {
   Globe,
   BookOpen,
   Cpu,
+  Receipt,
 } from 'lucide-react';
 import NotificationBell from '@/components/admin/notification-bell';
 
@@ -73,6 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       title: 'CORE NAVIGATION',
       items: [
         { title: 'Dashboard', href: '/admin', icon: LayoutDashboard, external: false },
+        { title: 'Invoices & Billing', href: '/admin/invoices', icon: Receipt, external: false },
         { title: 'Blog Articles', href: '/admin/blog', icon: BookOpen, external: false },
         { title: 'AI API Settings', href: '/admin/ai-settings', icon: Cpu, external: false },
         { title: 'Landing Pages', href: '/admin/landing-pages', icon: Globe, external: false },
