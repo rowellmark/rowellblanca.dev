@@ -48,6 +48,8 @@ interface Invoice {
   paymentTerms?: string;
   paymentDetails?: string;
   status: 'DRAFT' | 'SCHEDULED' | 'SENT' | 'PAID' | 'CANCELLED';
+  isRecurring?: boolean;
+  recurringInterval?: string;
   issueDate: string;
   dueDate: string;
   sentAt?: string;
@@ -249,19 +251,26 @@ export default function ClientInvoiceViewPage() {
           <div className="flex flex-col justify-between sm:items-end">
             <div className="text-left sm:text-right">
               <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">Status</span>
-              {isPaid ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-black text-xs uppercase border border-emerald-300">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Paid on {formatDate(invoice.paidAt)}
-                </span>
-              ) : isOverdue ? (
-                <span className="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-900 font-black text-xs uppercase border border-rose-300">
-                  Overdue
-                </span>
-              ) : (
-                <span className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-black text-xs uppercase border border-amber-300">
-                  Payment Pending
-                </span>
-              )}
+              <div className="flex items-center sm:justify-end gap-2 flex-wrap">
+                {isPaid ? (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-black text-xs uppercase border border-emerald-300">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Paid on {formatDate(invoice.paidAt)}
+                  </span>
+                ) : isOverdue ? (
+                  <span className="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-900 font-black text-xs uppercase border border-rose-300">
+                    Overdue
+                  </span>
+                ) : (
+                  <span className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-black text-xs uppercase border border-amber-300">
+                    Payment Pending
+                  </span>
+                )}
+                {invoice.isRecurring && (
+                  <span className="inline-block px-2.5 py-1 rounded-full bg-purple-100 text-purple-900 font-black text-[11px] uppercase border border-purple-300">
+                    🔄 {invoice.recurringInterval === 'MONTHLY' ? 'Monthly Retainer' : invoice.recurringInterval || 'Recurring'}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="text-left sm:text-right mt-4 sm:mt-0">

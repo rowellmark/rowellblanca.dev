@@ -62,6 +62,9 @@ interface Invoice {
   paymentTerms?: string;
   paymentDetails?: string;
   status: 'DRAFT' | 'SCHEDULED' | 'SENT' | 'PAID' | 'CANCELLED';
+  isRecurring?: boolean;
+  recurringInterval?: string;
+  nextRecurringDate?: string;
   issueDate: string;
   dueDate: string;
   scheduledSendDate?: string;
@@ -124,8 +127,10 @@ export default function AdminInvoicesPage() {
     tagline: DEFAULT_TAGLINE,
     issueDate: new Date().toISOString().split('T')[0],
     dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    sendOption: 'schedule', // 'immediate' | 'schedule' | 'draft'
+    sendOption: 'schedule', // 'immediate' | 'schedule' | 'recurring' | 'draft'
     scheduledSendDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+    isRecurring: false,
+    recurringInterval: 'MONTHLY',
     discount: 0,
     taxRate: 0,
     paymentTerms: DEFAULT_TERMS,
@@ -201,6 +206,8 @@ export default function AdminInvoicesPage() {
       dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       sendOption: 'schedule',
       scheduledSendDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      isRecurring: false,
+      recurringInterval: 'MONTHLY',
       discount: 0,
       taxRate: 0,
       paymentTerms: DEFAULT_TERMS,
@@ -231,10 +238,12 @@ export default function AdminInvoicesPage() {
       tagline: inv.tagline || DEFAULT_TAGLINE,
       issueDate: new Date(inv.issueDate).toISOString().split('T')[0],
       dueDate: new Date(inv.dueDate).toISOString().split('T')[0],
-      sendOption: inv.status === 'SCHEDULED' ? 'schedule' : inv.status === 'SENT' ? 'immediate' : 'draft',
+      sendOption: inv.isRecurring ? 'recurring' : inv.status === 'SCHEDULED' ? 'schedule' : inv.status === 'SENT' ? 'immediate' : 'draft',
       scheduledSendDate: inv.scheduledSendDate
         ? new Date(inv.scheduledSendDate).toISOString().slice(0, 16)
         : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      isRecurring: Boolean(inv.isRecurring),
+      recurringInterval: inv.recurringInterval || 'MONTHLY',
       discount: inv.discount || 0,
       taxRate: inv.taxRate || 0,
       paymentTerms: inv.paymentTerms || DEFAULT_TERMS,
@@ -346,9 +355,11 @@ export default function AdminInvoicesPage() {
         tagline: formData.tagline,
         issueDate: formData.issueDate,
         dueDate: formData.dueDate,
-        scheduledSendDate: formData.sendOption === 'schedule' ? formData.scheduledSendDate : null,
+        scheduledSendDate: (formData.sendOption === 'schedule' || formData.sendOption === 'recurring') ? formData.scheduledSendDate : null,
         sendNow: formData.sendOption === 'immediate',
-        status: formData.sendOption === 'immediate' ? 'SENT' : formData.sendOption === 'schedule' ? 'SCHEDULED' : 'DRAFT',
+        status: formData.sendOption === 'immediate' ? 'SENT' : (formData.sendOption === 'schedule' || formData.sendOption === 'recurring') ? 'SCHEDULED' : 'DRAFT',
+        isRecurring: formData.sendOption === 'recurring' || Boolean(formData.isRecurring),
+        recurringInterval: formData.sendOption === 'recurring' ? (formData.recurringInterval || 'MONTHLY') : (formData.recurringInterval || 'NONE'),
         discount: Number(formData.discount),
         taxRate: Number(formData.taxRate),
         paymentTerms: formData.paymentTerms,
@@ -577,7 +588,7 @@ export default function AdminInvoicesPage() {
         </div>
 
         <div className="flex items-center gap-1 flex-wrap">
-          {['ALL', 'SCHEDULED', 'SENT', 'PAID', 'DRAFT'].map((st) => (
+          {['ALL', 'SCHEDULED', 'RECURRING', 'SENT', 'PAID', 'DRAFT'].map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
@@ -587,7 +598,7 @@ export default function AdminInvoicesPage() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              {st}
+              {st === 'RECURRING' ? '🔄 RECURRING' : st}
             </button>
           ))}
         </div>
@@ -651,10 +662,15 @@ export default function AdminInvoicesPage() {
                         {inv.clientCompany && (
                           <span className="text-slate-400 text-[10px] block">{inv.clientCompany}</span>
                         )}
-                        <div className="mt-1 flex items-center gap-1 flex-wrap">
+                        <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                           <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
                             {inv.items?.length || 0} Job Item(s)
                           </span>
+                          {inv.isRecurring && (
+                            <span className="text-[10px] font-black text-purple-900 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">
+                              🔄 {inv.recurringInterval === 'MONTHLY' ? 'Monthly' : inv.recurringInterval || 'Recurring'}
+                            </span>
+                          )}
                         </div>
                       </td>
 
@@ -919,13 +935,33 @@ export default function AdminInvoicesPage() {
                   />
                 </div>
 
-                {/* Auto Send Schedule Control */}
+                {/* Auto Send & Recurring Schedule Control */}
                 <div className="sm:col-span-3 pt-2 border-t border-amber-200 space-y-2">
-                  <span className="text-[11px] font-black uppercase text-amber-900 tracking-wider block">
-                    ⚡ Auto-Send & Delivery Timing
-                  </span>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <span className="text-[11px] font-black uppercase text-amber-900 tracking-wider block">
+                      ⚡ Auto-Send &amp; Recurring Schedule Timing
+                    </span>
+                    {formData.sendOption === 'recurring' && (
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-purple-200 text-purple-900 px-2 py-0.5 rounded-md border border-purple-300">
+                        🔄 Auto Monthly Recurring Active
+                      </span>
+                    )}
+                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
+                    <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
+                      formData.sendOption === 'recurring' ? 'bg-purple-100 border-purple-400 text-purple-950 font-bold shadow-xs' : 'bg-white border-slate-200 text-slate-700'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="sendOption"
+                        value="recurring"
+                        checked={formData.sendOption === 'recurring'}
+                        onChange={() => setFormData({ ...formData, sendOption: 'recurring', isRecurring: true, recurringInterval: 'MONTHLY' })}
+                      />
+                      <span>🔄 Monthly Recurring</span>
+                    </label>
+
                     <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
                       formData.sendOption === 'schedule' ? 'bg-amber-100 border-amber-400 text-amber-950 font-bold' : 'bg-white border-slate-200 text-slate-700'
                     }`}>
@@ -934,9 +970,9 @@ export default function AdminInvoicesPage() {
                         name="sendOption"
                         value="schedule"
                         checked={formData.sendOption === 'schedule'}
-                        onChange={(e) => setFormData({ ...formData, sendOption: e.target.value })}
+                        onChange={() => setFormData({ ...formData, sendOption: 'schedule', isRecurring: false })}
                       />
-                      <span>⏰ Schedule Auto-Send Date</span>
+                      <span>⏰ Scheduled One-Time</span>
                     </label>
 
                     <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
@@ -947,7 +983,7 @@ export default function AdminInvoicesPage() {
                         name="sendOption"
                         value="immediate"
                         checked={formData.sendOption === 'immediate'}
-                        onChange={(e) => setFormData({ ...formData, sendOption: e.target.value })}
+                        onChange={() => setFormData({ ...formData, sendOption: 'immediate', isRecurring: false })}
                       />
                       <span>⚡ Send Immediately</span>
                     </label>
@@ -960,11 +996,43 @@ export default function AdminInvoicesPage() {
                         name="sendOption"
                         value="draft"
                         checked={formData.sendOption === 'draft'}
-                        onChange={(e) => setFormData({ ...formData, sendOption: e.target.value })}
+                        onChange={() => setFormData({ ...formData, sendOption: 'draft', isRecurring: false })}
                       />
-                      <span>📝 Save as Draft (No Send)</span>
+                      <span>📝 Save as Draft</span>
                     </label>
                   </div>
+
+                  {formData.sendOption === 'recurring' && (
+                    <div className="pt-2 p-3.5 rounded-xl bg-purple-50 border border-purple-200 space-y-2">
+                      <div className="flex items-center justify-between flex-wrap gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-purple-950">Frequency:</span>
+                          <select
+                            value={formData.recurringInterval}
+                            onChange={(e) => setFormData({ ...formData, recurringInterval: e.target.value })}
+                            className="px-2.5 py-1.5 rounded-lg bg-white border border-purple-300 font-bold text-xs text-purple-950 cursor-pointer"
+                          >
+                            <option value="MONTHLY">Monthly (Every Month)</option>
+                            <option value="BIWEEKLY">Bi-Weekly (Every 2 Weeks)</option>
+                            <option value="WEEKLY">Weekly (Every Week)</option>
+                          </select>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-purple-950">Next Send Date &amp; Time:</span>
+                          <input
+                            type="datetime-local"
+                            value={formData.scheduledSendDate}
+                            onChange={(e) => setFormData({ ...formData, scheduledSendDate: e.target.value })}
+                            className="px-2.5 py-1 rounded-lg bg-white border border-purple-300 font-mono font-bold text-xs text-slate-900 focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-purple-800 font-medium">
+                        ✨ <strong>Monthly Retainer Schedule:</strong> This invoice will auto-send on the selected date, and the system will automatically generate and queue the next month&apos;s invoice upon delivery.
+                      </p>
+                    </div>
+                  )}
 
                   {formData.sendOption === 'schedule' && (
                     <div className="pt-2 flex items-center gap-3">
@@ -998,15 +1066,22 @@ export default function AdminInvoicesPage() {
                   <label className="block text-[11px] font-bold text-slate-700 mb-1">Currency</label>
                   <select
                     value={formData.currency}
-                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                    onChange={(e) => {
+                      const newCurr = e.target.value;
+                      setFormData({
+                        ...formData,
+                        currency: newCurr,
+                        taxRate: newCurr === 'PHP' && (formData.taxRate === 0 || formData.taxRate === undefined) ? 15 : formData.taxRate,
+                      });
+                    }}
                     className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-900 cursor-pointer"
                   >
                     <option value="USD">USD ($)</option>
+                    <option value="PHP">PHP (₱ - 15% PH Tax)</option>
                     <option value="EUR">EUR (€)</option>
                     <option value="GBP">GBP (£)</option>
                     <option value="AUD">AUD (A$)</option>
                     <option value="CAD">CAD (C$)</option>
-                    <option value="PHP">PHP (₱)</option>
                   </select>
                 </div>
               </div>
@@ -1144,40 +1219,94 @@ export default function AdminInvoicesPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   <div className="flex justify-between items-center text-slate-600">
                     <span>Subtotal:</span>
-                    <span className="font-bold text-slate-900">${computedSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                    <span className="font-bold text-slate-900">{formatCurrency(computedSubtotal, formData.currency)}</span>
                   </div>
 
                   <div className="flex justify-between items-center text-slate-600">
-                    <span>Discount ($):</span>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.discount}
-                      onChange={(e) => setFormData({ ...formData, discount: Math.max(0, Number(e.target.value)) })}
-                      className="w-24 px-2 py-1 rounded-lg border border-slate-300 text-right font-bold text-slate-900"
-                    />
+                    <span>Discount:</span>
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={formData.discount}
+                        onChange={(e) => setFormData({ ...formData, discount: Math.max(0, Number(e.target.value)) })}
+                        className="w-24 px-2 py-1 rounded-lg border border-slate-300 text-right font-bold text-slate-900"
+                      />
+                      <span className="text-xs font-bold text-slate-500">{formData.currency}</span>
+                    </div>
                   </div>
 
-                  <div className="flex justify-between items-center text-slate-600">
-                    <span>Tax Rate (%):</span>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.1"
-                      value={formData.taxRate}
-                      onChange={(e) => setFormData({ ...formData, taxRate: Math.max(0, Number(e.target.value)) })}
-                      className="w-24 px-2 py-1 rounded-lg border border-slate-300 text-right font-bold text-slate-900"
-                    />
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center text-slate-600">
+                      <div className="flex items-center gap-1.5">
+                        <span>Tax Rate (%):</span>
+                        {formData.currency === 'PHP' && (
+                          <span className="text-[10px] font-black uppercase text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">
+                            PH 15%
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={formData.taxRate}
+                          onChange={(e) => setFormData({ ...formData, taxRate: Math.max(0, Number(e.target.value)) })}
+                          className="w-20 px-2 py-1 rounded-lg border border-slate-300 text-right font-bold text-slate-900"
+                        />
+                        <span className="text-xs font-bold text-slate-500">%</span>
+                      </div>
+                    </div>
+
+                    {/* Quick Tax Rate Presets */}
+                    <div className="flex items-center justify-end gap-1 pt-1">
+                      <span className="text-[10px] text-slate-400 font-bold">Presets:</span>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, taxRate: 15 })}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                          formData.taxRate === 15
+                            ? 'bg-amber-100 border-amber-400 text-amber-900'
+                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                        title="15% Reduced Philippines Tax Rate"
+                      >
+                        15% (PH)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, taxRate: 12 })}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                          formData.taxRate === 12
+                            ? 'bg-blue-100 border-blue-400 text-blue-900'
+                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        12% (VAT)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, taxRate: 0 })}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                          formData.taxRate === 0
+                            ? 'bg-slate-200 border-slate-400 text-slate-900'
+                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        0% (None)
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex justify-between items-center pt-3 border-t-2 border-slate-900 text-sm">
                     <span className="font-black text-[#0b1a30] uppercase">Total Amount:</span>
                     <span className="font-black text-[#1d63ed] text-lg">
-                      ${computedTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })} {formData.currency}
+                      {formatCurrency(computedTotal, formData.currency)}
                     </span>
                   </div>
                 </div>
@@ -1269,10 +1398,15 @@ export default function AdminInvoicesPage() {
                         <span>+63 968 890 0418</span>
                       </a>
                       <span className="text-slate-300">•</span>
-                      <span className="inline-flex items-center gap-1 text-slate-600">
+                      <a href="mailto:rowellblanca94@gmail.com" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">
                         <Mail className="w-3 h-3 text-blue-500" />
                         <span>rowellblanca94@gmail.com</span>
-                      </span>
+                      </a>
+                      <span className="text-slate-300">•</span>
+                      <a href="https://rowellblanca.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">
+                        <Globe className="w-3 h-3 text-emerald-500" />
+                        <span>rowellblanca.dev</span>
+                      </a>
                     </div>
                   </div>
                   <div className="text-right font-mono">

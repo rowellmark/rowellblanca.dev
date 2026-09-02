@@ -189,6 +189,11 @@ export default function InvoicePreviewPage() {
                         <Mail className="w-3 h-3 text-blue-400" />
                         <span>rowellblanca94@gmail.com</span>
                       </a>
+                      <span className="text-slate-400">•</span>
+                      <a href="https://rowellblanca.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-emerald-300 hover:text-white">
+                        <Globe className="w-3 h-3 text-emerald-400" />
+                        <span>rowellblanca.dev</span>
+                      </a>
                     </div>
                   </div>
                   <div className="text-right bg-white/10 backdrop-blur-md border border-white/10 px-3.5 py-2 rounded-xl">

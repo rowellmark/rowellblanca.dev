@@ -199,6 +199,10 @@ model Invoice {
 
   status            InvoiceStatus @default(DRAFT)
 
+  isRecurring       Boolean       @default(false)
+  recurringInterval String?       @default("NONE") // NONE, MONTHLY, BIWEEKLY, WEEKLY
+  nextRecurringDate DateTime?
+
   issueDate         DateTime      @default(now())
   dueDate           DateTime
   scheduledSendDate DateTime?

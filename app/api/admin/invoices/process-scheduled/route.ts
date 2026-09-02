@@ -72,11 +72,75 @@ export async function POST(request: Request) {
           },
         });
 
+        // If recurring invoice (e.g. Monthly Retainer), spawn next cycle's scheduled invoice
+        let nextCycleInvoiceNumber = null;
+        if (invoice.isRecurring && invoice.recurringInterval && invoice.recurringInterval !== 'NONE') {
+          try {
+            const baseSendDate = invoice.scheduledSendDate || invoice.issueDate || new Date();
+            const nextSendDate = new Date(baseSendDate);
+            const nextDueDate = new Date(invoice.dueDate || baseSendDate);
+
+            if (invoice.recurringInterval === 'MONTHLY') {
+              nextSendDate.setMonth(nextSendDate.getMonth() + 1);
+              nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+            } else if (invoice.recurringInterval === 'BIWEEKLY') {
+              nextSendDate.setDate(nextSendDate.getDate() + 14);
+              nextDueDate.setDate(nextDueDate.getDate() + 14);
+            } else if (invoice.recurringInterval === 'WEEKLY') {
+              nextSendDate.setDate(nextSendDate.getDate() + 7);
+              nextDueDate.setDate(nextDueDate.getDate() + 7);
+            }
+
+            const totalCount = await prisma.invoice.count();
+            const year = nextSendDate.getFullYear();
+            const nextInvNum = `INV-${year}-${String(totalCount + 1).padStart(3, '0')}`;
+
+            const nextInvoice = await prisma.invoice.create({
+              data: {
+                invoiceNumber: nextInvNum,
+                clientName: invoice.clientName,
+                clientEmail: invoice.clientEmail,
+                clientCompany: invoice.clientCompany,
+                clientPhone: invoice.clientPhone,
+                clientAddress: invoice.clientAddress,
+                tagline: invoice.tagline,
+                currency: invoice.currency,
+                subtotal: invoice.subtotal,
+                discount: invoice.discount,
+                taxRate: invoice.taxRate,
+                totalAmount: invoice.totalAmount,
+                isRecurring: true,
+                recurringInterval: invoice.recurringInterval,
+                issueDate: nextSendDate,
+                dueDate: nextDueDate,
+                scheduledSendDate: nextSendDate,
+                status: 'SCHEDULED',
+                paymentTerms: invoice.paymentTerms,
+                paymentDetails: invoice.paymentDetails,
+                notes: invoice.notes,
+                items: {
+                  create: invoice.items.map((it) => ({
+                    description: it.description,
+                    details: it.details,
+                    quantity: it.quantity,
+                    unitPrice: it.unitPrice,
+                    amount: it.amount,
+                  })),
+                },
+              },
+            });
+            nextCycleInvoiceNumber = nextInvoice.invoiceNumber;
+          } catch (recurErr) {
+            console.error(`[Process-Scheduled] Failed to spawn next recurring cycle for #${invoice.invoiceNumber}:`, recurErr);
+          }
+        }
+
         processedResults.push({
           id: invoice.id,
           invoiceNumber: invoice.invoiceNumber,
           clientEmail: invoice.clientEmail,
           success: true,
+          nextCycleInvoiceNumber,
           mailResult: mailRes,
         });
       } catch (err: any) {

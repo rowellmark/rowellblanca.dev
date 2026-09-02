@@ -16,7 +16,11 @@ export async function GET(request: Request) {
     let whereClause: any = {};
 
     if (statusParam && statusParam !== 'ALL') {
-      whereClause.status = statusParam;
+      if (statusParam === 'RECURRING') {
+        whereClause.isRecurring = true;
+      } else {
+        whereClause.status = statusParam;
+      }
     }
 
     if (searchParam && searchParam.trim()) {
@@ -88,6 +92,8 @@ export async function POST(request: Request) {
       items = [],
       discount = 0,
       taxRate = 0,
+      isRecurring = false,
+      recurringInterval = 'NONE',
       issueDate,
       dueDate,
       scheduledSendDate,
@@ -152,6 +158,21 @@ export async function POST(request: Request) {
       initialStatus = 'SCHEDULED';
     }
 
+    // Calculate next recurring date if recurring schedule is enabled
+    let nextRecurringDate: Date | null = null;
+    if (isRecurring && recurringInterval && recurringInterval !== 'NONE') {
+      const base = finalScheduledDate || finalIssueDate;
+      const next = new Date(base);
+      if (recurringInterval === 'MONTHLY') {
+        next.setMonth(next.getMonth() + 1);
+      } else if (recurringInterval === 'BIWEEKLY') {
+        next.setDate(next.getDate() + 14);
+      } else if (recurringInterval === 'WEEKLY') {
+        next.setDate(next.getDate() + 7);
+      }
+      nextRecurringDate = next;
+    }
+
     const newInvoice = await prisma.invoice.create({
       data: {
         invoiceNumber,
@@ -166,6 +187,9 @@ export async function POST(request: Request) {
         discount: numDiscount,
         taxRate: numTaxRate,
         totalAmount,
+        isRecurring: Boolean(isRecurring),
+        recurringInterval: isRecurring ? (recurringInterval || 'MONTHLY') : 'NONE',
+        nextRecurringDate,
         issueDate: finalIssueDate,
         dueDate: finalDueDate,
         scheduledSendDate: finalScheduledDate,
@@ -243,6 +267,8 @@ export async function PUT(request: Request) {
       items,
       discount,
       taxRate,
+      isRecurring,
+      recurringInterval,
       issueDate,
       dueDate,
       scheduledSendDate,
@@ -289,6 +315,25 @@ export async function PUT(request: Request) {
       });
     }
 
+    // Calculate next recurring date if recurring schedule is updated
+    let nextRecurringDate: Date | null | undefined = undefined;
+    if (isRecurring !== undefined) {
+      if (isRecurring && recurringInterval && recurringInterval !== 'NONE') {
+        const base = scheduledSendDate ? new Date(scheduledSendDate) : issueDate ? new Date(issueDate) : new Date();
+        const next = new Date(base);
+        if (recurringInterval === 'MONTHLY') {
+          next.setMonth(next.getMonth() + 1);
+        } else if (recurringInterval === 'BIWEEKLY') {
+          next.setDate(next.getDate() + 14);
+        } else if (recurringInterval === 'WEEKLY') {
+          next.setDate(next.getDate() + 7);
+        }
+        nextRecurringDate = next;
+      } else if (!isRecurring) {
+        nextRecurringDate = null;
+      }
+    }
+
     const updatedInvoice = await prisma.invoice.update({
       where: { id: invoiceId },
       data: {
@@ -304,6 +349,9 @@ export async function PUT(request: Request) {
         ...(discount !== undefined ? { discount: Number(discount) } : {}),
         ...(taxRate !== undefined ? { taxRate: Number(taxRate) } : {}),
         ...(totalAmount !== undefined ? { totalAmount } : {}),
+        ...(isRecurring !== undefined ? { isRecurring: Boolean(isRecurring) } : {}),
+        ...(recurringInterval !== undefined ? { recurringInterval } : {}),
+        ...(nextRecurringDate !== undefined ? { nextRecurringDate } : {}),
         ...(issueDate ? { issueDate: new Date(issueDate) } : {}),
         ...(dueDate ? { dueDate: new Date(dueDate) } : {}),
         ...(scheduledSendDate !== undefined
