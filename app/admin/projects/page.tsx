@@ -88,6 +88,7 @@ export default function ProjectsManagerPage() {
   const [uploadingFullDesktop, setUploadingFullDesktop] = useState(false);
   const [uploadingFullMobile, setUploadingFullMobile] = useState(false);
   const [updatingSpotlightId, setUpdatingSpotlightId] = useState<number | null>(null);
+  const [updatingFeaturedId, setUpdatingFeaturedId] = useState<number | null>(null);
   const [galleryTarget, setGalleryTarget] = useState<GalleryTarget | null>(null);
   const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
 
@@ -155,6 +156,31 @@ export default function ProjectsManagerPage() {
       alert('Error setting spotlight project');
     } finally {
       setUpdatingSpotlightId(null);
+    }
+  };
+
+  const toggleProjectFeatured = async (proj: Project) => {
+    setUpdatingFeaturedId(proj.id);
+    const newFeatured = !proj.featured;
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: proj.id,
+          featured: newFeatured,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchProjects();
+      } else {
+        alert(data.message || 'Failed to update flagship status');
+      }
+    } catch (e) {
+      console.error('Error toggling flagship status:', e);
+    } finally {
+      setUpdatingFeaturedId(null);
     }
   };
 
@@ -442,6 +468,7 @@ export default function ProjectsManagerPage() {
                 <th className="p-4">Project Name & Category</th>
                 <th className="p-4">Status</th>
                 <th className="p-4">Spotlight</th>
+                <th className="p-4">Flagship (Top 5)</th>
                 <th className="p-4">Tech Stack</th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
@@ -528,6 +555,32 @@ export default function ProjectsManagerPage() {
                         Set Spotlight
                       </button>
                     )}
+                  </td>
+                  <td className="p-4">
+                    <button
+                      type="button"
+                      onClick={() => toggleProjectFeatured(proj)}
+                      disabled={updatingFeaturedId === proj.id}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-[11px] border cursor-pointer transition-all ${
+                        proj.featured
+                          ? 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100 shadow-xs'
+                          : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-amber-50 hover:text-amber-800'
+                      }`}
+                      title={
+                        proj.featured
+                          ? 'Selected as Flagship (Shows in Homepage Top 5 & Curated Portfolios)'
+                          : 'Click to select as Flagship for Homepage Top 5'
+                      }
+                    >
+                      {updatingFeaturedId === proj.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
+                      ) : (
+                        <Sparkles
+                          className={`w-3.5 h-3.5 ${proj.featured ? 'text-amber-500 fill-amber-500' : 'text-slate-400'}`}
+                        />
+                      )}
+                      {proj.featured ? 'Top 5 Flagship' : 'Add Flagship'}
+                    </button>
                   </td>
                   <td className="p-4">
                     <div className="flex flex-wrap gap-1">
@@ -801,7 +854,7 @@ export default function ProjectsManagerPage() {
                         onChange={(e) => setForm({ ...form, featured: e.target.checked })}
                         className="h-4 w-4 rounded text-[#1d63ed]"
                       />
-                      Featured in Portfolio Grid
+                      Flagship / Featured (Shows in Homepage Top 5 & Curated Portfolios)
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer font-bold text-amber-900">
                       <input

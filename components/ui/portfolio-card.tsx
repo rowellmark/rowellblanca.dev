@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Monitor, Smartphone, Maximize2, X, ExternalLink, ArrowRight, Package, Terminal, Code2, CheckCircle2, Cpu, Sparkles, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -1315,21 +1315,52 @@ export function ProjectGallery({ project }: { project: PortfolioProject }) {
 export function ProjectDetailPreview({ project }: { project: PortfolioProject }) {
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [modalOpen, setModalOpen] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
+  const [hasScrolledNearBottom, setHasScrolledNearBottom] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const isPlugin =
     project.url?.startsWith('wp-content') ||
     project.permalink?.includes('plugin') ||
     project.technologies?.some((t) => t.toLowerCase() === 'wordpress plugins');
 
+  const mobileSrc = getImageSrc(project.fullMobileImage || project.mobileImage || project.image);
+  const desktopSrc = getImageSrc(project.fullDesktopImage || project.image);
+
+  const checkScrollability = useCallback(() => {
+    if (scrollContainerRef.current) {
+      const el = scrollContainerRef.current;
+      const canScroll = el.scrollHeight > el.clientHeight + 20;
+      setIsScrollable(canScroll);
+      const isNearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 30;
+      setHasScrolledNearBottom(isNearBottom);
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const el = scrollContainerRef.current;
+      const isNearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 30;
+      setHasScrolledNearBottom(isNearBottom);
+    }
+  };
+
+  useEffect(() => {
+    checkScrollability();
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const ro = new ResizeObserver(() => {
+      checkScrollability();
+    });
+    ro.observe(el);
+
+    return () => ro.disconnect();
+  }, [desktopSrc, previewMode, checkScrollability]);
 
   if (isPlugin) {
     return <WordPressPluginDetailPreview project={project} />;
   }
-
-  const mobileSrc = getImageSrc(project.fullMobileImage || project.mobileImage || project.image);
-  const desktopSrc = getImageSrc(project.fullDesktopImage || project.image);
-
-
 
   return (
     <>
@@ -1341,28 +1372,47 @@ export function ProjectDetailPreview({ project }: { project: PortfolioProject })
         size="detail"
       >
         {previewMode === 'desktop' ? (
-          <div className="relative w-full h-[440px] sm:h-[540px] md:h-[797px] overflow-y-auto bg-[#111] scrollbar-thin scrollbar-thumb-amber-500/40 hover:scrollbar-thumb-amber-500 group/scroll">
-            <div className="relative w-full min-h-full">
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="relative w-full max-h-[640px] sm:max-h-[720px] lg:max-h-[780px] overflow-y-auto bg-slate-950/90 scrollbar-thin scrollbar-thumb-amber-500/40 hover:scrollbar-thumb-amber-500 group/scroll"
+          >
+            {/* Ambient blurred backdrop if screenshot ever has any sub-pixel gap */}
+            <div
+              className="absolute inset-0 bg-cover bg-center blur-3xl opacity-15 pointer-events-none"
+              style={{ backgroundImage: `url(${desktopSrc})` }}
+            />
+
+            <div className="relative w-full">
               <Image
                 src={desktopSrc}
                 alt={project.sitename}
                 width={1200}
                 height={2400}
                 className="w-full h-auto block object-top"
+                onLoad={checkScrollability}
                 unoptimized
               />
             </div>
 
-            {/* Floating Scroll Indicator */}
-            <div className="sticky bottom-4 right-4 ml-auto w-fit px-3 py-1.5 rounded-full bg-slate-950/90 backdrop-blur-md border border-white/20 text-white text-[11px] font-extrabold shadow-xl flex items-center gap-1.5 pointer-events-none group-hover/scroll:opacity-50 transition-opacity">
-              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-              Scroll to view full site ↓
-            </div>
+            {/* Floating Scroll Indicator - only shown if the image actually overflows container */}
+            {isScrollable && (
+              <div
+                className={`sticky bottom-4 right-4 ml-auto w-fit px-3 py-1.5 rounded-full bg-slate-950/90 backdrop-blur-md border border-white/20 text-white text-[11px] font-extrabold shadow-xl flex items-center gap-1.5 pointer-events-none transition-all duration-300 ${
+                  hasScrolledNearBottom ? 'opacity-0 scale-95' : 'opacity-100 group-hover/scroll:opacity-60'
+                }`}
+              >
+                <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+                Scroll to view full site ↓
+              </div>
+            )}
           </div>
         ) : (
-          <div className="w-full h-[440px] sm:h-[540px] md:h-[620px] bg-[#111] flex items-center justify-center p-6">
-            <div className="relative shadow-2xl" style={{ width: '220px', height: '420px' }}>
-              <div className="absolute inset-0 rounded-[32px] bg-[#222] border-2 border-white/20" />
+          <div className="w-full min-h-[460px] md:min-h-[580px] bg-gradient-to-b from-[#0b101e] via-[#070b15] to-[#04060c] flex items-center justify-center p-6 sm:p-10 relative overflow-hidden">
+            {/* Subtle glow behind phone */}
+            <div className="absolute w-72 h-72 rounded-full bg-amber-500/10 blur-[100px] pointer-events-none" />
+            <div className="relative shadow-2xl transition-transform duration-300 hover:scale-[1.02]" style={{ width: '220px', height: '420px' }}>
+              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-b from-[#333] via-[#1c1c1e] to-[#0a0a0a] border-2 border-white/20 shadow-2xl" />
               <div className="absolute inset-2 rounded-[24px] overflow-hidden bg-black overflow-y-auto scrollbar-none [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <Image
                   src={mobileSrc}
@@ -1373,7 +1423,7 @@ export function ProjectDetailPreview({ project }: { project: PortfolioProject })
                   unoptimized
                 />
               </div>
-              <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-3.5 w-16 rounded-full bg-[#222] z-10 pointer-events-none" />
+              <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-3.5 w-16 rounded-full bg-[#1c1c1e] z-10 pointer-events-none border border-black/40" />
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 h-1 w-16 rounded-full bg-white/30 z-10 pointer-events-none" />
             </div>
           </div>

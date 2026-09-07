@@ -7,7 +7,7 @@ import Footer from '@/components/footer/footer';
 import { WelcomeLoading } from '@/components/loading-intro/loading-screen';
 import ChatBubble from '@/components/ui/chat-bubble';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
-
+import { CommandPalette } from '@/components/ui/command-palette';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +23,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     <>
       <ScrollProgress />
       <WelcomeLoading />
+      <CommandPalette />
       <Header />
       <main>{children}</main>
       <Footer />

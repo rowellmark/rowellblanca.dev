@@ -1,11 +1,12 @@
 import { Metadata } from "next";
-import rowellPic from "@/assets/images/ROWELL-6.jpg";
+import rowellbanner from "@/assets/images/rowellbanner.png";
 import Image from "next/image";
 import Link from "next/link";
 import { CVDownloadButton } from "@/components/ui/cv-download-button";
 import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
 import Banner from "@/components/banner/banner";
 import { Mail, Phone, MapPin, CheckCircle2, Award, Briefcase, Sparkles, Send, Globe } from "lucide-react";
+import WorkHistory from "@/components/homepage/work-history";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
@@ -151,10 +152,10 @@ export default function AboutPage() {
                         <div className="lg:col-span-5 space-y-6">
                             <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden border border-slate-200/90 shadow-2xl bg-white p-3 group">
                                 <Image
-                                    src={rowellPic}
-                                    alt="Rowell Mark Blanca"
+                                    src={rowellbanner}
+                                    alt="Rowell Mark Blanca — Senior Software Engineer"
                                     fill
-                                    className="object-cover rounded-2xl group-hover:scale-102 transition-transform duration-500"
+                                    className="object-cover object-top rounded-2xl group-hover:scale-102 transition-transform duration-500"
                                     sizes="(max-width: 1024px) 100vw, 450px"
                                     priority
                                 />
@@ -236,6 +237,11 @@ export default function AboutPage() {
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    {/* Verified Career & Work History */}
+                    <div className="pt-2">
+                        <WorkHistory />
                     </div>
 
                     {/* Interactive Scope & Architecture Estimator */}

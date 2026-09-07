@@ -45,11 +45,11 @@ export const ContainerScroll = ({
 
     return (
         <div
-            className="h-[60rem] md:h-[70rem] flex items-center justify-center relative p-2 pt-0 max-sm:-mb-36 max-sm:h-[50rem]"
+            className="h-[60rem] md:h-[72rem] flex items-center justify-center relative p-2 pt-8 sm:pt-16 max-sm:-mb-36 max-sm:h-[50rem]"
             ref={containerRef}
         >
             <div
-                className="pb-10  w-full relative"
+                className="pb-10 w-full relative"
                 style={{
                     perspective: "1000px",
                 }}
@@ -69,7 +69,7 @@ export const Header = ({ translate, titleComponent }: any) => {
             style={{
                 translateY: translate,
             }}
-            className="div max-w-5xl mx-auto text-center"
+            className="div max-w-5xl mx-auto text-center pt-4 sm:pt-8 pb-4"
         >
             {titleComponent}
         </motion.div>

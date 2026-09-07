@@ -3,27 +3,27 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Code, CheckCircle, ShieldCheck, Award, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Code, CheckCircle, ShieldCheck, Award, Zap, Terminal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import rowellbanner from '@/assets/images/rowellbanner.png';
 import { ContactModal } from "@/components/ui/contact-modal";
 import { RotatingText } from "@/components/ui/rotating-text";
+import { DeveloperTelemetryHud } from "./developer-telemetry-hud";
 
 const ROTATING_PREFIXES = [
     "Full-Stack",
-    "Creative",
-    "Solutions-Driven",
-    "Product-Focused",
+    "Senior React",
+    "Systems & API",
+    "Next.js & PHP",
 ];
 
 const TECH_PILLS = [
-    { label: "React", bg: "bg-cyan-50 text-cyan-700 border-cyan-200 hover:bg-cyan-100" },
-    { label: "Next.js", bg: "bg-slate-900 text-white border-slate-700 hover:bg-slate-800" },
-    { label: "TypeScript", bg: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100" },
-    { label: "PHP", bg: "bg-violet-50 text-violet-700 border-violet-200 hover:bg-violet-100" },
-    { label: "WordPress", bg: "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100" },
-    { label: "Node.js", bg: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100" },
-    { label: "AI Workflows", bg: "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100" },
+    { label: "React 19", bg: "bg-cyan-50 text-cyan-800 border-cyan-200 hover:bg-cyan-100" },
+    { label: "Next.js 14", bg: "bg-slate-900 text-white border-slate-700 hover:bg-slate-800" },
+    { label: "TypeScript", bg: "bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100" },
+    { label: "PostgreSQL", bg: "bg-indigo-50 text-indigo-800 border-indigo-200 hover:bg-indigo-100" },
+    { label: "WordPress & PHP", bg: "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100" },
+    { label: "Node.js", bg: "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100" },
+    { label: "Prisma ORM", bg: "bg-violet-50 text-violet-800 border-violet-200 hover:bg-violet-100" },
 ];
 
 export function Hero() {
@@ -37,46 +37,38 @@ export function Hero() {
         return () => clearInterval(interval);
     }, []);
 
-    return (
-        <section className="relative w-full pt-28 pb-16 lg:pt-36 lg:pb-24 bg-[#FAFAF7] overflow-hidden">
-            
-            {/* Subtle Textured Background Pattern */}
-            <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+    const triggerCommandPalette = () => {
+        window.dispatchEvent(new CustomEvent('open-command-palette'));
+    };
 
-            {/* Pulsing Ambient Background Mesh Blobs */}
-            <motion.div
-                animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.95, 1.08, 0.95] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-400/20 to-orange-300/10 blur-3xl pointer-events-none"
-            />
-            <motion.div
-                animate={{ opacity: [0.25, 0.5, 0.25], scale: [1.05, 0.95, 1.05] }}
-                transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-20 right-1/4 w-96 h-96 rounded-full bg-gradient-to-br from-violet-400/15 to-indigo-300/10 blur-3xl pointer-events-none"
-            />
+    return (
+        <section className="relative w-full pt-28 pb-16 lg:pt-34 lg:pb-22 bg-[#FAFAF7] border-b border-slate-200/70 overflow-hidden">
+            
+            {/* Crisp Technical Grid Texture */}
+            <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-35 pointer-events-none" />
 
             <div className="container mx-auto px-6 max-w-6xl relative z-10">
                 
                 {/* Main Hero Row */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
 
                     {/* Left Column (Content) */}
                     <div className="lg:col-span-7 space-y-6 text-left">
                         
-                        {/* Status Badge & UK Trust Badge */}
+                        {/* Status Badge & UK/US/AU Trust Badge */}
                         <div className="flex flex-wrap items-center gap-2">
                             <motion.div
                                 initial={{ y: -15, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-xs"
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-2xs"
                             >
-                                <span className="relative flex h-2.5 w-2.5">
+                                <span className="relative flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                                 </span>
-                                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
-                                    Available for Select Projects
+                                <span className="text-[11px] font-mono font-bold text-slate-700 uppercase tracking-wider">
+                                    Available for Select Contracts
                                 </span>
                             </motion.div>
 
@@ -84,28 +76,38 @@ export function Hero() {
                                 <motion.div
                                     initial={{ y: -15, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                                    whileHover={{ scale: 1.04 }}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-900 shadow-xs cursor-pointer hover:bg-amber-500/20 transition-all"
+                                    transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+                                    whileHover={{ scale: 1.03 }}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-900 shadow-2xs cursor-pointer hover:bg-amber-500/20 transition-all"
                                 >
-                                    <span className="text-xs font-bold text-slate-800 tracking-wide">
-                                        Trusted by Global Clients: <span className="font-extrabold text-amber-700">UK</span> · <span className="font-extrabold text-amber-700">US</span> · <span className="font-extrabold text-amber-700">AU</span>
+                                    <span className="text-[11px] font-bold text-slate-800 tracking-wide">
+                                        Client Footprint: <span className="font-extrabold text-amber-700">UK</span> · <span className="font-extrabold text-amber-700">US</span> · <span className="font-extrabold text-amber-700">AU</span>
                                     </span>
                                 </motion.div>
                             </Link>
+
+                            {/* ⌘K Trigger Pill */}
+                            <button
+                                onClick={triggerCommandPalette}
+                                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-300/80 text-slate-700 text-[11px] font-mono font-bold transition-colors cursor-pointer"
+                                title="Open Developer Command Palette"
+                            >
+                                <Terminal className="w-3 h-3 text-slate-500" />
+                                <span>⌘K Menu</span>
+                            </button>
                         </div>
 
-                        {/* Title with ReactBits RotatingText Animation */}
+                        {/* Title */}
                         <h1 className="space-y-2">
-                            <span className="sr-only">Rowell Mark Blanca — </span>
+                            <span className="sr-only">Rowell Mark Blanca — Senior Software Engineer</span>
                             <div className="flex items-center gap-2">
                                 <RotatingText
                                     texts={ROTATING_PREFIXES}
                                     rotationInterval={2600}
-                                    badgeBg="text-brand-navy text-4xl sm:text-5xl lg:text-6xl font-black"
+                                    badgeBg="text-[#0b1a30] text-4xl sm:text-5xl lg:text-6xl font-black"
                                 />
                             </div>
-                            <span className="block text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-amber via-amber-600 to-brand-navy tracking-tight leading-normal py-1 pb-2">
+                            <span className="block text-4xl sm:text-5xl lg:text-6xl font-black text-[#0b1a30] tracking-tight leading-normal py-0.5">
                                 Software Engineer
                             </span>
                         </h1>
@@ -114,17 +116,17 @@ export function Hero() {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="flex flex-wrap items-center gap-2 pt-1"
+                            transition={{ duration: 0.5, delay: 0.15 }}
+                            className="flex flex-wrap items-center gap-2 pt-0.5"
                         >
                             {TECH_PILLS.map(({ label, bg }, idx) => (
                                 <motion.span
                                     key={idx}
-                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
-                                    transition={{ duration: 0.35, delay: 0.25 + idx * 0.06 }}
-                                    whileHover={{ scale: 1.08, y: -2 }}
-                                    className={`text-xs font-extrabold px-3 py-1 rounded-lg border shadow-2xs cursor-pointer transition-colors ${bg}`}
+                                    transition={{ duration: 0.3, delay: 0.2 + idx * 0.04 }}
+                                    whileHover={{ y: -2 }}
+                                    className={`text-[11px] font-mono font-extrabold px-3 py-1 rounded-lg border shadow-2xs transition-all ${bg}`}
                                 >
                                     {label}
                                 </motion.span>
@@ -135,91 +137,50 @@ export function Hero() {
                         <motion.p
                             initial={{ y: 15, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-base sm:text-lg text-brand-slate font-medium leading-relaxed max-w-xl"
+                            transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                            className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-xl"
                         >
-                            Senior Full-Stack & Next.js Engineer helping funded startups, agencies, and UK, US & Australian (AU) businesses build high-performance digital products and custom WordPress engines—without the 50% agency overhead.
+                            Senior Full-Stack & Next.js Engineer helping funded startups, agencies, and UK, US & Australian businesses build high-concurrency web platforms, zero-bloat WordPress engines, and high-performance APIs—without agency overhead.
                         </motion.p>
 
-                        {/* Dual Conversion CTAs */}
+                        {/* Conversion CTAs */}
                         <motion.div
                             initial={{ y: 15, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                            className="pt-2 flex flex-wrap items-center gap-3.5"
+                            transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                            className="pt-1 flex flex-wrap items-center gap-3"
                         >
                             <button
                                 onClick={() => setIsContactModalOpen(true)}
-                                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-brand-amber hover:bg-slate-900 text-brand-navy hover:text-white font-extrabold text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
                             >
-                                <Sparkles className="h-4 w-4 text-brand-navy group-hover:text-amber-400 transition-colors" />
+                                <Sparkles className="h-4 w-4 text-slate-950 group-hover:text-amber-400 transition-colors" />
                                 <span>Book Discovery Call</span>
                             </button>
 
                             <a
-                                href="#project-estimator"
-                                className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-white border border-slate-300 hover:border-slate-800 hover:bg-slate-900 text-brand-navy hover:text-white font-extrabold text-sm shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+                                href="#architecture-inspector"
+                                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-white border border-slate-300 hover:border-slate-800 hover:bg-slate-900 text-slate-800 hover:text-white font-extrabold text-xs uppercase tracking-wider shadow-2xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300 group"
                             >
-                                <span>Estimate Scope</span>
-                                <ArrowRight className="h-4 w-4 text-brand-amber group-hover:text-amber-400 transition-colors" />
+                                <span>Inspect Architecture</span>
+                                <ArrowRight className="h-4 w-4 text-amber-600 group-hover:text-amber-400 transition-colors" />
                             </a>
 
-                            <Link
-                                href="/case-studies"
-                                className="inline-flex items-center justify-center gap-1.5 px-4 py-4 text-xs font-bold text-slate-600 hover:text-[#0b1a30] transition-colors"
+                            <button
+                                onClick={triggerCommandPalette}
+                                className="inline-flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-mono font-bold text-xs transition-colors cursor-pointer"
                             >
-                                <span>Case Studies & ROI →</span>
-                            </Link>
+                                <span>Press</span>
+                                <kbd className="px-1.5 py-0.5 text-[10px] bg-white border border-slate-300 rounded shadow-2xs text-slate-800">
+                                    ⌘K
+                                </kbd>
+                            </button>
                         </motion.div>
                     </div>
 
-                    {/* Right Column (Floating Photo Card + Badges) */}
+                    {/* Right Column: Interactive Developer Telemetry HUD */}
                     <div className="lg:col-span-5 flex justify-center relative">
-                        
-                        {/* Glow behind image card */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-amber-400/30 via-violet-400/20 to-transparent rounded-full blur-2xl transform scale-90 pointer-events-none" />
-
-                        {/* Floating Main Image Container */}
-                        <motion.div
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: [0, -8, 0], opacity: 1 }}
-                            transition={{
-                                opacity: { duration: 0.8, delay: 0.3 },
-                                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-                            }}
-                            className="relative w-full max-w-sm aspect-[4/4.5] rounded-3xl p-3 bg-white border border-slate-200 shadow-2xl overflow-hidden group"
-                        >
-                            <Image
-                                src={rowellbanner}
-                                alt="Rowell Mark Blanca — Software Engineer specializing in React, Next.js and WordPress development"
-                                fill
-                                priority
-                                className="object-cover object-top rounded-2xl group-hover:scale-103 transition-transform duration-500"
-                                sizes="(max-width: 768px) 320px, 400px"
-                            />
-
-                            {/* Floating Top Badge */}
-                            <motion.div
-                                animate={{ y: [0, 6, 0] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute top-4 left-4 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 z-20"
-                            >
-                                <Zap className="h-3.5 w-3.5 text-amber-500 fill-amber-400" />
-                                <span className="text-[11px] font-extrabold text-brand-navy">12+ Years Exp</span>
-                            </motion.div>
-
-                            {/* Floating Bottom Card */}
-                            <div className="absolute bottom-4 inset-x-4 bg-white/95 backdrop-blur-md border border-slate-200/90 p-3 rounded-2xl text-left shadow-xl z-20 flex items-center justify-between">
-                                <div>
-                                    <h3 className="font-extrabold text-brand-navy text-sm leading-tight">Rowell Mark Blanca</h3>
-                                    <p className="text-[11px] font-bold text-brand-amber">Software Engineer</p>
-                                </div>
-                                <div className="flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-xl text-[10px] font-extrabold border border-amber-200 shrink-0">
-                                    <ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Top Rated
-                                </div>
-                            </div>
-                        </motion.div>
-
+                        <DeveloperTelemetryHud onOpenContact={() => setIsContactModalOpen(true)} />
                     </div>
 
                 </div>

@@ -60,7 +60,14 @@ export default function Header() {
                     </Link>
 
                     {/* Mobile Menu Icon */}
-                    <div className="flex items-center gap-3 lg:hidden">
+                    <div className="flex items-center gap-2 lg:hidden">
+                        <button
+                            onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
+                            className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 font-mono text-xs font-bold"
+                            title="Command Palette"
+                        >
+                            ⌘K
+                        </button>
                         <button
                             onClick={() => setIsContactModalOpen(true)}
                             className="p-2 rounded-lg bg-amber-50 text-brand-amber border border-amber-200"
@@ -81,8 +88,8 @@ export default function Header() {
                     </div>
 
                     {/* Desktop Nav */}
-                    <nav className={`lg:flex items-center gap-8 ${isMobileNavOpen ? 'flex flex-col absolute top-full left-0 w-full bg-white border-b border-slate-200 p-6 shadow-xl' : 'hidden lg:flex'}`}>
-                        <ul className="flex items-center gap-8 max-lg:flex-col max-lg:w-full">
+                    <nav className={`lg:flex items-center gap-6 ${isMobileNavOpen ? 'flex flex-col absolute top-full left-0 w-full bg-white border-b border-slate-200 p-6 shadow-xl' : 'hidden lg:flex'}`}>
+                        <ul className="flex items-center gap-6 max-lg:flex-col max-lg:w-full">
                             {navs.map((nav, index) => (
                                 <li key={index} onClick={handleMobileMenuClick} className="max-lg:w-full max-lg:text-center">
                                     <Link
@@ -94,12 +101,28 @@ export default function Header() {
                                 </li>
                             ))}
                         </ul>
+
+                        {/* ⌘K Trigger Pill */}
+                        <button
+                            onClick={() => {
+                                handleMobileMenuClick();
+                                window.dispatchEvent(new CustomEvent('open-command-palette'));
+                            }}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-700 font-mono text-[11px] font-bold transition-all cursor-pointer max-lg:w-full max-lg:justify-center"
+                            title="Open Command Palette (⌘K)"
+                        >
+                            <span className="text-[10px] text-slate-400">Search</span>
+                            <kbd className="px-1.5 py-0.5 text-[10px] bg-white border border-slate-300 rounded shadow-2xs text-slate-800">
+                                ⌘K
+                            </kbd>
+                        </button>
+
                         <button
                             onClick={() => {
                                 handleMobileMenuClick();
                                 setIsContactModalOpen(true);
                             }}
-                            className="px-6 py-2.5 rounded-full bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 max-lg:w-full max-lg:text-center cursor-pointer"
+                            className="px-5 py-2.5 rounded-full bg-amber-500 hover:bg-slate-900 text-slate-950 hover:text-white font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 max-lg:w-full max-lg:text-center cursor-pointer"
                         >
                             Say Hello!
                         </button>

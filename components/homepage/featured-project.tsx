@@ -69,7 +69,7 @@ export function FeaturedProject() {
     };
 
     return (
-        <div className="flex flex-col overflow-hidden px-8 max-sm:px-0 relative">
+        <section className="relative w-full pt-20 pb-12 sm:pt-28 sm:pb-20 overflow-hidden px-8 max-sm:px-4 bg-[#FAFAF7] border-b border-slate-200/70">
             <ContainerScroll
                 mobileImgSrc={mobileImgSrc}
                 titleComponent={
@@ -126,6 +126,6 @@ export function FeaturedProject() {
                 onClose={() => setIsContactModalOpen(false)}
                 defaultService={`Custom Web App based on ${projectTitle}`}
             />
-        </div>
+        </section>
     );
 }

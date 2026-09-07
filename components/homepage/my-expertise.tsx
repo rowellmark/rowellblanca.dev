@@ -89,19 +89,7 @@ export default function MyExpertise() {
     <section className="py-24 bg-brand-bg relative overflow-hidden">
 
       {/* Subtle Textured Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-
-      {/* Pulsing Ambient Background Mesh Blobs */}
-      <motion.div
-        animate={{ opacity: [0.25, 0.5, 0.25], scale: [0.95, 1.08, 0.95] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-0 left-0 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-400/15 to-orange-300/10 blur-3xl pointer-events-none"
-      />
-      <motion.div
-        animate={{ opacity: [0.2, 0.4, 0.2], scale: [1.05, 0.95, 1.05] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-gradient-to-br from-violet-400/15 to-indigo-300/10 blur-3xl pointer-events-none"
-      />
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-35 pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-6xl relative z-10">
         
