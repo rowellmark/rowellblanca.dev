@@ -17,6 +17,7 @@ import {
   Server,
   AlertCircle,
   Cpu,
+  Package,
 } from "lucide-react";
 
 interface ProjectTypeOption {
@@ -34,7 +35,7 @@ const PROJECT_TYPES: ProjectTypeOption[] = [
     title: "Next.js / React Web App",
     desc: "Scalable SaaS platform, client portal, or custom web platform with sub-second performance.",
     baseWeeks: "3–6 weeks",
-    basePriceUsd: 3600,
+    basePriceUsd: 1800,
     recommendedStack: ["Next.js 15", "React 19", "TypeScript", "TailwindCSS", "PostgreSQL"],
   },
   {
@@ -42,7 +43,7 @@ const PROJECT_TYPES: ProjectTypeOption[] = [
     title: "Custom WordPress & Gutenberg",
     desc: "Bespoke high-speed theme, headless setup, or custom Gutenberg block plugins without page builder bloat.",
     baseWeeks: "2–4 weeks",
-    basePriceUsd: 2240,
+    basePriceUsd: 1120,
     recommendedStack: ["WordPress 6.7+", "Native Gutenberg", "PHP 8.3", "React Block Editor", "MySQL"],
   },
   {
@@ -50,7 +51,7 @@ const PROJECT_TYPES: ProjectTypeOption[] = [
     title: "AI / Workflow Automation",
     desc: "LLM copilot, RAG knowledge system, OpenAI/Gemini integration, or automated CRM workflows.",
     baseWeeks: "2–3 weeks",
-    basePriceUsd: 2560,
+    basePriceUsd: 1280,
     recommendedStack: ["LangChain", "Gemini / OpenAI API", "Vector DB", "Next.js API", "Node.js"],
   },
   {
@@ -58,7 +59,7 @@ const PROJECT_TYPES: ProjectTypeOption[] = [
     title: "Dedicated Senior Dev Retainer",
     desc: "Continuous sprint shipping, daily standups, codebase maintenance, and feature iteration sprints.",
     baseWeeks: "Monthly Ongoing",
-    basePriceUsd: 600,
+    basePriceUsd: 460,
     recommendedStack: ["React 19 / Next.js", "WordPress Gutenberg", "TypeScript / Node", "Prisma / SQL"],
   },
 ];
@@ -116,47 +117,98 @@ const DEVELOPER_SKILLS_CATEGORIES = [
   },
 ];
 
+export interface FeaturePackage {
+  id: string;
+  name: string;
+  badge?: string;
+  desc: string;
+  features: string[];
+}
+
+export const FEATURE_PACKAGES: FeaturePackage[] = [
+  {
+    id: "lead_gen",
+    name: "🎯 Inbound Leads Suite",
+    badge: "Popular",
+    desc: "Leads CRM (Free), Gutenberg Blocks (Free), SEO & Email Drip Campaigns",
+    features: ["crm", "custom_blocks", "seo", "email_followup"],
+  },
+  {
+    id: "saas_portal",
+    name: "🚀 SaaS & Client Portal",
+    badge: "Recommended",
+    desc: "Client Portal & SSO (Free), Leads CRM (Free), Stripe Billing & Telemetry",
+    features: ["auth_portal", "crm", "stripe_billing", "monitoring", "seo"],
+  },
+  {
+    id: "free_bundle",
+    name: "⚡ Free Inclusions Pack",
+    badge: "$0 Cost",
+    desc: "Leads CRM, Gutenberg Block Suite & Client Portal included at $0",
+    features: ["crm", "custom_blocks", "auth_portal"],
+  },
+  {
+    id: "all_inclusive",
+    name: "⭐ Full Enterprise Stack",
+    badge: "All Add-ons",
+    desc: "Complete feature set including UI/UX design mockup fee & all tools",
+    features: [
+      "ui_ux_design",
+      "seo",
+      "crm",
+      "email_followup",
+      "custom_blocks",
+      "auth_portal",
+      "stripe_billing",
+      "monitoring",
+    ],
+  },
+];
+
 const FEATURE_OPTIONS = [
   {
     id: "ui_ux_design",
     label: "Bespoke UI/UX Design Fee (Full Figma mockups & wireframes — required if design not provided)",
-    price: 720,
+    price: 360,
     badge: "Design Fee",
   },
   {
     id: "seo",
     label: "Technical SEO & Rich Schema LD Engine (Automated JSON-LD, sitemaps & search indexing)",
-    price: 480,
+    price: 240,
   },
   {
     id: "crm",
     label: "Inbound Leads CRM & Sales Pipeline (Real-time capture, instant email alerts & Kanban)",
-    price: 480,
+    price: 0,
+    badge: "FREE",
   },
   {
     id: "email_followup",
     label: "Automated Email Follow-Up & Drip Campaigns (Multi-step lead nurture funnels)",
-    price: 420,
+    price: 210,
   },
   {
     id: "custom_blocks",
     label: "Bespoke React Gutenberg Block Suite",
-    price: 480,
+    price: 0,
+    badge: "FREE",
   },
   {
     id: "auth_portal",
     label: "Client Portal & 1-Click SSO Authentication",
-    price: 640,
+    price: 0,
+    badge: "FREE",
   },
   {
     id: "stripe_billing",
     label: "Stripe Payments, Invoices & Subscriptions",
-    price: 720,
+    price: 360,
   },
   {
     id: "monitoring",
     label: "24/7 Production Telemetry, Health Checks & Error Monitoring",
-    price: 320,
+    price: 160,
   },
 ];
 
@@ -178,6 +230,7 @@ export function ProjectEstimator() {
     "auth_portal",
     "monitoring",
   ]);
+  const [activePackageId, setActivePackageId] = useState<string | null>("all_inclusive");
   const [selectedTimeline, setSelectedTimeline] = useState<string>("standard");
   const [retainerBillingMode, setRetainerBillingMode] = useState<"monthly" | "project">("monthly");
 
@@ -204,11 +257,21 @@ export function ProjectEstimator() {
   const activeTimelineObj =
     TIMELINE_OPTIONS.find((t) => t.id === selectedTimeline) || TIMELINE_OPTIONS[1];
 
+  const applyPackage = (pkg: FeaturePackage) => {
+    setSelectedFeatures(pkg.features);
+    setActivePackageId(pkg.id);
+  };
+
   const toggleFeature = (id: string) => {
+    setActivePackageId(null);
     setSelectedFeatures((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     );
   };
+
+  const freeFeaturesCount = selectedFeatures.filter(
+    (featId) => FEATURE_OPTIONS.find((f) => f.id === featId)?.price === 0
+  ).length;
 
   // Calculate estimated investment
   const featureCost = selectedFeatures.reduce((acc, featId) => {
@@ -218,7 +281,7 @@ export function ProjectEstimator() {
 
   const baseCalculated = isRetainer
     ? retainerBillingMode === "monthly"
-      ? 600
+      ? 460
       : 0
     : (currentTypeConfig.basePriceUsd + featureCost) * activeTimelineObj.multiplier;
 
@@ -236,7 +299,11 @@ export function ProjectEstimator() {
     setErrorMsg("");
 
     const featureLabels = selectedFeatures
-      .map((f) => FEATURE_OPTIONS.find((opt) => opt.id === f)?.label)
+      .map((f) => {
+        const feat = FEATURE_OPTIONS.find((opt) => opt.id === f);
+        if (!feat) return null;
+        return feat.price === 0 ? `${feat.label} [FREE]` : feat.label;
+      })
       .filter(Boolean)
       .join(", ");
 
@@ -245,10 +312,10 @@ export function ProjectEstimator() {
 
     const summaryDetails = isRetainer
       ? `--- DEDICATED SENIOR DEV RETAINER INQUIRY ---
-• Engagement Basis: ${retainerBillingMode === "monthly" ? "Monthly Dedicated Retainer ($600 USD / month)" : "Project-Based Scope (Custom Quote Request)"}
+• Engagement Basis: ${retainerBillingMode === "monthly" ? "Monthly Dedicated Retainer ($460 USD / month)" : "Project-Based Scope (Custom Quote Request)"}
 • Selected Cadence: ${timelineLabel}
 • Recommended Stack: ${currentTypeConfig.recommendedStack.join(", ")}
-• Investment: ${retainerBillingMode === "monthly" ? "$600 USD / month" : "Custom Quote (Inquiry Based)"}
+• Investment: ${retainerBillingMode === "monthly" ? "$460 USD / month" : "Custom Quote (Inquiry Based)"}
 • Scope / Project Notes: ${contactNotes || "N/A"}`
       : `--- INTERACTIVE PROJECT ESTIMATOR SCOPE ---
 • Project Category: ${currentTypeConfig.title}
@@ -269,15 +336,15 @@ export function ProjectEstimator() {
           phone: contactPhone.trim() || undefined,
           service: isRetainer
             ? retainerBillingMode === "monthly"
-              ? "Dedicated Senior Dev Retainer ($600 USD / mo)"
+              ? "Dedicated Senior Dev Retainer ($460 USD / mo)"
               : "Project-Based Development (Custom Quote Request)"
             : currentTypeConfig.title,
           subject: isRetainer
-            ? `Retainer Inquiry: ${retainerBillingMode === "monthly" ? "Monthly ($600/mo)" : "Project Scope (Custom Quote)"}`
+            ? `Retainer Inquiry: ${retainerBillingMode === "monthly" ? "Monthly ($460/mo)" : "Project Scope (Custom Quote)"}`
             : `Estimate Request: ${currentTypeConfig.title} ($${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()})`,
           budget: isRetainer
             ? retainerBillingMode === "monthly"
-              ? "$600 USD / month"
+              ? "$460 USD / month"
               : "Custom Quote (Project-Based)"
             : `$${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()} USD`,
           message: summaryDetails,
@@ -364,7 +431,7 @@ export function ProjectEstimator() {
                           {type.id === "fractional_retainer" ? "Rolling Sprints" : `Est. ${type.baseWeeks}`}
                         </span>
                         <span className="font-bold text-slate-900">
-                          {type.id === "fractional_retainer" ? "$600 USD / mo" : `From $${type.basePriceUsd.toLocaleString()}`}
+                          {type.id === "fractional_retainer" ? "$460 USD / mo" : `From $${type.basePriceUsd.toLocaleString()}`}
                         </span>
                       </div>
                     </div>
@@ -405,7 +472,7 @@ export function ProjectEstimator() {
                       <div className="flex items-center justify-between">
                         <span className="font-black text-xs">Monthly Basis</span>
                         <span className={`text-[11px] font-mono font-bold ${retainerBillingMode === "monthly" ? "text-amber-400" : "text-slate-900"}`}>
-                          $600 USD / mo
+                          $460 USD / mo
                         </span>
                       </div>
                       <p className={`text-[11px] mt-1 leading-snug ${retainerBillingMode === "monthly" ? "text-slate-300" : "text-slate-500"}`}>
@@ -467,53 +534,131 @@ export function ProjectEstimator() {
                 </div>
               </div>
             ) : (
-              <div className="space-y-3 pt-2 border-t border-slate-100">
+              <div className="space-y-4 pt-2 border-t border-slate-100">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-                    Step 2 · Select Included Architecture & Capabilities
+                  <div>
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
+                      Step 2 · Select Included Architecture & Capabilities
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      {selectedFeatures.length} selected ({freeFeaturesCount} Free Inclusions)
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    🎁 3 Included Free
                   </span>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    {selectedFeatures.length} selected
-                  </span>
+                </div>
+
+                {/* Quick Package Presets */}
+                <div className="space-y-2 p-3 rounded-2xl bg-slate-50/80 border border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                      <Package className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Curated Feature Packages</span>
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-semibold">
+                      Click to apply preset
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {FEATURE_PACKAGES.map((pkg) => {
+                      const isPkgActive =
+                        activePackageId === pkg.id ||
+                        (pkg.features.length === selectedFeatures.length &&
+                          pkg.features.every((f) => selectedFeatures.includes(f)));
+                      return (
+                        <button
+                          key={pkg.id}
+                          type="button"
+                          onClick={() => applyPackage(pkg)}
+                          className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
+                            isPkgActive
+                              ? "bg-slate-900 border-slate-900 text-white shadow-sm ring-2 ring-amber-400/40"
+                              : "bg-white hover:bg-slate-100/80 border-slate-200 text-slate-800"
+                          }`}
+                        >
+                          <div className="space-y-1">
+                            <span className={`text-[11px] font-extrabold block leading-tight ${isPkgActive ? "text-amber-300" : "text-[#0b1a30]"}`}>
+                              {pkg.name}
+                            </span>
+                            <p className={`text-[10px] leading-tight line-clamp-2 ${isPkgActive ? "text-slate-300" : "text-slate-500"}`}>
+                              {pkg.desc}
+                            </p>
+                          </div>
+                          {pkg.badge && (
+                            <div className="mt-2 pt-1.5 border-t border-slate-200/40 flex items-center justify-between">
+                              <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                                isPkgActive
+                                  ? "bg-amber-400/20 text-amber-300"
+                                  : "bg-slate-100 text-slate-600 border border-slate-200"
+                              }`}>
+                                {pkg.badge}
+                              </span>
+                              {isPkgActive && (
+                                <CheckCircle2 className="w-3 h-3 text-amber-400" />
+                              )}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Design Fee Disclaimer Notice */}
                 <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/90 flex items-start gap-2.5 text-xs text-amber-950">
                   <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                   <p className="text-[11px] leading-relaxed">
-                    <strong className="font-bold">Important Notice:</strong> Custom UI/UX Design is a specialized external fee ($720). Core software engineering does not include Figma mockups unless selected or provided by your design team.
+                    <strong className="font-bold">Important Notice:</strong> Custom UI/UX Design is a specialized external fee ($360). Core software engineering does not include Figma mockups unless selected or provided by your design team.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2">
                   {FEATURE_OPTIONS.map((feat) => {
                     const isChecked = selectedFeatures.includes(feat.id);
+                    const isFree = feat.price === 0;
                     return (
                       <div
                         key={feat.id}
                         onClick={() => toggleFeature(feat.id)}
                         className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                           isChecked
-                            ? "bg-amber-50/60 border-amber-400 text-[#0b1a30]"
+                            ? isFree
+                              ? "bg-emerald-50/70 border-emerald-400 text-[#0b1a30] shadow-sm"
+                              : "bg-amber-50/60 border-amber-400 text-[#0b1a30]"
                             : "bg-slate-50 hover:bg-slate-100/60 border-slate-200 text-slate-700"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 pr-2">
                           <span className="text-xs font-extrabold leading-snug">{feat.label}</span>
                           {feat.badge && (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px] font-mono font-bold shrink-0">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 ${
+                                feat.badge === "Design Fee"
+                                  ? "bg-amber-200 text-amber-900"
+                                  : "bg-emerald-100 text-emerald-800 border border-emerald-300 font-black"
+                              }`}
+                            >
                               {feat.badge}
                             </span>
                           )}
                         </div>
                         <div className="flex items-center gap-2.5 shrink-0">
-                          <span className="text-xs font-mono font-bold text-slate-900">
-                            +${feat.price}
-                          </span>
+                          {isFree ? (
+                            <span className="text-xs font-mono font-black text-emerald-700 bg-emerald-100/90 px-2 py-0.5 rounded border border-emerald-300">
+                              $0 (FREE)
+                            </span>
+                          ) : (
+                            <span className="text-xs font-mono font-bold text-slate-900">
+                              +${feat.price}
+                            </span>
+                          )}
                           <div
                             className={`w-5 h-5 rounded-md flex items-center justify-center border transition-all ${
                               isChecked
-                                ? "bg-[#0b1a30] border-[#0b1a30] text-amber-400"
+                                ? isFree
+                                  ? "bg-emerald-700 border-emerald-700 text-white"
+                                  : "bg-[#0b1a30] border-[#0b1a30] text-amber-400"
                                 : "bg-white border-slate-300"
                             }`}
                           >
@@ -629,7 +774,7 @@ export function ProjectEstimator() {
                     {isRetainer ? (
                       retainerBillingMode === "monthly" ? (
                         <>
-                          $600 <span className="text-xs font-normal text-slate-400">USD / month</span>
+                          $460 <span className="text-xs font-normal text-slate-400">USD / month</span>
                         </>
                       ) : (
                         <>
@@ -684,6 +829,12 @@ export function ProjectEstimator() {
 
               {/* Key Highlights */}
               <div className="pt-2 border-t border-slate-800/80 space-y-1.5 text-xs text-slate-300 font-medium">
+                {freeFeaturesCount > 0 && (
+                  <div className="flex items-center gap-2 text-emerald-400 font-bold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>{freeFeaturesCount} Free Premium Add-On{freeFeaturesCount > 1 ? "s" : ""} Included ($0)</span>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Full UK (GMT), US & Australian (AEST) Timezone Overlap</span>
@@ -705,7 +856,7 @@ export function ProjectEstimator() {
                 <Zap className="w-3.5 h-3.5" />
                 {isRetainer
                   ? retainerBillingMode === "monthly"
-                    ? "Lock In Dedicated Retainer ($600 USD / mo)"
+                    ? "Lock In Dedicated Retainer ($460 USD / mo)"
                     : "Submit Project Scope for Custom Quote"
                   : "Lock In Your Proposal & Call"}
               </h4>
@@ -842,7 +993,7 @@ export function ProjectEstimator() {
                       <span>
                         {isRetainer
                           ? retainerBillingMode === "monthly"
-                            ? "Request $600/mo Retainer Onboarding"
+                            ? "Request $460/mo Retainer Onboarding"
                             : "Submit Project Scope Inquiry"
                           : "Get Itemized Proposal & Scope"}
                       </span>
