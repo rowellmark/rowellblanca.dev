@@ -27,6 +27,7 @@ See `.env.example` for the full list. Required locally:
 - `DATABASE_URL` — NeonDB (Postgres) connection string, used by Prisma (`lib/prisma.ts`).
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — fallback admin credentials used by `lib/auth.ts` when the `User` table has no matching row (lets admin login work before the DB is seeded).
 - `MAILTRAP_HOST` / `MAILTRAP_PORT` / `MAILTRAP_USER` / `MAILTRAP_PASS` (+ optional `MAILTRAP_TO`, `MAILTRAP_FROM`) — SMTP creds for `lib/mailer.ts`, used by the contact API route to email new inquiries.
+- `MAIL_FROM_EMAIL` (default `hello@rowellblanca.dev`) / `MAIL_NOREPLY_EMAIL` (default `noreply@rowellblanca.dev`) — sender addresses in `lib/mailer.ts`. Mail that expects a reply (admin replies, invoices) uses `MAIL_FROM_EMAIL`; automated mail (receipts, internal notifications) passes `noReply: true` and uses `MAIL_NOREPLY_EMAIL`. Public-facing contact email across the site is `hello@rowellblanca.dev`.
 - `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` — fallback form submission used by `components/ui/contactForm.tsx`.
 
 Firebase env vars (`utils/firebaseconfig.tsx`) are no longer read anywhere else in the app — the project detail page and all project listings now go through `/api/projects` (Prisma/NeonDB) instead of Firestore. Treat `utils/firebaseconfig.tsx` as legacy/unused rather than removing data from it without checking first.

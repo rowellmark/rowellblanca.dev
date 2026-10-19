@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
                 <p className="font-extrabold text-sm text-[#0b1a30]">Rowell Mark Blanca</p>
                 <p>Senior Full-Stack Software Engineer & WordPress Architect</p>
                 <p>Website: https://www.rowellblanca.dev</p>
-                <p>Email: rowellblanca94@gmail.com</p>
+                <p>Email: hello@rowellblanca.dev</p>
               </div>
             </section>
 
@@ -201,8 +201,8 @@ export default function PrivacyPolicyPage() {
                 <Mail className="h-5 w-5 text-amber-600 shrink-0" />
                 <div>
                   <span className="block text-[#0b1a30]">Data Protection Email:</span>
-                  <a href="mailto:rowellblanca94@gmail.com" className="text-indigo-600 hover:underline">
-                    rowellblanca94@gmail.com
+                  <a href="mailto:hello@rowellblanca.dev" className="text-indigo-600 hover:underline">
+                    hello@rowellblanca.dev
                   </a>
                 </div>
               </div>

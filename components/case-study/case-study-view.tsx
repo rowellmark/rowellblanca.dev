@@ -424,11 +424,11 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
               </button>
 
               <a
-                href="mailto:rowellblanca94@gmail.com"
+                href="mailto:hello@rowellblanca.dev"
                 className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
               >
                 <Mail className="h-3.5 w-3.5 text-amber-400" />
-                <span>rowellblanca94@gmail.com</span>
+                <span>hello@rowellblanca.dev</span>
               </a>
             </div>
           </div>

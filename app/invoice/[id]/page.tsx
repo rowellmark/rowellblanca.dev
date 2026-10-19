@@ -210,9 +210,9 @@ export default function ClientInvoiceViewPage() {
                 <Phone className="w-3.5 h-3.5 text-amber-500" />
                 <span>+63 968 890 0418</span>
               </a>
-              <a href="mailto:rowellblanca94@gmail.com" className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+              <a href="mailto:hello@rowellblanca.dev" className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
                 <Mail className="w-3.5 h-3.5 text-blue-500" />
-                <span>rowellblanca94@gmail.com</span>
+                <span>hello@rowellblanca.dev</span>
               </a>
               <a href="https://rowellblanca.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
                 <Globe className="w-3.5 h-3.5 text-emerald-500" />
@@ -343,7 +343,7 @@ export default function ClientInvoiceViewPage() {
               </div>
             ) : (
               <div className="text-slate-500 italic">
-                Please contact rowellblanca94@gmail.com for wire transfer details.
+                Please contact hello@rowellblanca.dev for wire transfer details.
               </div>
             )}
 

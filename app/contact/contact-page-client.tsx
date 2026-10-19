@@ -121,7 +121,7 @@ export function ContactPageClient() {
         setErrors({ general: data?.error || "Failed to send message. Please try again." });
       }
     } catch (err) {
-      setErrors({ general: "An error occurred. Please reach out to rowellblanca94@gmail.com directly." });
+      setErrors({ general: "An error occurred. Please reach out to hello@rowellblanca.dev directly." });
     } finally {
       setIsSubmitting(false);
     }
@@ -181,7 +181,7 @@ export function ContactPageClient() {
 
               <div className="space-y-3 pt-2">
                 <a
-                  href="mailto:rowellblanca94@gmail.com"
+                  href="mailto:hello@rowellblanca.dev"
                   className="p-3.5 rounded-2xl bg-slate-50 hover:bg-amber-50/70 border border-slate-200/80 hover:border-amber-300 transition-all flex items-center gap-3 group"
                 >
                   <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-amber-600 shadow-2xs group-hover:scale-105 transition-transform">
@@ -190,7 +190,7 @@ export function ContactPageClient() {
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">Primary Email</span>
                     <span className="text-xs font-black text-[#0b1a30] group-hover:text-amber-700 transition-colors">
-                      rowellblanca94@gmail.com
+                      hello@rowellblanca.dev
                     </span>
                   </div>
                 </a>

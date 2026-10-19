@@ -131,11 +131,11 @@ export default function ThankYouPage() {
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm font-semibold text-slate-800">
                 <a
-                  href="mailto:rowellblanca94@gmail.com"
+                  href="mailto:hello@rowellblanca.dev"
                   className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 hover:text-amber-600 transition-colors group shadow-2xs"
                 >
                   <Mail className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span className="truncate">rowellblanca94@gmail.com</span>
+                  <span className="truncate">hello@rowellblanca.dev</span>
                 </a>
 
                 <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-2xs">

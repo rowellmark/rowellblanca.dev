@@ -117,7 +117,7 @@ export default function AboutPage() {
                                     <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                                         <Mail className="h-4 w-4 text-brand-amber" /> Email
                                     </div>
-                                    <p className="text-xs sm:text-sm font-black text-brand-navy">rowellblanca94@gmail.com</p>
+                                    <p className="text-xs sm:text-sm font-black text-brand-navy">hello@rowellblanca.dev</p>
                                 </div>
 
                                 <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-1">

@@ -35,7 +35,7 @@ const contactJsonLd = {
         "@type": "Person",
         name: "Rowell Mark Blanca",
         jobTitle: "Senior Full-Stack Engineer",
-        email: "rowellblanca94@gmail.com",
+        email: "hello@rowellblanca.dev",
         url: "https://www.rowellblanca.dev",
     },
 };

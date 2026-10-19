@@ -1398,9 +1398,9 @@ export default function AdminInvoicesPage() {
                         <span>+63 968 890 0418</span>
                       </a>
                       <span className="text-slate-300">•</span>
-                      <a href="mailto:rowellblanca94@gmail.com" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">
+                      <a href="mailto:hello@rowellblanca.dev" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">
                         <Mail className="w-3 h-3 text-blue-500" />
-                        <span>rowellblanca94@gmail.com</span>
+                        <span>hello@rowellblanca.dev</span>
                       </a>
                       <span className="text-slate-300">•</span>
                       <a href="https://rowellblanca.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">

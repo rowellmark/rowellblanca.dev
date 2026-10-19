@@ -83,7 +83,7 @@ const Contact: React.FC = () => {
             }
         } catch (err) {
             console.error("Submission error:", err);
-            setErrors({ general: "An error occurred. Please email rowellblanca94@gmail.com directly." });
+            setErrors({ general: "An error occurred. Please email hello@rowellblanca.dev directly." });
         } finally {
             setIsSubmitting(false);
         }

@@ -4,6 +4,7 @@ type ResendConfig = {
   provider: 'resend';
   apiKey: string;
   fromEmail: string;
+  noReplyEmail: string;
   fromName: string;
   toEmail: string;
 };
@@ -15,6 +16,7 @@ type MailTransportConfig = {
   user: string;
   pass: string;
   fromEmail: string;
+  noReplyEmail: string;
   toEmail: string;
 };
 
@@ -26,6 +28,8 @@ type MailContent = {
   text: string;
   html: string;
   replyTo?: string;
+  // Automated mail that doesn't expect a response is sent from the noreply address.
+  noReply?: boolean;
 };
 
 function escapeHtml(value: string) {
@@ -82,15 +86,17 @@ function buildEmailShell(options: {
 
 function getMailTransportConfig(): MailConfig | null {
   const resendApiKey = process.env.RESEND_API_KEY;
-  const resendFromEmail = process.env.RESEND_FROM_EMAIL || process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev';
+  const fromEmail = process.env.MAIL_FROM_EMAIL || 'hello@rowellblanca.dev';
+  const noReplyEmail = process.env.MAIL_NOREPLY_EMAIL || 'noreply@rowellblanca.dev';
   const resendFromName = process.env.RESEND_FROM_NAME || 'Rowell Mark Blanca';
   const toEmail = process.env.CONTACT_TO_EMAIL || 'rowellblanca94@gmail.com';
 
-  if (resendApiKey && resendFromEmail) {
+  if (resendApiKey) {
     return {
       provider: 'resend',
       apiKey: resendApiKey,
-      fromEmail: resendFromEmail,
+      fromEmail,
+      noReplyEmail,
       fromName: resendFromName,
       toEmail,
     };
@@ -100,9 +106,8 @@ function getMailTransportConfig(): MailConfig | null {
   const port = Number(process.env.SMTP_PORT || 2525);
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  const fromEmail = process.env.CONTACT_FROM_EMAIL || 'no-reply@rowellblanca.dev';
 
-  if (!host || !user || !pass || !fromEmail) {
+  if (!host || !user || !pass) {
     return null;
   }
 
@@ -113,6 +118,7 @@ function getMailTransportConfig(): MailConfig | null {
     user,
     pass,
     fromEmail,
+    noReplyEmail,
     toEmail,
   };
 }
@@ -129,6 +135,8 @@ function createTransport(config: MailTransportConfig) {
 }
 
 async function sendMail(config: MailConfig, content: MailContent) {
+  const fromEmail = content.noReply ? config.noReplyEmail : config.fromEmail;
+
   if (config.provider === 'resend') {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -137,7 +145,7 @@ async function sendMail(config: MailConfig, content: MailContent) {
         Authorization: `Bearer ${config.apiKey}`,
       },
       body: JSON.stringify({
-        from: `${config.fromName} <${config.fromEmail}>`,
+        from: `${config.fromName} <${fromEmail}>`,
         to: [content.to],
         reply_to: content.replyTo ? [content.replyTo] : undefined,
         subject: content.subject,
@@ -157,7 +165,7 @@ async function sendMail(config: MailConfig, content: MailContent) {
 
   const transporter = createTransport(config);
   const info = await transporter.sendMail({
-    from: `"Rowell Mark Blanca" <${config.fromEmail}>`,
+    from: `"Rowell Mark Blanca" <${fromEmail}>`,
     to: content.to,
     replyTo: content.replyTo,
     subject: content.subject,
@@ -194,6 +202,7 @@ export async function sendContactEmail({ name, email, subject, message, phone, c
   return sendMail(config, {
     to: config.toEmail,
     replyTo: email,
+    noReply: true,
     subject: subject ? `[Portfolio Inquiry] ${subject}` : `New Inquiry from ${name}`,
     text: `Name: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${company ? `\nCompany: ${company}` : ''}${service ? `\nService: ${service}` : ''}${budget ? `\nBudget: ${budget}` : ''}${sourceUrl ? `\nLead Source Page: ${sourceUrl}` : ''}\n\nMessage:\n${message}`,
     html: buildEmailShell({
@@ -296,6 +305,7 @@ export async function sendAcknowledgmentReceipt({
 
   return sendMail(config, {
     to: email,
+    noReply: true,
     subject: `Inquiry Receipt & Submission Copy — Rowell Mark Blanca`,
     text: `Hi ${name},\n\nThank you for reaching out! I have received your message and will review it promptly.\n\nHere is a copy of your inquiry for your records:\nService: ${service || subject || 'General Inquiry'}\nBudget: ${budget || 'N/A'}\nMessage:\n${message}\n\nBest regards,\nRowell Mark Blanca\nhttps://rowellblanca.dev`,
     html: buildEmailShell({
@@ -327,7 +337,7 @@ export async function sendAcknowledgmentReceipt({
           <a href="https://rowellblanca.dev" style="display: inline-block; padding: 12px 22px; border-radius: 999px; background: #0b1a30; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 800;">Visit rowellblanca.dev</a>
         </div>
       `,
-      footer: 'This is an automated confirmation for your records. Replies to this email will continue the same conversation.',
+      footer: 'This is an automated confirmation for your records — please don\'t reply to this email. To follow up, write to hello@rowellblanca.dev.',
     }),
   });
 }
@@ -359,6 +369,7 @@ export async function sendTestimonialNotification({
 
   return sendMail(config, {
     to: config.toEmail,
+    noReply: true,
     subject: `⭐ New Client Review Submitted: ${name} (${rating}/5 Stars)`,
     text: `New Client Testimonial Received!\n\nName: ${name}\nRole/Company: ${clientInfo}\nRating: ${rating}/5 (${stars})\nQuote:\n"${quote}"\n\nApprove or Manage in Admin Dashboard: https://www.rowellblanca.dev/admin/testimonials`,
     html: buildEmailShell({
@@ -413,6 +424,7 @@ export async function sendChatTranscriptEmail({
   return sendMail(config, {
     to: config.toEmail,
     replyTo: email,
+    noReply: true,
     subject: `💬 Ended Chat Session Transcript: ${name}`,
     text: `Chat Session Completed!\nName: ${name}\nEmail: ${email}\nSession ID: ${sessionId}\n\nFull Chat Transcript:\n${transcript}`,
     html: buildEmailShell({
@@ -577,7 +589,7 @@ export async function sendInvoiceEmail(params: SendInvoiceEmailParams) {
                     📞 <a href="tel:+639688900418" style="color: #60a5fa; text-decoration: none; font-weight: 700;">+63 968 890 0418</a>
                   </span>
                   <span style="display: inline-block; margin-right: 14px;">
-                    ✉️ <a href="mailto:rowellblanca94@gmail.com" style="color: #60a5fa; text-decoration: none; font-weight: 700;">rowellblanca94@gmail.com</a>
+                    ✉️ <a href="mailto:hello@rowellblanca.dev" style="color: #60a5fa; text-decoration: none; font-weight: 700;">hello@rowellblanca.dev</a>
                   </span>
                   <span style="display: inline-block;">
                     🌐 <a href="https://rowellblanca.dev" style="color: #60a5fa; text-decoration: none; font-weight: 700;">rowellblanca.dev</a>
@@ -731,7 +743,7 @@ export async function sendInvoiceEmail(params: SendInvoiceEmailParams) {
           <p style="margin: 0;">
             📞 <a href="tel:+639688900418" style="color: #60a5fa; text-decoration: none;">+63 968 890 0418</a> · 
             <a href="https://rowellblanca.dev" style="color: #60a5fa; text-decoration: none;">rowellblanca.dev</a> · 
-            <a href="mailto:rowellblanca94@gmail.com" style="color: #60a5fa; text-decoration: none;">rowellblanca94@gmail.com</a>
+            <a href="mailto:hello@rowellblanca.dev" style="color: #60a5fa; text-decoration: none;">hello@rowellblanca.dev</a>
           </p>
         </div>
 
@@ -741,7 +753,7 @@ export async function sendInvoiceEmail(params: SendInvoiceEmailParams) {
 
   return sendMail(config, {
     to: clientEmail,
-    replyTo: config.toEmail,
+    replyTo: config.fromEmail,
     subject: `📄 Invoice ${invoiceNumber} from Rowell Mark Blanca (${formatMoney(totalAmount)} ${currency})`,
     text: `Invoice #${invoiceNumber}\nFrom: Rowell Mark Blanca (+63 968 890 0418)\nBilled To: ${clientName} (${clientCompany || ''})\nIssue Date: ${formatDate(issueDate)}\nDue Date: ${formatDate(dueDate)}\n\nTagline: ${tagline}\n\nDeliverables:\n${textSummary}\n\nTotal Due: ${formatMoney(totalAmount)} ${currency}\n\nView and pay your invoice online at: ${invoiceUrl}`,
     html: emailHtml,

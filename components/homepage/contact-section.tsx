@@ -62,11 +62,11 @@ export default function ContactSection() {
                         {/* Direct Email Badge */}
                         <div className="pt-4 flex flex-wrap items-center gap-4">
                             <a
-                                href="mailto:rowellblanca94@gmail.com"
+                                href="mailto:hello@rowellblanca.dev"
                                 className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-white border border-slate-200 shadow-sm hover:shadow-md text-brand-navy font-bold text-sm hover:border-brand-amber transition-all"
                             >
                                 <Mail className="h-4 w-4 text-brand-amber" />
-                                rowellblanca94@gmail.com
+                                hello@rowellblanca.dev
                             </a>
 
                             <div className="flex items-center gap-2">

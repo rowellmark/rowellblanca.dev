@@ -76,7 +76,7 @@ export function CommandPalette() {
 
   const copyEmail = () => {
     if (typeof navigator !== 'undefined') {
-      navigator.clipboard.writeText('rowellblanca94@gmail.com');
+      navigator.clipboard.writeText('hello@rowellblanca.dev');
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2000);
     }
@@ -100,7 +100,7 @@ export function CommandPalette() {
       id: 'copy-email',
       category: 'Quick Actions',
       title: 'Copy Direct Email',
-      subtitle: 'rowellblanca94@gmail.com',
+      subtitle: 'hello@rowellblanca.dev',
       badge: copiedEmail ? 'Copied!' : 'Direct',
       icon: copiedEmail ? Check : Copy,
       action: copyEmail,

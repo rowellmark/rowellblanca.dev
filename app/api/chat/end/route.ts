@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       console.warn('[API/chat/end] Lead creation warning:', leadErr);
     }
 
-    // 3. Send full transcript email to site owner (rowellblanca94@gmail.com)
+    // 3. Send full transcript email to site owner (CONTACT_TO_EMAIL)
     try {
       await sendChatTranscriptEmail({
         name: name.trim(),

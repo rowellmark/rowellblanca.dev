@@ -205,14 +205,14 @@ export function ContactModal({
                     {/* Quick Direct Channels */}
                     <div className="space-y-2.5 pt-2">
                       <a
-                        href="mailto:rowellblanca94@gmail.com"
+                        href="mailto:hello@rowellblanca.dev"
                         className="p-3 rounded-xl bg-slate-950/60 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-400/40 transition-all flex items-center gap-2.5 group"
                       >
                         <Mail className="w-4 h-4 text-amber-400 shrink-0" />
                         <div className="overflow-hidden">
                           <span className="text-[10px] uppercase font-bold text-slate-400 block">Direct Email</span>
                           <span className="text-xs font-black text-white group-hover:text-amber-300 transition-colors truncate block">
-                            rowellblanca94@gmail.com
+                            hello@rowellblanca.dev
                           </span>
                         </div>
                       </a>

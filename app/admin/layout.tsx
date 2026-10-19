@@ -180,7 +180,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             <p className="text-[11px] text-slate-400">Rowell Blanca Portfolio CRM</p>
             <div className="text-[11px] text-amber-400 font-mono pt-1">
-              rowellblanca94@gmail.com
+              hello@rowellblanca.dev
             </div>
           </div>
 
