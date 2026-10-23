@@ -16,6 +16,10 @@ import {
 } from "lucide-react";
 import { SplitText } from "@/components/ui/split-text";
 
+// Monthly price of the dedicated senior developer retainer (USD).
+const MONTHLY_RETAINER_USD = 800;
+const MONTHLY_RETAINER_LABEL = `$${MONTHLY_RETAINER_USD} USD`;
+
 interface ProjectTypeOption {
   id: string;
   title: string;
@@ -26,6 +30,14 @@ interface ProjectTypeOption {
 }
 
 const PROJECT_TYPES: ProjectTypeOption[] = [
+  {
+    id: "fractional_retainer",
+    title: "Dedicated Senior Dev Retainer",
+    desc: "Continuous sprint shipping, daily standups, codebase maintenance, and feature iteration sprints.",
+    baseWeeks: "Monthly Ongoing",
+    basePriceUsd: MONTHLY_RETAINER_USD,
+    recommendedStack: ["React 19 / Next.js", "WordPress Gutenberg", "TypeScript / Node", "Prisma / SQL"],
+  },
   {
     id: "nextjs_app",
     title: "Next.js / React Web App",
@@ -49,14 +61,6 @@ const PROJECT_TYPES: ProjectTypeOption[] = [
     baseWeeks: "2–3 weeks",
     basePriceUsd: 1280,
     recommendedStack: ["LangChain", "Gemini / OpenAI API", "Vector DB", "Next.js API", "Node.js"],
-  },
-  {
-    id: "fractional_retainer",
-    title: "Dedicated Senior Dev Retainer",
-    desc: "Continuous sprint shipping, daily standups, codebase maintenance, and feature iteration sprints.",
-    baseWeeks: "Monthly Ongoing",
-    basePriceUsd: 460,
-    recommendedStack: ["React 19 / Next.js", "WordPress Gutenberg", "TypeScript / Node", "Prisma / SQL"],
   },
 ];
 
@@ -226,7 +230,7 @@ const StepHeading = ({ n, title, note }: { n: string; title: string; note?: stri
 
 export function ProjectEstimator() {
   const router = useRouter();
-  const [selectedType, setSelectedType] = useState<string>("nextjs_app");
+  const [selectedType, setSelectedType] = useState<string>("fractional_retainer");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([
     "ui_ux_design",
     "seo",
@@ -239,6 +243,10 @@ export function ProjectEstimator() {
   const [activePackageId, setActivePackageId] = useState<string | null>("all_inclusive");
   const [selectedTimeline, setSelectedTimeline] = useState<string>("standard");
   const [retainerBillingMode, setRetainerBillingMode] = useState<"monthly" | "project">("monthly");
+  // Progressive disclosure keeps the default view light.
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
+  const [showSkills, setShowSkills] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   // Lead capture state
   const [contactName, setContactName] = useState("");
@@ -287,7 +295,7 @@ export function ProjectEstimator() {
 
   const baseCalculated = isRetainer
     ? retainerBillingMode === "monthly"
-      ? 460
+      ? MONTHLY_RETAINER_USD
       : 0
     : (currentTypeConfig.basePriceUsd + featureCost) * activeTimelineObj.multiplier;
 
@@ -318,10 +326,10 @@ export function ProjectEstimator() {
 
     const summaryDetails = isRetainer
       ? `--- DEDICATED SENIOR DEV RETAINER INQUIRY ---
-• Engagement Basis: ${retainerBillingMode === "monthly" ? "Monthly Dedicated Retainer ($460 USD / month)" : "Project-Based Scope (Custom Quote Request)"}
+• Engagement Basis: ${retainerBillingMode === "monthly" ? `Monthly Dedicated Retainer (${MONTHLY_RETAINER_LABEL} / month)` : "Project-Based Scope (Custom Quote Request)"}
 • Selected Cadence: ${timelineLabel}
 • Recommended Stack: ${currentTypeConfig.recommendedStack.join(", ")}
-• Investment: ${retainerBillingMode === "monthly" ? "$460 USD / month" : "Custom Quote (Inquiry Based)"}
+• Investment: ${retainerBillingMode === "monthly" ? `${MONTHLY_RETAINER_LABEL} / month` : "Custom Quote (Inquiry Based)"}
 • Scope / Project Notes: ${contactNotes || "N/A"}`
       : `--- INTERACTIVE PROJECT ESTIMATOR SCOPE ---
 • Project Category: ${currentTypeConfig.title}
@@ -342,15 +350,15 @@ export function ProjectEstimator() {
           phone: contactPhone.trim() || undefined,
           service: isRetainer
             ? retainerBillingMode === "monthly"
-              ? "Dedicated Senior Dev Retainer ($460 USD / mo)"
+              ? `Dedicated Senior Dev Retainer (${MONTHLY_RETAINER_LABEL} / mo)`
               : "Project-Based Development (Custom Quote Request)"
             : currentTypeConfig.title,
           subject: isRetainer
-            ? `Retainer Inquiry: ${retainerBillingMode === "monthly" ? "Monthly ($460/mo)" : "Project Scope (Custom Quote)"}`
+            ? `Retainer Inquiry: ${retainerBillingMode === "monthly" ? `Monthly ($${MONTHLY_RETAINER_USD}/mo)` : "Project Scope (Custom Quote)"}`
             : `Estimate Request: ${currentTypeConfig.title} ($${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()})`,
           budget: isRetainer
             ? retainerBillingMode === "monthly"
-              ? "$460 USD / month"
+              ? `${MONTHLY_RETAINER_LABEL} / month`
               : "Custom Quote (Project-Based)"
             : `$${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()} USD`,
           message: summaryDetails,
@@ -437,7 +445,7 @@ export function ProjectEstimator() {
                           {isSelected && <span className="h-2 w-2 rounded-full bg-amber-400" />}
                         </span>
                       </span>
-                      <span className={`text-sm leading-relaxed ${isSelected ? "text-slate-300" : "text-brand-slate"}`}>
+                      <span className={`hidden sm:block text-sm leading-relaxed ${isSelected ? "text-slate-300" : "text-brand-slate"}`}>
                         {type.desc}
                       </span>
                       <span className={`mt-auto pt-3 border-t flex items-center justify-between font-mono text-xs ${isSelected ? "border-white/10" : "border-brand-border"}`}>
@@ -445,7 +453,7 @@ export function ProjectEstimator() {
                           {type.id === "fractional_retainer" ? "Rolling sprints" : `Est. ${type.baseWeeks}`}
                         </span>
                         <span className="font-medium">
-                          {type.id === "fractional_retainer" ? "$460 USD / mo" : `From $${type.basePriceUsd.toLocaleString()}`}
+                          {type.id === "fractional_retainer" ? `${MONTHLY_RETAINER_LABEL} / mo` : `From $${type.basePriceUsd.toLocaleString()}`}
                         </span>
                       </span>
                     </button>
@@ -468,7 +476,7 @@ export function ProjectEstimator() {
                   <span className="font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">Retainer engagement model</span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {([
-                      { id: "monthly", title: "Monthly basis", price: "$460 USD / mo", desc: "Continuous sprint shipping, daily standups & dedicated weekly capacity." },
+                      { id: "monthly", title: "Monthly basis", price: `${MONTHLY_RETAINER_LABEL} / mo`, desc: "Continuous sprint shipping, daily standups & dedicated weekly capacity." },
                       { id: "project", title: "Project base", price: "Custom quote", desc: "Fixed scope deliverable with milestone review. Submit inquiry below." },
                     ] as const).map((mode) => {
                       const isSelected = retainerBillingMode === mode.id;
@@ -491,29 +499,45 @@ export function ProjectEstimator() {
                   </div>
                 </div>
 
-                {/* Developer Skills Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {DEVELOPER_SKILLS_CATEGORIES.map((cat, idx) => {
-                    const IconComp = cat.icon;
-                    return (
-                      <div key={idx} className="rounded-2xl border border-brand-border bg-brand-bg p-5 flex flex-col gap-3">
-                        <div className="flex items-center gap-2.5 text-sm font-extrabold text-brand-navy">
-                          <span className="h-8 w-8 rounded-lg bg-amber-500/15 text-amber-700 flex items-center justify-center">
-                            <IconComp className="h-4 w-4" />
-                          </span>
-                          <span>{cat.title}</span>
+                {/* Developer skills: category chips, details on demand */}
+                <div className="flex flex-col gap-3">
+                  <ul className="m-0 p-0 list-none flex flex-wrap gap-2">
+                    {DEVELOPER_SKILLS_CATEGORIES.map((cat) => {
+                      const IconComp = cat.icon;
+                      return (
+                        <li key={cat.title} className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-brand-border bg-brand-bg text-sm font-semibold text-brand-navy">
+                          <IconComp className="h-3.5 w-3.5 text-amber-700" aria-hidden="true" />
+                          {cat.title}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <button
+                    type="button"
+                    aria-expanded={showSkills}
+                    onClick={() => setShowSkills((v) => !v)}
+                    className="self-start inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-brand-navy motion-underline cursor-pointer"
+                  >
+                    {showSkills ? "Hide skill details" : "See every skill included"}
+                    <span aria-hidden="true" className={`transition-transform duration-300 ${showSkills ? "rotate-180" : ""}`}>↓</span>
+                  </button>
+                  {showSkills && (
+                    <div className="motion-fade grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 pt-2">
+                      {DEVELOPER_SKILLS_CATEGORIES.map((cat) => (
+                        <div key={cat.title} className="flex flex-col gap-2">
+                          <span className="font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">{cat.title}</span>
+                          <ul className="m-0 p-0 list-none flex flex-col gap-1.5">
+                            {cat.skills.map((skill) => (
+                              <li key={skill} className="flex items-start gap-2.5 text-sm text-brand-slate leading-snug">
+                                <span aria-hidden="true" className="text-brand-navy">—</span>
+                                <span>{skill}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <ul className="m-0 p-0 list-none flex flex-col gap-2">
-                          {cat.skills.map((skill, sIdx) => (
-                            <li key={sIdx} className="flex items-start gap-2.5 text-sm text-brand-slate leading-snug">
-                              <span aria-hidden="true" className="text-brand-navy">—</span>
-                              <span>{skill}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -563,59 +587,78 @@ export function ProjectEstimator() {
                   </div>
                 </div>
 
-                {/* Design Fee Disclaimer Notice */}
-                <div className="rounded-2xl bg-brand-cream p-4 flex items-start gap-3 text-sm text-brand-navy">
-                  <AlertCircle className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" aria-hidden="true" />
-                  <p className="m-0 leading-relaxed">
-                    <strong className="font-bold">Important notice:</strong> Custom UI/UX Design is a specialized external
-                    fee ($360). Core software engineering does not include Figma mockups unless selected or provided by your
-                    design team.
-                  </p>
-                </div>
+                <button
+                  type="button"
+                  aria-expanded={showAllFeatures}
+                  onClick={() => setShowAllFeatures((v) => !v)}
+                  className="w-full min-h-[56px] px-5 rounded-2xl border border-brand-border hover:border-brand-navy/40 flex items-center justify-between gap-4 text-left cursor-pointer transition-colors"
+                >
+                  <span className="flex flex-col">
+                    <span className="font-semibold text-brand-navy">Customize individual features</span>
+                    <span className="text-sm text-brand-slate">
+                      {selectedFeatures.length} of {FEATURE_OPTIONS.length} selected · {freeFeaturesCount} free
+                    </span>
+                  </span>
+                  <span aria-hidden="true" className={`text-brand-navy transition-transform duration-300 ${showAllFeatures ? "rotate-180" : ""}`}>↓</span>
+                </button>
 
-                <ul className="m-0 p-0 list-none flex flex-col border-t border-brand-border">
-                  {FEATURE_OPTIONS.map((feat) => {
-                    const isChecked = selectedFeatures.includes(feat.id);
-                    const isFree = feat.price === 0;
-                    return (
-                      <li key={feat.id} className="border-b border-brand-border">
-                        <button
-                          type="button"
-                          role="checkbox"
-                          aria-checked={isChecked}
-                          onClick={() => toggleFeature(feat.id)}
-                          className="group w-full min-h-[56px] py-3 flex items-center justify-between gap-4 text-left cursor-pointer"
-                        >
-                          <span className="flex items-center gap-3.5">
-                            <span
-                              aria-hidden="true"
-                              className={`h-5 w-5 shrink-0 rounded-md border-2 flex items-center justify-center transition-colors ${
-                                isChecked ? "bg-brand-ink border-brand-ink text-amber-400" : "border-slate-300 group-hover:border-brand-navy/50"
-                              }`}
+                {showAllFeatures && (
+                  <div className="motion-fade flex flex-col gap-5">
+                    {/* Design Fee Disclaimer Notice */}
+                    <div className="rounded-2xl bg-brand-cream p-4 flex items-start gap-3 text-sm text-brand-navy">
+                      <AlertCircle className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" aria-hidden="true" />
+                      <p className="m-0 leading-relaxed">
+                        <strong className="font-bold">Important notice:</strong> Custom UI/UX Design is a specialized external
+                        fee ($360). Core software engineering does not include Figma mockups unless selected or provided by your
+                        design team.
+                      </p>
+                    </div>
+
+                    <ul className="m-0 p-0 list-none flex flex-col border-t border-brand-border">
+                      {FEATURE_OPTIONS.map((feat) => {
+                        const isChecked = selectedFeatures.includes(feat.id);
+                        const isFree = feat.price === 0;
+                        return (
+                          <li key={feat.id} className="border-b border-brand-border">
+                            <button
+                              type="button"
+                              role="checkbox"
+                              aria-checked={isChecked}
+                              onClick={() => toggleFeature(feat.id)}
+                              className="group w-full min-h-[56px] py-3 flex items-center justify-between gap-4 text-left cursor-pointer"
                             >
-                              {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
-                            </span>
-                            <span className={`text-[15px] font-semibold leading-snug ${isChecked ? "text-brand-navy" : "text-brand-slate"}`}>
-                              {feat.label}
-                            </span>
-                            {feat.badge && (
-                              <span
-                                className={`hidden sm:inline font-mono text-[11px] px-2 py-0.5 rounded-full shrink-0 ${
-                                  feat.badge === "Design Fee" ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-800"
-                                }`}
-                              >
-                                {feat.badge}
+                              <span className="flex items-center gap-3.5">
+                                <span
+                                  aria-hidden="true"
+                                  className={`h-5 w-5 shrink-0 rounded-md border-2 flex items-center justify-center transition-colors ${
+                                    isChecked ? "bg-brand-ink border-brand-ink text-amber-400" : "border-slate-300 group-hover:border-brand-navy/50"
+                                  }`}
+                                >
+                                  {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
+                                </span>
+                                <span className={`text-[15px] font-semibold leading-snug ${isChecked ? "text-brand-navy" : "text-brand-slate"}`}>
+                                  {feat.label}
+                                </span>
+                                {feat.badge && (
+                                  <span
+                                    className={`hidden sm:inline font-mono text-[11px] px-2 py-0.5 rounded-full shrink-0 ${
+                                      feat.badge === "Design Fee" ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-800"
+                                    }`}
+                                  >
+                                    {feat.badge}
+                                  </span>
+                                )}
                               </span>
-                            )}
-                          </span>
-                          <span className={`font-mono text-sm shrink-0 ${isFree ? "text-emerald-700" : "text-brand-navy"}`}>
-                            {isFree ? "Free" : `+$${feat.price}`}
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                              <span className={`font-mono text-sm shrink-0 ${isFree ? "text-emerald-700" : "text-brand-navy"}`}>
+                                {isFree ? "Free" : `+$${feat.price}`}
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
 
@@ -671,30 +714,21 @@ export function ProjectEstimator() {
             </div>
 
             {/* Calculated Investment & Delivery Time */}
-            <div className="flex flex-col gap-6 border-y border-white/10 py-8">
-              <div className="flex items-center justify-between font-mono text-xs uppercase tracking-[0.08em] text-slate-400">
-                <span>
-                  {isRetainer
-                    ? retainerBillingMode === "monthly"
-                      ? "Monthly retainer investment"
-                      : "Engagement basis"
-                    : "Estimated investment"}
-                </span>
-                <span className="text-amber-400">
-                  {isRetainer
-                    ? retainerBillingMode === "monthly"
-                      ? "Monthly retainer"
-                      : "Project scope"
-                    : currentTypeConfig.title.split(" ")[0]}
-                </span>
-              </div>
+            <div className="flex flex-col gap-5 border-y border-white/10 py-7">
+              <span className="font-mono text-xs uppercase tracking-[0.08em] text-slate-400">
+                {isRetainer
+                  ? retainerBillingMode === "monthly"
+                    ? "Monthly retainer"
+                    : "Project-based retainer"
+                  : `Estimated investment · ${currentTypeConfig.title}`}
+              </span>
 
               <div key={priceKey} className="motion-fade" aria-live="polite">
-                <div className="font-extrabold tracking-[-0.04em] leading-none text-[clamp(40px,4.2vw,60px)]">
+                <div className="font-extrabold tracking-[-0.04em] leading-none text-[clamp(34px,3vw,46px)]">
                   {isRetainer ? (
                     retainerBillingMode === "monthly" ? (
                       <>
-                        $460 <span className="text-base font-medium tracking-normal text-slate-400">USD / month</span>
+                        ${MONTHLY_RETAINER_USD} <span className="text-sm font-medium tracking-normal text-slate-400">USD / month</span>
                       </>
                     ) : (
                       <>Custom quote</>
@@ -703,13 +737,13 @@ export function ProjectEstimator() {
                     <>
                       ${lowEstimate.toLocaleString()}
                       <span className="text-slate-500"> – </span>${highEstimate.toLocaleString()}
-                      <span className="text-base font-medium tracking-normal text-slate-400"> USD</span>
+                      <span className="text-sm font-medium tracking-normal text-slate-400"> USD</span>
                     </>
                   )}
                 </div>
                 {isRetainer && retainerBillingMode === "project" && (
                   <p className="m-0 mt-3 text-sm text-slate-400">
-                    Submit your project specifications below to receive an itemized proposal and timeline.
+                    Share your project specifications to receive an itemized proposal and timeline.
                   </p>
                 )}
               </div>
@@ -743,7 +777,7 @@ export function ProjectEstimator() {
 
             {/* Key Highlights */}
             <ul className="m-0 p-0 list-none flex flex-col gap-2.5 text-sm text-slate-300">
-              {freeFeaturesCount > 0 && (
+              {!isRetainer && freeFeaturesCount > 0 && (
                 <li className="flex gap-3 text-emerald-400 font-semibold">
                   <span aria-hidden="true">—</span>
                   {freeFeaturesCount} free premium add-on{freeFeaturesCount > 1 ? "s" : ""} included ($0)
@@ -754,12 +788,26 @@ export function ProjectEstimator() {
               <li className="flex gap-3"><span aria-hidden="true" className="text-amber-500">—</span>100% direct senior code quality &amp; daily comms</li>
             </ul>
 
-            {/* Request Formal Proposal Form */}
-            <div className="flex flex-col gap-4 pt-8 border-t border-white/10">
+            {/* Request Formal Proposal: one CTA, form revealed on demand */}
+            {!showForm ? (
+              <button
+                type="button"
+                onClick={() => setShowForm(true)}
+                className="motion-btn motion-magnetic w-full min-h-[60px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold flex items-center justify-between gap-3 cursor-pointer"
+              >
+                {isRetainer
+                  ? retainerBillingMode === "monthly"
+                    ? "Start retainer onboarding"
+                    : "Request a custom quote"
+                  : "Get my itemized proposal"}
+                <span className="motion-arrow" aria-hidden="true">→</span>
+              </button>
+            ) : (
+            <div className="motion-fade flex flex-col gap-4 pt-8 border-t border-white/10">
               <h4 className="m-0 text-base font-extrabold">
                 {isRetainer
                   ? retainerBillingMode === "monthly"
-                    ? "Lock in a dedicated retainer ($460 USD / mo)"
+                    ? `Lock in a dedicated retainer (${MONTHLY_RETAINER_LABEL} / mo)`
                     : "Submit your project scope for a custom quote"
                   : "Lock in your proposal & call"}
               </h4>
@@ -887,7 +935,7 @@ export function ProjectEstimator() {
                       <span>
                         {isRetainer
                           ? retainerBillingMode === "monthly"
-                            ? "Request $460/mo retainer onboarding"
+                            ? `Request $${MONTHLY_RETAINER_USD}/mo retainer onboarding`
                             : "Submit project scope inquiry"
                           : "Get itemized proposal & scope"}
                       </span>
@@ -900,6 +948,7 @@ export function ProjectEstimator() {
                 </span>
               </form>
             </div>
+            )}
           </div>
         </div>
       </div>
