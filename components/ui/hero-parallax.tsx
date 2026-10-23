@@ -9,9 +9,8 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Sparkles, ShieldCheck, Clock, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, Clock, ArrowUpRight } from "lucide-react";
 import { resolveValidImageSrc } from "@/lib/image-utils";
-import { FuzzyText } from "@/components/ui/fuzzy-text";
 
 export const HeroParallax = ({
     products,
@@ -132,108 +131,114 @@ export const HeroParallax = ({
                 </motion.div>
             </div>
 
+            {/* Vignette: pushes the busy screenshot rows back behind the panel */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 z-10 pointer-events-none bg-[radial-gradient(ellipse_60%_55%_at_50%_50%,rgba(2,6,23,0.92)_0%,rgba(2,6,23,0.6)_55%,rgba(2,6,23,0)_100%)]"
+            />
+
             {/* Foreground Floating Trust & Showcase Overlay */}
-            <div className="relative z-20 max-w-4xl mx-auto px-6">
-                <div className="p-6 sm:p-9 rounded-3xl bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 shadow-2xl text-center space-y-5">
-                    {/* Eyebrow */}
-                    <div>
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/30 inline-block shadow-2xs">
-                            Trusted by UK, US & Australian Businesses for Mission-Critical Engineering
-                        </span>
-                    </div>
-
-                    {/* Headline */}
-                    <div className="space-y-1.5">
-                        <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-                            Interactive Portfolio Showcase
-                        </h2>
-                        <p className="text-slate-300 text-xs sm:text-sm font-medium max-w-2xl mx-auto leading-relaxed">
-                            High-concurrency Next.js web applications, custom multi-tenant SaaS portals, and enterprise WordPress engines engineered for sub-second performance.
-                        </p>
-                    </div>
-
-                    {/* Trust & Client Pillars Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-left">
+            <div className="relative z-20 w-full max-w-[1040px] mx-auto px-4 sm:px-6">
+                <div className="motion-reveal rounded-[28px] bg-brand-ink/80 backdrop-blur-2xl border border-white/10 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] p-6 sm:p-10 lg:p-12 flex flex-col gap-10">
+                    {/* Header: label, headline, CTA */}
+                    <div className="flex flex-wrap items-end justify-between gap-8">
+                        <div className="flex flex-col gap-4 max-w-[540px]">
+                            <span className="inline-flex items-center gap-2.5 font-mono text-xs uppercase tracking-[0.08em] text-slate-400">
+                                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+                                Trusted by UK, US &amp; Australian businesses
+                            </span>
+                            <h2 className="m-0 font-extrabold tracking-[-0.04em] leading-[0.98] text-white text-[clamp(34px,4.4vw,60px)]">
+                                Interactive portfolio showcase
+                            </h2>
+                            <p className="m-0 text-slate-300 text-base sm:text-[17px] leading-relaxed">
+                                High-concurrency Next.js web applications, custom multi-tenant SaaS portals, and enterprise
+                                WordPress engines engineered for sub-second performance.
+                            </p>
+                        </div>
                         <Link
-                            href="/mywork/macmanus-portal"
-                            className="p-3 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-slate-700 hover:border-amber-400/60 transition-all group"
+                            href="/mywork"
+                            className="motion-btn motion-magnetic inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold"
                         >
-                            <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-amber-400">
-                                <span className="truncate">MacManus Finance</span>
-                                <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 text-amber-400 shrink-0" />
-                            </div>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">UK Asset Finance</span>
-                            <span className="text-[9px] font-mono font-bold text-emerald-400 bg-emerald-950/70 px-1.5 py-0.5 rounded border border-emerald-800/50 inline-block mt-1">
+                            Explore all 50+ projects
+                            <ArrowRight className="motion-arrow w-4 h-4" aria-hidden="true" />
+                        </Link>
+                    </div>
+
+                    {/* Trust pillars: one quiet grid with hairline dividers */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden bg-white/10 border border-white/10">
+                        <Link href="/mywork/macmanus-portal" className="group bg-brand-ink-2 hover:bg-[#1A2238] transition-colors p-4 sm:p-5 flex flex-col gap-3">
+                            <span className="flex items-start justify-between gap-3">
+                                <span className="flex flex-col gap-1">
+                                    <span className="text-white font-bold">MacManus Finance</span>
+                                    <span className="text-sm text-slate-400">UK asset finance</span>
+                                </span>
+                                <ArrowUpRight className="w-4 h-4 shrink-0 text-slate-500 group-hover:text-amber-400 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+                            </span>
+                            <span className="mt-auto inline-flex items-center gap-2 font-mono text-xs text-slate-300">
+                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
                                 98/100 Web Vitals
                             </span>
                         </Link>
-
-                        <Link
-                            href="/mywork/buildforuser"
-                            className="p-3 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-slate-700 hover:border-amber-400/60 transition-all group"
-                        >
-                            <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-amber-400">
-                                <span className="truncate">BuildForUser SaaS</span>
-                                <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 text-amber-400 shrink-0" />
-                            </div>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">Multi-Tenant Platform</span>
-                            <span className="text-[9px] font-mono font-bold text-blue-400 bg-blue-950/70 px-1.5 py-0.5 rounded border border-blue-800/50 inline-block mt-1">
-                                Next.js & NeonDB
+                        <Link href="/mywork/buildforuser" className="group bg-brand-ink-2 hover:bg-[#1A2238] transition-colors p-4 sm:p-5 flex flex-col gap-3">
+                            <span className="flex items-start justify-between gap-3">
+                                <span className="flex flex-col gap-1">
+                                    <span className="text-white font-bold">BuildForUser SaaS</span>
+                                    <span className="text-sm text-slate-400">Multi-tenant platform</span>
+                                </span>
+                                <ArrowUpRight className="w-4 h-4 shrink-0 text-slate-500 group-hover:text-amber-400 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+                            </span>
+                            <span className="mt-auto inline-flex items-center gap-2 font-mono text-xs text-slate-300">
+                                <span className="h-1.5 w-1.5 rounded-full bg-sky-400" aria-hidden="true" />
+                                Next.js &amp; NeonDB
                             </span>
                         </Link>
-
-                        <div className="p-3 rounded-xl bg-slate-800/90 border border-slate-700">
-                            <div className="flex items-center gap-1 text-xs font-bold text-white">
-                                <Clock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                                <span className="truncate">Timezone Overlap</span>
-                            </div>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">UK, US & AU Overlap</span>
-                            <span className="text-[9px] font-mono font-bold text-indigo-400 bg-indigo-950/70 px-1.5 py-0.5 rounded border border-indigo-800/50 inline-block mt-1">
-                                Daily Standups
+                        <div className="bg-brand-ink-2 p-4 sm:p-5 flex flex-col gap-3">
+                            <span className="flex items-start justify-between gap-3">
+                                <span className="flex flex-col gap-1">
+                                    <span className="text-white font-bold">Timezone overlap</span>
+                                    <span className="text-sm text-slate-400">UK, US &amp; AU</span>
+                                </span>
+                                <Clock className="w-4 h-4 shrink-0 text-slate-500" aria-hidden="true" />
+                            </span>
+                            <span className="mt-auto inline-flex items-center gap-2 font-mono text-xs text-slate-300">
+                                <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" aria-hidden="true" />
+                                Daily standups
                             </span>
                         </div>
-
-                        <div className="p-3 rounded-xl bg-slate-800/90 border border-slate-700">
-                            <div className="flex items-center gap-1 text-xs font-bold text-white">
-                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                                <span className="truncate">Senior Dev Access</span>
-                            </div>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">12+ Yrs Experience</span>
-                            <span className="text-[9px] font-mono font-bold text-amber-400 bg-amber-950/70 px-1.5 py-0.5 rounded border border-amber-800/50 inline-block mt-1">
-                                Zero Delegation
+                        <div className="bg-brand-ink-2 p-4 sm:p-5 flex flex-col gap-3">
+                            <span className="flex items-start justify-between gap-3">
+                                <span className="flex flex-col gap-1">
+                                    <span className="text-white font-bold">Senior dev access</span>
+                                    <span className="text-sm text-slate-400">12+ yrs experience</span>
+                                </span>
+                                <ShieldCheck className="w-4 h-4 shrink-0 text-slate-500" aria-hidden="true" />
+                            </span>
+                            <span className="mt-auto inline-flex items-center gap-2 font-mono text-xs text-slate-300">
+                                <span className="h-1.5 w-1.5 rounded-full bg-amber-400" aria-hidden="true" />
+                                Zero delegation
                             </span>
                         </div>
                     </div>
 
-                    {/* Stats strip & CTA */}
-                    <div className="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-4 sm:gap-6 text-left">
-                            <div>
-                                <span className="text-sm sm:text-base font-black text-white">12+ Yrs</span>
-                                <span className="block text-[9px] font-mono text-slate-400 uppercase">Production</span>
+                    {/* Stats */}
+                    <dl className="m-0 grid grid-cols-2 lg:grid-cols-4 gap-y-6">
+                        {[
+                            { value: "12+ yrs", label: "In production", tone: "text-white" },
+                            { value: "50+", label: "Apps shipped", tone: "text-white" },
+                            { value: "<1s", label: "Web Vitals", tone: "text-amber-400" },
+                            { value: "100%", label: "Top rated", tone: "text-emerald-400" },
+                        ].map((stat, i) => (
+                            <div
+                                key={stat.label}
+                                className={`flex flex-col-reverse gap-1.5 ${i % 2 === 1 ? "pl-6 border-l border-white/10" : ""} ${i > 0 ? "lg:pl-6 lg:border-l lg:border-white/10" : ""}`}
+                            >
+                                <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">{stat.label}</dt>
+                                <dd className={`m-0 font-extrabold tracking-[-0.04em] leading-none text-[clamp(28px,3vw,40px)] ${stat.tone}`}>
+                                    {stat.value}
+                                </dd>
                             </div>
-                            <div>
-                                <span className="text-sm sm:text-base font-black text-white">50+ Apps</span>
-                                <span className="block text-[9px] font-mono text-slate-400 uppercase">Shipped</span>
-                            </div>
-                            <div>
-                                <span className="text-sm sm:text-base font-black text-amber-400">Sub-Second</span>
-                                <span className="block text-[9px] font-mono text-slate-400 uppercase">Web Vitals</span>
-                            </div>
-                            <div>
-                                <span className="text-sm sm:text-base font-black text-emerald-400">100%</span>
-                                <span className="block text-[9px] font-mono text-slate-400 uppercase">Top Rated</span>
-                            </div>
-                        </div>
-
-                        <Link
-                            href="/mywork"
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-white text-slate-950 font-extrabold text-xs uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                        >
-                            <span>Explore All 50+ Projects</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                    </div>
+                        ))}
+                    </dl>
                 </div>
             </div>
         </section>
