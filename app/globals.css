@@ -126,6 +126,11 @@ body {
 .motion-marquee:hover .motion-marquee-track { animation-play-state: paused; }
 @keyframes motion-marquee { to { transform: translateX(-50%); } }
 
+/* Hero project reel: columns of screenshots drifting in opposite directions */
+.motion-reel-up, .motion-reel-down { animation: motion-reel 48s linear infinite; }
+.motion-reel-down { animation-direction: reverse; }
+.motion-reel:hover .motion-reel-up, .motion-reel:hover .motion-reel-down { animation-play-state: paused; }
+@keyframes motion-reel { from { transform: translateY(0); } to { transform: translateY(-50%); } }
 .motion-float { animation: motion-float 6s ease-in-out infinite; }
 @keyframes motion-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
 
@@ -181,7 +186,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .motion-rise, .motion-fade, .motion-marquee-track, .motion-cue, .motion-pulse,
-  .motion-float, .motion-orbit, .motion-twinkle,
+  .motion-reel-up, .motion-reel-down, .motion-float, .motion-orbit, .motion-twinkle,
   .motion-reveal, .motion-lit, .motion-recede { animation: none !important; }
   .motion-btn, .motion-lift, .motion-underline::after, .motion-card .motion-shot { transition: none !important; }
 }

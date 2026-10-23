@@ -4,6 +4,7 @@ import Image from "next/image";
 import { CVDownloadButton } from "@/components/ui/cv-download-button";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
 import { PageHero } from "@/components/ui/page-hero";
+import { TechGalaxy } from "@/components/homepage/tech-galaxy";
 import WorkHistory from "@/components/homepage/work-history";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
@@ -59,7 +60,7 @@ export default function AboutPage() {
         },
         {
             label: "Backend & Database",
-            items: ["Node.js (Express)", "PHP (Laravel, WordPress)", "NeonDB (PostgreSQL)", "Prisma ORM", "MySQL", "Redis", "REST & GraphQL APIs"],
+            items: ["Node.js (Express)", "PHP (Laravel, WordPress)", "PostgreSQL", "NeonDB", "Prisma ORM", "MySQL", "Redis", "REST & GraphQL APIs"],
         },
         {
             label: "DevOps & Cloud Tools",
@@ -178,9 +179,18 @@ export default function AboutPage() {
             {/* Technical skills */}
             <section className="px-4 sm:px-6 lg:px-10 pt-24 lg:pt-36">
                 <div className="mx-auto max-w-[1360px] flex flex-col gap-12">
-                    <div className="motion-reveal flex flex-col gap-5">
-                        <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — Technology matrix</p>
-                        <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(36px,5vw,80px)]">Skills & ecosystem.</h2>
+                    <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
+                        <div className="motion-reveal flex flex-col gap-5">
+                            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — Technology matrix</p>
+                            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(36px,5vw,80px)]">Skills & ecosystem.</h2>
+                            <p className="m-0 max-w-[480px] text-brand-slate text-[17px] leading-relaxed">
+                                The tools I reach for every day — from React and Next.js on the front end to PostgreSQL, Prisma and
+                                WordPress behind it, shipped on Vercel.
+                            </p>
+                        </div>
+                        <div className="motion-reveal rounded-[28px] bg-brand-ink p-6 sm:p-10 overflow-hidden">
+                            <TechGalaxy className="max-w-[480px] mx-auto" />
+                        </div>
                     </div>
                     <dl className="m-0 flex flex-col border-t border-brand-border">
                         {techCategories.map(({ label, items }) => (
