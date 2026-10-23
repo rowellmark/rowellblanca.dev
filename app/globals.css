@@ -173,3 +173,9 @@ body {
   .motion-reveal, .motion-lit, .motion-recede { animation: none !important; }
   .motion-btn, .motion-lift, .motion-underline::after, .motion-card .motion-shot { transition: none !important; }
 }
+
+/* Testimonial autoplay progress segment (duration matches the 5.5s slider interval) */
+.motion-progress-fill { transform: scaleX(0); transform-origin: left; animation: motion-progress-fill 5.5s linear forwards; }
+.motion-progress-paused .motion-progress-fill { animation-play-state: paused; }
+@keyframes motion-progress-fill { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .motion-progress-fill { animation: none; transform: scaleX(1); } }

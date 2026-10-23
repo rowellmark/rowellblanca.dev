@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Quote, ChevronLeft, ChevronRight, ExternalLink, Sparkles } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, ExternalLink, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 export interface TestimonialItem {
@@ -41,7 +40,6 @@ export function TestimonialsSection({
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials || []);
   const [loading, setLoading] = useState(!initialTestimonials || initialTestimonials.length === 0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<number>(1);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
@@ -69,12 +67,11 @@ export function TestimonialsSection({
     loadTestimonials();
   }, [initialTestimonials]);
 
-  // Auto-play slider every 5.5 seconds with direction awareness
+  // Auto-play slider every 5.5 seconds
   useEffect(() => {
     if (testimonials.length <= 1 || isPaused) return;
 
     const interval = setInterval(() => {
-      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 5500);
 
@@ -82,33 +79,15 @@ export function TestimonialsSection({
   }, [testimonials.length, isPaused]);
 
   const handleNext = () => {
-    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const handlePrev = () => {
-    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   const handleDotClick = (idx: number) => {
-    setDirection(idx > currentIndex ? 1 : -1);
     setCurrentIndex(idx);
-  };
-
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-    center: {
-      x: '0%',
-      opacity: 1,
-    },
-    exit: (dir: number) => ({
-      x: dir < 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
   };
 
   const getPhotoUrl = (avatarUrl?: string) => {
@@ -124,216 +103,129 @@ export function TestimonialsSection({
 
   if (!loading && testimonials.length === 0) return null;
 
-  return (
-    <section
-      className={`py-24 border-y overflow-hidden relative ${
-        dark
-          ? 'bg-slate-950 border-slate-800 text-slate-100'
-          : 'bg-[#F8FAFC] border-slate-200/60 text-brand-navy'
-      } ${className}`}
-    >
-      {/* Background glow accents */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-amber-500/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-indigo-500/5 blur-3xl pointer-events-none" />
+  const current = testimonials[currentIndex];
+  const authorName = current?.name || current?.author;
+  const photo = getPhotoUrl(current?.avatarUrl);
+  const pad = (n: number) => String(n).padStart(2, '0');
 
-      <div className="container mx-auto px-6 max-w-5xl relative z-10">
+  const panel = dark ? 'bg-brand-ink-2 text-white border border-white/[0.08]' : 'bg-brand-cream text-brand-navy';
+  const muted = dark ? 'text-slate-400' : 'text-brand-slate';
+  const navBtn = `motion-btn h-[52px] w-[52px] rounded-full border flex items-center justify-center cursor-pointer ${
+    dark ? 'border-white/15 hover:border-white/50 text-white' : 'border-brand-navy/20 hover:border-brand-navy text-brand-navy'
+  }`;
+
+  return (
+    <section className={`px-4 sm:px-6 lg:px-10 py-24 lg:py-40 ${dark ? 'bg-brand-ink text-white' : 'text-brand-navy'} ${className}`}>
+      <div className="mx-auto max-w-[1360px] flex flex-col gap-14 lg:gap-16">
         {showHeading && (
-          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <span
-              className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${
-                dark
-                  ? 'text-amber-400 bg-amber-500/10 border-amber-500/20'
-                  : 'text-brand-amber bg-amber-50 border-amber-200/60'
-              }`}
-            >
-              {badge}
-            </span>
-            <h2
-              className={`text-4xl sm:text-5xl font-black tracking-tight ${
-                dark ? 'text-white' : 'text-brand-navy'
-              }`}
-            >
-              {title}
-            </h2>
-            {subtitle && (
-              <p className={`text-base ${dark ? 'text-slate-400' : 'text-brand-slate'}`}>
-                {subtitle}
-              </p>
-            )}
+          <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
+            <div className="flex flex-col gap-5 max-w-[860px]">
+              <p className={`m-0 font-mono text-[13px] tracking-[0.08em] uppercase ${muted}`}>{badge}</p>
+              <h2 className="m-0 font-extrabold tracking-[-0.045em] leading-[0.98] text-[clamp(40px,5.2vw,84px)]">{title}</h2>
+            </div>
+            {subtitle && <p className={`m-0 max-w-[420px] text-[17px] leading-relaxed ${muted}`}>{subtitle}</p>}
           </div>
         )}
 
         {loading ? (
-          <div className="flex justify-center py-16">
-            <div className="h-3 w-3 rounded-full bg-brand-amber animate-ping" />
+          <div className={`rounded-[28px] min-h-[420px] flex items-center justify-center ${panel}`}>
+            <div className="h-3 w-3 rounded-full bg-amber-500 animate-ping" />
           </div>
         ) : (
-          <div
-            className="relative max-w-3xl mx-auto"
+          <figure
+            className={`motion-reveal m-0 rounded-[28px] p-7 sm:p-12 lg:p-16 flex flex-col gap-10 lg:gap-14 ${panel}`}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            {/* Slider Controls (Prev & Next Buttons) */}
-            {testimonials.length > 1 && (
-              <>
-                <div className="absolute top-1/2 -left-4 sm:-left-12 -translate-y-1/2 z-20">
-                  <button
-                    onClick={handlePrev}
-                    className={`h-11 w-11 rounded-full border shadow-md flex items-center justify-center transition-all hover:scale-105 cursor-pointer ${
-                      dark
-                        ? 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800'
-                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
-                    title="Previous Testimonial"
-                  >
-                    <ChevronLeft className={`h-5 w-5 ${dark ? 'text-amber-400' : 'text-brand-navy'}`} />
+            {/* Rating, counter & controls */}
+            <div className="flex flex-wrap items-center justify-between gap-6">
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-1" aria-label={`Rated ${current?.rating || 5} out of 5`}>
+                  {Array.from({ length: current?.rating || 5 }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" aria-hidden="true" />
+                  ))}
+                </div>
+                {current?.featured && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] px-2.5 py-1 rounded-full bg-amber-500 text-brand-ink">
+                    <Sparkles className="w-3 h-3" aria-hidden="true" /> Featured
+                  </span>
+                )}
+              </div>
+              {testimonials.length > 1 && (
+                <div className="flex items-center gap-4">
+                  <span className={`font-mono text-sm tabular-nums ${muted}`} aria-live="polite">
+                    <span className={dark ? 'text-white' : 'text-brand-navy'}>{pad(currentIndex + 1)}</span> / {pad(testimonials.length)}
+                  </span>
+                  <button type="button" onClick={handlePrev} className={navBtn} aria-label="Previous testimonial">
+                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                  <button type="button" onClick={handleNext} className={navBtn} aria-label="Next testimonial">
+                    <ChevronRight className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
-
-                <div className="absolute top-1/2 -right-4 sm:-right-12 -translate-y-1/2 z-20">
-                  <button
-                    onClick={handleNext}
-                    className={`h-11 w-11 rounded-full border shadow-md flex items-center justify-center transition-all hover:scale-105 cursor-pointer ${
-                      dark
-                        ? 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800'
-                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
-                    title="Next Testimonial"
-                  >
-                    <ChevronRight className={`h-5 w-5 ${dark ? 'text-amber-400' : 'text-brand-navy'}`} />
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/* Testimonial Card Carousel Display */}
-            <div className="overflow-hidden p-2 relative">
-              <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-                <motion.div
-                  key={currentIndex}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{
-                    x: { type: 'spring', stiffness: 260, damping: 28, mass: 0.8 },
-                    opacity: { duration: 0.25 },
-                  }}
-                  className={`relative rounded-3xl p-8 sm:p-12 flex flex-col justify-between transition-shadow duration-500 w-full ${
-                    dark
-                      ? testimonials[currentIndex]?.featured
-                        ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/40 border-2 border-amber-400/70 shadow-amber-500/10 shadow-2xl ring-1 ring-amber-400/30'
-                        : 'bg-slate-900 border border-slate-800 shadow-xl'
-                      : testimonials[currentIndex]?.featured
-                      ? 'bg-gradient-to-b from-white via-white to-amber-50/50 border-2 border-amber-400/70 shadow-amber-500/10 shadow-2xl ring-1 ring-amber-400/30'
-                      : 'bg-white border border-slate-200/90 shadow-xl'
-                  }`}
-                >
-                  {/* Accent bar */}
-                  <div className="absolute top-0 inset-x-12 h-1 bg-gradient-to-r from-brand-amber via-amber-500 to-amber-600 rounded-b-full" />
-
-                  {testimonials[currentIndex]?.featured && (
-                    <span className="absolute -top-3 right-8 text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                      <Sparkles className="w-3 h-3 fill-slate-950" /> Featured
-                    </span>
-                  )}
-
-                  <div className="space-y-6">
-                    {/* Star Rating & Quote Icon */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: testimonials[currentIndex]?.rating || 5 }).map((_, i) => (
-                          <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                      <Quote className={`h-10 w-10 ${dark ? 'text-amber-500/20' : 'text-amber-100'}`} />
-                    </div>
-
-                    {/* Quote Body */}
-                    <p
-                      className={`text-base sm:text-lg font-medium leading-relaxed italic ${
-                        dark ? 'text-slate-200' : 'text-slate-800'
-                      }`}
-                    >
-                      &ldquo;{testimonials[currentIndex]?.quote}&rdquo;
-                    </p>
-                  </div>
-
-                  {/* Author Info */}
-                  <div
-                    className={`flex items-center gap-4 pt-8 mt-8 border-t ${
-                      dark ? 'border-slate-800' : 'border-slate-100'
-                    }`}
-                  >
-                    <div className="relative h-14 w-14 rounded-full overflow-hidden bg-slate-800 shrink-0 border-2 border-amber-400/40 shadow-sm flex items-center justify-center">
-                      {getPhotoUrl(testimonials[currentIndex]?.avatarUrl) ? (
-                        <Image
-                          src={getPhotoUrl(testimonials[currentIndex]?.avatarUrl)!}
-                          alt={testimonials[currentIndex]?.name || testimonials[currentIndex]?.author || 'Client Testimonial'}
-                          fill
-                          className="object-cover"
-                          sizes="56px"
-                          unoptimized
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-black text-lg">
-                          {(testimonials[currentIndex]?.name || testimonials[currentIndex]?.author)?.charAt(0) || 'C'}
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h4
-                        className={`text-base font-extrabold leading-snug ${
-                          dark ? 'text-white' : 'text-brand-navy'
-                        }`}
-                      >
-                        {testimonials[currentIndex]?.name || testimonials[currentIndex]?.author}
-                      </h4>
-                      <p className={`text-xs sm:text-sm font-medium ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
-                        {testimonials[currentIndex]?.role} ·{' '}
-                        {testimonials[currentIndex]?.companyUrl ? (
-                          <a
-                            href={testimonials[currentIndex]?.companyUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-brand-amber font-extrabold hover:underline inline-flex items-center gap-1"
-                          >
-                            {testimonials[currentIndex]?.company}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        ) : (
-                          <span className="text-brand-amber font-extrabold">
-                            {testimonials[currentIndex]?.company}
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+              )}
             </div>
 
-            {/* Pagination Indicators (Dots) */}
+            {/* Quote — keyed so each change replays the rise-in */}
+            <div key={currentIndex} className="flex flex-col gap-10 lg:gap-14 min-h-[260px]">
+              <blockquote className="motion-fade m-0 font-semibold tracking-[-0.03em] leading-[1.18] text-[clamp(24px,3.1vw,48px)]">
+                &ldquo;{current?.quote}&rdquo;
+              </blockquote>
+
+              <figcaption className="motion-fade motion-d2 mt-auto flex items-center gap-4">
+                <span className="relative h-14 w-14 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-amber-500 text-brand-ink font-extrabold text-lg">
+                  {photo ? (
+                    <Image src={photo} alt={authorName || 'Client'} fill className="object-cover" sizes="56px" unoptimized />
+                  ) : (
+                    <span aria-hidden="true">{authorName?.charAt(0) || 'C'}</span>
+                  )}
+                </span>
+                <span className="flex flex-col gap-0.5">
+                  <strong className="text-base font-extrabold">{authorName}</strong>
+                  <span className={`text-sm ${muted}`}>
+                    {current?.role}
+                    {current?.role && current?.company ? ' · ' : ''}
+                    {current?.companyUrl ? (
+                      <a
+                        href={current.companyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`motion-underline font-semibold inline-flex items-center gap-1 ${dark ? 'text-amber-400' : 'text-amber-700'}`}
+                      >
+                        {current?.company}
+                        <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <span className={`font-semibold ${dark ? 'text-amber-400' : 'text-amber-700'}`}>{current?.company}</span>
+                    )}
+                  </span>
+                </span>
+              </figcaption>
+            </div>
+
+            {/* Segmented autoplay progress (doubles as pagination) */}
             {testimonials.length > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8">
-                {testimonials.map((_, idx) => (
+              <div className={`flex gap-2 ${isPaused ? 'motion-progress-paused' : ''}`}>
+                {testimonials.map((t, idx) => (
                   <button
                     key={idx}
+                    type="button"
                     onClick={() => handleDotClick(idx)}
-                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                      idx === currentIndex
-                        ? 'w-8 bg-brand-amber shadow-sm'
-                        : dark
-                        ? 'w-2.5 bg-slate-800 hover:bg-slate-700'
-                        : 'w-2.5 bg-slate-300 hover:bg-slate-400'
-                    }`}
-                    title={`Go to testimonial ${idx + 1}`}
-                  />
+                    aria-label={`Go to testimonial ${idx + 1}`}
+                    aria-current={idx === currentIndex}
+                    className="group flex-1 py-3 cursor-pointer"
+                  >
+                    <span className={`block h-[3px] rounded-full overflow-hidden ${dark ? 'bg-white/15' : 'bg-brand-navy/15'}`}>
+                      {idx < currentIndex && <span className={`block h-full ${dark ? 'bg-white/50' : 'bg-brand-navy/40'}`} />}
+                      {idx === currentIndex && (
+                        <span key={`${currentIndex}-${isPaused}`} className="motion-progress-fill block h-full bg-amber-500" />
+                      )}
+                    </span>
+                  </button>
                 ))}
               </div>
             )}
-          </div>
+          </figure>
         )}
       </div>
     </section>

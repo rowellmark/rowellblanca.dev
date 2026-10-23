@@ -3,16 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Calculator,
   CheckCircle2,
-  Sparkles,
-  ArrowRight,
-  Send,
   Loader2,
   Code2,
   Layers,
   Clock,
-  ShieldCheck,
   Zap,
   Server,
   AlertCircle,
@@ -218,6 +213,16 @@ const TIMELINE_OPTIONS = [
   { id: "retainer", label: "🔄 Monthly Partnership", multiplier: 1.0, desc: "Ongoing sprint capacity & dedicated hours" },
 ];
 
+const StepHeading = ({ n, title, note }: { n: string; title: string; note?: string }) => (
+  <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+    <h3 className="m-0 flex items-baseline gap-3 text-xl sm:text-2xl font-extrabold tracking-[-0.02em] text-brand-navy">
+      <span className="font-mono text-[13px] font-normal text-brand-slate">{n}</span>
+      {title}
+    </h3>
+    {note && <span className="text-sm text-brand-slate">{note}</span>}
+  </div>
+);
+
 export function ProjectEstimator() {
   const router = useRouter();
   const [selectedType, setSelectedType] = useState<string>("nextjs_app");
@@ -370,71 +375,81 @@ export function ProjectEstimator() {
     }
   };
 
-  return (
-    <section className="relative w-full py-16 sm:py-24 bg-gradient-to-b from-[#FAFAF7] via-white to-[#FAFAF7] overflow-hidden font-sans border-t border-slate-200/80">
-      {/* Background Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+  const optionClass = (selected: boolean) =>
+    `motion-btn w-full text-left rounded-2xl border p-5 cursor-pointer transition-colors ${
+      selected
+        ? "bg-brand-ink text-white border-brand-ink"
+        : "bg-white text-brand-navy border-brand-border hover:border-brand-navy/40"
+    }`;
 
-      <div className="container mx-auto px-6 max-w-6xl relative z-10">
+  const inputClass =
+    "w-full min-h-[48px] px-4 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:bg-white/[0.06] text-sm transition-colors";
+
+  const priceKey = isRetainer ? `r-${retainerBillingMode}` : `${lowEstimate}-${highEstimate}`;
+
+  return (
+    <section className="relative px-4 sm:px-6 lg:px-10 pb-24 lg:pb-40">
+      <div className="mx-auto max-w-[1360px] flex flex-col gap-14 lg:gap-16">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-900 text-xs font-black uppercase tracking-wider">
-            <Calculator className="w-3.5 h-3.5 text-amber-600" />
-            <span>Scope & Investment Calculator</span>
+        <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
+          <div className="flex flex-col gap-5">
+            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">
+              (04) — Scope &amp; investment calculator
+            </p>
+            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
+              Price your
+              <br />
+              project.
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-[#0b1a30] tracking-tight">
-            Interactive Project Scope Estimator
-          </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
-            Configure your technical requirements, select add-ons, and get a transparent timeline and budget estimate in 60 seconds.
+          <p className="m-0 max-w-[420px] text-brand-slate text-[17px] leading-relaxed">
+            Configure your technical requirements, select add-ons, and get a transparent timeline and budget estimate in
+            60 seconds.
           </p>
         </div>
 
         {/* Main Grid: Steps on Left, Live Summary on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Step 1 & 2 Form Controls */}
-          <div className="lg:col-span-7 space-y-8 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-xl">
-            
+          <div className="lg:col-span-7 bg-white rounded-[28px] border border-brand-border p-6 sm:p-10 flex flex-col gap-12">
+
             {/* Step 1: Project Type */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-                  Step 1 · Choose Engineering Core
-                </span>
-              </div>
+            <div className="flex flex-col gap-5">
+              <StepHeading n="01" title="Engineering core" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {PROJECT_TYPES.map((type) => {
                   const isSelected = selectedType === type.id;
                   return (
-                    <div
+                    <button
                       key={type.id}
+                      type="button"
+                      aria-pressed={isSelected}
                       onClick={() => setSelectedType(type.id)}
-                      className={`p-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 relative ${
-                        isSelected
-                          ? "bg-amber-50/80 border-amber-500 shadow-sm ring-2 ring-amber-500/20"
-                          : "bg-slate-50 hover:bg-slate-100/70 border-slate-200/80"
-                      }`}
+                      className={`${optionClass(isSelected)} flex flex-col gap-3`}
                     >
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className="text-xs font-black text-[#0b1a30]">
-                          {type.title}
-                        </h4>
-                        {isSelected && (
-                          <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
-                        )}
-                      </div>
-                      <p className="text-[11px] text-slate-600 leading-snug">
-                        {type.desc}
-                      </p>
-                      <div className="mt-3 flex items-center justify-between text-[11px] font-mono">
-                        <span className={isSelected ? "text-amber-700 font-bold" : "text-slate-500"}>
-                          {type.id === "fractional_retainer" ? "Rolling Sprints" : `Est. ${type.baseWeeks}`}
+                      <span className="flex items-start justify-between gap-3">
+                        <span className="text-base font-extrabold leading-snug">{type.title}</span>
+                        <span
+                          aria-hidden="true"
+                          className={`mt-0.5 h-5 w-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
+                            isSelected ? "border-amber-400" : "border-slate-300"
+                          }`}
+                        >
+                          {isSelected && <span className="h-2 w-2 rounded-full bg-amber-400" />}
                         </span>
-                        <span className="font-bold text-slate-900">
+                      </span>
+                      <span className={`text-sm leading-relaxed ${isSelected ? "text-slate-300" : "text-brand-slate"}`}>
+                        {type.desc}
+                      </span>
+                      <span className={`mt-auto pt-3 border-t flex items-center justify-between font-mono text-xs ${isSelected ? "border-white/10" : "border-brand-border"}`}>
+                        <span className={isSelected ? "text-amber-400" : "text-brand-slate"}>
+                          {type.id === "fractional_retainer" ? "Rolling sprints" : `Est. ${type.baseWeeks}`}
+                        </span>
+                        <span className="font-medium">
                           {type.id === "fractional_retainer" ? "$460 USD / mo" : `From $${type.basePriceUsd.toLocaleString()}`}
                         </span>
-                      </div>
-                    </div>
+                      </span>
+                    </button>
                   );
                 })}
               </div>
@@ -442,88 +457,57 @@ export function ProjectEstimator() {
 
             {/* Step 2: Key Features OR Developer Skills (Retainer Mode) */}
             {isRetainer ? (
-              <div className="space-y-4 pt-2 border-t border-slate-100">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-                      Step 2 · Senior Developer Skills & Competencies
-                    </span>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      Direct engineering capability included in dedicated retainer partnerships.
-                    </p>
-                  </div>
-                </div>
+              <div className="flex flex-col gap-5">
+                <StepHeading
+                  n="02"
+                  title="Senior developer skills"
+                  note="Included in dedicated retainer partnerships"
+                />
 
                 {/* Engagement Basis Toggle (Monthly vs Project Base) */}
-                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2.5">
-                  <span className="text-xs font-black text-amber-950 uppercase tracking-wider block">
-                    Select Retainer Engagement Model:
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => setRetainerBillingMode("monthly")}
-                      className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
-                        retainerBillingMode === "monthly"
-                          ? "bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-amber-400/40"
-                          : "bg-white text-slate-700 border-amber-200 hover:bg-amber-100/50"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-xs">Monthly Basis</span>
-                        <span className={`text-[11px] font-mono font-bold ${retainerBillingMode === "monthly" ? "text-amber-400" : "text-slate-900"}`}>
-                          $460 USD / mo
-                        </span>
-                      </div>
-                      <p className={`text-[11px] mt-1 leading-snug ${retainerBillingMode === "monthly" ? "text-slate-300" : "text-slate-500"}`}>
-                        Continuous sprint shipping, daily standups & dedicated weekly capacity.
-                      </p>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setRetainerBillingMode("project")}
-                      className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
-                        retainerBillingMode === "project"
-                          ? "bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-amber-400/40"
-                          : "bg-white text-slate-700 border-amber-200 hover:bg-amber-100/50"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-xs">Project Base</span>
-                        <span className={`text-[11px] font-mono font-bold ${retainerBillingMode === "project" ? "text-amber-400" : "text-slate-900"}`}>
-                          Custom Quote
-                        </span>
-                      </div>
-                      <p className={`text-[11px] mt-1 leading-snug ${retainerBillingMode === "project" ? "text-slate-300" : "text-slate-500"}`}>
-                        Fixed scope deliverable with milestone review. Submit inquiry below.
-                      </p>
-                    </button>
+                <div className="flex flex-col gap-3">
+                  <span className="font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">Retainer engagement model</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {([
+                      { id: "monthly", title: "Monthly basis", price: "$460 USD / mo", desc: "Continuous sprint shipping, daily standups & dedicated weekly capacity." },
+                      { id: "project", title: "Project base", price: "Custom quote", desc: "Fixed scope deliverable with milestone review. Submit inquiry below." },
+                    ] as const).map((mode) => {
+                      const isSelected = retainerBillingMode === mode.id;
+                      return (
+                        <button
+                          key={mode.id}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => setRetainerBillingMode(mode.id)}
+                          className={`${optionClass(isSelected)} flex flex-col gap-2`}
+                        >
+                          <span className="flex items-center justify-between gap-3">
+                            <span className="font-extrabold">{mode.title}</span>
+                            <span className={`font-mono text-xs ${isSelected ? "text-amber-400" : "text-brand-navy"}`}>{mode.price}</span>
+                          </span>
+                          <span className={`text-sm leading-relaxed ${isSelected ? "text-slate-300" : "text-brand-slate"}`}>{mode.desc}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Developer Skills Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {DEVELOPER_SKILLS_CATEGORIES.map((cat, idx) => {
                     const IconComp = cat.icon;
                     return (
-                      <div
-                        key={idx}
-                        className="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2"
-                      >
-                        <div className="flex items-center gap-2 text-xs font-black text-slate-900">
-                          <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800">
-                            <IconComp className="h-3.5 w-3.5" />
-                          </div>
+                      <div key={idx} className="rounded-2xl border border-brand-border bg-brand-bg p-5 flex flex-col gap-3">
+                        <div className="flex items-center gap-2.5 text-sm font-extrabold text-brand-navy">
+                          <span className="h-8 w-8 rounded-lg bg-amber-500/15 text-amber-700 flex items-center justify-center">
+                            <IconComp className="h-4 w-4" />
+                          </span>
                           <span>{cat.title}</span>
                         </div>
-                        <ul className="space-y-1.5 pl-1">
+                        <ul className="m-0 p-0 list-none flex flex-col gap-2">
                           {cat.skills.map((skill, sIdx) => (
-                            <li
-                              key={sIdx}
-                              className="text-[11px] text-slate-600 flex items-start gap-1.5 leading-snug"
-                            >
-                              <CheckCircle2 className="h-3 w-3 text-emerald-600 shrink-0 mt-0.5" />
+                            <li key={sIdx} className="flex items-start gap-2.5 text-sm text-brand-slate leading-snug">
+                              <span aria-hidden="true" className="text-brand-navy">—</span>
                               <span>{skill}</span>
                             </li>
                           ))}
@@ -534,33 +518,20 @@ export function ProjectEstimator() {
                 </div>
               </div>
             ) : (
-              <div className="space-y-4 pt-2 border-t border-slate-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-                      Step 2 · Select Included Architecture & Capabilities
-                    </span>
-                    <span className="text-[11px] text-slate-500 font-medium">
-                      {selectedFeatures.length} selected ({freeFeaturesCount} Free Inclusions)
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
-                    🎁 3 Included Free
-                  </span>
-                </div>
+              <div className="flex flex-col gap-5">
+                <StepHeading
+                  n="02"
+                  title="Architecture & capabilities"
+                  note={`${selectedFeatures.length} selected · ${freeFeaturesCount} free inclusion${freeFeaturesCount === 1 ? "" : "s"}`}
+                />
 
                 {/* Quick Package Presets */}
-                <div className="space-y-2 p-3 rounded-2xl bg-slate-50/80 border border-slate-200">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                      <Package className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Curated Feature Packages</span>
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-semibold">
-                      Click to apply preset
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="flex flex-col gap-3">
+                  <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">
+                    <Package className="w-3.5 h-3.5" aria-hidden="true" />
+                    Curated packages — click to apply
+                  </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     {FEATURE_PACKAGES.map((pkg) => {
                       const isPkgActive =
                         activePackageId === pkg.id ||
@@ -570,34 +541,22 @@ export function ProjectEstimator() {
                         <button
                           key={pkg.id}
                           type="button"
+                          aria-pressed={isPkgActive}
                           onClick={() => applyPackage(pkg)}
-                          className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
+                          className={`motion-btn rounded-xl border p-3.5 text-left cursor-pointer flex flex-col justify-between gap-2 transition-colors ${
                             isPkgActive
-                              ? "bg-slate-900 border-slate-900 text-white shadow-sm ring-2 ring-amber-400/40"
-                              : "bg-white hover:bg-slate-100/80 border-slate-200 text-slate-800"
+                              ? "bg-amber-500 border-amber-500 text-brand-ink"
+                              : "bg-white border-brand-border text-brand-navy hover:border-brand-navy/40"
                           }`}
                         >
-                          <div className="space-y-1">
-                            <span className={`text-[11px] font-extrabold block leading-tight ${isPkgActive ? "text-amber-300" : "text-[#0b1a30]"}`}>
-                              {pkg.name}
-                            </span>
-                            <p className={`text-[10px] leading-tight line-clamp-2 ${isPkgActive ? "text-slate-300" : "text-slate-500"}`}>
-                              {pkg.desc}
-                            </p>
-                          </div>
+                          <span className="text-sm font-extrabold leading-tight">{pkg.name}</span>
+                          <span className={`text-xs leading-snug line-clamp-2 ${isPkgActive ? "text-brand-ink/80" : "text-brand-slate"}`}>
+                            {pkg.desc}
+                          </span>
                           {pkg.badge && (
-                            <div className="mt-2 pt-1.5 border-t border-slate-200/40 flex items-center justify-between">
-                              <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                                isPkgActive
-                                  ? "bg-amber-400/20 text-amber-300"
-                                  : "bg-slate-100 text-slate-600 border border-slate-200"
-                              }`}>
-                                {pkg.badge}
-                              </span>
-                              {isPkgActive && (
-                                <CheckCircle2 className="w-3 h-3 text-amber-400" />
-                              )}
-                            </div>
+                            <span className={`self-start font-mono text-[11px] px-1.5 py-0.5 rounded ${isPkgActive ? "bg-brand-ink/10" : "bg-brand-bg text-brand-slate"}`}>
+                              {pkg.badge}
+                            </span>
                           )}
                         </button>
                       );
@@ -606,268 +565,213 @@ export function ProjectEstimator() {
                 </div>
 
                 {/* Design Fee Disclaimer Notice */}
-                <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/90 flex items-start gap-2.5 text-xs text-amber-950">
-                  <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                  <p className="text-[11px] leading-relaxed">
-                    <strong className="font-bold">Important Notice:</strong> Custom UI/UX Design is a specialized external fee ($360). Core software engineering does not include Figma mockups unless selected or provided by your design team.
+                <div className="rounded-2xl bg-brand-cream p-4 flex items-start gap-3 text-sm text-brand-navy">
+                  <AlertCircle className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" aria-hidden="true" />
+                  <p className="m-0 leading-relaxed">
+                    <strong className="font-bold">Important notice:</strong> Custom UI/UX Design is a specialized external
+                    fee ($360). Core software engineering does not include Figma mockups unless selected or provided by your
+                    design team.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-2">
+                <ul className="m-0 p-0 list-none flex flex-col border-t border-brand-border">
                   {FEATURE_OPTIONS.map((feat) => {
                     const isChecked = selectedFeatures.includes(feat.id);
                     const isFree = feat.price === 0;
                     return (
-                      <div
-                        key={feat.id}
-                        onClick={() => toggleFeature(feat.id)}
-                        className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
-                          isChecked
-                            ? isFree
-                              ? "bg-emerald-50/70 border-emerald-400 text-[#0b1a30] shadow-sm"
-                              : "bg-amber-50/60 border-amber-400 text-[#0b1a30]"
-                            : "bg-slate-50 hover:bg-slate-100/60 border-slate-200 text-slate-700"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 pr-2">
-                          <span className="text-xs font-extrabold leading-snug">{feat.label}</span>
-                          {feat.badge && (
+                      <li key={feat.id} className="border-b border-brand-border">
+                        <button
+                          type="button"
+                          role="checkbox"
+                          aria-checked={isChecked}
+                          onClick={() => toggleFeature(feat.id)}
+                          className="group w-full min-h-[56px] py-3 flex items-center justify-between gap-4 text-left cursor-pointer"
+                        >
+                          <span className="flex items-center gap-3.5">
                             <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 ${
-                                feat.badge === "Design Fee"
-                                  ? "bg-amber-200 text-amber-900"
-                                  : "bg-emerald-100 text-emerald-800 border border-emerald-300 font-black"
+                              aria-hidden="true"
+                              className={`h-5 w-5 shrink-0 rounded-md border-2 flex items-center justify-center transition-colors ${
+                                isChecked ? "bg-brand-ink border-brand-ink text-amber-400" : "border-slate-300 group-hover:border-brand-navy/50"
                               }`}
                             >
-                              {feat.badge}
+                              {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
                             </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2.5 shrink-0">
-                          {isFree ? (
-                            <span className="text-xs font-mono font-black text-emerald-700 bg-emerald-100/90 px-2 py-0.5 rounded border border-emerald-300">
-                              $0 (FREE)
+                            <span className={`text-[15px] font-semibold leading-snug ${isChecked ? "text-brand-navy" : "text-brand-slate"}`}>
+                              {feat.label}
                             </span>
-                          ) : (
-                            <span className="text-xs font-mono font-bold text-slate-900">
-                              +${feat.price}
-                            </span>
-                          )}
-                          <div
-                            className={`w-5 h-5 rounded-md flex items-center justify-center border transition-all ${
-                              isChecked
-                                ? isFree
-                                  ? "bg-emerald-700 border-emerald-700 text-white"
-                                  : "bg-[#0b1a30] border-[#0b1a30] text-amber-400"
-                                : "bg-white border-slate-300"
-                            }`}
-                          >
-                            {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
-                          </div>
-                        </div>
-                      </div>
+                            {feat.badge && (
+                              <span
+                                className={`hidden sm:inline font-mono text-[11px] px-2 py-0.5 rounded-full shrink-0 ${
+                                  feat.badge === "Design Fee" ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-800"
+                                }`}
+                              >
+                                {feat.badge}
+                              </span>
+                            )}
+                          </span>
+                          <span className={`font-mono text-sm shrink-0 ${isFree ? "text-emerald-700" : "text-brand-navy"}`}>
+                            {isFree ? "Free" : `+$${feat.price}`}
+                          </span>
+                        </button>
+                      </li>
                     );
                   })}
-                </div>
+                </ul>
               </div>
             )}
 
             {/* Step 3: Timeline & Cadence */}
             {isRetainer ? (
-              <div className="space-y-3 pt-2 border-t border-slate-100">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-                  Step 3 · Retainer Sprint Cadence
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div className="flex flex-col gap-5">
+                <StepHeading n="03" title="Sprint cadence" />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
-                    { id: "rolling", label: "🔄 Sprint-by-Sprint", desc: "Rolling monthly flexibility without lock-in" },
-                    { id: "quarterly", label: "🎯 Quarterly Strategic", desc: "3-month planned sprint roadmap & feature focus" },
-                    { id: "longterm", label: "🛡️ Half-Year Retainer", desc: "Dedicated engineering capacity & high-priority SLA" },
-                  ].map((cadence, cIdx) => (
-                    <div
-                      key={cIdx}
-                      className="p-3 rounded-xl border bg-slate-50 border-slate-200 text-left"
-                    >
-                      <span className="text-xs font-black block text-[#0b1a30]">
-                        {cadence.label}
-                      </span>
-                      <span className="text-[10px] text-slate-500 block mt-0.5">
-                        {cadence.desc}
-                      </span>
+                    { id: "rolling", label: "Sprint-by-sprint", desc: "Rolling monthly flexibility without lock-in" },
+                    { id: "quarterly", label: "Quarterly strategic", desc: "3-month planned sprint roadmap & feature focus" },
+                    { id: "longterm", label: "Half-year retainer", desc: "Dedicated engineering capacity & high-priority SLA" },
+                  ].map((cadence) => (
+                    <div key={cadence.id} className="rounded-2xl border border-brand-border bg-brand-bg p-4 flex flex-col gap-1">
+                      <span className="font-extrabold text-brand-navy">{cadence.label}</span>
+                      <span className="text-sm text-brand-slate leading-snug">{cadence.desc}</span>
                     </div>
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="space-y-3 pt-2 border-t border-slate-100">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-400 block">
-                  Step 3 · Timeline & Urgency
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div className="flex flex-col gap-5">
+                <StepHeading n="03" title="Timeline & urgency" />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {TIMELINE_OPTIONS.map((time) => {
                     const isSelected = selectedTimeline === time.id;
                     return (
-                      <div
+                      <button
                         key={time.id}
+                        type="button"
+                        aria-pressed={isSelected}
                         onClick={() => setSelectedTimeline(time.id)}
-                        className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
-                          isSelected
-                            ? "bg-amber-50 border-amber-500 ring-2 ring-amber-500/20"
-                            : "bg-slate-50 hover:bg-slate-100 border-slate-200"
-                        }`}
+                        className={`${optionClass(isSelected)} flex flex-col gap-1 !p-4`}
                       >
-                        <span className="text-xs font-black block text-[#0b1a30]">
-                          {time.label}
-                        </span>
-                        <span className="text-[10px] text-slate-500 block mt-0.5">
-                          {time.desc}
-                        </span>
-                      </div>
+                        <span className="font-extrabold">{time.label}</span>
+                        <span className={`text-sm leading-snug ${isSelected ? "text-slate-300" : "text-brand-slate"}`}>{time.desc}</span>
+                      </button>
                     );
                   })}
                 </div>
               </div>
             )}
-
           </div>
 
           {/* Right Column: Live Calculated Estimate & Proposal Request */}
-          <div className="lg:col-span-5 bg-gradient-to-b from-[#0b1a30] via-slate-900 to-[#0b1a30] p-6 sm:p-8 rounded-3xl text-white shadow-2xl space-y-6 relative overflow-hidden border border-slate-800">
-            {/* Ambient Corner Sparkle */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none" />
-
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-400 animate-pulse" />
-                <h3 className="text-base font-black tracking-wide">
-                  Scope Summary & Stack
-                </h3>
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-500/30">
-                Direct Senior Dev
+          <div className="lg:col-span-5 lg:sticky lg:top-28 bg-brand-ink text-white rounded-[28px] p-6 sm:p-10 flex flex-col gap-8">
+            <div className="flex items-center justify-between gap-4">
+              <h3 className="m-0 text-lg font-extrabold tracking-[-0.01em]">Scope summary</h3>
+              <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-emerald-400">
+                <span className="motion-pulse h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                Direct senior dev
               </span>
             </div>
 
             {/* Calculated Investment & Delivery Time */}
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-slate-400 border-b border-slate-800/80 pb-2">
-                  <span>Calculated Project Scope:</span>
-                  <span className="text-amber-400 font-bold">
-                    {isRetainer
-                      ? retainerBillingMode === "monthly"
-                        ? "Monthly Retainer"
-                        : "Project Scope"
-                      : currentTypeConfig.title.split(" ")[0]}
-                  </span>
-                </div>
+            <div className="flex flex-col gap-6 border-y border-white/10 py-8">
+              <div className="flex items-center justify-between font-mono text-xs uppercase tracking-[0.08em] text-slate-400">
+                <span>
+                  {isRetainer
+                    ? retainerBillingMode === "monthly"
+                      ? "Monthly retainer investment"
+                      : "Engagement basis"
+                    : "Estimated investment"}
+                </span>
+                <span className="text-amber-400">
+                  {isRetainer
+                    ? retainerBillingMode === "monthly"
+                      ? "Monthly retainer"
+                      : "Project scope"
+                    : currentTypeConfig.title.split(" ")[0]}
+                </span>
+              </div>
 
-                <div>
-                  <div className="text-xs text-slate-400 font-mono uppercase">
-                    {isRetainer
-                      ? retainerBillingMode === "monthly"
-                        ? "Monthly Retainer Investment"
-                        : "Engagement Basis"
-                      : "Estimated Investment Range"}
-                  </div>
-                  <div className="text-3xl font-extrabold text-white tracking-tight font-mono mt-1">
-                    {isRetainer ? (
-                      retainerBillingMode === "monthly" ? (
-                        <>
-                          $460 <span className="text-xs font-normal text-slate-400">USD / month</span>
-                        </>
-                      ) : (
-                        <>
-                          Custom Quote <span className="text-xs font-normal text-slate-400">(Inquiry Based)</span>
-                        </>
-                      )
-                    ) : (
+              <div key={priceKey} className="motion-fade" aria-live="polite">
+                <div className="font-extrabold tracking-[-0.04em] leading-none text-[clamp(40px,4.2vw,60px)]">
+                  {isRetainer ? (
+                    retainerBillingMode === "monthly" ? (
                       <>
-                        ${lowEstimate.toLocaleString()} – ${highEstimate.toLocaleString()}{" "}
-                        <span className="text-xs font-normal text-slate-400">USD</span>
+                        $460 <span className="text-base font-medium tracking-normal text-slate-400">USD / month</span>
                       </>
-                    )}
-                  </div>
-                  {isRetainer && retainerBillingMode === "project" && (
-                    <p className="text-[11px] text-slate-400 mt-1 font-sans">
-                      Submit your project specifications below to receive an itemized proposal and timeline.
-                    </p>
+                    ) : (
+                      <>Custom quote</>
+                    )
+                  ) : (
+                    <>
+                      ${lowEstimate.toLocaleString()}
+                      <span className="text-slate-500"> – </span>${highEstimate.toLocaleString()}
+                      <span className="text-base font-medium tracking-normal text-slate-400"> USD</span>
+                    </>
                   )}
                 </div>
-
-                <div className="flex items-center justify-between text-xs font-mono text-slate-300 pt-2 border-t border-slate-800/80">
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Target Delivery:</span>
-                  </span>
-                  <span className="font-bold text-white">
-                    {isRetainer
-                      ? retainerBillingMode === "monthly"
-                        ? "Rolling Monthly Sprints"
-                        : "Milestone-Based Timeline"
-                      : currentTypeConfig.baseWeeks}
-                  </span>
-                </div>
-              </div>
-
-              {/* Recommended Stack */}
-              <div className="space-y-2">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Recommended Architecture Stack
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {currentTypeConfig.recommendedStack.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-200"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Key Highlights */}
-              <div className="pt-2 border-t border-slate-800/80 space-y-1.5 text-xs text-slate-300 font-medium">
-                {freeFeaturesCount > 0 && (
-                  <div className="flex items-center gap-2 text-emerald-400 font-bold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>{freeFeaturesCount} Free Premium Add-On{freeFeaturesCount > 1 ? "s" : ""} Included ($0)</span>
-                  </div>
+                {isRetainer && retainerBillingMode === "project" && (
+                  <p className="m-0 mt-3 text-sm text-slate-400">
+                    Submit your project specifications below to receive an itemized proposal and timeline.
+                  </p>
                 )}
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Full UK (GMT), US & Australian (AEST) Timezone Overlap</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>40–50% Cost Savings vs UK / US / AU Agency Bloat</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>100% Direct Senior Code Quality & Daily Comms</span>
-                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center gap-2 text-slate-400">
+                  <Clock className="w-4 h-4 text-amber-400" aria-hidden="true" />
+                  Target delivery
+                </span>
+                <span className="font-semibold">
+                  {isRetainer
+                    ? retainerBillingMode === "monthly"
+                      ? "Rolling monthly sprints"
+                      : "Milestone-based timeline"
+                    : currentTypeConfig.baseWeeks}
+                </span>
               </div>
             </div>
 
+            {/* Recommended Stack */}
+            <div className="flex flex-col gap-3">
+              <span className="font-mono text-xs uppercase tracking-[0.08em] text-slate-400">Recommended stack</span>
+              <ul className="m-0 p-0 list-none flex flex-wrap gap-2">
+                {currentTypeConfig.recommendedStack.map((tech, i) => (
+                  <li key={i} className="font-mono text-xs px-3 py-1.5 rounded-full border border-white/15 text-slate-200">
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Key Highlights */}
+            <ul className="m-0 p-0 list-none flex flex-col gap-2.5 text-sm text-slate-300">
+              {freeFeaturesCount > 0 && (
+                <li className="flex gap-3 text-emerald-400 font-semibold">
+                  <span aria-hidden="true">—</span>
+                  {freeFeaturesCount} free premium add-on{freeFeaturesCount > 1 ? "s" : ""} included ($0)
+                </li>
+              )}
+              <li className="flex gap-3"><span aria-hidden="true" className="text-amber-500">—</span>Full UK (GMT), US &amp; Australian (AEST) timezone overlap</li>
+              <li className="flex gap-3"><span aria-hidden="true" className="text-amber-500">—</span>40–50% cost savings vs UK / US / AU agency bloat</li>
+              <li className="flex gap-3"><span aria-hidden="true" className="text-amber-500">—</span>100% direct senior code quality &amp; daily comms</li>
+            </ul>
+
             {/* Request Formal Proposal Form */}
-            <div className="pt-3 border-t border-slate-800">
-              <h4 className="text-xs font-black uppercase tracking-wider text-amber-300 mb-3 flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5" />
+            <div className="flex flex-col gap-4 pt-8 border-t border-white/10">
+              <h4 className="m-0 text-base font-extrabold">
                 {isRetainer
                   ? retainerBillingMode === "monthly"
-                    ? "Lock In Dedicated Retainer ($460 USD / mo)"
-                    : "Submit Project Scope for Custom Quote"
-                  : "Lock In Your Proposal & Call"}
+                    ? "Lock in a dedicated retainer ($460 USD / mo)"
+                    : "Submit your project scope for a custom quote"
+                  : "Lock in your proposal & call"}
               </h4>
 
               {errorMsg && (
-                <div className="p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-bold mb-3">
+                <div role="alert" className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-sm font-semibold">
                   {errorMsg}
                 </div>
               )}
 
-              <form onSubmit={handleSubmitEstimate} className="space-y-3 text-xs">
+              <form onSubmit={handleSubmitEstimate} className="flex flex-col gap-2.5">
                 {/* Anti-spam honeypot bot trap */}
                 <div
                   aria-hidden="true"
@@ -908,101 +812,92 @@ export function ProjectEstimator() {
                   />
                 </div>
 
-                <div>
+                <input
+                  type="text"
+                  required
+                  aria-label="Your full name"
+                  placeholder="Your full name *"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  className={inputClass}
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <input
+                    type="email"
+                    required
+                    aria-label="Work email address"
+                    placeholder="Work email *"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    className={inputClass}
+                  />
                   <input
                     type="text"
-                    required
-                    placeholder="Your Full Name *"
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-medium"
+                    aria-label="Company (optional)"
+                    placeholder="Company (optional)"
+                    value={contactCompany}
+                    onChange={(e) => setContactCompany(e.target.value)}
+                    className={inputClass}
                   />
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div>
-                    <input
-                      type="email"
-                      required
-                      placeholder="Work Email Address *"
-                      value={contactEmail}
-                      onChange={(e) => setContactEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-medium"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Company (Optional)"
-                      value={contactCompany}
-                      onChange={(e) => setContactCompany(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-medium"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div>
-                    <input
-                      type="tel"
-                      placeholder="Phone Number (Optional)"
-                      value={contactPhone}
-                      onChange={(e) => setContactPhone(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-medium"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="url"
-                      placeholder="Website / Repo URL (Optional)"
-                      value={contactWebsite}
-                      onChange={(e) => setContactWebsite(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-medium"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <textarea
-                    rows={2}
-                    placeholder={
-                      isRetainer
-                        ? retainerBillingMode === "project"
-                          ? "Describe your project scope, features, deliverables, and timeline requirements..."
-                          : "Describe your weekly/monthly backlog, preferred stack, or onboarding schedule (optional)..."
-                        : "Project details or special requirements (optional)..."
-                    }
-                    value={contactNotes}
-                    onChange={(e) => setContactNotes(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-medium"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <input
+                    type="tel"
+                    aria-label="Phone number (optional)"
+                    placeholder="Phone (optional)"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    className={inputClass}
+                  />
+                  <input
+                    type="url"
+                    aria-label="Website or repo URL (optional)"
+                    placeholder="Website / repo URL (optional)"
+                    value={contactWebsite}
+                    onChange={(e) => setContactWebsite(e.target.value)}
+                    className={inputClass}
                   />
                 </div>
+                <textarea
+                  rows={3}
+                  aria-label="Project details"
+                  placeholder={
+                    isRetainer
+                      ? retainerBillingMode === "project"
+                        ? "Describe your project scope, features, deliverables, and timeline requirements..."
+                        : "Describe your weekly/monthly backlog, preferred stack, or onboarding schedule (optional)..."
+                      : "Project details or special requirements (optional)..."
+                  }
+                  value={contactNotes}
+                  onChange={(e) => setContactNotes(e.target.value)}
+                  className={`${inputClass} py-3`}
+                />
 
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="motion-btn mt-2 w-full min-h-[56px] px-6 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold flex items-center justify-between gap-3 cursor-pointer disabled:opacity-50"
                 >
                   {submitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                      <span>Submitting Estimate Request...</span>
-                    </>
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                      Submitting estimate request...
+                    </span>
                   ) : (
                     <>
                       <span>
                         {isRetainer
                           ? retainerBillingMode === "monthly"
-                            ? "Request $460/mo Retainer Onboarding"
-                            : "Submit Project Scope Inquiry"
-                          : "Get Itemized Proposal & Scope"}
+                            ? "Request $460/mo retainer onboarding"
+                            : "Submit project scope inquiry"
+                          : "Get itemized proposal & scope"}
                       </span>
-                      <ArrowRight className="w-4 h-4" />
+                      <span className="motion-arrow" aria-hidden="true">→</span>
                     </>
                   )}
                 </button>
-                <span className="text-[10px] text-slate-400 block text-center">
-                  🔒 Direct senior response within 24h · Zero spam · Strict NDA
+                <span className="text-xs text-slate-400 text-center">
+                  Direct senior response within 24h · Zero spam · Strict NDA
                 </span>
               </form>
             </div>
