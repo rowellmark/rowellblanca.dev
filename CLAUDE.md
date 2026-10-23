@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Personal portfolio site for Rowell Mark Blanca (rowellblanca.dev), built with Next.js 15 (App Router) and React 19, TypeScript, Tailwind CSS, and SCSS modules. It now also includes a self-hosted admin CRM (leads, projects, testimonials, messages) backed by Prisma/NeonDB (PostgreSQL). No test suite exists in this repo.
+Personal portfolio site for Rowell Mark Blanca (rowellblanca.dev), built with Next.js 16 (App Router, Turbopack) and React 19, TypeScript, Tailwind CSS, and SCSS modules. It now also includes a self-hosted admin CRM (leads, projects, testimonials, messages) backed by Prisma/NeonDB (PostgreSQL). No test suite exists in this repo.
 
 ## Commands
 
@@ -12,7 +12,7 @@ Personal portfolio site for Rowell Mark Blanca (rowellblanca.dev), built with Ne
 npm run dev          # start dev server at http://localhost:3000
 npm run build        # production build
 npm run start         # run production build
-npm run lint          # next lint (eslint-config-next)
+npm run lint          # eslint . (flat config in eslint.config.mjs; `next lint` was removed in Next 16)
 npm run seed          # seed NeonDB with portfolio projects + sample CRM leads (scripts/seed.js)
 npm run seed:reset    # same, but purges existing Project rows first
 npx prisma generate    # regenerate the Prisma client into lib/generated/client after schema.prisma changes
@@ -43,7 +43,7 @@ Firebase has been removed entirely (package and `utils/firebaseconfig.tsx`) — 
 - Auth is a custom cookie session, **not** middleware-gated. `lib/auth.ts` sets an httpOnly `admin_session_token` cookie (`setAdminSessionCookie`) containing the user payload as JSON — it is not a signed/opaque token, just JSON in an httpOnly cookie.
 - There is no `middleware.ts`. Route protection happens per-request inside each API route handler via `isAdminAuthenticated()` (see `app/api/crm/leads/route.ts`, `app/api/projects/route.ts` POST/PUT/DELETE, `app/api/upload/route.ts`, etc.) — GET on `/api/projects` and `/api/testimonials` is intentionally public (read-only, used by the public site).
 - Admin *pages* under `app/admin/**` are not server-protected either; `app/admin/layout.tsx` does a client-side auth check by calling `/api/crm/leads` and redirecting if it 401s. When adding a new admin page/route, remember to call `isAdminAuthenticated()` yourself — it is not automatic.
-- All `lib/auth.ts` session helpers (`isAdminAuthenticated`, `getAdminSessionUser`, `setAdminSessionCookie`, `clearAdminSessionCookie`) are **async** (Next 15's `cookies()` returns a Promise). Always `await` them — `if (!isAdminAuthenticated())` without `await` checks a Promise, which is always truthy, and silently lets every request through.
+- All `lib/auth.ts` session helpers (`isAdminAuthenticated`, `getAdminSessionUser`, `setAdminSessionCookie`, `clearAdminSessionCookie`) are **async** (`cookies()` returns a Promise since Next 15). Always `await` them — `if (!isAdminAuthenticated())` without `await` checks a Promise, which is always truthy, and silently lets every request through.
 - `lib/auth.ts` also has a **hardcoded credential fallback**: if `email === ADMIN_EMAIL` (or `rowellblanca94@gmail.com`) and password matches `ADMIN_PASSWORD` (or the literal string `RowellDev2026!`), login succeeds even with no `User` row in the DB. This exists so admin login works before the DB is seeded — be aware of it when touching `authenticateAdminUser`.
 - Passwords are hashed with Node's `crypto.pbkdf2Sync` (`lib/crypto.ts`), not bcrypt/argon2.
 
@@ -58,7 +58,7 @@ Firebase has been removed entirely (package and `utils/firebaseconfig.tsx`) — 
 - `components/ui/contactForm.tsx` (the older Web3Forms-based form) still posts directly to the Web3Forms API from the client as a separate/fallback path — the two contact mechanisms are not unified.
 
 ### Styling
-- Tailwind utility classes are the default for layout/spacing; a handful of components with more complex/animated markup (`header`, `banner`, `loading-intro`) use co-located `*.module.scss` files instead. `next.config.mjs` adds `styles/` as a Sass include path even though no top-level `styles/` directory currently exists — don't assume it does.
+- Tailwind utility classes are the default for layout/spacing; a handful of components with more complex/animated markup (`header`, `banner`, `loading-intro`) use co-located `*.module.scss` files instead. `next.config.mjs` adds `styles/` as a Sass include path even though no top-level `styles/` directory currently exists — don't assume it does. Turbopack (the Next 16 default bundler) drops remote CSS `@import url(...)`s, so web fonts are loaded via `<link>` tags in `app/layout.tsx`'s `<head>`, not from `globals.css`.
 - `tailwind.config.ts` defines the site's custom color tokens (`primary`, `primary-accent`, `text-accent`, `accent-color`, `accent-color-slate`) and a plugin that mirrors every Tailwind color as a CSS variable (`--<color>`) on `:root` — use the custom tokens/CSS vars over hardcoded hex values to stay consistent with the existing theme. The admin CRM UI (`app/admin/**`) instead uses its own hardcoded navy/slate palette (`#0b1a30`, `#1d63ed`, etc.) directly in classNames rather than the shared tokens — match that local palette when editing admin screens, not the marketing-site tokens.
 
 ### Misc
