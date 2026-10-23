@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Clock, ArrowUpRight } from "lucide-react";
-import { resolveValidImageSrc } from "@/lib/image-utils";
+import { resolveValidImageSrc, canOptimizeImage } from "@/lib/image-utils";
 
 export const HeroParallax = ({
     products,
@@ -285,21 +285,22 @@ export const ProductCard = ({
                 <Image
                     src={imgSrc}
                     fill
+                    sizes="(max-width: 768px) 70vw, 480px"
                     className="object-cover object-left-top absolute inset-0 h-full w-full"
                     alt={product.sitename}
                     onError={() => setImgSrc('/no-image-placeholder.svg')}
-                    unoptimized
+                    unoptimized={!canOptimizeImage(imgSrc)}
                 />
             </Link>
 
             <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none transition-opacity duration-300" />
             <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 z-20 pointer-events-none">
-                <h3 className="font-extrabold text-white text-sm leading-snug">
+                <p className="m-0 font-extrabold text-white text-sm leading-snug">
                     {product.sitename}
-                </h3>
+                </p>
                 <div className="flex flex-wrap gap-1 mt-1.5">
                     {product.technologies?.slice(0, 3).map((tech, idx) => (
-                        <span key={idx} className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-amber text-brand-navy">
+                        <span key={idx} className="text-[11px] font-bold px-2 py-0.5 rounded bg-brand-amber text-brand-navy">
                             {tech}
                         </span>
                     ))}

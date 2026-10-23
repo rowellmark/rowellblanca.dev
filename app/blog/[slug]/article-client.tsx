@@ -259,7 +259,7 @@ export function ArticleClient({ slug }: ArticleClientProps) {
                 )}
                 <div>
                   <span className="font-extrabold text-white block">{post.author || 'Rowell Mark Blanca'}</span>
-                  <span className="text-[10px] text-slate-400 block">Senior Full-Stack Engineer</span>
+                  <span className="text-[11px] text-slate-400 block">Senior Full-Stack Engineer</span>
                 </div>
               </div>
 
@@ -339,7 +339,7 @@ export function ArticleClient({ slug }: ArticleClientProps) {
                 <div className="space-y-3">
                   {relatedPosts.map((rel) => (
                     <div key={rel.id} className="space-y-1 group">
-                      <span className="text-[9px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md inline-block">
+                      <span className="text-[11px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md inline-block">
                         {rel.category || 'Engineering'}
                       </span>
                       <h4 className="text-xs font-black text-[#0b1a30] group-hover:text-amber-600 transition-colors leading-snug">

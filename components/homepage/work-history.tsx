@@ -69,7 +69,7 @@ export default function WorkHistory() {
                 
                 {/* Heading */}
                 <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                    <span className="text-xs font-bold uppercase tracking-wider text-brand-amber bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60">
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60">
                         Career Timeline
                     </span>
                     <h2 className="text-4xl sm:text-5xl font-extrabold text-brand-navy tracking-tight">

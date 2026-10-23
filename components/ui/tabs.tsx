@@ -125,7 +125,7 @@ export function Tab({ nav }: TabProps) {
 
                     {/* Result Counter Badge */}
                     <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-                        <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200">
+                        <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200">
                             Showing <span className="text-slate-900 font-extrabold">{filteredProjects.length}</span> of {allProjects.length}
                         </span>
 

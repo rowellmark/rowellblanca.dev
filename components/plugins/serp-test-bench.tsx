@@ -90,7 +90,7 @@ export function SerpTestBench() {
                         <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
                             <div className={`h-full rounded-full transition-[width] duration-300 ${meterColor}`} style={{ width: `${pct}%` }} />
                         </div>
-                        <div className="flex justify-between font-mono text-[10px] text-slate-400">
+                        <div className="flex justify-between font-mono text-[11px] text-slate-400">
                             <span>0px</span>
                             <span>Safe 300–580px</span>
                             <span>600px cutoff</span>

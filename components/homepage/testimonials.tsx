@@ -140,7 +140,7 @@ export function TestimonialsSection({
             {/* Rating, counter & controls */}
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="flex items-center gap-5">
-                <div className="flex items-center gap-1" aria-label={`Rated ${current?.rating || 5} out of 5`}>
+                <div role="img" className="flex items-center gap-1" aria-label={`Rated ${current?.rating || 5} out of 5`}>
                   {Array.from({ length: current?.rating || 5 }).map((_, i) => (
                     <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" aria-hidden="true" />
                   ))}

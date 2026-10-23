@@ -222,7 +222,7 @@ export function BlogAiAssistant({
               <h3 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
                 RowBot — AI Engineering & Marketing Co-Pilot
               </h3>
-              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1 text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                 <Cpu className="w-3 h-3 text-emerald-400" />
                 <span>{activeEngine}</span>
               </span>
@@ -321,7 +321,7 @@ export function BlogAiAssistant({
       <div className="space-y-3 shrink-0 pt-3 border-t border-slate-800/80 relative z-10">
         {/* Suggested Quick Question Chips */}
         <div className="space-y-1.5">
-          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+          <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block">
             SUGGESTED QUESTIONS:
           </span>
           <div className="flex flex-wrap gap-1.5">

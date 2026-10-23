@@ -209,7 +209,7 @@ export function CaseStudiesClient() {
                     href="https://macmanusfd.finance"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-extrabold text-slate-300 hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1.5 min-h-[40px] text-xs font-extrabold text-slate-300 hover:text-white transition-colors"
                   >
                     <span>Visit Live Platform</span>
                     <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
@@ -271,7 +271,7 @@ export function CaseStudiesClient() {
                         </span>
                         <Link
                           href={`/landing/${lp.slug}`}
-                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
+                          className="inline-flex items-center gap-1 min-h-[40px] text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>Explore Solution</span>
                           <ChevronRight className="w-4 h-4" />
@@ -350,7 +350,7 @@ export function CaseStudiesClient() {
                         </span>
                         <Link
                           href={`/mywork/${proj.permalink}`}
-                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
+                          className="inline-flex items-center gap-1 min-h-[40px] text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>View Architecture</span>
                           <ChevronRight className="w-4 h-4" />
@@ -424,7 +424,7 @@ export function CaseStudiesClient() {
                         </span>
                         <Link
                           href={`/mywork/${proj.permalink}`}
-                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
+                          className="inline-flex items-center gap-1 min-h-[40px] text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>View Plugin Docs</span>
                           <ChevronRight className="w-4 h-4" />

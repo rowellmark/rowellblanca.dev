@@ -575,11 +575,11 @@ export default function ChatBubble() {
                 <div>
                   <h3 className="text-xs font-black text-white flex items-center gap-1.5">
                     RowBot
-                    <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold border border-amber-500/30">
+                    <span className="text-[11px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold border border-amber-500/30">
                       AI Co-Pilot
                     </span>
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-medium">Rowell Mark Blanca's AI Assistant</p>
+                  <p className="text-[11px] text-slate-400 font-medium">Rowell Mark Blanca's AI Assistant</p>
                 </div>
               </div>
 
@@ -588,7 +588,7 @@ export default function ChatBubble() {
                   <button
                     type="button"
                     onClick={handleEndChat}
-                    className="px-2.5 py-1 rounded-xl text-[10px] font-extrabold text-slate-300 hover:text-amber-300 bg-slate-900 border border-slate-800 hover:border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
+                    className="px-2.5 py-1 rounded-xl text-[11px] font-extrabold text-slate-300 hover:text-amber-300 bg-slate-900 border border-slate-800 hover:border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
                     title="Reset Session"
                   >
                     <RotateCcw className="w-3 h-3 text-amber-400" />
@@ -657,7 +657,7 @@ export default function ChatBubble() {
                       className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
                     >
                       <div
-                        className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
+                        className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[11px] font-black ${
                           m.sender === 'user'
                             ? 'bg-blue-600 text-white'
                             : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
@@ -674,13 +674,13 @@ export default function ChatBubble() {
                               : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'
                           }`}
                         >
-                          <span className="text-[10px] font-extrabold block opacity-75 mb-0.5">
+                          <span className="text-[11px] font-extrabold block opacity-75 mb-0.5">
                             {m.senderName}
                           </span>
                           {m.text}
                         </div>
                         {m.time && (
-                          <span className="text-[9px] text-slate-500 font-mono block px-1 text-right">
+                          <span className="text-[11px] text-slate-500 font-mono block px-1 text-right">
                             {m.time}
                           </span>
                         )}
@@ -702,7 +702,7 @@ export default function ChatBubble() {
                           </div>
                           <div>
                             <h4 className="text-xs font-black text-white">Request Project Estimate</h4>
-                            <p className="text-[10px] text-slate-400">Direct response within 24 hours</p>
+                            <p className="text-[11px] text-slate-400">Direct response within 24 hours</p>
                           </div>
                         </div>
                         <button
@@ -715,7 +715,7 @@ export default function ChatBubble() {
 
                       <form onSubmit={handleLeadFormSubmit} className="space-y-2.5">
                         <div>
-                          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
                             Project Type
                           </label>
                           <select
@@ -793,7 +793,7 @@ export default function ChatBubble() {
                   {!showLeadCard && !formSubmitted && (
                     <button
                       onClick={() => setShowLeadCard(true)}
-                      className="text-[10px] font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-full px-3 py-1.5 flex items-center gap-1 transition-all"
+                      className="text-[11px] font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-full px-3 py-1.5 flex items-center gap-1 transition-all"
                     >
                       <Calculator className="w-3 h-3 text-amber-400" />
                       <span>Request Custom Estimate</span>
@@ -803,7 +803,7 @@ export default function ChatBubble() {
                     <button
                       key={i}
                       onClick={() => handleSendMessage(prompt)}
-                      className="text-[10px] font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-[200px]"
+                      className="text-[11px] font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-[200px]"
                     >
                       💡 {prompt}
                     </button>
@@ -817,7 +817,7 @@ export default function ChatBubble() {
                   </span>
                   <button
                     onClick={() => setIsContactOpen(true)}
-                    className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer"
+                    className="text-[11px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer"
                   >
                     <Calendar className="w-3 h-3" />
                     <span>Book Call</span>

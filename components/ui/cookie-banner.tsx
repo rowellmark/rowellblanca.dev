@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Cookie } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 type Consent = { necessary: true; analytics: boolean; marketing: boolean };
 
@@ -89,18 +88,12 @@ export function CookieBanner() {
         </button>
       )}
 
-      <AnimatePresence>
-        {showBanner && (
-          <motion.div
-            key="cookie-banner"
+      {showBanner && (
+          <div
             ref={panelRef}
             role="dialog"
             aria-label="Cookie preferences"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed z-[99999] inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] sm:inset-x-auto sm:left-6 sm:bottom-6 sm:w-[400px]"
+            className="motion-fade fixed z-[99999] inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] sm:inset-x-auto sm:left-6 sm:bottom-6 sm:w-[400px]"
           >
             <div className="rounded-[22px] bg-brand-ink/95 backdrop-blur-xl text-white border border-white/10 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)] p-5 flex flex-col gap-4">
               <div className="flex items-start gap-3.5">
@@ -134,9 +127,8 @@ export function CookieBanner() {
                 </button>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+      )}
     </>
   );
 }

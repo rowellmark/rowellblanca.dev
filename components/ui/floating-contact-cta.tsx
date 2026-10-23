@@ -30,7 +30,7 @@ export function FloatingContactCTA({ defaultService }: FloatingContactCTAProps) 
           </span>
 
           <div className="text-left leading-tight">
-            <span className="text-[10px] uppercase font-black tracking-wider text-amber-400 block group-hover:text-white transition-colors">
+            <span className="text-[11px] uppercase font-black tracking-wider text-amber-400 block group-hover:text-white transition-colors">
               Have a Project in Mind?
             </span>
             <span className="text-xs font-black text-white block">

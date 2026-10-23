@@ -81,11 +81,15 @@ export function MotionEffects() {
         if (!dot || prefersReducedMotion() || !hasFinePointer()) return;
 
         let x = -100, y = -100, tx = -100, ty = -100, raf = 0;
+        // Eases towards the pointer and stops once it has caught up (no idle RAF loop).
         const loop = () => {
             x += (tx - x) * 0.18;
             y += (ty - y) * 0.18;
             dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            raf = requestAnimationFrame(loop);
+            raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.2 ? requestAnimationFrame(loop) : 0;
+        };
+        const kick = () => {
+            if (!raf) raf = requestAnimationFrame(loop);
         };
         const updateTarget = (el: Element | null) => {
             dot.classList.toggle('is-view', Boolean(el?.closest('[data-cursor="view"]')));
@@ -95,6 +99,7 @@ export function MotionEffects() {
             ty = e.clientY;
             updateTarget(e.target as Element | null);
             dot.classList.add('is-visible');
+            kick();
         };
         const onLeave = () => dot.classList.remove('is-visible');
         // Content moves under a still pointer while scrolling, so re-check what is beneath it.
@@ -111,7 +116,6 @@ export function MotionEffects() {
         window.addEventListener('pointermove', onMove, { passive: true });
         window.addEventListener('scroll', onScroll, { passive: true });
         document.addEventListener('pointerleave', onLeave);
-        raf = requestAnimationFrame(loop);
         return () => {
             cancelAnimationFrame(raf);
             window.removeEventListener('pointermove', onMove);

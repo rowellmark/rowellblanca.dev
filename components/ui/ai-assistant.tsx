@@ -125,11 +125,11 @@ export function AiAssistant() {
                 <div>
                   <h3 className="text-xs font-black text-white flex items-center gap-1.5">
                     RowBot
-                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
+                    <span className="text-[11px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
                       Online
                     </span>
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-medium">Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot</p>
+                  <p className="text-[11px] text-slate-400 font-medium">Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot</p>
                 </div>
               </div>
 
@@ -149,7 +149,7 @@ export function AiAssistant() {
                   className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
                 >
                   <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[11px] font-black ${
                       m.sender === 'user'
                         ? 'bg-blue-600 text-white'
                         : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
@@ -186,7 +186,7 @@ export function AiAssistant() {
                   <button
                     key={i}
                     onClick={() => sendMessage(prompt)}
-                    className="text-[10px] font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-full"
+                    className="text-[11px] font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-full px-3 py-1 transition-all text-left truncate max-w-full"
                   >
                     {prompt}
                   </button>
@@ -201,7 +201,7 @@ export function AiAssistant() {
               </span>
               <button
                 onClick={() => setIsContactOpen(true)}
-                className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-brand-amber hover:bg-amber-400 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition-all cursor-pointer"
+                className="text-[11px] font-black uppercase tracking-wider text-slate-950 bg-brand-amber hover:bg-amber-400 px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition-all cursor-pointer"
               >
                 <span>Book Call</span>
                 <ArrowRight className="w-3 h-3" />

@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
 import Image from "next/image";
+import { canOptimizeImage } from '@/lib/image-utils';
 
 export const useIsMobile = (breakpoint = 768) => {
     const [isMobile, setIsMobile] = React.useState(false);
@@ -100,7 +101,7 @@ function MobilePhoneSvgMockup({ imgSrc }: { imgSrc: string }) {
                     {/* Screen Viewport */}
                     <div className="relative w-full h-full rounded-[28px] overflow-hidden bg-[#0a0a0a] flex flex-col">
                         {/* Status Bar */}
-                        <div className="w-full px-5 pt-2.5 pb-1.5 flex items-center justify-between bg-[#141414] text-white text-[9px] font-mono pointer-events-none z-20 shrink-0 border-b border-white/10">
+                        <div className="w-full px-5 pt-2.5 pb-1.5 flex items-center justify-between bg-[#141414] text-white text-[11px] font-mono pointer-events-none z-20 shrink-0 border-b border-white/10">
                             <span className="font-bold text-slate-200">9:41</span>
                             <div className="flex items-center gap-1">
                                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -119,7 +120,7 @@ function MobilePhoneSvgMockup({ imgSrc }: { imgSrc: string }) {
                                 className="object-contain object-top"
                                 onError={() => setResolvedSrc('/no-image-placeholder.svg')}
                                 draggable={false}
-                                unoptimized
+                                unoptimized={!canOptimizeImage(resolvedSrc)}
                             />
                         </div>
                     </div>

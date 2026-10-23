@@ -53,12 +53,12 @@ export default function Footer() {
                     </div>
 
                     {/* Navigation Links with generous breathing room and no cramped line wraps */}
-                    <nav className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-2.5 text-sm font-medium text-slate-400">
+                    <nav className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-0 lg:gap-y-2.5 text-sm font-medium text-slate-400">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`whitespace-nowrap transition-colors duration-200 ${
+                                className={`inline-flex items-center min-h-[40px] lg:min-h-0 whitespace-nowrap transition-colors duration-200 ${
                                     link.highlight
                                         ? 'motion-underline text-amber-400 hover:text-amber-300 font-bold'
                                         : 'motion-underline hover:text-white'

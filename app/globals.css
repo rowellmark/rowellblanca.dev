@@ -5,7 +5,7 @@
 body {
   color: #0F172A;
   background: #FAFAF7;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.5;
 }
@@ -180,6 +180,10 @@ body {
   .motion-l6 { animation-range: cover 38% cover 50%; }
   .motion-recede { animation: motion-recede linear both; animation-timeline: view(); animation-range: exit-crossing 0% exit-crossing 100%; }
 }
+@supports (animation-timeline: scroll()) {
+  .motion-scroll-progress { animation: motion-scroll-progress linear both; animation-timeline: scroll(root); }
+}
+@keyframes motion-scroll-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes motion-reveal { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
 @keyframes motion-lit { from { opacity: .16; } to { opacity: 1; } }
 @keyframes motion-recede { to { transform: scale(.92); filter: brightness(.7); } }
@@ -275,7 +279,7 @@ body {
 .case-study-content a:hover { color: #B45309; }
 .case-study-content strong { color: #0F172A; }
 .case-study-content blockquote { border-left: 3px solid #F59E0B; padding: 0.25em 0 0.25em 1.25em; font-size: 1.15em; font-weight: 600; color: #0F172A; }
-.case-study-content code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.9em; background: #F1F5F9; padding: 0.1em 0.35em; border-radius: 6px; }
+.case-study-content code { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.9em; background: #F1F5F9; padding: 0.1em 0.35em; border-radius: 6px; }
 .case-study-content pre { background: #0B1020; color: #E2E8F0; padding: 1.25em; border-radius: 16px; overflow-x: auto; }
 .case-study-content pre code { background: none; padding: 0; }
 .case-study-content img { border-radius: 18px; border: 1px solid #E2E8F0; }

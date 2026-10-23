@@ -25,7 +25,6 @@ import {
   IconBrandFacebook,
   IconBrandInstagram,
 } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
@@ -133,33 +132,24 @@ export function ContactPageClient() {
       <section className="relative pt-32 pb-16 bg-gradient-to-b from-indigo-950 via-slate-900 to-[#0b1a30] text-white overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
         <div className="max-w-6xl mx-auto px-6 relative z-10 text-center space-y-5">
-          <motion.div
-            initial={{ y: -15, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-black uppercase tracking-wider"
+          <div
+            className="motion-fade motion-d1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-black uppercase tracking-wider"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Available for Select Client Projects</span>
-          </motion.div>
+          </div>
 
-          <motion.h1
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight max-w-3xl mx-auto"
+          <h1
+            className="motion-fade motion-d2 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight max-w-3xl mx-auto"
           >
             Let's Discuss Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-200">Next Digital Product</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed"
+          <p
+            className="motion-fade motion-d3 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed"
           >
             Partner directly with senior engineer Rowell Mark Blanca for bespoke React, Next.js, and custom WordPress systems with full UK, US & Australian timezone overlap.
-          </motion.p>
+          </p>
         </div>
       </section>
 
@@ -173,7 +163,7 @@ export function ContactPageClient() {
             {/* Quick Contact Direct Card */}
             <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm space-y-5">
               <div className="space-y-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-md inline-block">
+                <span className="text-[11px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-md inline-block">
                   Direct Contact Channels
                 </span>
                 <h3 className="text-xl font-black text-[#0b1a30]">Get In Touch Directly</h3>
@@ -188,7 +178,7 @@ export function ContactPageClient() {
                     <Mail className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Primary Email</span>
+                    <span className="text-[11px] uppercase font-bold text-slate-400 block">Primary Email</span>
                     <span className="text-xs font-black text-[#0b1a30] group-hover:text-amber-700 transition-colors">
                       hello@rowellblanca.dev
                     </span>
@@ -200,7 +190,7 @@ export function ContactPageClient() {
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Timezone Coverage</span>
+                    <span className="text-[11px] uppercase font-bold text-slate-400 block">Timezone Coverage</span>
                     <span className="text-xs font-black text-[#0b1a30]">
                       AU (AEST) · UK (GMT) · US (EST/PST)
                     </span>
@@ -212,7 +202,7 @@ export function ContactPageClient() {
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Response Time</span>
+                    <span className="text-[11px] uppercase font-bold text-slate-400 block">Response Time</span>
                     <span className="text-xs font-black text-[#0b1a30]">
                       Direct reply within 2–4 business hours
                     </span>

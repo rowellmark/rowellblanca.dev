@@ -223,7 +223,7 @@ export function BlogClient() {
                         </span>
                         <Link
                           href={`/blog/${post.slug}`}
-                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
+                          className="inline-flex items-center gap-1 min-h-[40px] text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>Read Article</span>
                           <ChevronRight className="w-3.5 h-3.5" />

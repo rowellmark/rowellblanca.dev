@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FALLBACK_PROJECTS } from "@/lib/fallback-projects";
-import { resolveValidImageSrc } from "@/lib/image-utils";
+import { resolveValidImageSrc, canOptimizeImage } from "@/lib/image-utils";
 import { SplitText } from "@/components/ui/split-text";
 
 interface WorkProject {
@@ -139,7 +139,7 @@ export function SelectedWork() {
                                             fill
                                             sizes="(min-width: 1024px) 760px, 100vw"
                                             className="motion-shot motion-parallax object-cover object-left-top"
-                                            unoptimized
+                                            unoptimized={!canOptimizeImage(resolveValidImageSrc(project.image))}
                                         />
                                     </div>
                                 </div>

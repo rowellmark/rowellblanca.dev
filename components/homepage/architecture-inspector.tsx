@@ -399,7 +399,7 @@ export function ArchitectureInspector() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-base font-black text-white">{currentPreset.title}</span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">
                       {currentPreset.badge}
                     </span>
                   </div>
@@ -463,7 +463,7 @@ export function ArchitectureInspector() {
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-bold text-white">{node.name}</span>
-                              <span className="text-[10px] font-mono text-slate-400">
+                              <span className="text-[11px] font-mono text-slate-400">
                                 Layer {nodeIdx + 1}
                               </span>
                             </div>
@@ -475,7 +475,7 @@ export function ArchitectureInspector() {
                           <span className="text-[11px] font-mono font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded">
                             {node.latency}
                           </span>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                          <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
                             {node.badge}
                           </span>
                         </div>
@@ -499,7 +499,7 @@ export function ArchitectureInspector() {
               {/* Node Inspector Header */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-800">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold">
                     Node Inspector
                   </span>
                   <h3 className="text-lg font-black text-white mt-0.5">{currentNode.name}</h3>
@@ -512,7 +512,7 @@ export function ArchitectureInspector() {
               {/* Node Specifications Grid */}
               <div className="space-y-3">
                 <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 block">
                     Core Technology & Framework
                   </span>
                   <span className="text-xs font-bold text-slate-200 block mt-0.5">
@@ -522,7 +522,7 @@ export function ArchitectureInspector() {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block">
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 block">
                       Security Controls
                     </span>
                     <span className="text-[11px] font-medium text-slate-300 block mt-0.5">
@@ -531,7 +531,7 @@ export function ArchitectureInspector() {
                   </div>
 
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block">
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 block">
                       Caching & Invalidation
                     </span>
                     <span className="text-[11px] font-medium text-slate-300 block mt-0.5">

@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Zap, ShieldCheck } from 'lucide-react';
-import { resolveValidImageSrc } from '@/lib/image-utils';
+import { resolveValidImageSrc, canOptimizeImage } from '@/lib/image-utils';
 import { FALLBACK_PROJECTS, FallbackProject } from '@/lib/fallback-projects';
 import { PortfolioProject } from '@/components/ui/portfolio-card';
+import { sortFlagship } from '@/lib/flagship';
 
 interface FlagshipItem {
   id: string;
@@ -94,10 +95,12 @@ function mapToSpotlightItem(p: PortfolioProject | FallbackProject): FlagshipItem
   };
 }
 
-export function FlagshipSpotlight() {
-  // Initialize with the top 2 flagship builds from fallback-projects
-  const initialItems = FALLBACK_PROJECTS.slice(0, 2).map(mapToSpotlightItem);
-  const [items, setItems] = useState<FlagshipItem[]>(initialItems);
+// `initialProjects` comes from the server (app/mywork/page.tsx) so the cards render
+// in the HTML and the client refresh below doesn't swap content and shift the layout.
+export function FlagshipSpotlight({ initialProjects }: { initialProjects?: any[] }) {
+  const [items, setItems] = useState<FlagshipItem[]>(() =>
+    (initialProjects?.length ? initialProjects : sortFlagship(FALLBACK_PROJECTS as any[])).slice(0, 2).map(mapToSpotlightItem)
+  );
 
   // Dynamically load from /api/projects (the exact same data source as MyWork)
   useEffect(() => {
@@ -108,14 +111,7 @@ export function FlagshipSpotlight() {
         if (data.success && Array.isArray(data.projects)) {
           const activeProjects = data.projects.filter((p: any) => p.active !== false);
 
-          // Prioritize spotlight project first, followed by projects marked as featured (flagship)
-          const sorted = [...activeProjects].sort((a: any, b: any) => {
-            if (a.spotlight && !b.spotlight) return -1;
-            if (!a.spotlight && b.spotlight) return 1;
-            if (a.featured && !b.featured) return -1;
-            if (!a.featured && b.featured) return 1;
-            return 0;
-          });
+          const sorted = sortFlagship<any>(activeProjects);
 
           if (sorted.length > 0) {
             setItems(sorted.slice(0, 2).map(mapToSpotlightItem));
@@ -147,7 +143,7 @@ export function FlagshipSpotlight() {
 
         <Link
           href="/case-studies"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-amber-600 transition-colors shrink-0"
+          className="inline-flex items-center gap-1.5 min-h-[40px] text-xs font-bold text-slate-700 hover:text-amber-600 transition-colors shrink-0"
         >
           <span>View Detailed Case Studies</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -170,7 +166,7 @@ export function FlagshipSpotlight() {
                     src={item.image}
                     alt={item.title}
                     fill
-                    unoptimized
+                    unoptimized={!canOptimizeImage(item.image)}
                     className="object-cover object-top group-hover:scale-103 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                     sizes="(max-width: 1024px) 100vw, 600px"
                   />

@@ -137,7 +137,7 @@ export function Hero() {
                             href="/plugins/buildforuser-seo"
                             className="motion-float group absolute right-6 top-8 flex flex-col gap-1 rounded-2xl bg-white text-brand-ink py-3.5 px-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] [animation-delay:-3s]"
                         >
-                            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-brand-slate">Now shipping</span>
+                            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-brand-slate">Now shipping</span>
                             <span className="font-extrabold text-sm">
                                 BuildForUser SEO <span className="text-amber-600">v1.0</span>{" "}
                                 <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1" aria-hidden="true">→</span>

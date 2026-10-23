@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Sparkles, Zap, ShieldCheck, Layers, ExternalLink } from 'lucide-react';
-import { resolveValidImageSrc } from '@/lib/image-utils';
+import { resolveValidImageSrc, canOptimizeImage } from '@/lib/image-utils';
 import { FALLBACK_PROJECTS, FallbackProject } from '@/lib/fallback-projects';
 import { PortfolioProject } from '@/components/ui/portfolio-card';
 
@@ -166,7 +166,7 @@ export function FlagshipWork() {
                     src={project.image}
                     alt={project.title}
                     fill
-                    unoptimized
+                    unoptimized={!canOptimizeImage(project.image)}
                     className="object-cover object-top group-hover:scale-103 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                     sizes="(max-width: 1024px) 100vw, 600px"
                   />
@@ -183,7 +183,7 @@ export function FlagshipWork() {
                     <span className="text-xs font-mono font-bold text-amber-400">
                       {project.category}
                     </span>
-                    <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full backdrop-blur-md">
+                    <span className="text-[11px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full backdrop-blur-md">
                       Production Shipped
                     </span>
                   </div>
@@ -256,7 +256,7 @@ export function FlagshipWork() {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
 
                   <div className="absolute top-3 left-3">
-                    <span className="text-[10px] font-mono font-bold bg-white/95 backdrop-blur-md text-slate-900 px-2.5 py-0.5 rounded-full border border-slate-200">
+                    <span className="text-[11px] font-mono font-bold bg-white/95 backdrop-blur-md text-slate-900 px-2.5 py-0.5 rounded-full border border-slate-200">
                       {project.region}
                     </span>
                   </div>
@@ -278,7 +278,7 @@ export function FlagshipWork() {
                     </p>
                   </div>
 
-                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/60 text-[10px] font-mono font-bold text-slate-700 truncate">
+                  <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/60 text-[11px] font-mono font-bold text-slate-700 truncate">
                     {project.metricBadge}
                   </div>
 
@@ -286,7 +286,7 @@ export function FlagshipWork() {
                     {project.techStack.slice(0, 3).map((tech) => (
                       <span
                         key={tech}
-                        className="text-[10px] font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200"
+                        className="text-[11px] font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200"
                       >
                         {tech}
                       </span>

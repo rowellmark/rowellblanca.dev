@@ -4,11 +4,12 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 
-// Lenis-style smooth wheel scrolling for the public site. Touch devices keep
-// native momentum scroll (syncTouch off) and prefers-reduced-motion disables
-// smoothing entirely (respectReducedMotion defaults to true).
+// Lenis-style smooth wheel scrolling for the public site. Touch-only devices
+// skip Lenis entirely (native momentum scroll, and no per-frame RAF loop on
+// phones), and prefers-reduced-motion disables smoothing (respectReducedMotion).
 export function SmoothScroll() {
   useEffect(() => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     const lenis = new Lenis({
       lerp: 0.1,
       autoRaf: true,
