@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { TechGalaxy } from "@/components/homepage/tech-galaxy";
 
 const CLOCKS = [
     { label: "London", timeZone: "Europe/London" },
@@ -33,61 +34,6 @@ function useClocks() {
     }, []);
 
     return times;
-}
-
-// Cropped hero thumbnails (public/images/hero) of shipped client sites.
-const REEL = [
-    ["macmanusfd", "MacManus Funeral Director Finance"],
-    ["joy-homes", "Joy Baresel — Engel & Völkers"],
-    ["juliettehohnen", "Juliette Hohnen real estate"],
-    ["bellemere", "Bellemere fashion store"],
-    ["minimalist-studio", "Minimalist studio slider"],
-    ["community-scheduler", "Community scheduler"],
-    ["car-landing", "Car rental landing page"],
-    ["smooth-fruit", "Smooth fruit app landing"],
-] as const;
-const REEL_COLUMNS = [REEL.slice(0, 3), REEL.slice(3, 6), REEL.slice(5, 8).concat(REEL.slice(0, 1))];
-
-function ReelShot({ name, label }: { name: string; label: string }) {
-    return (
-        <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-brand-ink-2 ring-1 ring-white/10 shadow-[0_24px_50px_-20px_rgba(0,0,0,0.8)]">
-            <Image src={`/images/hero/${name}.webp`} alt={label} fill sizes="(min-width: 1024px) 220px, 200px" className="object-cover object-top" />
-        </div>
-    );
-}
-
-/** Tilted wall of project screenshots drifting up/down (desktop). */
-function ProjectReel() {
-    return (
-        <div aria-hidden="true" className="motion-reel relative h-full min-h-[560px] overflow-hidden rounded-[28px] [mask-image:linear-gradient(to_bottom,transparent,black_14%,black_86%,transparent)]">
-            <div className="absolute inset-[-18%] grid grid-cols-3 gap-4 [transform:perspective(1800px)_rotateX(14deg)_rotateZ(-10deg)]">
-                {REEL_COLUMNS.map((col, c) => (
-                    <div key={c} className={`flex flex-col gap-4 ${c === 1 ? "motion-reel-down" : "motion-reel-up"}`}>
-                        {[...col, ...col].map(([name, label], i) => (
-                            <ReelShot key={`${name}-${i}`} name={name} label={label} />
-                        ))}
-                    </div>
-                ))}
-            </div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-brand-ink to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-brand-ink to-transparent" />
-        </div>
-    );
-}
-
-/** Single-row marquee of the same screenshots (phones and tablets). */
-function ProjectStrip() {
-    return (
-        <div aria-hidden="true" className="motion-marquee -mx-4 sm:-mx-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-            <div className="motion-marquee-track gap-3">
-                {[...REEL, ...REEL].map(([name, label], i) => (
-                    <div key={`${name}-${i}`} className="w-[220px] shrink-0">
-                        <ReelShot name={name} label={label} />
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
 }
 
 export function Hero() {
@@ -123,10 +69,10 @@ export function Hero() {
                         </h1>
                     </div>
 
-                    {/* Visual: live wall of shipped work + floating proof cards */}
-                    <div className="motion-fade motion-d3 relative hidden lg:block">
-                        <ProjectReel />
-                        <div className="motion-float absolute left-[-28px] bottom-10 flex items-center gap-3 rounded-full bg-brand-ink/85 backdrop-blur-xl border border-white/10 py-2 pl-2 pr-5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]">
+                    {/* Visual: rotating tech-stack galaxy + floating proof cards */}
+                    <div className="motion-fade motion-d3 relative hidden lg:flex items-center justify-center">
+                        <TechGalaxy className="max-w-[600px]" />
+                        <div className="motion-float absolute left-0 bottom-6 flex items-center gap-3 rounded-full bg-brand-ink/85 backdrop-blur-xl border border-white/10 py-2 pl-2 pr-5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]">
                             <Image src="/images/hero/rowell-avatar.webp" alt="" width={44} height={44} className="h-11 w-11 rounded-full object-cover ring-2 ring-amber-500" />
                             <span className="flex flex-col leading-tight">
                                 <span className="font-bold text-sm">Rowell Mark Blanca</span>
@@ -135,7 +81,7 @@ export function Hero() {
                         </div>
                         <Link
                             href="/plugins/buildforuser-seo"
-                            className="motion-float group absolute right-6 top-8 flex flex-col gap-1 rounded-2xl bg-white text-brand-ink py-3.5 px-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] [animation-delay:-3s]"
+                            className="motion-float group absolute right-0 top-6 flex flex-col gap-1 rounded-2xl bg-white text-brand-ink py-3.5 px-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] [animation-delay:-3s]"
                         >
                             <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-brand-slate">Now shipping</span>
                             <span className="font-extrabold text-sm">
@@ -147,7 +93,7 @@ export function Hero() {
                 </div>
 
                 <div className="motion-fade motion-d4 lg:hidden">
-                    <ProjectStrip />
+                    <TechGalaxy className="max-w-[420px] mx-auto" />
                 </div>
 
                 <div className="flex flex-wrap items-end justify-between gap-10 border-t border-white/10 pt-8">
