@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Personal portfolio site for Rowell Mark Blanca (rowellblanca.dev), built with Next.js 14 (App Router), TypeScript, Tailwind CSS, and SCSS modules. It now also includes a self-hosted admin CRM (leads, projects, testimonials, messages) backed by Prisma/NeonDB (PostgreSQL). No test suite exists in this repo.
+Personal portfolio site for Rowell Mark Blanca (rowellblanca.dev), built with Next.js 15 (App Router) and React 19, TypeScript, Tailwind CSS, and SCSS modules. It now also includes a self-hosted admin CRM (leads, projects, testimonials, messages) backed by Prisma/NeonDB (PostgreSQL). No test suite exists in this repo.
 
 ## Commands
 
@@ -43,6 +43,7 @@ Firebase env vars (`utils/firebaseconfig.tsx`) are no longer read anywhere else 
 - Auth is a custom cookie session, **not** middleware-gated. `lib/auth.ts` sets an httpOnly `admin_session_token` cookie (`setAdminSessionCookie`) containing the user payload as JSON — it is not a signed/opaque token, just JSON in an httpOnly cookie.
 - There is no `middleware.ts`. Route protection happens per-request inside each API route handler via `isAdminAuthenticated()` (see `app/api/crm/leads/route.ts`, `app/api/projects/route.ts` POST/PUT/DELETE, `app/api/upload/route.ts`, etc.) — GET on `/api/projects` and `/api/testimonials` is intentionally public (read-only, used by the public site).
 - Admin *pages* under `app/admin/**` are not server-protected either; `app/admin/layout.tsx` does a client-side auth check by calling `/api/crm/leads` and redirecting if it 401s. When adding a new admin page/route, remember to call `isAdminAuthenticated()` yourself — it is not automatic.
+- All `lib/auth.ts` session helpers (`isAdminAuthenticated`, `getAdminSessionUser`, `setAdminSessionCookie`, `clearAdminSessionCookie`) are **async** (Next 15's `cookies()` returns a Promise). Always `await` them — `if (!isAdminAuthenticated())` without `await` checks a Promise, which is always truthy, and silently lets every request through.
 - `lib/auth.ts` also has a **hardcoded credential fallback**: if `email === ADMIN_EMAIL` (or `rowellblanca94@gmail.com`) and password matches `ADMIN_PASSWORD` (or the literal string `RowellDev2026!`), login succeeds even with no `User` row in the DB. This exists so admin login works before the DB is seeded — be aware of it when touching `authenticateAdminUser`.
 - Passwords are hashed with Node's `crypto.pbkdf2Sync` (`lib/crypto.ts`), not bcrypt/argon2.
 

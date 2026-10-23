@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     const permalink = searchParams.get('permalink');
     const category = searchParams.get('category');
     const featuredOnly = searchParams.get('featured') === 'true';
-    const includeInactive = searchParams.get('includeInactive') === 'true' && isAdminAuthenticated();
+    const includeInactive = searchParams.get('includeInactive') === 'true' && (await isAdminAuthenticated());
 
     let dbProjects: any[] = [];
     try {
@@ -108,7 +108,7 @@ function cleanImg(img?: string | null) {
 }
 
 export async function POST(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -188,7 +188,7 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -276,7 +276,7 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

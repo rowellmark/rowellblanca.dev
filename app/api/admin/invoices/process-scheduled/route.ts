@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const cronSecret = process.env.CRON_SECRET;
   const isCronAuthorized = cronSecret && authHeader === `Bearer ${cronSecret}`;
 
-  if (!isAdminAuthenticated() && !isCronAuthorized) {
+  if (!(await isAdminAuthenticated()) && !isCronAuthorized) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   // Return current due count and pending queue
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

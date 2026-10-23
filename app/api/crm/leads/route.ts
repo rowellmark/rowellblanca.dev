@@ -5,7 +5,7 @@ import { LeadStatus } from '@/lib/generated/client/index';
 import { checkRateLimit, checkSpamPayload, createSilentSpamResponse, getClientIp } from '@/lib/anti-spam';
 
 export async function GET(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
     // Case 1: Admin adding an internal note to an existing lead
     if (leadId && content) {
-      if (!isAdminAuthenticated()) {
+      if (!(await isAdminAuthenticated())) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
       }
 
@@ -151,7 +151,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { googleFile: string } }
-) {
+export async function GET(req: NextRequest, props: { params: Promise<{ googleFile: string }> }) {
+  const params = await props.params;
   const filename = params.googleFile || '';
 
   if (filename.startsWith('google') && filename.endsWith('.html')) {

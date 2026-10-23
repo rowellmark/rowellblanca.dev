@@ -5,7 +5,7 @@ import { classifyLeadWithAI } from '@/lib/ai-lead-classifier';
 import { LeadStatus } from '@/lib/generated/client/index';
 
 export async function POST(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

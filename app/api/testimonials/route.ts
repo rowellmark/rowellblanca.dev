@@ -36,7 +36,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const target = searchParams.get('target'); // e.g. 'uk-react' | 'uk-wordpress'
-    const includeInactive = searchParams.get('includeInactive') === 'true' && isAdminAuthenticated();
+    const includeInactive = searchParams.get('includeInactive') === 'true' && (await isAdminAuthenticated());
 
     let dbTestimonials: any[] = [];
     try {
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -162,7 +162,7 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

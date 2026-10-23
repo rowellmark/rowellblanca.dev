@@ -3,11 +3,9 @@ import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/auth';
 import { sendInvoiceEmail } from '@/lib/mailer';
 
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  if (!isAdminAuthenticated()) {
+export async function POST(request: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

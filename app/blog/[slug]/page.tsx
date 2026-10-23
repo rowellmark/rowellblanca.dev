@@ -17,7 +17,8 @@ async function getPostData(slug: string) {
   return INITIAL_BLOG_POSTS.find((p) => p.slug === slug) || null;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const post = await getPostData(params.slug);
   const baseUrl = 'https://www.rowellblanca.dev';
 
@@ -57,7 +58,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
+export default async function ArticlePage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const post = await getPostData(params.slug);
 
   const articleJsonLd = post
