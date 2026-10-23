@@ -403,7 +403,7 @@ export function ProjectEstimator() {
         <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
           <div className="flex flex-col gap-5">
             <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">
-              (04) — Scope &amp; investment calculator
+              (05) — Scope &amp; investment calculator
             </p>
             <h2 data-inview className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
               <SplitText lines={["Price your", "project."]} />

@@ -3,17 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  FolderKanban,
-  Globe,
   ArrowRight,
   Sparkles,
   ExternalLink,
   ChevronRight,
-  CheckCircle2,
-  Layers,
   Search,
   Code2,
-  Layout,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ContactModal } from '@/components/ui/contact-modal';
@@ -21,6 +16,7 @@ import { SharedSidebar } from '@/components/ui/shared-sidebar';
 import { ProjectEstimator } from '@/components/homepage/project-estimator';
 import { EngagementModels } from '@/components/homepage/engagement-models';
 import { SpeedRacerGame } from '@/components/interactive/speed-racer-game';
+import { PageHero, heroSearchClass, heroChipClass } from '@/components/ui/page-hero';
 
 interface LandingPageItem {
   id: number;
@@ -116,88 +112,58 @@ export function CaseStudiesClient() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAFAF7] text-slate-900 font-sans selection:bg-amber-400 selection:text-slate-950 overflow-x-hidden">
+    <div className="min-h-screen bg-brand-bg text-slate-900 font-sans selection:bg-amber-400 selection:text-slate-950 overflow-x-hidden">
       {/* Hero Header */}
-      <section className="relative pt-32 pb-16 bg-gradient-to-b from-indigo-950 via-slate-900 to-[#0b1a30] text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
-        <div className="max-w-[1440px] mx-auto px-6 relative z-10 text-center space-y-6">
-          <motion.div
-            initial={{ y: -15, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-extrabold tracking-wider uppercase"
-          >
-            <FolderKanban className="w-3.5 h-3.5" />
-            <span>Case Studies & Specialized Solutions</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight max-w-4xl mx-auto"
-          >
-            Production Case Studies & <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-200">Engineering Solutions</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed"
-          >
-            Explore targeted landing pages, production client architectures, and specialized engineering solutions for web and enterprise platforms.
-          </motion.p>
-
-          {/* Search Bar & Filter Buttons */}
-          <div className="pt-4 max-w-2xl mx-auto space-y-4">
-            <div className="relative">
-              <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search solutions by keyword, tech stack, or industry (e.g. React, WordPress, FinTech)..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all shadow-inner"
-              />
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {[
-                { id: 'all', label: 'All Solutions' },
-                { id: 'landing', label: `Landing Pages (${landingPages.length})` },
-                { id: 'projects', label: `Production Projects (${nonPluginProjects.length})` },
-                { id: 'plugins', label: `WP Plugins (${pluginProjects.length})` },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all border cursor-pointer ${
-                    activeTab === tab.id
-                      ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md ring-2 ring-amber-400/40'
-                      : 'bg-white/10 text-slate-300 border-white/20 hover:bg-white/20'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+      <PageHero
+        label="Production case studies & engineering solutions"
+        titleLines={['Case studies', '& engineering solutions.']}
+        accentLine={1}
+        lead="Explore targeted landing pages, production client architectures, and specialized engineering solutions for web and enterprise platforms."
+      >
+        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+          <div className="relative flex-1 max-w-[560px]">
+            <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+            <input
+              type="text"
+              aria-label="Search solutions"
+              placeholder="Search by keyword, stack or industry (React, WordPress, FinTech)…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={heroSearchClass}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'all', label: 'All solutions' },
+              { id: 'landing', label: `Landing pages (${landingPages.length})` },
+              { id: 'projects', label: `Projects (${nonPluginProjects.length})` },
+              { id: 'plugins', label: `WP plugins (${pluginProjects.length})` },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                aria-pressed={activeTab === tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={heroChipClass(activeTab === tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
-      </section>
+      </PageHero>
 
       {/* Main 2-Column Section (8 Cols Solutions + 4 Cols Shared Sidebar) */}
-      <section className="py-16 max-w-[1440px] mx-auto px-6">
+      <section className="py-16 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* MAIN SOLUTIONS COLUMN (8 Cols) */}
           <div className="lg:col-span-8 space-y-16">
             {/* FEATURED CASE STUDY SPOTLIGHT CARD */}
             {!search && (activeTab === 'all' || activeTab === 'projects') && (
-              <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0b1a30] via-slate-900 to-[#0b1a30] text-white border border-slate-800 shadow-2xl space-y-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+              <div className="p-6 sm:p-8 rounded-[28px] bg-brand-ink text-white border border-slate-800 shadow-2xl space-y-6 relative overflow-hidden">
 
                 <div className="flex items-center justify-between gap-2 flex-wrap relative z-10">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/20 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-amber-400 bg-amber-500/20 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5" /> Featured Architecture Spotlight
                   </span>
                   <span className="text-[11px] font-extrabold text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
@@ -206,10 +172,10 @@ export function CaseStudiesClient() {
                 </div>
 
                 <div className="space-y-3 relative z-10">
-                  <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
                     MacManus Asset Finance Portal — Enterprise FinTech Platform
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
+                  <p className="text-[15px] text-slate-300 leading-relaxed">
                     End-to-end asset finance platform engineered for a regulated UK lender — featuring a custom CRM lead pipeline, multi-funder product directory, document hub, and support ticketing unified in a sub-second Next.js and NeonDB architecture.
                   </p>
                 </div>
@@ -217,15 +183,15 @@ export function CaseStudiesClient() {
                 {/* Architecture Highlights Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 text-xs font-bold relative z-10">
                   <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">Tech Stack</span>
+                    <span className="text-[11px] uppercase text-slate-400 block font-semibold">Tech Stack</span>
                     <span className="text-white text-xs">Next.js 14 · NeonDB · Prisma</span>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">Performance</span>
+                    <span className="text-[11px] uppercase text-slate-400 block font-semibold">Performance</span>
                     <span className="text-amber-400 text-xs">Sub-Second SSR & RSC</span>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5 col-span-2 sm:col-span-1">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">Security</span>
+                    <span className="text-[11px] uppercase text-slate-400 block font-semibold">Security</span>
                     <span className="text-emerald-400 text-xs">FCA Compliance Hardened</span>
                   </div>
                 </div>
@@ -233,7 +199,7 @@ export function CaseStudiesClient() {
                 <div className="pt-2 flex items-center justify-between flex-wrap gap-4 relative z-10">
                   <Link
                     href="/mywork/macmanus-portal"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg transition-all"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl motion-btn motion-magnetic bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-sm"
                   >
                     <span>Read Full Case Study</span>
                     <ArrowRight className="w-4 h-4" />
@@ -257,10 +223,10 @@ export function CaseStudiesClient() {
               <div className="space-y-8">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                   <div className="space-y-1">
-                    <span className="text-xs font-black uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
+                    <span className="font-mono text-[13px] font-normal uppercase tracking-[0.08em] text-brand-slate">
                       Targeted Service Pages
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-[#0b1a30]">
+                    <h2 className="text-[clamp(32px,4vw,56px)] font-extrabold tracking-[-0.04em] leading-[1] text-brand-navy">
                       Specialized Solutions ({filteredLandingPages.length})
                     </h2>
                   </div>
@@ -274,7 +240,7 @@ export function CaseStudiesClient() {
                       whileInView={{ y: 0, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: idx * 0.1 }}
-                      className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+                      className="bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between space-y-6 motion-lift group"
                     >
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-2 flex-wrap text-xs">
@@ -290,11 +256,11 @@ export function CaseStudiesClient() {
                           )}
                         </div>
 
-                        <h3 className="text-lg font-black text-[#0b1a30] group-hover:text-amber-600 transition-colors leading-snug line-clamp-2">
+                        <h3 className="text-lg font-extrabold text-brand-navy group-hover:text-amber-600 transition-colors leading-snug line-clamp-2">
                           <Link href={`/landing/${lp.slug}`}>{lp.heroTitle}</Link>
                         </h3>
 
-                        <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
+                        <p className="text-sm text-brand-slate leading-relaxed line-clamp-3">
                           {lp.heroSubtitle}
                         </p>
                       </div>
@@ -305,7 +271,7 @@ export function CaseStudiesClient() {
                         </span>
                         <Link
                           href={`/landing/${lp.slug}`}
-                          className="inline-flex items-center gap-1 text-xs font-black text-[#0b1a30] group-hover:text-[#1d63ed] transition-colors"
+                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>Explore Solution</span>
                           <ChevronRight className="w-4 h-4" />
@@ -322,10 +288,10 @@ export function CaseStudiesClient() {
               <div className="space-y-8">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                   <div className="space-y-1">
-                    <span className="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full">
+                    <span className="font-mono text-[13px] font-normal uppercase tracking-[0.08em] text-brand-slate">
                       Client Case Studies
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-[#0b1a30]">
+                    <h2 className="text-[clamp(32px,4vw,56px)] font-extrabold tracking-[-0.04em] leading-[1] text-brand-navy">
                       Production Project Architectures ({filteredProjects.length})
                     </h2>
                   </div>
@@ -339,11 +305,11 @@ export function CaseStudiesClient() {
                       whileInView={{ y: 0, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: idx * 0.1 }}
-                      className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+                      className="bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between space-y-6 motion-lift group"
                     >
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-black text-[#0b1a30] group-hover:text-amber-600 transition-colors leading-snug">
+                          <h3 className="text-lg font-extrabold text-brand-navy group-hover:text-amber-600 transition-colors leading-snug">
                             <Link href={`/mywork/${proj.permalink}`}>{proj.sitename}</Link>
                           </h3>
                           {proj.url && (
@@ -359,7 +325,7 @@ export function CaseStudiesClient() {
                           )}
                         </div>
 
-                        <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
+                        <p className="text-sm text-brand-slate leading-relaxed line-clamp-3">
                           {proj.description}
                         </p>
 
@@ -369,7 +335,7 @@ export function CaseStudiesClient() {
                             {proj.technologies.map((tech: string, tIdx: number) => (
                               <span
                                 key={tIdx}
-                                className="text-[10px] font-mono text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md"
+                                className="text-xs font-mono text-brand-slate border border-brand-border px-2.5 py-1 rounded-full"
                               >
                                 {tech}
                               </span>
@@ -384,7 +350,7 @@ export function CaseStudiesClient() {
                         </span>
                         <Link
                           href={`/mywork/${proj.permalink}`}
-                          className="inline-flex items-center gap-1 text-xs font-black text-[#0b1a30] group-hover:text-[#1d63ed] transition-colors"
+                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>View Architecture</span>
                           <ChevronRight className="w-4 h-4" />
@@ -401,10 +367,10 @@ export function CaseStudiesClient() {
               <div className="space-y-8">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                   <div className="space-y-1">
-                    <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+                    <span className="font-mono text-[13px] font-normal uppercase tracking-[0.08em] text-brand-slate">
                       Custom WordPress Plugins
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-[#0b1a30]">
+                    <h2 className="text-[clamp(32px,4vw,56px)] font-extrabold tracking-[-0.04em] leading-[1] text-brand-navy">
                       Bespoke WP Plugin Suite ({filteredPlugins.length})
                     </h2>
                     <p className="text-sm text-slate-500 font-medium">
@@ -421,19 +387,19 @@ export function CaseStudiesClient() {
                       whileInView={{ y: 0, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: idx * 0.1 }}
-                      className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+                      className="bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between space-y-6 motion-lift group"
                     >
                       <div className="space-y-4">
                         <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
                             <Code2 className="w-3 h-3" /> WP Plugin
                           </span>
                         </div>
-                        <h3 className="text-lg font-black text-[#0b1a30] group-hover:text-amber-600 transition-colors leading-snug">
+                        <h3 className="text-lg font-extrabold text-brand-navy group-hover:text-amber-600 transition-colors leading-snug">
                           <Link href={`/mywork/${proj.permalink}`}>{proj.sitename}</Link>
                         </h3>
 
-                        <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-4">
+                        <p className="text-sm text-brand-slate leading-relaxed line-clamp-4">
                           {proj.description.split('\n\n')[0]}
                         </p>
 
@@ -443,7 +409,7 @@ export function CaseStudiesClient() {
                             {proj.technologies.map((tech: string, tIdx: number) => (
                               <span
                                 key={tIdx}
-                                className="text-[10px] font-mono text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md"
+                                className="text-xs font-mono text-brand-slate border border-brand-border px-2.5 py-1 rounded-full"
                               >
                                 {tech}
                               </span>
@@ -458,7 +424,7 @@ export function CaseStudiesClient() {
                         </span>
                         <Link
                           href={`/mywork/${proj.permalink}`}
-                          className="inline-flex items-center gap-1 text-xs font-black text-[#0b1a30] group-hover:text-[#1d63ed] transition-colors"
+                          className="inline-flex items-center gap-1 text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>View Plugin Docs</span>
                           <ChevronRight className="w-4 h-4" />
@@ -479,7 +445,7 @@ export function CaseStudiesClient() {
       </section>
 
       {/* Interactive Scope & Architecture Estimator */}
-      <div id="project-estimator" className="border-t border-slate-200">
+      <div id="project-estimator" className="border-t border-brand-border pt-24 lg:pt-32">
         <ProjectEstimator />
       </div>
 

@@ -234,3 +234,11 @@ body {
   .motion-velocity-skew { transform: none !important; }
   .motion-cursor { display: none; }
 }
+
+/* Plugins showcase: SERP title pixel-width meter fills to 512/600px on view */
+.motion-meter { width: 85.3%; transform-origin: left; }
+@supports (animation-timeline: view()) {
+  .motion-meter { animation: motion-meter linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; }
+}
+@keyframes motion-meter { from { transform: scaleX(0.1); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .motion-meter { animation: none; } }

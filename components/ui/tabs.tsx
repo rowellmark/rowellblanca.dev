@@ -99,7 +99,7 @@ export function Tab({ nav }: TabProps) {
     return (
         <div className="space-y-8">
             {/* Interactive Search & Filter Toolbar HUD */}
-            <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/90 shadow-sm space-y-4">
+            <div className="bg-white rounded-[28px] p-4 sm:p-6 border border-slate-200/90 shadow-sm space-y-4">
                 
                 {/* Search Bar Input */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -155,14 +155,14 @@ export function Tab({ nav }: TabProps) {
                             onClick={() => setActiveTab(tab)}
                             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                               isSelected
-                                ? 'bg-[#0b1a30] text-white border-slate-900 shadow-xs font-black'
+                                ? 'bg-[#0b1a30] text-white border-slate-900 shadow-xs font-extrabold'
                                 : 'bg-slate-50 text-slate-600 border-slate-200/80 hover:bg-slate-100 hover:text-slate-900'
                             }`}
                           >
                             <span>{tab}</span>
                             <span
-                              className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${
-                                isSelected ? 'bg-amber-500 text-slate-950 font-black' : 'bg-slate-200/80 text-slate-600'
+                              className={`text-[11px] font-mono px-1.5 py-0.2 rounded-md ${
+                                isSelected ? 'bg-amber-500 text-slate-950 font-extrabold' : 'bg-slate-200/80 text-slate-600'
                               }`}
                             >
                               {count}
@@ -189,7 +189,7 @@ export function Tab({ nav }: TabProps) {
                     </div>
                 </div>
             ) : filteredProjects.length === 0 ? (
-                <div className="p-16 rounded-3xl bg-white border border-slate-200 text-center space-y-3">
+                <div className="p-16 rounded-[28px] bg-white border border-slate-200 text-center space-y-3">
                     <p className="text-base font-bold text-slate-800">
                         No projects matched your filter <span className="font-mono text-amber-600">"{searchQuery || activeTab}"</span>
                     </p>
@@ -214,7 +214,7 @@ export function Tab({ nav }: TabProps) {
                             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                                 <div className="flex items-center gap-2">
                                     <Globe className="w-4 h-4 text-amber-500 shrink-0" />
-                                    <h3 className="text-lg sm:text-xl font-black text-[#0b1a30] tracking-tight">
+                                    <h3 className="text-lg sm:text-xl font-extrabold text-brand-navy tracking-tight">
                                         Web Applications & Platforms ({webProjects.length})
                                     </h3>
                                 </div>
@@ -240,17 +240,17 @@ export function Tab({ nav }: TabProps) {
 
                     {/* SECTION 2: WORDPRESS PLUGINS & CUSTOM EXTENSIONS */}
                     {pluginProjects.length > 0 && (
-                        <div className="bg-gradient-to-b from-[#0b1426] via-[#09101f] to-[#050914] rounded-3xl p-6 sm:p-10 border border-indigo-900/60 shadow-2xl space-y-6 text-white relative overflow-hidden">
+                        <div className="bg-gradient-to-b from-[#0b1426] via-[#09101f] to-[#050914] rounded-[28px] p-6 sm:p-10 border border-indigo-900/60 shadow-2xl space-y-6 text-white relative overflow-hidden">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5 relative z-10">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-0.5 rounded-full flex items-center gap-1">
+                                        <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-0.5 rounded-full flex items-center gap-1">
                                             <Code2 className="w-3 h-3 text-cyan-400" />
                                             Developer Extensions
                                         </span>
                                         <Sparkles className="w-4 h-4 text-amber-400" />
                                     </div>
-                                    <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                                    <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
                                         WordPress Plugins & PHP Architectures ({pluginProjects.length})
                                     </h3>
                                     <p className="text-xs text-slate-300 font-medium max-w-2xl leading-relaxed">

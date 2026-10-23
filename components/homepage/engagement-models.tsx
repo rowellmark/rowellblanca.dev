@@ -60,7 +60,7 @@ export function EngagementModels() {
       <div className="mx-auto max-w-[1360px] flex flex-col gap-16">
         <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
           <div className="flex flex-col gap-5">
-            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — Ways to work together</p>
+            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(04) — Ways to work together</p>
             <h2 data-inview className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
               <SplitText lines={["Pick your", "engagement."]} />
             </h2>

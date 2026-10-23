@@ -1,0 +1,189 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { ContactModal } from "@/components/ui/contact-modal";
+import { SplitText } from "@/components/ui/split-text";
+
+const SEO_FEATURES = [
+    "Live Google, Facebook & X previews with a 600px title pixel-width meter",
+    "Primary + up to 5 secondary/LSI keyphrase content audit",
+    "Multi-part XML sitemaps, 301/410 redirect manager & CSV import",
+    "llms.txt endpoints for AI search (ChatGPT, Claude, Perplexity, Gemini)",
+    "One-click import from Yoast SEO, Rank Math & All in One SEO",
+];
+
+const LOGIN_FEATURES = [
+    "Branded split-panel login screen replacing the default wp-login.php",
+    "Live logo, background, accent colour & tagline settings — no code",
+    "Secure custom login slug; /wp-login.php returns a 404",
+    "Shares the BuildForUser Dashboard admin menu & UI shell",
+];
+
+// Default case-study link; refreshed from /api/projects in case the DB uses another permalink.
+const LOGIN_FALLBACK_HREF = "/mywork/buildforuser-login-customizer-plugin";
+const LOGIN_PLUGIN_PATH = "buildforuser-login-customizer";
+
+function useLoginCustomizerHref() {
+    const [href, setHref] = useState(LOGIN_FALLBACK_HREF);
+    useEffect(() => {
+        let cancelled = false;
+        fetch("/api/projects")
+            .then((res) => res.json())
+            .then((data) => {
+                if (cancelled || !Array.isArray(data?.projects)) return;
+                const match = data.projects.find(
+                    (p: { url?: string; permalink?: string }) => p.url?.includes(LOGIN_PLUGIN_PATH) && p.permalink
+                );
+                if (match) setHref(`/mywork/${match.permalink}`);
+            })
+            .catch(() => {});
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+    return href;
+}
+
+function FeatureList({ items }: { items: string[] }) {
+    return (
+        <ul className="m-0 p-0 list-none flex flex-col border-t border-white/10">
+            {items.map((item) => (
+                <li key={item} className="flex gap-3.5 py-3.5 border-b border-white/10 text-[15px] leading-snug text-slate-300">
+                    <span aria-hidden="true" className="text-amber-500">—</span>
+                    {item}
+                </li>
+            ))}
+        </ul>
+    );
+}
+
+/** Mini SERP preview echoing the plugin's live snippet editor and pixel meter. */
+function SerpPreview() {
+    return (
+        <div aria-hidden="true" className="rounded-2xl bg-white text-[#202124] p-5 flex flex-col gap-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
+            <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-slate-500">
+                <span className="px-2 py-0.5 rounded-full bg-slate-900 text-white">Google</span>
+                <span>Desktop preview</span>
+            </div>
+            <div className="flex flex-col gap-1">
+                <span className="text-xs text-[#4d5156]">yourdomain.com › services › web-development</span>
+                <span className="text-lg leading-snug text-[#1a0dab]">Custom Web Development for UK Businesses | Your Brand</span>
+                <span className="text-sm leading-snug text-[#4d5156]">
+                    Fast, accessible websites engineered for Core Web Vitals. Book a free discovery call and get a
+                    transparent quote in 24 hours.
+                </span>
+            </div>
+            <div className="flex flex-col gap-1.5">
+                <div className="flex justify-between font-mono text-[11px] text-slate-500">
+                    <span>Title width</span>
+                    <span>512 / 600px</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="motion-meter h-full rounded-full bg-emerald-500" />
+                </div>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+                {["Title", "Slug", "Meta", "Intro", "H2"].map((pill) => (
+                    <span key={pill} className="font-mono text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        ✓ {pill}
+                    </span>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+/** Mini split-panel login screen echoing the Login Customizer UI. */
+function LoginPreview() {
+    return (
+        <div aria-hidden="true" className="rounded-2xl overflow-hidden grid grid-cols-5 min-h-[248px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
+            <div className="col-span-2 bg-amber-500 text-brand-ink p-5 flex flex-col justify-between">
+                <span className="h-8 w-8 rounded-lg bg-brand-ink text-amber-500 grid place-items-center font-extrabold">B</span>
+                <span className="font-extrabold leading-tight text-lg">Welcome back to your studio.</span>
+            </div>
+            <div className="col-span-3 bg-white p-5 flex flex-col justify-center gap-3">
+                <span className="font-mono text-[11px] text-slate-500">yourdomain.com/admin-access</span>
+                <span className="h-9 rounded-lg border border-slate-200 bg-slate-50" />
+                <span className="h-9 rounded-lg border border-slate-200 bg-slate-50" />
+                <span className="h-9 rounded-lg bg-brand-ink" />
+                <span className="font-mono text-[11px] text-rose-600">/wp-login.php → 404</span>
+            </div>
+        </div>
+    );
+}
+
+export function PluginsShowcase() {
+    const loginHref = useLoginCustomizerHref();
+    const [modalOpen, setModalOpen] = useState(false);
+
+    return (
+        <section id="plugins" className="px-4 sm:px-6 lg:px-10 pb-24 lg:pb-40">
+            <div className="mx-auto max-w-[1360px] flex flex-col gap-14 lg:gap-16">
+                <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
+                    <div className="flex flex-col gap-5">
+                        <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — WordPress plugins</p>
+                        <h2 data-inview className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
+                            <SplitText lines={["Plugins I", "build & ship."]} />
+                        </h2>
+                    </div>
+                    <p className="m-0 max-w-[420px] text-brand-slate text-[17px] leading-relaxed">
+                        Hand-coded WordPress plugins from the BuildForUser suite — fast, dependency-light, and with every
+                        feature unlocked.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    {/* BuildForUser SEO */}
+                    <article data-cursor="view" className="motion-reveal motion-card rounded-[28px] bg-brand-ink text-white p-6 sm:p-10 flex flex-col gap-8">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <span className="font-mono text-xs uppercase tracking-[0.08em] text-amber-400">SEO engine · v1.0.0</span>
+                            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">WP 5.8+ · PHP 7.4+ · GPLv2</span>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <h3 className="m-0 text-[clamp(30px,3vw,44px)] font-extrabold tracking-[-0.04em] leading-none">BuildForUser SEO</h3>
+                            <p className="m-0 text-slate-300 text-[17px] leading-relaxed max-w-[520px]">
+                                All-in-one WordPress SEO engine with live multi-platform SERP previews, multi-keyword
+                                auditing, XML sitemaps and 301 redirects — no paywalls or license gates.
+                            </p>
+                        </div>
+                        <SerpPreview />
+                        <FeatureList items={SEO_FEATURES} />
+                        <button
+                            type="button"
+                            onClick={() => setModalOpen(true)}
+                            className="motion-btn motion-magnetic mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold cursor-pointer"
+                        >
+                            Ask about BuildForUser SEO <span className="motion-arrow" aria-hidden="true">→</span>
+                        </button>
+                    </article>
+
+                    {/* Login Customizer */}
+                    <article data-cursor="view" className="motion-reveal motion-card rounded-[28px] bg-brand-ink-2 text-white border border-white/[0.08] p-6 sm:p-10 flex flex-col gap-8">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <span className="font-mono text-xs uppercase tracking-[0.08em] text-amber-400">Security · Admin UI</span>
+                            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">WordPress plugin</span>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <h3 className="m-0 text-[clamp(30px,3vw,44px)] font-extrabold tracking-[-0.04em] leading-none">Login Customizer</h3>
+                            <p className="m-0 text-slate-300 text-[17px] leading-relaxed max-w-[520px]">
+                                A premium split-panel login screen with live branding controls and a secure login URL that
+                                hides the default wp-login.php from brute-force bots.
+                            </p>
+                        </div>
+                        <LoginPreview />
+                        <FeatureList items={LOGIN_FEATURES} />
+                        <Link
+                            href={loginHref}
+                            className="motion-btn motion-magnetic mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold"
+                        >
+                            View plugin case study <span className="motion-arrow" aria-hidden="true">→</span>
+                        </Link>
+                    </article>
+                </div>
+            </div>
+
+            <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} defaultService="Custom WordPress Engine / Plugin" />
+        </section>
+    );
+}
