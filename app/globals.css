@@ -262,3 +262,10 @@ body {
 .case-study-content pre { background: #0B1020; color: #E2E8F0; padding: 1.25em; border-radius: 16px; overflow-x: auto; }
 .case-study-content pre code { background: none; padding: 0; }
 .case-study-content img { border-radius: 18px; border: 1px solid #E2E8F0; }
+
+/* Stretched link: the card's primary link covers the whole card, so everywhere
+   the "View" cursor appears is clickable. Card roots must be positioned, and the
+   link itself must never be transformed (no motion-btn / motion-magnetic): a
+   transform makes it the ::after's containing block and the overlay collapses.
+   For animated buttons use a separate absolute overlay link instead. */
+.motion-stretch::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }

@@ -120,7 +120,7 @@ export function WordPressPluginCard({ project, index = 0 }: { project: Portfolio
 
         <Link
           href={`/mywork/${project.permalink}`}
-          className="mt-auto pt-2 inline-flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-slate-900 text-white font-extrabold text-xs border border-indigo-500/40 hover:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 group/btn cursor-pointer"
+          className="motion-stretch mt-auto pt-2 inline-flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-slate-900 text-white font-extrabold text-xs border border-indigo-500/40 hover:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 group/btn cursor-pointer"
         >
           <span>Explore Plugin Architecture</span>
           <ArrowRight className="h-3.5 w-3.5 text-amber-400 group-hover/btn:translate-x-0.5 transition-transform" />

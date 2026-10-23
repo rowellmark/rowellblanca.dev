@@ -160,7 +160,7 @@ export function FlagshipSpotlight() {
           <div
             key={item.id}
             data-cursor="view"
-            className="group rounded-[28px] bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/60 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+            className="group relative rounded-[28px] bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/60 transition-all duration-300 overflow-hidden flex flex-col justify-between"
           >
             <div>
               {/* Card Header Media & Badges */}
@@ -237,7 +237,7 @@ export function FlagshipSpotlight() {
             <div className="p-6 pt-0">
               <Link
                 href={item.link}
-                className="w-full py-3 rounded-xl bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md cursor-pointer"
+                className="motion-stretch w-full py-3 rounded-xl bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md cursor-pointer"
               >
                 <span>Read Architectural Case Study</span>
                 <ArrowRight className="w-3.5 h-3.5" />

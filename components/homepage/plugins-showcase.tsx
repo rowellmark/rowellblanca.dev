@@ -135,7 +135,15 @@ export function PluginsShowcase() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     {/* BuildForUser SEO */}
-                    <article data-cursor="view" className="motion-reveal motion-card rounded-[28px] bg-brand-ink text-white p-6 sm:p-10 flex flex-col gap-8">
+                    <article data-cursor="view" className="relative motion-reveal motion-card rounded-[28px] bg-brand-ink text-white p-6 sm:p-10 flex flex-col gap-8">
+                        {/* Whole-card click target (kept separate from the animated button) */}
+                        <button
+                            type="button"
+                            aria-hidden="true"
+                            tabIndex={-1}
+                            onClick={() => setModalOpen(true)}
+                            className="absolute inset-0 z-[1] rounded-[inherit] cursor-pointer"
+                        />
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <span className="font-mono text-xs uppercase tracking-[0.08em] text-amber-400">SEO engine · v1.0.0</span>
                             <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">WP 5.8+ · PHP 7.4+ · GPLv2</span>
@@ -152,14 +160,15 @@ export function PluginsShowcase() {
                         <button
                             type="button"
                             onClick={() => setModalOpen(true)}
-                            className="motion-btn motion-magnetic mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold cursor-pointer"
+                            className="motion-btn motion-magnetic relative z-[2] mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold cursor-pointer"
                         >
                             Ask about BuildForUser SEO <span className="motion-arrow" aria-hidden="true">→</span>
                         </button>
                     </article>
 
                     {/* Login Customizer */}
-                    <article data-cursor="view" className="motion-reveal motion-card rounded-[28px] bg-brand-ink-2 text-white border border-white/[0.08] p-6 sm:p-10 flex flex-col gap-8">
+                    <article data-cursor="view" className="relative motion-reveal motion-card rounded-[28px] bg-brand-ink-2 text-white border border-white/[0.08] p-6 sm:p-10 flex flex-col gap-8">
+                        <Link href={loginHref} aria-hidden="true" tabIndex={-1} className="absolute inset-0 z-[1] rounded-[inherit]" />
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <span className="font-mono text-xs uppercase tracking-[0.08em] text-amber-400">Security · Admin UI</span>
                             <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">WordPress plugin</span>
@@ -175,7 +184,7 @@ export function PluginsShowcase() {
                         <FeatureList items={LOGIN_FEATURES} />
                         <Link
                             href={loginHref}
-                            className="motion-btn motion-magnetic mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold"
+                            className="motion-btn motion-magnetic relative z-[2] mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold"
                         >
                             View plugin case study <span className="motion-arrow" aria-hidden="true">→</span>
                         </Link>

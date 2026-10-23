@@ -293,7 +293,7 @@ export const ProductCard = ({
             </Link>
 
             <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none transition-opacity duration-300" />
-            <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 z-20">
+            <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 z-20 pointer-events-none">
                 <h3 className="font-extrabold text-white text-sm leading-snug">
                     {product.sitename}
                 </h3>

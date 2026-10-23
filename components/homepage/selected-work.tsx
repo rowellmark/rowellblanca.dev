@@ -89,6 +89,13 @@ export function SelectedWork() {
                                 data-cursor="view"
                                 className={`motion-card ${isLast ? "" : "motion-recede"} sticky ${STICKY_TOPS[i % STICKY_TOPS.length]} ${skin.card} rounded-[28px] p-6 sm:p-8 lg:p-11 flex flex-wrap gap-10 min-h-[560px]`}
                             >
+                                {/* Whole-card click target (kept separate from the animated button) */}
+                                <Link
+                                    href={`/mywork/${project.permalink}`}
+                                    aria-hidden="true"
+                                    tabIndex={-1}
+                                    className="absolute inset-0 z-[1] rounded-[inherit]"
+                                />
                                 <div className="flex-[1_1_340px] flex flex-col justify-between gap-8">
                                     <div className="flex flex-col gap-4">
                                         <span className={`font-mono text-[13px] ${skin.label}`}>
@@ -112,7 +119,7 @@ export function SelectedWork() {
                                         </ul>
                                         <Link
                                             href={`/mywork/${project.permalink}`}
-                                            className="motion-btn inline-flex items-center gap-2.5 min-h-[44px] font-bold self-start"
+                                            className="motion-btn relative z-[2] inline-flex items-center gap-2.5 min-h-[44px] font-bold self-start"
                                         >
                                             View case study <span className="sr-only">: {project.sitename}</span>
                                             <span className="motion-arrow" aria-hidden="true">→</span>
