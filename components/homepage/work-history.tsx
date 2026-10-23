@@ -65,7 +65,7 @@ export default function WorkHistory() {
 
     return (
         <section className="py-24 bg-brand-bg relative overflow-hidden">
-            <div className="container mx-auto px-6 max-w-6xl">
+            <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-10">
                 
                 {/* Heading */}
                 <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">

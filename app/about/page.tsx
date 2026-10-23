@@ -1,11 +1,9 @@
 import { Metadata } from "next";
 import rowellbanner from "@/assets/images/rowellbanner.png";
 import Image from "next/image";
-import Link from "next/link";
 import { CVDownloadButton } from "@/components/ui/cv-download-button";
-import { IconArrowLeft, IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
-import Banner from "@/components/banner/banner";
-import { Mail, Phone, MapPin, CheckCircle2, Award, Briefcase, Sparkles, Send, Globe } from "lucide-react";
+import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
+import { PageHero } from "@/components/ui/page-hero";
 import WorkHistory from "@/components/homepage/work-history";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
@@ -25,10 +23,10 @@ export default function AboutPage() {
     ];
 
     const stats = [
-        { label: "Years Experience", value: "12+", icon: Award },
-        { label: "Job Success Rate", value: "100%", icon: Sparkles },
-        { label: "Production Builds", value: "50+", icon: Briefcase },
-        { label: "Global Overlap", value: "UK · US · AU", icon: Globe },
+        { label: "Years of experience", value: "12+" },
+        { label: "Job success rate", value: "100%" },
+        { label: "Production builds", value: "50+" },
+        { label: "Timezone overlap", value: "UK·US·AU" },
     ];
 
     const coreCapabilities = [
@@ -79,206 +77,145 @@ export default function AboutPage() {
 
     return (
         <div className="bg-brand-bg min-h-screen">
-            <Banner title="About Me" subtitle="Biography, Skills & Technical Background" />
-
-            <div className="py-12 pb-24">
-                <div className="container mx-auto px-6 max-w-6xl space-y-16">
-                    
-                    {/* Back link */}
-                    <div className="flex items-start">
-                        <Link
-                            href="/"
-                            className="inline-flex items-center px-4 py-2 uppercase font-extrabold text-xs tracking-wider rounded-xl bg-white border border-slate-200 text-brand-navy hover:border-brand-amber transition-all shadow-xs hover:shadow-sm"
-                        >
-                            <IconArrowLeft className="mr-2 h-4 w-4 text-brand-amber" /> Back to Home
-                        </Link>
-                    </div>
-
-                    {/* Main Hero Overview */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                        
-                        {/* Left Info Column */}
-                        <div className="lg:col-span-7 space-y-6">
-                            <div>
-                                <span className="text-xs font-extrabold uppercase tracking-wider text-brand-amber bg-amber-500/10 px-3.5 py-1.5 rounded-full border border-amber-500/30 inline-block mb-3">
-                                    Senior Software Engineer
-                                </span>
-                                <h1 className="text-4xl sm:text-5xl font-black text-brand-navy tracking-tight leading-tight">
-                                    Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-amber to-amber-600">Rowell Mark Blanca</span>
-                                </h1>
-                                <p className="text-base text-brand-slate mt-4 leading-relaxed font-medium">
-                                    Over 12 years of hands-on software development experience partnering with agency leaders, corporate platforms, and clients across the US, UK, Hong Kong, and Philippines. Specializing in high-performance Next.js web applications, custom WordPress systems, and AI-driven automation workflows.
-                                </p>
-                            </div>
-
-                            {/* Quick Contact Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
-                                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-1">
-                                    <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                                        <Mail className="h-4 w-4 text-brand-amber" /> Email
-                                    </div>
-                                    <p className="text-xs sm:text-sm font-black text-brand-navy">hello@rowellblanca.dev</p>
-                                </div>
-
-                                <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-1">
-                                    <div className="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                                        <Phone className="h-4 w-4 text-brand-amber" /> Phone / WhatsApp
-                                    </div>
-                                    <p className="text-xs sm:text-sm font-black text-brand-navy">+63 968 890 0418</p>
-                                </div>
-                            </div>
-
-                            {/* Social Media & Action */}
-                            <div className="pt-2 flex flex-wrap items-center gap-4">
-                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Connect:</span>
-                                <div className="flex items-center gap-2.5">
-                                    {socialMedia.map(({ title, icon: Icon, url }, idx) => (
-                                        <a
-                                            key={idx}
-                                            href={url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={title}
-                                            className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-brand-amber hover:border-amber-400 hover:shadow-md transition-all shadow-xs"
-                                        >
-                                            <Icon size="18" />
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
+            <PageHero
+                label="About · Senior full-stack software engineer"
+                titleLines={["Hi, I'm", "Rowell Mark Blanca."]}
+                accentLine={1}
+                lead="Over 12 years of hands-on software development partnering with agency leaders, corporate platforms, and clients across the US, UK, Hong Kong, and the Philippines — specializing in high-performance Next.js apps, custom WordPress systems, and AI-driven automation."
+            >
+                <div className="flex flex-wrap items-center justify-between gap-6">
+                    <dl className="m-0 flex flex-wrap gap-x-10 gap-y-4">
+                        <div className="flex flex-col-reverse gap-1">
+                            <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">Email</dt>
+                            <dd className="m-0"><a href="mailto:hello@rowellblanca.dev" className="motion-underline text-white font-semibold">hello@rowellblanca.dev</a></dd>
                         </div>
-
-                        {/* Right Photo Column */}
-                        <div className="lg:col-span-5 space-y-6">
-                            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden border border-slate-200/90 shadow-2xl bg-white p-3 group">
-                                <Image
-                                    src={rowellbanner}
-                                    alt="Rowell Mark Blanca — Senior Software Engineer"
-                                    fill
-                                    className="object-cover object-top rounded-2xl group-hover:scale-102 transition-transform duration-500"
-                                    sizes="(max-width: 1024px) 100vw, 450px"
-                                    priority
-                                />
-                                
-                                {/* Floating Experience Badge */}
-                                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-white/20 text-white shadow-xl flex items-center justify-between">
-                                    <div>
-                                        <p className="text-xs font-extrabold text-amber-400 uppercase tracking-widest">Full-Stack & WP Engineer</p>
-                                        <p className="text-sm font-black text-white mt-0.5">12+ Years Experience</p>
-                                    </div>
-                                    <Sparkles className="w-6 h-6 text-amber-400 shrink-0" />
-                                </div>
-                            </div>
-
-                            <CVDownloadButton />
+                        <div className="flex flex-col-reverse gap-1">
+                            <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">Phone / WhatsApp</dt>
+                            <dd className="m-0"><a href="tel:+639688900418" className="motion-underline text-white font-semibold">+63 968 890 0418</a></dd>
                         </div>
-
+                    </dl>
+                    <div className="flex flex-wrap items-center gap-3">
+                        {socialMedia.map(({ title, icon: Icon, url }) => (
+                            <a
+                                key={title}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={title}
+                                className="h-[52px] w-[52px] rounded-full border border-white/15 hover:border-amber-400 text-slate-300 hover:text-amber-400 flex items-center justify-center transition-colors"
+                            >
+                                <Icon size="18" />
+                            </a>
+                        ))}
+                        <CVDownloadButton tone="dark" />
                     </div>
+                </div>
+            </PageHero>
 
-                    {/* Key Stats Bar */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-                        {stats.map(({ label, value, icon: Icon }, idx) => (
-                            <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs text-center space-y-2 hover:shadow-md hover:border-amber-300 transition-all">
-                                <Icon className="w-6 h-6 text-brand-amber mx-auto" />
-                                <h3 className="text-3xl font-black text-brand-navy">{value}</h3>
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</p>
+            {/* Portrait + stats */}
+            <section className="px-4 sm:px-6 lg:px-10 pt-20 lg:pt-28">
+                <div className="mx-auto max-w-[1360px] grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                    <div className="motion-reveal lg:col-span-5 relative aspect-[4/5] rounded-[28px] overflow-hidden bg-brand-cream">
+                        <Image
+                            src={rowellbanner}
+                            alt="Rowell Mark Blanca — Senior Software Engineer"
+                            fill
+                            className="object-cover object-top"
+                            sizes="(max-width: 1024px) 100vw, 520px"
+                            priority
+                        />
+                        <div className="absolute bottom-5 left-5 right-5 rounded-2xl bg-brand-ink/90 backdrop-blur-md text-white px-5 py-4 flex items-center justify-between gap-4">
+                            <span className="flex flex-col gap-0.5">
+                                <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-amber-400">Full-stack & WP engineer</span>
+                                <span className="font-extrabold">12+ years experience</span>
+                            </span>
+                            <span className="motion-pulse h-2.5 w-2.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                        </div>
+                    </div>
+                    <div className="lg:col-span-7 flex flex-col gap-10">
+                        <div className="motion-reveal flex flex-col gap-5">
+                            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(01) — At a glance</p>
+                            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(36px,4.6vw,72px)]">
+                                Senior engineering, without the agency layer.
+                            </h2>
+                        </div>
+                        <dl className="m-0 grid grid-cols-2 border-t border-brand-border">
+                            {stats.map(({ label, value }, i) => (
+                                <div key={label} className={`motion-reveal flex flex-col-reverse gap-2 py-7 border-b border-brand-border ${i % 2 === 1 ? 'pl-6 border-l' : 'pr-6'}`}>
+                                    <dt className="text-brand-slate">{label}</dt>
+                                    <dd className="m-0 font-extrabold tracking-[-0.05em] leading-none text-brand-navy text-[clamp(36px,4vw,64px)]">{value}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </div>
+            </section>
+
+            {/* Core capabilities */}
+            <section className="px-4 sm:px-6 lg:px-10 pt-24 lg:pt-36">
+                <div className="mx-auto max-w-[1360px] flex flex-col gap-12">
+                    <div className="motion-reveal flex flex-col gap-5">
+                        <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(02) — Core capabilities</p>
+                        <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(36px,5vw,80px)]">What I build.</h2>
+                    </div>
+                    <ol className="m-0 p-0 list-none grid grid-cols-1 md:grid-cols-2 border-t border-brand-border">
+                        {coreCapabilities.map(({ title, description, icon: Icon }, i) => (
+                            <li key={title} className={`motion-reveal flex gap-6 py-10 border-b border-brand-border ${i % 2 === 1 ? 'md:pl-10 md:border-l' : 'md:pr-10'}`}>
+                                <span className="font-mono text-sm text-amber-700 pt-1.5">{String(i + 1).padStart(2, '0')}</span>
+                                <div className="flex flex-col gap-3">
+                                    <h3 className="m-0 flex items-center gap-3 text-2xl font-extrabold tracking-[-0.03em] text-brand-navy">
+                                        <Icon size={22} className="text-amber-600 shrink-0" aria-hidden="true" />
+                                        {title}
+                                    </h3>
+                                    <p className="m-0 text-brand-slate leading-relaxed">{description}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            </section>
+
+            {/* Technical skills */}
+            <section className="px-4 sm:px-6 lg:px-10 pt-24 lg:pt-36">
+                <div className="mx-auto max-w-[1360px] flex flex-col gap-12">
+                    <div className="motion-reveal flex flex-col gap-5">
+                        <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — Technology matrix</p>
+                        <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(36px,5vw,80px)]">Skills & ecosystem.</h2>
+                    </div>
+                    <dl className="m-0 flex flex-col border-t border-brand-border">
+                        {techCategories.map(({ label, items }) => (
+                            <div key={label} className="motion-reveal grid grid-cols-1 md:grid-cols-12 gap-4 py-7 border-b border-brand-border">
+                                <dt className="md:col-span-3 font-mono text-[13px] uppercase tracking-[0.08em] text-brand-slate pt-2">{label}</dt>
+                                <dd className="md:col-span-9 m-0">
+                                    <ul className="m-0 p-0 list-none flex flex-wrap gap-2">
+                                        {items.map((item) => (
+                                            <li key={item} className="px-3.5 py-2 rounded-full border border-brand-border bg-white text-sm font-medium text-brand-navy">
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </dd>
                             </div>
                         ))}
-                    </div>
+                    </dl>
+                </div>
+            </section>
 
-                    {/* Core Capabilities */}
-                    <div className="space-y-6 pt-4">
-                        <div className="text-center max-w-xl mx-auto space-y-2">
-                            <span className="text-xs font-extrabold uppercase tracking-wider text-brand-amber bg-amber-500/10 px-3.5 py-1 rounded-full border border-amber-500/30 inline-block">
-                                Core Capabilities
-                            </span>
-                            <h2 className="text-3xl font-black text-brand-navy">What I Build & Specialize In</h2>
-                        </div>
+            {/* Verified Career & Work History */}
+            <WorkHistory />
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {coreCapabilities.map(({ title, description, icon: Icon }, idx) => (
-                                <div key={idx} className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3 hover:shadow-md hover:border-amber-300 transition-all">
-                                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600">
-                                        <Icon size={24} />
-                                    </div>
-                                    <h3 className="text-lg font-black text-brand-navy">{title}</h3>
-                                    <p className="text-sm text-slate-600 leading-relaxed font-medium">{description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            {/* Interactive Scope & Architecture Estimator */}
+            <div id="project-estimator" className="border-t border-brand-border pt-24 lg:pt-32">
+                <ProjectEstimator />
+            </div>
 
-                    {/* Categorized Technical Summary Chips */}
-                    <div className="space-y-6 pt-4">
-                        <div className="space-y-2">
-                            <span className="text-xs font-extrabold uppercase tracking-wider text-brand-amber bg-amber-500/10 px-3.5 py-1 rounded-full border border-amber-500/30 inline-block">
-                                Technology Matrix
-                            </span>
-                            <h2 className="text-3xl font-black text-brand-navy">Technical Skills & Ecosystem</h2>
-                        </div>
+            {/* How We Can Work Together (Engagement Models) */}
+            <EngagementModels />
 
-                        <div className="space-y-4">
-                            {techCategories.map(({ label, items }, idx) => (
-                                <div key={idx} className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3">
-                                    <div className="flex items-center gap-2 text-xs font-extrabold text-brand-navy uppercase tracking-wider border-b border-slate-100 pb-2">
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                                        {label}
-                                    </div>
-                                    <div className="flex flex-wrap gap-2 pt-1">
-                                        {items.map((item, i) => (
-                                            <span
-                                                key={i}
-                                                className="bg-slate-100/90 border border-slate-200/90 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-800 hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 transition-all cursor-default"
-                                            >
-                                                {item}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Verified Career & Work History */}
-                    <div className="pt-2">
-                        <WorkHistory />
-                    </div>
-
-                    {/* Interactive Scope & Architecture Estimator */}
-                    <div id="project-estimator" className="pt-4">
-                        <ProjectEstimator />
-                    </div>
-
-                    {/* How We Can Work Together (Engagement Models) */}
-                    <EngagementModels />
-
-                    {/* Interactive Speed Racer Game */}
+            {/* Interactive Speed Racer Game */}
+            <div className="px-4 sm:px-6 lg:px-10 pb-24">
+                <div className="mx-auto max-w-[1360px]">
                     <SpeedRacerGame />
-
-                    {/* Bottom CTA Card */}
-                    <div className="p-8 sm:p-12 rounded-3xl bg-slate-900 text-white shadow-2xl relative overflow-hidden border border-slate-800 text-center space-y-5">
-                        <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-                            <span className="text-xs font-extrabold uppercase tracking-widest text-brand-amber bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/30 inline-block">
-                                Let's Build Together
-                            </span>
-                            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
-                                Have a Project or Product in Mind?
-                            </h2>
-                            <p className="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
-                                Whether you need a full Next.js web application, a custom WordPress ecosystem, or AI workflow integrations, I'm available for technical contracts and high-impact projects.
-                            </p>
-                            <div className="pt-2 flex justify-center gap-4">
-                                <Link
-                                    href="/contact"
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-md hover:shadow-xl transition-all cursor-pointer"
-                                >
-                                    <Send className="h-4 w-4" />
-                                    <span>Get In Touch</span>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

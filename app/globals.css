@@ -269,3 +269,15 @@ body {
    transform makes it the ::after's containing block and the overlay collapses.
    For animated buttons use a separate absolute overlay link instead. */
 .motion-stretch::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+
+/* RowBot dock & panel: sit above the safe area, and above the cookie sheet on phones
+   (the cookie banner publishes --cookie-offset while it is open). */
+.rowbot-dock { bottom: calc(1rem + env(safe-area-inset-bottom)); transition: bottom .5s cubic-bezier(.16,1,.3,1); }
+.rowbot-panel { bottom: calc(5.5rem + env(safe-area-inset-bottom)); height: min(640px, calc(100dvh - 8rem)); }
+@media (max-width: 639px) {
+  .rowbot-dock { bottom: calc(1rem + env(safe-area-inset-bottom) + var(--cookie-offset, 0px)); }
+  .rowbot-panel { bottom: calc(5.5rem + env(safe-area-inset-bottom) + var(--cookie-offset, 0px)); height: min(640px, calc(100dvh - 7rem - var(--cookie-offset, 0px))); }
+}
+@media (min-width: 640px) { .rowbot-dock { bottom: 1.5rem; } .rowbot-panel { bottom: 6rem; } }
+/* One floating prompt at a time: hide the RowBot teaser while the cookie banner asks for consent. */
+html[data-cookie-open] .rowbot-dock .group { display: none; }

@@ -76,22 +76,22 @@ export default function RichTextEditor({
   const insertCodeBlock = () => {
     const code = prompt('Enter code snippet:');
     if (code) {
-      const html = `<pre className="bg-slate-900 text-amber-300 p-4 rounded-xl font-mono text-xs overflow-x-auto my-4"><code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+      const html = `<pre className="bg-zinc-900 text-amber-300 p-4 rounded-xl font-mono text-xs overflow-x-auto my-4"><code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
       execCommand('insertHTML', html);
     }
   };
 
   return (
-    <div className="border border-slate-300 rounded-2xl overflow-hidden bg-white shadow-xs focus-within:border-brand-amber transition-all">
+    <div className="border border-zinc-300 rounded-xl overflow-hidden bg-white shadow-sm focus-within:border-brand-amber transition-all">
       {/* Toolbar Header */}
-      <div className="bg-slate-50 border-b border-slate-200 p-2 sm:p-3 flex flex-wrap items-center justify-between gap-2">
+      <div className="bg-zinc-50 border-b border-zinc-200 p-2 sm:p-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
           {/* Format Controls */}
           <button
             type="button"
             onClick={() => execCommand('bold')}
             title="Bold (Ctrl+B)"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 font-bold transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 font-bold transition-all"
           >
             <Bold className="w-4 h-4" />
           </button>
@@ -99,7 +99,7 @@ export default function RichTextEditor({
             type="button"
             onClick={() => execCommand('italic')}
             title="Italic (Ctrl+I)"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <Italic className="w-4 h-4" />
           </button>
@@ -107,19 +107,19 @@ export default function RichTextEditor({
             type="button"
             onClick={() => execCommand('underline')}
             title="Underline (Ctrl+U)"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <Underline className="w-4 h-4" />
           </button>
 
-          <div className="w-px h-5 bg-slate-300 mx-1" />
+          <div className="w-px h-5 bg-zinc-300 mx-1" />
 
           {/* Headings */}
           <button
             type="button"
             onClick={() => insertHeading('h2')}
             title="Heading 2"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all flex items-center gap-1"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all flex items-center gap-1"
           >
             <Heading2 className="w-4 h-4" />
           </button>
@@ -127,7 +127,7 @@ export default function RichTextEditor({
             type="button"
             onClick={() => insertHeading('h3')}
             title="Heading 3"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all flex items-center gap-1"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all flex items-center gap-1"
           >
             <Heading3 className="w-4 h-4" />
           </button>
@@ -135,19 +135,19 @@ export default function RichTextEditor({
             type="button"
             onClick={() => execCommand('formatBlock', '<p>')}
             title="Normal Paragraph"
-            className="px-2 py-1 text-xs font-extrabold rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="px-2 py-1 text-xs font-semibold rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             Paragraph
           </button>
 
-          <div className="w-px h-5 bg-slate-300 mx-1" />
+          <div className="w-px h-5 bg-zinc-300 mx-1" />
 
           {/* Lists & Quotes */}
           <button
             type="button"
             onClick={() => execCommand('insertUnorderedList')}
             title="Bullet List"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <List className="w-4 h-4" />
           </button>
@@ -155,7 +155,7 @@ export default function RichTextEditor({
             type="button"
             onClick={() => execCommand('insertOrderedList')}
             title="Numbered List"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <ListOrdered className="w-4 h-4" />
           </button>
@@ -163,7 +163,7 @@ export default function RichTextEditor({
             type="button"
             onClick={() => execCommand('formatBlock', 'blockquote')}
             title="Blockquote"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <Quote className="w-4 h-4" />
           </button>
@@ -171,19 +171,19 @@ export default function RichTextEditor({
             type="button"
             onClick={insertCodeBlock}
             title="Code Block"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <Code className="w-4 h-4" />
           </button>
 
-          <div className="w-px h-5 bg-slate-300 mx-1" />
+          <div className="w-px h-5 bg-zinc-300 mx-1" />
 
           {/* Links & Images */}
           <button
             type="button"
             onClick={insertLink}
             title="Insert Link"
-            className="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition-all"
+            className="p-2 rounded-lg hover:bg-zinc-200 text-zinc-700 transition-all"
           >
             <LinkIcon className="w-4 h-4" />
           </button>
@@ -192,7 +192,7 @@ export default function RichTextEditor({
               type="button"
               onClick={onOpenMediaPicker}
               title="Insert Image from Uploads"
-              className="p-2 rounded-lg hover:bg-slate-200 text-amber-600 font-bold transition-all flex items-center gap-1"
+              className="p-2 rounded-lg hover:bg-zinc-200 text-amber-600 font-bold transition-all flex items-center gap-1"
             >
               <ImageIcon className="w-4 h-4" />
             </button>
@@ -205,7 +205,7 @@ export default function RichTextEditor({
             <button
               type="button"
               onClick={onOpenGeminiAI}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-slate-900 text-xs font-black flex items-center gap-1.5 shadow-xs hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-zinc-900 text-xs font-semibold flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               Write with Gemini AI
@@ -213,14 +213,14 @@ export default function RichTextEditor({
           )}
 
           {/* View Mode Switcher */}
-          <div className="flex bg-slate-200 p-0.5 rounded-lg text-xs font-bold">
+          <div className="flex bg-zinc-200 p-0.5 rounded-lg text-xs font-bold">
             <button
               type="button"
               onClick={() => setMode('visual')}
               className={`px-2.5 py-1 rounded-md transition-all ${
                 mode === 'visual'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white text-zinc-900 shadow-sm'
+                  : 'text-zinc-600 hover:text-zinc-900'
               }`}
             >
               <Eye className="w-3.5 h-3.5 inline mr-1" />
@@ -231,8 +231,8 @@ export default function RichTextEditor({
               onClick={() => setMode('code')}
               className={`px-2.5 py-1 rounded-md transition-all ${
                 mode === 'code'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white text-zinc-900 shadow-sm'
+                  : 'text-zinc-600 hover:text-zinc-900'
               }`}
             >
               <Code2 className="w-3.5 h-3.5 inline mr-1" />
@@ -250,7 +250,7 @@ export default function RichTextEditor({
           onInput={handleInput}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="min-h-[300px] p-4 sm:p-6 outline-none text-slate-800 text-sm leading-relaxed prose max-w-none focus:outline-none"
+          className="min-h-[300px] p-4 sm:p-6 outline-none text-zinc-800 text-sm leading-relaxed prose max-w-none focus:outline-none"
           style={{ minHeight: '320px' }}
         />
       ) : (
@@ -258,7 +258,7 @@ export default function RichTextEditor({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Paste or write raw HTML code here..."
-          className="w-full min-h-[320px] p-4 font-mono text-xs text-slate-800 bg-slate-950 text-emerald-400 outline-none resize-y"
+          className="w-full min-h-[320px] p-4 font-mono text-xs text-zinc-800 bg-zinc-950 text-emerald-400 outline-none resize-y"
         />
       )}
     </div>

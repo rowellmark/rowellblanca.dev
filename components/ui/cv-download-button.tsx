@@ -3,16 +3,20 @@
 import { IconDownload } from "@tabler/icons-react";
 import { trackDownloadCV } from "@/lib/analytics";
 
-export function CVDownloadButton() {
+export function CVDownloadButton({ tone = "light" }: { tone?: "light" | "dark" }) {
   return (
     <a
-      href="/resume.pdf"
+      href="/rowell-resume.pdf"
       download
       onClick={() => trackDownloadCV()}
-      className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-brand-navy hover:bg-slate-800 text-white font-extrabold text-sm uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
+      className={`motion-btn motion-magnetic inline-flex items-center justify-center gap-2.5 min-h-[52px] px-6 rounded-full font-semibold ${
+        tone === "dark"
+          ? "border border-white/25 hover:border-white/60 text-white"
+          : "bg-brand-navy hover:bg-brand-ink text-white"
+      }`}
     >
-      <IconDownload size="18" className="text-brand-amber" />
-      Download Curriculum Vitae (CV)
+      <IconDownload size="18" className="text-amber-500" aria-hidden="true" />
+      Download CV
     </a>
   );
 }

@@ -481,7 +481,7 @@ export default function ChatBubble() {
   return (
     <>
       {/* ── TRIGGER BUTTON & SPEECH BUBBLE ───────────────────────────────── */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
+      <div className="rowbot-dock fixed right-4 sm:right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
         <AnimatePresence>
           {!isOpen && !isBubbleDismissed && (
             <motion.div
@@ -490,23 +490,24 @@ export default function ChatBubble() {
               exit={{ opacity: 0, y: 8, scale: 0.92 }}
               transition={{ type: 'spring', stiffness: 350, damping: 24 }}
               onClick={() => { setIsOpen(true); setIsBubbleDismissed(true); }}
-              className="pointer-events-auto relative max-w-[290px] sm:max-w-[320px] bg-slate-950/95 backdrop-blur-xl border border-amber-400/40 hover:border-amber-400 p-3.5 rounded-2xl shadow-2xl cursor-pointer group transition-all"
+              className="hidden sm:block pointer-events-auto relative max-w-[320px] bg-brand-ink/95 backdrop-blur-xl border border-white/10 hover:border-amber-400/60 p-4 rounded-[20px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] cursor-pointer group transition-colors"
             >
               <div className="flex items-center justify-between gap-2 mb-1.5">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  <Bot className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                  Quick Question
+                <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-amber-400">
+                  <span className="motion-pulse h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                  RowBot · online
                 </span>
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setIsBubbleDismissed(true); }}
-                  className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+                  aria-label="Dismiss"
+                  className="h-8 w-8 -mr-1.5 -mt-1.5 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <div className="text-xs font-bold text-slate-100 leading-snug">
+              <div className="text-sm font-semibold text-white leading-snug">
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={activeTeaserIndex}
@@ -521,35 +522,35 @@ export default function ChatBubble() {
               </div>
 
               {/* CTA Hint */}
-              <div className="mt-2 text-[10px] font-extrabold text-amber-400 flex items-center justify-end gap-1 group-hover:translate-x-1 transition-transform">
-                <span>Click to ask RowBot</span>
+              <div className="mt-2.5 text-xs font-semibold text-amber-400 flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                <span>Ask RowBot</span>
                 <ArrowRight className="w-3 h-3" />
               </div>
 
               {/* Tail pointing to circle robot launcher */}
-              <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-slate-950 border-r border-b border-amber-400/40 rotate-45" />
+              <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-brand-ink border-r border-b border-white/10 rotate-45" />
             </motion.div>
           )}
         </AnimatePresence>
 
         <div className="relative pointer-events-auto">
           {!isOpen && (
-            <span className="absolute -inset-1.5 rounded-full bg-amber-400/60 animate-ping pointer-events-none opacity-80" />
+            <span className="absolute -inset-1 rounded-full bg-amber-400/40 animate-ping pointer-events-none [animation-duration:2.4s]" aria-hidden="true" />
           )}
 
           <motion.button
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
             onClick={() => { setIsOpen(!isOpen); if (!isOpen) setIsBubbleDismissed(true); }}
-            className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-[#0b1a30] via-slate-900 to-[#1d63ed] text-white shadow-2xl border-2 border-amber-400/60 hover:border-amber-400 flex items-center justify-center cursor-pointer group overflow-hidden"
-            title="Open RowBot — Rowell's AI Co-Pilot"
+            className="relative w-14 h-14 rounded-full bg-brand-ink text-white shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)] border-2 border-amber-400/70 hover:border-amber-400 flex items-center justify-center cursor-pointer group overflow-hidden"
+            aria-label={isOpen ? "Close RowBot chat" : "Open RowBot — Rowell's AI co-pilot"}
+            aria-expanded={isOpen}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 via-blue-500/20 to-amber-500/10 rounded-full animate-pulse" />
             {isOpen ? (
               <X className="w-6 h-6 text-white relative z-10" />
             ) : (
               <div className="relative z-10 flex items-center justify-center">
-                <Bot className="w-7.5 h-7.5 text-amber-300 group-hover:scale-110 transition-transform animate-bounce duration-1000" />
+                <Bot className="w-7 h-7 text-amber-400 group-hover:scale-110 transition-transform" />
               </div>
             )}
           </motion.button>
@@ -563,10 +564,10 @@ export default function ChatBubble() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[430px] h-[600px] bg-slate-950/95 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden font-sans"
+            className="rowbot-panel fixed z-50 inset-x-3 sm:inset-x-auto sm:right-6 sm:w-[430px] bg-brand-ink/95 backdrop-blur-xl border border-white/10 rounded-[24px] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden font-sans"
           >
             {/* Header */}
-            <div className="p-4 bg-gradient-to-r from-[#0b1a30] to-slate-900 border-b border-slate-800 flex items-center justify-between">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
                   <Sparkles className="w-4 h-4 animate-pulse" />

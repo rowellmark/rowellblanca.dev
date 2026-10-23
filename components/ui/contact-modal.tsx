@@ -5,17 +5,11 @@ import { useRouter } from 'next/navigation';
 import {
   X,
   Send,
-  Sparkles,
   CheckCircle2,
-  Clock,
   Mail,
   Calendar,
   Video,
-  ShieldCheck,
-  Zap,
-  Globe,
   Loader2,
-  ExternalLink,
 } from 'lucide-react';
 import {
   IconBrandGithub,
@@ -24,6 +18,14 @@ import {
   IconBrandInstagram,
 } from '@tabler/icons-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const SERVICE_OPTIONS = [
+  'React / Next.js Web App',
+  'Custom WordPress Engine / Plugin',
+  'Fractional Senior Dev Retainer',
+  'AI / Automation Workflow Integration',
+  'Codebase Rescue & Speed Audit',
+];
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -144,194 +146,181 @@ export function ContactModal({
     onClose();
   };
 
+  // Escape closes; lock page scroll while open (Lenis + native).
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') resetAndClose();
+    };
+    const prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.documentElement.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const serviceOptions = SERVICE_OPTIONS.includes(form.service) ? SERVICE_OPTIONS : [form.service, ...SERVICE_OPTIONS];
+  const fieldClass =
+    'w-full min-h-[48px] px-4 rounded-xl bg-brand-bg border border-brand-border text-brand-navy text-[15px] placeholder:text-slate-400 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-colors';
+  const labelClass = 'block mb-1.5 text-sm font-semibold text-brand-navy';
+  const isCall = activeTab === 'call';
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-950/80 backdrop-blur-md font-sans">
+        <motion.div
+          key="contact-modal"
+          data-lenis-prevent
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) resetAndClose();
+          }}
+          className="fixed inset-0 z-[10000] flex items-end sm:items-start justify-center sm:p-6 overflow-y-auto overscroll-contain bg-brand-ink/70 backdrop-blur-md font-sans"
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 15 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="bg-white border border-slate-200/90 rounded-3xl max-w-4xl w-full shadow-2xl relative my-auto overflow-hidden text-slate-900"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-modal-title"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full sm:max-w-[960px] sm:my-auto max-h-[92dvh] sm:max-h-none overflow-y-auto sm:overflow-hidden rounded-t-[28px] sm:rounded-[28px] bg-white text-brand-navy shadow-[0_60px_140px_-40px_rgba(0,0,0,0.8)]"
           >
-            {/* Modal Body */}
+            <button
+              type="button"
+              onClick={resetAndClose}
+              aria-label="Close"
+              className="absolute top-4 right-4 z-10 h-11 w-11 rounded-full bg-brand-bg hover:bg-brand-border text-brand-navy flex items-center justify-center transition-colors cursor-pointer"
+            >
+              <X className="h-5 w-5" />
+            </button>
 
             {success ? (
-              <div className="text-center p-8 sm:p-12 space-y-4 relative">
-                <button
-                  onClick={resetAndClose}
-                  className="absolute top-4 right-4 h-9 w-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-950 transition-colors cursor-pointer shadow-2xs border border-slate-200"
-                  title="Close modal"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-                <div className="h-16 w-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600">
-                  <CheckCircle2 className="h-10 w-10" />
-                </div>
-                <h3 className="text-2xl font-black text-[#0b1a30]">Request Received!</h3>
-                <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium">
-                  Thank you for reaching out. I've received your inquiry and will review your scope to reply within 2–4 hours.
+              <div className="px-6 py-14 sm:p-16 flex flex-col items-center text-center gap-5">
+                <span className="h-16 w-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                  <CheckCircle2 className="h-9 w-9" />
+                </span>
+                <h3 id="contact-modal-title" className="m-0 text-[clamp(28px,3vw,40px)] font-extrabold tracking-[-0.04em] leading-tight">
+                  Request received.
+                </h3>
+                <p className="m-0 max-w-md text-brand-slate leading-relaxed">
+                  Thank you for reaching out. I&apos;ve received your inquiry and will review your scope to reply within 2–4
+                  hours.
                 </p>
-                <div className="pt-4">
-                  <button
-                    onClick={resetAndClose}
-                    className="px-8 py-3 rounded-xl bg-[#0b1a30] hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider shadow-md cursor-pointer transition-all"
-                  >
-                    Done
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={resetAndClose}
+                  className="motion-btn mt-2 min-h-[52px] px-8 rounded-full bg-brand-navy hover:bg-brand-ink text-white font-bold cursor-pointer"
+                >
+                  Done
+                </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-12">
-                {/* LEFT COLUMN: Contact Details & Senior Guarantees (5 Cols) */}
-                <div className="lg:col-span-5 bg-gradient-to-br from-[#0b1a30] via-slate-900 to-[#0b1a30] text-white p-6 sm:p-8 space-y-6 flex flex-col justify-between relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-
-                  <div className="space-y-4 relative z-10">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-amber-500/20 border border-amber-400/30 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
-                      <Sparkles className="w-3 h-3 text-amber-400 fill-amber-400" />
-                      <span>Direct Senior Developer</span>
+                {/* LEFT: direct channels & guarantees (desktop) */}
+                <aside className="hidden lg:flex lg:col-span-5 bg-brand-ink text-white p-10 flex-col justify-between gap-10">
+                  <div className="flex flex-col gap-6">
+                    <span className="inline-flex items-center gap-2.5 font-mono text-xs uppercase tracking-[0.08em] text-slate-400">
+                      <span className="motion-pulse h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                      Direct senior developer
                     </span>
-
-                    <h3 className="text-2xl font-black text-white leading-tight">
-                      Let's Build Your Next Digital Platform
-                    </h3>
-
-                    <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                    <p className="m-0 text-[40px] font-extrabold tracking-[-0.045em] leading-[1]">
+                      Let&apos;s build your next platform<span className="text-amber-500">.</span>
+                    </p>
+                    <p className="m-0 text-slate-300 leading-relaxed">
                       Partner directly with Rowell Mark Blanca for bespoke React, Next.js, and WordPress systems.
                     </p>
-
-                    {/* Quick Direct Channels */}
-                    <div className="space-y-2.5 pt-2">
-                      <a
-                        href="mailto:hello@rowellblanca.dev"
-                        className="p-3 rounded-xl bg-slate-950/60 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-400/40 transition-all flex items-center gap-2.5 group"
-                      >
-                        <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                        <div className="overflow-hidden">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Direct Email</span>
-                          <span className="text-xs font-black text-white group-hover:text-amber-300 transition-colors truncate block">
-                            hello@rowellblanca.dev
-                          </span>
-                        </div>
-                      </a>
-
-                      <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-2.5">
-                        <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
-                        <div>
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Timezone Overlap</span>
-                          <span className="text-xs font-black text-white">AU (AEST) · UK (GMT) · US (EST)</span>
-                        </div>
+                    <dl className="m-0 flex flex-col border-t border-white/10">
+                      <div className="flex flex-col-reverse gap-1 py-4 border-b border-white/10">
+                        <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">Email</dt>
+                        <dd className="m-0"><a href="mailto:hello@rowellblanca.dev" className="motion-underline font-semibold">hello@rowellblanca.dev</a></dd>
                       </div>
-
-                      <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-2.5">
-                        <Zap className="w-4 h-4 text-emerald-400 shrink-0" />
-                        <div>
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Direct Turnaround</span>
-                          <span className="text-xs font-black text-white">Fast reply within 2–4 business hours</span>
-                        </div>
+                      <div className="flex flex-col-reverse gap-1 py-4 border-b border-white/10">
+                        <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">Timezone overlap</dt>
+                        <dd className="m-0 font-semibold">AU (AEST) · UK (GMT) · US (EST)</dd>
                       </div>
-                    </div>
-
-                    {/* Senior Guarantees */}
-                    <ul className="space-y-2 text-xs text-slate-300 border-t border-slate-800 pt-3 font-medium">
-                      <li className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span>12+ Yrs Exp · Zero Junior Delegation</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span>98+ Core Web Vitals Speed Guarantee</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span>Strict NDA & Code IP Ownership</span>
-                      </li>
+                      <div className="flex flex-col-reverse gap-1 py-4 border-b border-white/10">
+                        <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">Turnaround</dt>
+                        <dd className="m-0 font-semibold">Reply within 2–4 business hours</dd>
+                      </div>
+                    </dl>
+                    <ul className="m-0 p-0 list-none flex flex-col gap-2.5 text-sm text-slate-300">
+                      {['12+ yrs experience · zero junior delegation', '98+ Core Web Vitals speed guarantee', 'Strict NDA & code IP ownership'].map((item) => (
+                        <li key={item} className="flex gap-3"><span aria-hidden="true" className="text-amber-500">—</span>{item}</li>
+                      ))}
                     </ul>
                   </div>
-
-                  {/* Social Links */}
-                  <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between relative z-10">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                      Professional
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      {socialMedia.map(({ title, icon: Icon, url }, i) => (
-                        <a
-                          key={i}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title={title}
-                          className="h-8 w-8 rounded-lg bg-slate-800 hover:bg-amber-400 hover:text-slate-950 flex items-center justify-center text-slate-300 transition-all"
-                        >
-                          <Icon size={14} />
-                        </a>
-                      ))}
-                    </div>
+                  <div className="flex items-center gap-2">
+                    {socialMedia.map(({ title, icon: Icon, url }) => (
+                      <a
+                        key={title}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={title}
+                        className="h-11 w-11 rounded-full border border-white/15 hover:border-amber-400 text-slate-300 hover:text-amber-400 flex items-center justify-center transition-colors"
+                      >
+                        <Icon size={16} />
+                      </a>
+                    ))}
                   </div>
-                </div>
+                </aside>
 
-                {/* RIGHT COLUMN: Interactive Form (7 Cols) */}
-                <div className="lg:col-span-7 p-6 sm:p-8 space-y-5 bg-white">
-                  {/* Top Action Bar: Mode Switcher Tabs + Close Button */}
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200 flex-1">
+                {/* RIGHT: form */}
+                <div className="lg:col-span-7 px-5 pt-6 pb-8 sm:p-10 flex flex-col gap-6">
+                  {/* Mobile: compact channel strip in place of the side panel */}
+                  <a href="mailto:hello@rowellblanca.dev" className="lg:hidden self-start inline-flex items-center gap-2 font-mono text-xs text-brand-slate pr-14">
+                    <span className="motion-pulse h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                    hello@rowellblanca.dev · reply in 2–4h
+                  </a>
+
+                  <div role="tablist" aria-label="Contact type" className="grid grid-cols-2 p-1 rounded-full bg-brand-bg border border-brand-border mr-14 sm:mr-14">
+                    {([
+                      { id: 'inquiry', label: 'Project inquiry', short: 'Inquiry', Icon: Mail },
+                      { id: 'call', label: 'Book a 15-min call', short: 'Book a call', Icon: Video },
+                    ] as const).map(({ id, label, short, Icon }) => (
                       <button
+                        key={id}
                         type="button"
-                        onClick={() => setActiveTab('inquiry')}
-                        className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          activeTab === 'inquiry'
-                            ? 'bg-white text-[#0b1a30] shadow-sm'
-                            : 'text-slate-500 hover:text-slate-900'
+                        role="tab"
+                        aria-selected={activeTab === id}
+                        onClick={() => setActiveTab(id)}
+                        className={`min-h-[44px] rounded-full text-sm font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer ${
+                          activeTab === id ? 'bg-brand-ink text-white shadow-sm' : 'text-brand-slate hover:text-brand-navy'
                         }`}
                       >
-                        <Mail className="w-3.5 h-3.5" />
-                        <span>Fast Inquiry</span>
+                        <Icon className="w-4 h-4" aria-hidden="true" />
+                        <span className="sm:hidden">{short}</span>
+                        <span className="hidden sm:inline">{label}</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('call')}
-                        className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          activeTab === 'call'
-                            ? 'bg-amber-400 text-slate-950 shadow-sm'
-                            : 'text-slate-500 hover:text-slate-900'
-                        }`}
-                      >
-                        <Video className="w-3.5 h-3.5 text-slate-950" />
-                        <span>Book 15-Min Call</span>
-                      </button>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={resetAndClose}
-                      className="h-9 w-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-950 transition-colors shrink-0 cursor-pointer shadow-2xs border border-slate-200"
-                      title="Close modal"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
+                    ))}
                   </div>
 
-                  <div>
-                    <h3 className="text-xl font-black text-[#0b1a30]">
-                      {activeTab === 'call' ? 'Schedule a 15-Min Architecture Call' : 'Request a Project Proposal'}
+                  <div className="flex flex-col gap-1.5">
+                    <h3 id="contact-modal-title" className="m-0 text-[clamp(26px,2.6vw,34px)] font-extrabold tracking-[-0.035em] leading-tight">
+                      {isCall ? 'Schedule a 15-min architecture call' : 'Request a project proposal'}
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">
-                      {activeTab === 'call'
-                        ? 'Select your preferred timezone and discussion agenda for a focused engineering consult.'
-                        : 'Submit your requirements below to receive an itemized estimate within 24 hours.'}
+                    <p className="m-0 text-brand-slate">
+                      {isCall
+                        ? 'Pick your timezone and agenda for a focused engineering consult.'
+                        : 'Share your requirements to receive an itemized estimate within 24 hours.'}
                     </p>
                   </div>
 
                   {error ? (
-                    <div className="rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs font-semibold text-rose-700">
+                    <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
                       {error}
                     </div>
                   ) : null}
 
-                  <form onSubmit={handleSubmit} className="space-y-3.5 text-xs font-sans">
+                  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     {/* Anti-spam honeypot bot trap */}
                     <div aria-hidden="true" style={{ opacity: 0, position: 'absolute', top: 0, left: '-9999px', height: 0, width: 0, zIndex: -1, pointerEvents: 'none' }}>
                       <label htmlFor="modal_website_hp">Website URL</label>
@@ -357,169 +346,114 @@ export function ContactModal({
                     </div>
 
                     <div>
-                      <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                        Your Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        placeholder="e.g. Alex Morgan"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-amber-500 font-medium transition-all"
-                      />
+                      <label htmlFor="cm_name" className={labelClass}>Full name *</label>
+                      <input id="cm_name" type="text" required autoComplete="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Alex Morgan" className={fieldClass} />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                          Work Email Address *
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          value={form.email}
-                          onChange={(e) => setForm({ ...form, email: e.target.value })}
-                          placeholder="alex@company.com"
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-amber-500 font-medium transition-all"
-                        />
+                        <label htmlFor="cm_email" className={labelClass}>Work email *</label>
+                        <input id="cm_email" type="email" required autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="alex@company.com" className={fieldClass} />
                       </div>
                       <div>
-                        <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                          Phone / WhatsApp
-                        </label>
-                        <input
-                          type="text"
-                          value={form.phone}
-                          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                          placeholder="+61 400 / +44 7000"
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-amber-500 font-medium transition-all"
-                        />
+                        <label htmlFor="cm_phone" className={labelClass}>Phone / WhatsApp</label>
+                        <input id="cm_phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+44 7000 000000" className={fieldClass} />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                          Project Category
-                        </label>
-                        <select
-                          value={form.service}
-                          onChange={(e) => setForm({ ...form, service: e.target.value })}
-                          className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:outline-none focus:border-amber-500"
-                        >
-                          <option value="React / Next.js Web App">React / Next.js Web App</option>
-                          <option value="Custom WordPress Engine / Plugin">Custom WordPress Engine / Plugin</option>
-                          <option value="Fractional Senior Dev Retainer">Fractional Senior Dev Retainer</option>
-                          <option value="AI / Automation Workflow Integration">AI / Automation Workflow Integration</option>
-                          <option value="Codebase Rescue & Speed Audit">Codebase Rescue & Speed Audit</option>
+                        <label htmlFor="cm_service" className={labelClass}>Project type</label>
+                        <select id="cm_service" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className={`${fieldClass} pr-10`}>
+                          {serviceOptions.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
                         </select>
                       </div>
-
-                      {activeTab === 'call' ? (
+                      {isCall ? (
                         <div>
-                          <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                            Preferred Timezone
-                          </label>
-                          <select
-                            value={form.preferredTimezone}
-                            onChange={(e) => setForm({ ...form, preferredTimezone: e.target.value })}
-                            className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:outline-none focus:border-amber-500"
-                          >
-                            <option value="AU (AEST/AEDT/AWST)">🇦🇺 Australia (AEST / AEDT / AWST)</option>
-                            <option value="UK (GMT/BST)">🇬🇧 UK (GMT / BST)</option>
-                            <option value="US East (EST/EDT)">🇺🇸 US East (EST / EDT)</option>
-                            <option value="US West (PST/PDT)">🇺🇸 US West (PST / PDT)</option>
-                            <option value="Europe (CET/CEST)">🇪🇺 Europe (CET / CEST)</option>
-                            <option value="Asia-Pacific">🌏 Asia-Pacific</option>
+                          <label htmlFor="cm_tz" className={labelClass}>Preferred timezone</label>
+                          <select id="cm_tz" value={form.preferredTimezone} onChange={(e) => setForm({ ...form, preferredTimezone: e.target.value })} className={`${fieldClass} pr-10`}>
+                            <option value="AU (AEST/AEDT/AWST)">Australia (AEST / AEDT / AWST)</option>
+                            <option value="UK (GMT/BST)">UK (GMT / BST)</option>
+                            <option value="US East (EST/EDT)">US East (EST / EDT)</option>
+                            <option value="US West (PST/PDT)">US West (PST / PDT)</option>
+                            <option value="Europe (CET/CEST)">Europe (CET / CEST)</option>
+                            <option value="Asia-Pacific">Asia-Pacific</option>
                           </select>
                         </div>
                       ) : (
                         <div>
-                          <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                            Launch Urgency
-                          </label>
-                          <select
-                            value={form.timeline}
-                            onChange={(e) => setForm({ ...form, timeline: e.target.value })}
-                            className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:outline-none focus:border-amber-500"
-                          >
-                            <option value="2–4 Weeks (Fast Sprint)">⚡ 2–4 Weeks (Fast Sprint)</option>
-                            <option value="1–2 Months (Standard Build)">📅 1–2 Months (Standard Build)</option>
-                            <option value="Ongoing Monthly (Fractional Retainer)">🔄 Ongoing Monthly (Retainer)</option>
+                          <label htmlFor="cm_timeline" className={labelClass}>Launch timeline</label>
+                          <select id="cm_timeline" value={form.timeline} onChange={(e) => setForm({ ...form, timeline: e.target.value })} className={`${fieldClass} pr-10`}>
+                            <option value="2–4 Weeks (Fast Sprint)">2–4 weeks (fast sprint)</option>
+                            <option value="1–2 Months (Standard Build)">1–2 months (standard build)</option>
+                            <option value="Ongoing Monthly (Fractional Retainer)">Ongoing monthly (retainer)</option>
                           </select>
                         </div>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-slate-700 font-extrabold mb-1 uppercase tracking-wider text-[10px]">
-                        {activeTab === 'call' ? 'Call Discussion Goals / What Are You Building? *' : 'Project Requirements & Goals *'}
+                      <label htmlFor="cm_message" className={labelClass}>
+                        {isCall ? 'What would you like to cover? *' : 'Project requirements & goals *'}
                       </label>
                       <textarea
+                        id="cm_message"
                         required
                         rows={3}
                         value={form.message}
                         onChange={(e) => setForm({ ...form, message: e.target.value })}
-                        placeholder={activeTab === 'call' ? 'Tell me briefly about what you want to achieve on the call...' : 'Briefly describe your project requirements, timeline, or scope...'}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-amber-500 font-medium transition-all"
+                        placeholder={isCall ? 'A sentence or two about what you want to achieve on the call…' : 'Briefly describe your requirements, timeline, or scope…'}
+                        className={`${fieldClass} py-3 resize-y`}
                       />
                     </div>
 
-                    {/* GDPR Consent Checkbox */}
-                    <div className="pt-1">
-                      <div className="flex items-start gap-2.5">
-                        <input
-                          type="checkbox"
-                          id="modalPopupGdpr"
-                          checked={gdprConsent}
-                          onChange={(e) => setGdprConsent(e.target.checked)}
-                          className="mt-0.5 h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer"
-                        />
-                        <label htmlFor="modalPopupGdpr" className="text-[11px] text-slate-600 leading-snug cursor-pointer font-medium">
-                          I consent to having my details processed in accordance with the{' '}
-                          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#1d63ed] underline font-bold hover:text-blue-700">
-                            Privacy Policy
-                          </a>.
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="pt-2">
-                      <button
-                        type="submit"
-                        disabled={submitting}
-                        className={`w-full py-3.5 px-6 rounded-2xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 ${
-                          activeTab === 'call'
-                            ? 'bg-amber-400 hover:bg-amber-300 text-slate-950'
-                            : 'bg-[#0b1a30] hover:bg-slate-800 text-white'
-                        }`}
-                      >
-                        {submitting ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Processing...</span>
-                          </>
-                        ) : activeTab === 'call' ? (
-                          <>
-                            <Calendar className="h-4 w-4" /> Confirm 15-Min Discovery Call
-                          </>
-                        ) : (
-                          <>
-                            <Send className="h-4 w-4" /> Submit Fast Inquiry
-                          </>
-                        )}
-                      </button>
-                      <span className="text-[10px] text-slate-400 block text-center mt-2 font-medium">
-                        🔒 Direct senior engineer response · Zero spam · Strict NDA
+                    <label htmlFor="modalPopupGdpr" className="flex items-start gap-3 text-sm text-brand-slate leading-snug cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="modalPopupGdpr"
+                        checked={gdprConsent}
+                        onChange={(e) => setGdprConsent(e.target.checked)}
+                        className="mt-0.5 h-5 w-5 shrink-0 rounded border-brand-border accent-amber-500 cursor-pointer"
+                      />
+                      <span>
+                        I consent to having my details processed in accordance with the{' '}
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" className="motion-underline font-semibold text-brand-navy">
+                          Privacy Policy
+                        </a>
+                        .
                       </span>
-                    </div>
+                    </label>
+
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className={`motion-btn mt-1 w-full min-h-[56px] px-7 rounded-full font-bold flex items-center justify-between gap-3 cursor-pointer disabled:opacity-50 ${
+                        isCall ? 'bg-amber-500 hover:bg-amber-400 text-brand-ink' : 'bg-brand-ink hover:bg-brand-navy text-white'
+                      }`}
+                    >
+                      {submitting ? (
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> Sending…
+                        </span>
+                      ) : (
+                        <>
+                          <span className="flex items-center gap-2.5">
+                            {isCall ? <Calendar className="h-4 w-4" aria-hidden="true" /> : <Send className="h-4 w-4" aria-hidden="true" />}
+                            {isCall ? 'Confirm discovery call' : 'Send inquiry'}
+                          </span>
+                          <span className="motion-arrow" aria-hidden="true">→</span>
+                        </>
+                      )}
+                    </button>
+                    <span className="text-xs text-slate-500 text-center">Direct senior engineer response · Zero spam · Strict NDA</span>
                   </form>
                 </div>
               </div>
             )}
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

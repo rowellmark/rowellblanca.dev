@@ -55,11 +55,11 @@ const STAT_COLORS = ['#1d63ed', '#f59e0b', '#10b981', '#8b5cf6'];
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 shadow-xl text-xs">
-      <p className="font-black text-[#0b1a30] mb-1">{label}</p>
+    <div className="bg-white border border-zinc-200 rounded-xl px-4 py-3 shadow-md text-xs">
+      <p className="font-semibold text-zinc-950 mb-1">{label}</p>
       {payload.map((p: any, i: number) => (
         <p key={i} className="font-bold" style={{ color: p.color }}>
-          {p.name}: <span className="text-[#0b1a30]">{p.value}</span>
+          {p.name}: <span className="text-zinc-950">{p.value}</span>
         </p>
       ))}
     </div>
@@ -74,23 +74,23 @@ function StatCard({
   icon: any; color: string; href?: string;
 }) {
   const inner = (
-    <div className={`bg-white border border-slate-200 rounded-2xl p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all group ${href ? 'cursor-pointer' : ''}`}>
+    <div className={`bg-white border border-zinc-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group ${href ? 'cursor-pointer' : ''}`}>
       <div className="flex items-start justify-between">
         <div className="space-y-0.5">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">{label}</span>
+          <span className="text-sm font-medium text-zinc-500">{label}</span>
         </div>
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`} style={{ backgroundColor: `${color}15`, color }}>
           <Icon className="w-5 h-5" />
         </div>
       </div>
       <div className="mt-4">
-        <span className="text-4xl font-black text-[#0b1a30] tabular-nums">{value}</span>
+        <span className="text-4xl font-semibold text-zinc-950 tabular-nums">{value}</span>
       </div>
       <div className="mt-2 flex items-center gap-1 text-xs font-bold">
         {subUp === true && <ChevronUp className="w-3.5 h-3.5 text-emerald-500" />}
         {subUp === false && <ChevronDown className="w-3.5 h-3.5 text-red-400" />}
-        {subUp === null && <Minus className="w-3.5 h-3.5 text-slate-400" />}
-        <span className={subUp === true ? 'text-emerald-600' : subUp === false ? 'text-red-500' : 'text-slate-500'}>{sub}</span>
+        {subUp === null && <Minus className="w-3.5 h-3.5 text-zinc-400" />}
+        <span className={subUp === true ? 'text-emerald-600' : subUp === false ? 'text-red-500' : 'text-zinc-500'}>{sub}</span>
       </div>
     </div>
   );
@@ -211,24 +211,24 @@ export default function DashboardHome() {
       {/* ── HEADER ROW ───────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-[#0b1a30]">Dashboard Overview</h1>
-          <p className="text-xs text-slate-400 font-medium mt-0.5">
+          <h1 className="text-2xl font-semibold text-zinc-950">Dashboard Overview</h1>
+          <p className="text-xs text-zinc-400 font-medium mt-0.5">
             Last updated: {lastRefreshed.toLocaleTimeString()}
           </p>
         </div>
         <button
           onClick={fetchDashboardStats}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-extrabold text-slate-600 hover:bg-slate-50 hover:border-[#1d63ed] transition-all shadow-xs"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 hover:border-zinc-900 transition-all shadow-sm"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#1d63ed]' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-zinc-900' : ''}`} />
           Refresh
         </button>
       </div>
 
       {/* ── NOTIFICATION BANNER ──────────────────────────── */}
       {totalNotifications > 0 ? (
-        <div className="bg-gradient-to-r from-blue-900 via-[#0b1a30] to-indigo-950 text-white rounded-2xl p-5 border border-blue-800/80 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-zinc-950 text-white rounded-xl p-5 border border-blue-800/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
             <div className="relative p-2.5 rounded-xl bg-blue-600/30 text-blue-300 border border-blue-500/40 shrink-0 mt-0.5">
               <Bell className="w-5 h-5" />
@@ -238,33 +238,33 @@ export default function DashboardHome() {
               </span>
             </div>
             <div>
-              <h2 className="text-base font-black text-white">{totalNotifications} New Notification{totalNotifications > 1 ? 's' : ''}</h2>
-              <p className="text-xs text-slate-300 mt-1">
+              <h2 className="text-base font-semibold text-white">{totalNotifications} New Notification{totalNotifications > 1 ? 's' : ''}</h2>
+              <p className="text-xs text-zinc-300 mt-1">
                 {unreadMessages.length} unread chat message{unreadMessages.length !== 1 ? 's' : ''} · {newLeads.length} new CRM lead{newLeads.length !== 1 ? 's' : ''}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2.5">
             {unreadMessages.length > 0 && (
-              <Link href="/admin/messages" className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl flex items-center gap-1.5">
+              <Link href="/admin/messages" className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-xl flex items-center gap-1.5">
                 <MessageSquare className="w-3.5 h-3.5" /> Messages ({unreadMessages.length})
               </Link>
             )}
             {newLeads.length > 0 && (
-              <Link href="/admin/leads" className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-xl flex items-center gap-1.5">
+              <Link href="/admin/leads" className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-semibold text-xs rounded-xl flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5" /> Leads ({newLeads.length})
               </Link>
             )}
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center justify-between text-xs text-slate-600 shadow-xs">
+        <div className="bg-white border border-zinc-200 rounded-xl p-4 flex items-center justify-between text-xs text-zinc-600 shadow-sm">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <span className="font-bold text-[#0b1a30]">All caught up!</span>
-            <span className="text-slate-400">No unread inquiries or pending leads.</span>
+            <span className="font-bold text-zinc-950">All caught up!</span>
+            <span className="text-zinc-400">No unread inquiries or pending leads.</span>
           </div>
-          <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider font-mono bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">System Active</span>
+          <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider font-mono bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">System Active</span>
         </div>
       )}
 
@@ -278,22 +278,22 @@ export default function DashboardHome() {
 
       {/* ── SECONDARY METRIC CARDS ────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-[#0b1a30] to-indigo-950 rounded-2xl p-5 text-white border border-indigo-900/50 shadow-lg">
+        <div className="bg-zinc-950 rounded-xl p-5 text-white border border-indigo-900/50 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Lead Conversion</span>
+            <span className="text-sm font-medium text-zinc-500">Lead Conversion</span>
             <Target className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-5xl font-black text-white tabular-nums">{conversionRate}<span className="text-2xl text-amber-400">%</span></div>
-          <div className="mt-2 text-xs text-slate-400 font-medium">{wonLeads} won out of {leads.length} total</div>
+          <div className="text-5xl font-semibold text-white tabular-nums">{conversionRate}<span className="text-2xl text-amber-400">%</span></div>
+          <div className="mt-2 text-xs text-zinc-400 font-medium">{wonLeads} won out of {leads.length} total</div>
           <div className="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-1000" style={{ width: `${conversionRate}%` }} />
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+        <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Pipeline Status</span>
-            <Activity className="w-4 h-4 text-[#1d63ed]" />
+            <span className="text-sm font-medium text-zinc-500">Pipeline Status</span>
+            <Activity className="w-4 h-4 text-zinc-900" />
           </div>
           <div className="space-y-2 mt-1">
             {['NEW', 'CONTACTED', 'QUALIFIED', 'WON'].map((status) => {
@@ -303,10 +303,10 @@ export default function DashboardHome() {
               return (
                 <div key={status}>
                   <div className="flex items-center justify-between text-xs mb-0.5">
-                    <span className="font-bold text-slate-600 capitalize">{status.toLowerCase()}</span>
-                    <span className="font-extrabold text-[#0b1a30] tabular-nums">{count}</span>
+                    <span className="font-bold text-zinc-600 capitalize">{status.toLowerCase()}</span>
+                    <span className="font-semibold text-zinc-950 tabular-nums">{count}</span>
                   </div>
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
                     <div className={`h-full ${colors[status]} rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
                   </div>
                 </div>
@@ -315,20 +315,20 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+        <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Quick Actions</span>
+            <span className="text-sm font-medium text-zinc-500">Quick Actions</span>
             <Zap className="w-4 h-4 text-amber-500" />
           </div>
           <div className="space-y-2">
             {[
-              { label: 'Add New Project', href: '/admin/projects', color: 'text-[#1d63ed]', bg: 'bg-blue-50 border-blue-200 hover:bg-blue-100' },
+              { label: 'Add New Project', href: '/admin/projects', color: 'text-zinc-900', bg: 'bg-blue-50 border-blue-200 hover:bg-blue-100' },
               { label: 'View Lead Pipeline', href: '/admin/leads', color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200 hover:bg-amber-100' },
               { label: 'Manage Testimonials', href: '/admin/testimonials', color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100' },
               { label: 'SEO & GTM Settings', href: '#', color: 'text-violet-700', bg: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
             ].map(({ label, href, color, bg }) => (
               <Link key={label} href={href} onClick={label.includes('SEO') ? (e) => { e.preventDefault(); setIsSettingsModalOpen(true); } : undefined}
-                className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-extrabold ${color} ${bg} transition-all`}>
+                className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-semibold ${color} ${bg} transition-all`}>
                 <span>{label}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -341,17 +341,17 @@ export default function DashboardHome() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Area Chart — 6-month activity */}
-        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div className="lg:col-span-2 bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-sm font-black text-[#0b1a30]">Activity Overview</h3>
-              <p className="text-xs text-slate-400 font-medium mt-0.5">Leads & messages — last 6 months</p>
+              <h3 className="text-sm font-semibold text-zinc-950">Activity Overview</h3>
+              <p className="text-xs text-zinc-400 font-medium mt-0.5">Leads & messages — last 6 months</p>
             </div>
-            <LineChart className="w-5 h-5 text-slate-400" />
+            <LineChart className="w-5 h-5 text-zinc-400" />
           </div>
           {monthlyData.every(d => d.leads === 0 && d.messages === 0) ? (
-            <div className="h-52 flex flex-col items-center justify-center text-slate-400 gap-2">
-              <BarChart3 className="w-10 h-10 text-slate-200" />
+            <div className="h-52 flex flex-col items-center justify-center text-zinc-400 gap-2">
+              <BarChart3 className="w-10 h-10 text-zinc-200" />
               <p className="text-xs font-bold">No activity data yet — submit a lead to see the graph</p>
             </div>
           ) : (
@@ -380,17 +380,17 @@ export default function DashboardHome() {
         </div>
 
         {/* Pie Chart — Lead status breakdown */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-sm font-black text-[#0b1a30]">Lead Breakdown</h3>
-              <p className="text-xs text-slate-400 font-medium mt-0.5">By pipeline status</p>
+              <h3 className="text-sm font-semibold text-zinc-950">Lead Breakdown</h3>
+              <p className="text-xs text-zinc-400 font-medium mt-0.5">By pipeline status</p>
             </div>
-            <PieChart className="w-5 h-5 text-slate-400" />
+            <PieChart className="w-5 h-5 text-zinc-400" />
           </div>
           {leadStatusData.length === 0 ? (
-            <div className="h-52 flex flex-col items-center justify-center text-slate-400 gap-2">
-              <Users className="w-10 h-10 text-slate-200" />
+            <div className="h-52 flex flex-col items-center justify-center text-zinc-400 gap-2">
+              <Users className="w-10 h-10 text-zinc-200" />
               <p className="text-xs font-bold text-center">No leads yet</p>
             </div>
           ) : (
@@ -411,9 +411,9 @@ export default function DashboardHome() {
                   <div key={item.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                      <span className="font-bold text-slate-600 capitalize">{item.name.toLowerCase()}</span>
+                      <span className="font-bold text-zinc-600 capitalize">{item.name.toLowerCase()}</span>
                     </div>
-                    <span className="font-extrabold text-[#0b1a30]">{item.value}</span>
+                    <span className="font-semibold text-zinc-950">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -424,25 +424,25 @@ export default function DashboardHome() {
 
       {/* ── CORE MODULES ─────────────────────────────────── */}
       <section className="space-y-4">
-        <h2 className="text-[11px] font-extrabold tracking-wider uppercase text-slate-400">Core Portal Modules</h2>
+        <h2 className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400">Core Portal Modules</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { href: '/admin/projects', icon: FolderKanban, label: 'Projects', desc: 'Manage portfolio project records, permalinks, and tech stack pills.', cta: 'Manage Projects', color: '#1d63ed', bg: 'bg-blue-50', textColor: 'text-[#1d63ed]', border: 'hover:border-[#1d63ed]' },
+            { href: '/admin/projects', icon: FolderKanban, label: 'Projects', desc: 'Manage portfolio project records, permalinks, and tech stack pills.', cta: 'Manage Projects', color: '#1d63ed', bg: 'bg-blue-50', textColor: 'text-zinc-900', border: 'hover:border-zinc-900' },
             { href: '/admin/leads', icon: Users, label: 'Leads & CRM', desc: 'Track pipeline leads, update status stages, and add internal notes.', cta: 'View Lead Pipeline', color: '#f59e0b', bg: 'bg-amber-50', textColor: 'text-amber-600', border: 'hover:border-amber-500' },
             { href: '/admin/testimonials', icon: Star, label: 'Testimonials', desc: 'Manage client recommendations, star ratings, and display quotes.', cta: 'Manage Reviews', color: '#10b981', bg: 'bg-emerald-50', textColor: 'text-emerald-600', border: 'hover:border-emerald-500' },
             { href: '/admin/messages', icon: MessageSquare, label: 'Messages', desc: 'View contact form submissions and Mailtrap email log alerts.', cta: 'View Messages', color: '#8b5cf6', bg: 'bg-purple-50', textColor: 'text-purple-600', border: 'hover:border-purple-500' },
           ].map(({ href, icon: Icon, label, desc, cta, color, bg, textColor, border }) => (
-            <Link key={href} href={href} className={`bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between ${border} hover:shadow-lg transition-all group`}>
+            <Link key={href} href={href} className={`bg-white border border-zinc-200 rounded-xl p-5 flex flex-col justify-between ${border} hover:shadow-lg transition-all group`}>
               <div className="space-y-3">
                 <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`} style={{ color }}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className={`font-extrabold text-base text-[#0b1a30] group-hover:${textColor} transition-colors`}>{label}</h3>
-                  <p className="text-xs text-slate-500 mt-1">{desc}</p>
+                  <h3 className={`font-semibold text-base text-zinc-950 group-hover:${textColor} transition-colors`}>{label}</h3>
+                  <p className="text-xs text-zinc-500 mt-1">{desc}</p>
                 </div>
               </div>
-              <div className={`pt-4 flex items-center gap-1.5 text-xs font-extrabold ${textColor}`}>
+              <div className={`pt-4 flex items-center gap-1.5 text-xs font-semibold ${textColor}`}>
                 <span>{cta}</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -453,52 +453,52 @@ export default function DashboardHome() {
 
       {/* ── SEO & SITEMAP ────────────────────────────────── */}
       <section className="space-y-4">
-        <h2 className="text-[11px] font-extrabold tracking-wider uppercase text-slate-400">SEO, Analytics & Indexing</h2>
+        <h2 className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400">SEO, Analytics & Indexing</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex flex-col justify-between space-y-4">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-2"><BarChart3 className="w-5 h-5 text-emerald-600" /><h3 className="font-extrabold text-sm text-[#0b1a30]">Google Analytics & GTM</h3></div>
-                <p className="text-xs text-slate-500">GA4 gtag.js & Tag Manager tracking.</p>
+                <div className="flex items-center gap-2"><BarChart3 className="w-5 h-5 text-emerald-600" /><h3 className="font-semibold text-sm text-zinc-950">Google Analytics & GTM</h3></div>
+                <p className="text-xs text-zinc-500">GA4 gtag.js & Tag Manager tracking.</p>
               </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
             </div>
-            <div className="space-y-1.5 pt-2 border-t border-slate-100 text-xs">
-              <div className="flex justify-between"><span className="text-slate-500">GA4 ID:</span><span className="font-mono font-extrabold text-[#0b1a30]">{gaId || 'G-XWQVTC4XWZ'}</span></div>
-              <div className="flex justify-between"><span className="text-slate-500">GTM ID:</span><span className="font-mono font-extrabold text-slate-600">{gtmId || 'Not Set'}</span></div>
+            <div className="space-y-1.5 pt-2 border-t border-zinc-100 text-xs">
+              <div className="flex justify-between"><span className="text-zinc-500">GA4 ID:</span><span className="font-mono font-semibold text-zinc-950">{gaId || 'G-XWQVTC4XWZ'}</span></div>
+              <div className="flex justify-between"><span className="text-zinc-500">GTM ID:</span><span className="font-mono font-semibold text-zinc-600">{gtmId || 'Not Set'}</span></div>
             </div>
-            <button onClick={() => setIsSettingsModalOpen(true)} className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition-all">
+            <button onClick={() => setIsSettingsModalOpen(true)} className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold transition-all">
               <Settings className="w-3.5 h-3.5 text-amber-400" /> Configure GTM & SEO Keys
             </button>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex flex-col justify-between space-y-4">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-2"><Globe className="w-5 h-5 text-blue-600" /><h3 className="font-extrabold text-sm text-[#0b1a30]">XML Sitemap</h3></div>
-                <p className="text-xs text-slate-500">Dynamic sitemap for Google & Bing.</p>
+                <div className="flex items-center gap-2"><Globe className="w-5 h-5 text-blue-600" /><h3 className="font-semibold text-sm text-zinc-950">XML Sitemap</h3></div>
+                <p className="text-xs text-zinc-500">Dynamic sitemap for Google & Bing.</p>
               </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-50 text-blue-700 border border-blue-200">Dynamic</span>
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200">Dynamic</span>
             </div>
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-xs text-slate-500 font-medium">Indexes <strong className="text-[#0b1a30]">{5 + projectsCount}</strong> pages</span>
-              <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-extrabold border border-blue-200 transition-all">
+            <div className="pt-2 border-t border-zinc-100 flex items-center justify-between">
+              <span className="text-xs text-zinc-500 font-medium">Indexes <strong className="text-zinc-950">{5 + projectsCount}</strong> pages</span>
+              <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold border border-blue-200 transition-all">
                 View sitemap.xml <ExternalLink className="w-3 h-3" />
               </a>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm flex flex-col justify-between space-y-4">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-2"><FileText className="w-5 h-5 text-amber-600" /><h3 className="font-extrabold text-sm text-[#0b1a30]">Robots.txt Rules</h3></div>
-                <p className="text-xs text-slate-500">Blocks /admin & /api from crawlers.</p>
+                <div className="flex items-center gap-2"><FileText className="w-5 h-5 text-amber-600" /><h3 className="font-semibold text-sm text-zinc-950">Robots.txt Rules</h3></div>
+                <p className="text-xs text-zinc-500">Blocks /admin & /api from crawlers.</p>
               </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-50 text-amber-700 border border-amber-200">Configured</span>
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase bg-amber-50 text-amber-700 border border-amber-200">Configured</span>
             </div>
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-xs text-slate-500 font-medium">Crawler rules active</span>
-              <a href="/robots.txt" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-extrabold border border-amber-200 transition-all">
+            <div className="pt-2 border-t border-zinc-100 flex items-center justify-between">
+              <span className="text-xs text-zinc-500 font-medium">Crawler rules active</span>
+              <a href="/robots.txt" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition-all">
                 View robots.txt <ExternalLink className="w-3 h-3" />
               </a>
             </div>
@@ -509,29 +509,29 @@ export default function DashboardHome() {
       {/* ── RECENT LEADS TABLE ───────────────────────────── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-black text-[#0b1a30] flex items-center gap-2">
+          <h2 className="text-base font-semibold text-zinc-950 flex items-center gap-2">
             <Users className="h-5 w-5 text-amber-500" /> Recent CRM Leads ({leads.length})
           </h2>
-          <Link href="/admin/leads" className="text-xs font-extrabold text-[#1d63ed] hover:underline flex items-center gap-1">
+          <Link href="/admin/leads" className="text-xs font-semibold text-zinc-900 hover:underline flex items-center gap-1">
             View All <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+        <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-extrabold">
+                <tr className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
                   <th className="p-4">Contact</th>
                   <th className="p-4">Service</th>
                   <th className="p-4">Status</th>
                   <th className="p-4">Submitted</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-medium">
+              <tbody className="divide-y divide-zinc-100 font-medium">
                 {leads.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="p-10 text-center text-slate-400">
-                      <Users className="w-10 h-10 text-slate-200 mx-auto mb-2" />
+                    <td colSpan={4} className="p-10 text-center text-zinc-400">
+                      <Users className="w-10 h-10 text-zinc-200 mx-auto mb-2" />
                       No CRM leads yet. Submit a form on the contact page to test!
                     </td>
                   </tr>
@@ -545,18 +545,18 @@ export default function DashboardHome() {
                       LOST: 'bg-red-50 text-red-700 border-red-200',
                     };
                     return (
-                      <tr key={lead.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={lead.id} className="hover:bg-zinc-50/70 transition-colors">
                         <td className="p-4">
-                          <span className="font-extrabold text-[#0b1a30] block">{lead.contactName}</span>
-                          <span className="text-slate-400 font-mono text-[11px]">{lead.email}</span>
+                          <span className="font-semibold text-zinc-950 block">{lead.contactName}</span>
+                          <span className="text-zinc-400 font-mono text-[11px]">{lead.email}</span>
                         </td>
-                        <td className="p-4 text-slate-700 font-bold">{lead.serviceInterest || 'General Inquiry'}</td>
+                        <td className="p-4 text-zinc-700 font-bold">{lead.serviceInterest || 'General Inquiry'}</td>
                         <td className="p-4">
-                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase border ${statusColors[lead.status] || 'bg-slate-50 text-slate-600 border-slate-200'}`}>
+                          <span className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold uppercase border ${statusColors[lead.status] || 'bg-zinc-50 text-zinc-600 border-zinc-200'}`}>
                             {lead.status}
                           </span>
                         </td>
-                        <td className="p-4 text-slate-400 font-mono">{new Date(lead.submittedAt).toLocaleDateString()}</td>
+                        <td className="p-4 text-zinc-400 font-mono">{new Date(lead.submittedAt).toLocaleDateString()}</td>
                       </tr>
                     );
                   })
@@ -569,17 +569,17 @@ export default function DashboardHome() {
 
       {/* ── SEO SETTINGS MODAL ───────────────────────────── */}
       {isSettingsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150 !mt-0">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/70 backdrop-blur-xs animate-in fade-in duration-150 !mt-0">
+          <div className="bg-white rounded-xl border border-zinc-200 shadow-sm max-w-lg w-full p-6 sm:p-8 space-y-6 relative">
+            <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-slate-900 text-amber-400"><Settings className="w-5 h-5" /></div>
+                <div className="p-2 rounded-xl bg-zinc-900 text-amber-400"><Settings className="w-5 h-5" /></div>
                 <div>
-                  <h3 className="text-lg font-black text-[#0b1a30]">Site Meta & SEO Settings</h3>
-                  <p className="text-xs text-slate-500 font-medium">GTM, Search Console, OG image</p>
+                  <h3 className="text-lg font-semibold text-zinc-950">Site Meta & SEO Settings</h3>
+                  <p className="text-xs text-zinc-500 font-medium">GTM, Search Console, OG image</p>
                 </div>
               </div>
-              <button onClick={() => setIsSettingsModalOpen(false)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors">
+              <button onClick={() => setIsSettingsModalOpen(false)} className="p-1.5 rounded-xl hover:bg-zinc-100 text-zinc-400 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -596,33 +596,33 @@ export default function DashboardHome() {
                 { label: 'Meta Description', value: metaDescription, setter: setMetaDescription, placeholder: 'Short description for search results', hint: 'Overrides default meta description.', textarea: true },
               ].map(({ label, value, setter, placeholder, hint, textarea }) => (
                 <div key={label} className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-600">{label}</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-zinc-600">{label}</label>
                   {textarea ? (
                     <textarea rows={3} value={value} onChange={(e) => setter(e.target.value)} placeholder={placeholder}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all resize-none" />
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-950 focus:outline-none focus:border-blue-600 transition-all resize-none" />
                   ) : (
                     <input type="text" value={value} onChange={(e) => setter(e.target.value)} placeholder={placeholder}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all" />
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-950 focus:outline-none focus:border-blue-600 transition-all" />
                   )}
-                  <p className="text-[11px] text-slate-400">{hint}</p>
+                  <p className="text-[11px] text-zinc-400">{hint}</p>
                 </div>
               ))}
 
               {/* OG Image */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                  <ImageIcon className="w-3.5 h-3.5 text-[#1d63ed]" /> Open Graph Image
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-600 flex items-center gap-1.5">
+                  <ImageIcon className="w-3.5 h-3.5 text-zinc-900" /> Open Graph Image
                 </label>
                 {ogImage && (
-                  <div className="relative w-full h-28 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 group">
+                  <div className="relative w-full h-28 rounded-xl overflow-hidden border border-zinc-200 bg-zinc-50 group">
                     <Image src={resolveValidImageSrc(ogImage)} alt="OG" fill sizes="(max-width: 768px) 100vw, 500px" className="object-cover" unoptimized />
-                    <button type="button" onClick={() => setOgImage('')} className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-slate-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all">
+                    <button type="button" onClick={() => setOgImage('')} className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-zinc-900/70 text-white opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all">
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 )}
-                <label className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer text-slate-600 font-bold text-xs">
-                  {uploadingOgImage ? <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1d63ed]" /> : <Upload className="w-3.5 h-3.5 text-[#1d63ed]" />}
+                <label className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 hover:bg-zinc-100 cursor-pointer text-zinc-600 font-bold text-xs">
+                  {uploadingOgImage ? <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-900" /> : <Upload className="w-3.5 h-3.5 text-zinc-900" />}
                   <span>{ogImage ? 'Replace Image' : 'Upload Image'}</span>
                   <input type="file" accept="image/*" onChange={handleOgImageUpload} disabled={uploadingOgImage} className="hidden" />
                 </label>
@@ -635,17 +635,17 @@ export default function DashboardHome() {
                 { label: 'Google Search Console Verification', value: googleVerification, setter: setGoogleVerification, placeholder: 'verification_code_string' },
               ].map(({ label, value, setter, placeholder }) => (
                 <div key={label} className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-600">{label}</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-zinc-600">{label}</label>
                   <input type="text" value={value} onChange={(e) => setter(e.target.value)} placeholder={placeholder}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-mono text-[#0b1a30] focus:outline-none focus:border-blue-600 transition-all" />
+                    className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 text-sm font-mono text-zinc-950 focus:outline-none focus:border-blue-600 transition-all" />
                 </div>
               ))}
 
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
-                <button type="button" onClick={() => setIsSettingsModalOpen(false)} className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-extrabold hover:bg-slate-50 transition-all">
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-zinc-100">
+                <button type="button" onClick={() => setIsSettingsModalOpen(false)} className="px-4 py-2.5 rounded-xl border border-zinc-200 text-zinc-600 text-xs font-semibold hover:bg-zinc-50 transition-all">
                   Cancel
                 </button>
-                <button type="submit" disabled={savingSettings} className="px-5 py-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md flex items-center gap-2 transition-all">
+                <button type="submit" disabled={savingSettings} className="px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold shadow-md flex items-center gap-2 transition-all">
                   {savingSettings ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : <><Save className="w-4 h-4" /> Save Settings</>}
                 </button>
               </div>
