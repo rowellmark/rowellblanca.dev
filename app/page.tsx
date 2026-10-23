@@ -9,7 +9,6 @@ import { ProofStrip } from "@/components/homepage/proof-strip";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { TestimonialsSection } from "@/components/homepage/testimonials";
-import ContactSection from "@/components/homepage/contact-section";
 
 export default function Home() {
   return (
@@ -45,9 +44,6 @@ export default function Home() {
         badge="(05) — Client feedback & proof"
         title="Trusted by the people who ship with me."
       />
-
-      {/* 10. Direct Contact & Discovery Call Scheduling */}
-      <ContactSection />
     </>
   );
 }

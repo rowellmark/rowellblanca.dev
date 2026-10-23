@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnimatedLogo } from "@/components/ui/animated-logo";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import { FooterBibleVerse } from "@/components/ui/footer-bible-verse";
+import { LetsBuildCta } from "@/components/footer/lets-build-cta";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -24,27 +25,8 @@ export default function Footer() {
 
     return (
         <footer className="bg-brand-ink text-slate-400">
-            {/* Big call to action */}
-            <div className="mx-auto px-4 sm:px-6 lg:px-10 max-w-[1360px] pt-24 sm:pt-32 lg:pt-40 pb-16 flex flex-col gap-10">
-                <p className="motion-reveal font-mono text-[13px] tracking-[0.08em] uppercase text-slate-400">Start a project</p>
-                <p className="motion-reveal m-0 text-white font-extrabold tracking-[-0.06em] leading-[0.86] text-[clamp(64px,13vw,220px)]">
-                    Let&rsquo;s build<span className="text-amber-500">.</span>
-                </p>
-                <div className="motion-reveal flex flex-wrap items-center gap-4">
-                    <Link
-                        href="/contact"
-                        className="motion-btn inline-flex items-center gap-2.5 min-h-[64px] px-8 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-lg"
-                    >
-                        Book a discovery call <span className="motion-arrow" aria-hidden="true">→</span>
-                    </Link>
-                    <a
-                        href="mailto:hello@rowellblanca.dev"
-                        className="motion-underline text-white font-semibold tracking-[-0.02em] text-[clamp(18px,2vw,28px)] px-1 py-2"
-                    >
-                        hello@rowellblanca.dev
-                    </a>
-                </div>
-            </div>
+            {/* Site-wide closing call to action */}
+            <LetsBuildCta />
 
             {/* ✝ Daily Bible Verse — client component, fetches on mount */}
             <FooterBibleVerse />
