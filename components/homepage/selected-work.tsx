@@ -16,16 +16,16 @@ interface WorkProject {
     category?: string;
 }
 
-const CARD_COUNT = 4;
+const CARD_COUNT = 6;
 
-// Card skins cycle ink → cream → amber → white; each sticks 24px lower than the last.
+// Card skins cycle ink → cream → amber → white; each sticks 16px lower than the last.
 const SKINS = [
     { card: "bg-brand-ink-2 text-white border border-white/[0.08]", muted: "text-slate-300", label: "text-amber-500", chip: "border-white/15 text-slate-300", frame: "bg-[#1E2740]", bar: "bg-[#0F1628]", dot: "bg-slate-700" },
     { card: "bg-brand-cream text-brand-navy", muted: "text-brand-slate", label: "text-brand-slate", chip: "border-slate-900/20", frame: "bg-[#E7E1D3]", bar: "bg-[#DDD6C6]", dot: "bg-[#B8AF9C]" },
     { card: "bg-amber-500 text-brand-ink", muted: "text-brand-ink", label: "text-brand-ink", chip: "border-brand-ink/30", frame: "bg-brand-ink/10", bar: "bg-brand-ink/10", dot: "bg-brand-ink/30" },
     { card: "bg-white text-brand-navy", muted: "text-brand-slate", label: "text-brand-slate", chip: "border-slate-900/20", frame: "bg-slate-100", bar: "bg-slate-200", dot: "bg-slate-300" },
 ];
-const STICKY_TOPS = ["top-[104px]", "top-[128px]", "top-[152px]", "top-[176px]"];
+const STICKY_TOPS = ["top-[104px]", "top-[120px]", "top-[136px]", "top-[152px]", "top-[168px]", "top-[184px]"];
 
 function isPlugin(project: WorkProject) {
     return (

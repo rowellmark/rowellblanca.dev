@@ -242,3 +242,23 @@ body {
 }
 @keyframes motion-meter { from { transform: scaleX(0.1); } to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) { .motion-meter { animation: none; } }
+
+/* Case-study deep-dive HTML (admin-authored), set in the site's editorial type */
+.case-study-content { color: #334155; font-size: 17px; line-height: 1.75; }
+.case-study-content > * + * { margin-top: 1.1em; }
+.case-study-content h2 { margin-top: 1.8em; font-size: clamp(26px, 2.6vw, 38px); font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; color: #0F172A; }
+.case-study-content h3 { margin-top: 1.5em; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; color: #0F172A; }
+.case-study-content h2:first-child, .case-study-content h3:first-child { margin-top: 0; }
+.case-study-content ul, .case-study-content ol { padding-left: 1.25em; }
+.case-study-content ul { list-style: disc; }
+.case-study-content ol { list-style: decimal; }
+.case-study-content li + li { margin-top: 0.4em; }
+.case-study-content li::marker { color: #F59E0B; }
+.case-study-content a { color: #0F172A; font-weight: 600; text-decoration: underline; text-decoration-color: #F59E0B; text-underline-offset: 3px; }
+.case-study-content a:hover { color: #B45309; }
+.case-study-content strong { color: #0F172A; }
+.case-study-content blockquote { border-left: 3px solid #F59E0B; padding: 0.25em 0 0.25em 1.25em; font-size: 1.15em; font-weight: 600; color: #0F172A; }
+.case-study-content code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.9em; background: #F1F5F9; padding: 0.1em 0.35em; border-radius: 6px; }
+.case-study-content pre { background: #0B1020; color: #E2E8F0; padding: 1.25em; border-radius: 16px; overflow-x: auto; }
+.case-study-content pre code { background: none; padding: 0; }
+.case-study-content img { border-radius: 18px; border: 1px solid #E2E8F0; }

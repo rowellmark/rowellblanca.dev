@@ -1,25 +1,52 @@
-const STACK = [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Node.js",
-    "Prisma",
-    "NeonDB",
-    "WordPress",
-    "PHP",
-    "Custom Gutenberg Blocks",
+import {
+    siNextdotjs,
+    siReact,
+    siTypescript,
+    siNodedotjs,
+    siPrisma,
+    siPostgresql,
+    siNeon,
+    siWordpress,
+    siPhp,
+    siTailwindcss,
+    siVercel,
+    siMysql,
+    type SimpleIcon,
+} from "simple-icons";
+
+// Official brand marks (simple-icons, CC0), drawn in one ink colour on the amber band.
+const STACK: SimpleIcon[] = [
+    siNextdotjs,
+    siReact,
+    siTypescript,
+    siNodedotjs,
+    siPrisma,
+    siPostgresql,
+    siNeon,
+    siWordpress,
+    siPhp,
+    siTailwindcss,
+    siVercel,
+    siMysql,
 ];
 
 function StackRun({ hidden }: { hidden?: boolean }) {
     return (
-        <>
-            {STACK.map((item) => (
-                <span key={item} className="flex items-center gap-16 pr-16" aria-hidden={hidden || undefined}>
-                    <span>{item}</span>
-                    <span aria-hidden="true">✦</span>
-                </span>
+        <ul className="m-0 p-0 list-none flex shrink-0" aria-hidden={hidden || undefined}>
+            {STACK.map((icon) => (
+                <li key={icon.slug} className="flex items-center gap-3 sm:gap-4 pr-12 sm:pr-16">
+                    <svg
+                        role="img"
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="h-[0.9em] w-[0.9em] shrink-0 fill-current"
+                    >
+                        <path d={icon.path} />
+                    </svg>
+                    <span>{icon.title}</span>
+                </li>
             ))}
-        </>
+        </ul>
     );
 }
 
