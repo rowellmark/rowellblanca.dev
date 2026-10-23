@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 
 interface RotatingTextProps {
   texts?: string[];
@@ -54,7 +54,7 @@ export function RotatingText({
     },
   };
 
-  const letterVariants = {
+  const letterVariants: Variants = {
     hidden: {
       y: '100%',
       opacity: 0,

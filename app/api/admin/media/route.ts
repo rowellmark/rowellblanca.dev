@@ -3,7 +3,7 @@ import { list } from '@vercel/blob';
 import { isAdminAuthenticated } from '@/lib/auth';
 
 export async function GET() {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

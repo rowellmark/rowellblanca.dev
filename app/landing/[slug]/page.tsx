@@ -4,9 +4,9 @@ import { notFound } from 'next/navigation';
 import { DynamicLandingPageClient } from './dynamic-landing-client';
 
 interface DynamicLandingPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function getLandingPageData(slug: string) {
@@ -23,7 +23,8 @@ async function getLandingPageData(slug: string) {
   }
 }
 
-export async function generateMetadata({ params }: DynamicLandingPageProps): Promise<Metadata> {
+export async function generateMetadata(props: DynamicLandingPageProps): Promise<Metadata> {
+  const params = await props.params;
   const page = await getLandingPageData(params.slug);
   const title = page?.metaTitle || page?.heroTitle || 'Hire Senior Full-Stack Software Engineer';
   const description = page?.metaDescription || page?.heroSubtitle || 'Bespoke web development and software engineering.';
@@ -43,7 +44,8 @@ export async function generateMetadata({ params }: DynamicLandingPageProps): Pro
   };
 }
 
-export default async function DynamicLandingPage({ params }: DynamicLandingPageProps) {
+export default async function DynamicLandingPage(props: DynamicLandingPageProps) {
+  const params = await props.params;
   const page = await getLandingPageData(params.slug);
 
   if (!page) {

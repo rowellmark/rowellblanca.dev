@@ -4,7 +4,7 @@ import { isAdminAuthenticated } from '@/lib/auth';
 import { sendReplyEmail } from '@/lib/mailer';
 
 export async function POST(req: NextRequest) {
-  if (!isAdminAuthenticated()) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 

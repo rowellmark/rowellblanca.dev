@@ -8,7 +8,7 @@ import { PortfolioProject } from '@/components/ui/portfolio-card';
 import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
 
 interface PageProps {
-  params: { projects: string };
+  params: Promise<{ projects: string }>;
 }
 
 async function getProject(permalink: string): Promise<PortfolioProject | null> {
@@ -42,7 +42,8 @@ async function getProject(permalink: string): Promise<PortfolioProject | null> {
   return null;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   const project = await getProject(params.projects);
 
   if (!project) {
@@ -62,7 +63,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   });
 }
 
-export default async function CaseStudyPage({ params }: PageProps) {
+export default async function CaseStudyPage(props: PageProps) {
+  const params = await props.params;
   const project = await getProject(params.projects);
 
   if (!project) {

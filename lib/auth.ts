@@ -50,8 +50,8 @@ export async function authenticateAdminUser(emailInput: string, passwordInput: s
   }
 }
 
-export function setAdminSessionCookie(userPayload: any): void {
-  const cookieStore = cookies();
+export async function setAdminSessionCookie(userPayload: any): Promise<void> {
+  const cookieStore = await cookies();
 
   cookieStore.set(ADMIN_COOKIE_NAME, JSON.stringify({
     id: userPayload.id,
@@ -67,13 +67,13 @@ export function setAdminSessionCookie(userPayload: any): void {
   });
 }
 
-export function clearAdminSessionCookie(): void {
-  const cookieStore = cookies();
+export async function clearAdminSessionCookie(): Promise<void> {
+  const cookieStore = await cookies();
   cookieStore.delete(ADMIN_COOKIE_NAME);
 }
 
-export function getAdminSessionUser(): any | null {
-  const cookieStore = cookies();
+export async function getAdminSessionUser(): Promise<any | null> {
+  const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_COOKIE_NAME);
   if (!token?.value) return null;
 
@@ -84,7 +84,7 @@ export function getAdminSessionUser(): any | null {
   }
 }
 
-export function isAdminAuthenticated(): boolean {
-  const user = getAdminSessionUser();
+export async function isAdminAuthenticated(): Promise<boolean> {
+  const user = await getAdminSessionUser();
   return Boolean(user && user.email);
 }

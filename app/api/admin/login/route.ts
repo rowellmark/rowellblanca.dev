@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: authResult.message || 'Invalid email or password' }, { status: 401 });
     }
 
-    setAdminSessionCookie(authResult.user);
+    await setAdminSessionCookie(authResult.user);
 
     return NextResponse.json({
       success: true,
