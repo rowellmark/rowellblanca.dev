@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ContactModal } from "@/components/ui/contact-modal";
 import { SplitText } from "@/components/ui/split-text";
 
 const SEO_FEATURES = [
@@ -19,6 +18,8 @@ const LOGIN_FEATURES = [
     "Secure custom login slug; /wp-login.php returns a 404",
     "Shares the BuildForUser Dashboard admin menu & UI shell",
 ];
+
+const SEO_PLUGIN_HREF = "/plugins/buildforuser-seo";
 
 // Default case-study link; refreshed from /api/projects in case the DB uses another permalink.
 const LOGIN_FALLBACK_HREF = "/mywork/buildforuser-login-customizer-plugin";
@@ -115,7 +116,6 @@ function LoginPreview() {
 
 export function PluginsShowcase() {
     const loginHref = useLoginCustomizerHref();
-    const [modalOpen, setModalOpen] = useState(false);
 
     return (
         <section id="plugins" className="px-4 sm:px-6 lg:px-10 pb-24 lg:pb-40">
@@ -137,13 +137,7 @@ export function PluginsShowcase() {
                     {/* BuildForUser SEO */}
                     <article data-cursor="view" className="relative motion-reveal motion-card rounded-[28px] bg-brand-ink text-white p-6 sm:p-10 flex flex-col gap-8">
                         {/* Whole-card click target (kept separate from the animated button) */}
-                        <button
-                            type="button"
-                            aria-hidden="true"
-                            tabIndex={-1}
-                            onClick={() => setModalOpen(true)}
-                            className="absolute inset-0 z-[1] rounded-[inherit] cursor-pointer"
-                        />
+                        <Link href={SEO_PLUGIN_HREF} aria-hidden="true" tabIndex={-1} className="absolute inset-0 z-[1] rounded-[inherit]" />
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <span className="font-mono text-xs uppercase tracking-[0.08em] text-amber-400">SEO engine · v1.0.0</span>
                             <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400">WP 5.8+ · PHP 7.4+ · GPLv2</span>
@@ -157,13 +151,13 @@ export function PluginsShowcase() {
                         </div>
                         <SerpPreview />
                         <FeatureList items={SEO_FEATURES} />
-                        <button
-                            type="button"
-                            onClick={() => setModalOpen(true)}
-                            className="motion-btn motion-magnetic relative z-[2] mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold cursor-pointer"
+                        <Link
+                            href={SEO_PLUGIN_HREF}
+                            aria-label="Know more about BuildForUser SEO"
+                            className="motion-btn motion-magnetic relative z-[2] mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold"
                         >
-                            Ask about BuildForUser SEO <span className="motion-arrow" aria-hidden="true">→</span>
-                        </button>
+                            Know more <span className="motion-arrow" aria-hidden="true">→</span>
+                        </Link>
                     </article>
 
                     {/* Login Customizer */}
@@ -184,15 +178,15 @@ export function PluginsShowcase() {
                         <FeatureList items={LOGIN_FEATURES} />
                         <Link
                             href={loginHref}
+                            aria-label="Know more about Login Customizer"
                             className="motion-btn motion-magnetic relative z-[2] mt-auto self-start inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold"
                         >
-                            View plugin case study <span className="motion-arrow" aria-hidden="true">→</span>
+                            Know more <span className="motion-arrow" aria-hidden="true">→</span>
                         </Link>
                     </article>
                 </div>
             </div>
 
-            <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} defaultService="Custom WordPress Engine / Plugin" />
         </section>
     );
 }
