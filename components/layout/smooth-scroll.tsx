@@ -17,7 +17,29 @@ export function SmoothScroll() {
       // chat panel, command palette and modals keep their own native scroll
       allowNestedScroll: true,
     });
-    return () => lenis.destroy();
+    // Expose a clamped scroll velocity (-1..1) as a CSS variable for velocity-linked effects.
+    const root = document.documentElement;
+    let last = 0;
+    lenis.on('scroll', ({ velocity }: Lenis) => {
+      const raw = Math.max(-1, Math.min(1, velocity / 40));
+      const v = Math.abs(raw) < 0.02 ? 0 : raw;
+      if (Math.abs(v - last) > 0.01) {
+        last = v;
+        root.style.setProperty('--scroll-velocity', v.toFixed(3));
+      }
+    });
+    const settle = setInterval(() => {
+      if (!lenis.isScrolling && last !== 0) {
+        last = 0;
+        root.style.setProperty('--scroll-velocity', '0');
+      }
+    }, 150);
+
+    return () => {
+      clearInterval(settle);
+      root.style.removeProperty('--scroll-velocity');
+      lenis.destroy();
+    };
   }, []);
 
   return null;

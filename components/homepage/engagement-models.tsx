@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { SplitText } from "@/components/ui/split-text";
 
 const MODELS = [
   {
@@ -60,10 +61,8 @@ export function EngagementModels() {
         <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
           <div className="flex flex-col gap-5">
             <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — Ways to work together</p>
-            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
-              Pick your
-              <br />
-              engagement.
+            <h2 data-inview className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
+              <SplitText lines={["Pick your", "engagement."]} />
             </h2>
           </div>
           <p className="m-0 max-w-[420px] text-brand-slate text-[17px] leading-relaxed">
@@ -100,7 +99,7 @@ export function EngagementModels() {
               <button
                 type="button"
                 onClick={() => handleSelectPackage(model.service)}
-                className={`motion-btn mt-auto inline-flex items-center justify-between min-h-[56px] px-6 rounded-full font-bold cursor-pointer ${
+                className={`motion-btn motion-magnetic mt-auto inline-flex items-center justify-between min-h-[56px] px-6 rounded-full font-bold cursor-pointer ${
                   model.featured
                     ? "bg-amber-500 hover:bg-amber-400 text-brand-ink"
                     : model.tag.startsWith("A")

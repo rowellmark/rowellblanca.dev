@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FALLBACK_PROJECTS } from "@/lib/fallback-projects";
 import { resolveValidImageSrc } from "@/lib/image-utils";
+import { SplitText } from "@/components/ui/split-text";
 
 interface WorkProject {
     sitename: string;
@@ -66,15 +67,13 @@ export function SelectedWork() {
                 <div className="motion-reveal flex flex-wrap items-end justify-between gap-8 mb-16 lg:mb-20">
                     <div className="flex flex-col gap-5">
                         <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-slate-400">(02) — Selected work</p>
-                        <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-[clamp(44px,6.4vw,104px)]">
-                            Built to
-                            <br />
-                            perform.
+                        <h2 data-inview className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-[clamp(44px,6.4vw,104px)]">
+                            <SplitText lines={["Built to", "perform."]} />
                         </h2>
                     </div>
                     <Link
                         href="/mywork"
-                        className="motion-btn inline-flex items-center gap-2.5 min-h-[52px] px-6 rounded-full border border-white/25 hover:border-white/60 font-semibold"
+                        className="motion-btn motion-magnetic inline-flex items-center gap-2.5 min-h-[52px] px-6 rounded-full border border-white/25 hover:border-white/60 font-semibold"
                     >
                         All 50+ projects <span className="motion-arrow" aria-hidden="true">→</span>
                     </Link>
@@ -87,6 +86,7 @@ export function SelectedWork() {
                         return (
                             <article
                                 key={project.permalink}
+                                data-cursor="view"
                                 className={`motion-card ${isLast ? "" : "motion-recede"} sticky ${STICKY_TOPS[i % STICKY_TOPS.length]} ${skin.card} rounded-[28px] p-6 sm:p-8 lg:p-11 flex flex-wrap gap-10 min-h-[560px]`}
                             >
                                 <div className="flex-[1_1_340px] flex flex-col justify-between gap-8">
@@ -131,7 +131,7 @@ export function SelectedWork() {
                                             alt={`${project.sitename} screenshot`}
                                             fill
                                             sizes="(min-width: 1024px) 760px, 100vw"
-                                            className="motion-shot object-cover object-left-top"
+                                            className="motion-shot motion-parallax object-cover object-left-top"
                                             unoptimized
                                         />
                                     </div>

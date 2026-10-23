@@ -14,6 +14,7 @@ import {
   Cpu,
   Package,
 } from "lucide-react";
+import { SplitText } from "@/components/ui/split-text";
 
 interface ProjectTypeOption {
   id: string;
@@ -396,10 +397,8 @@ export function ProjectEstimator() {
             <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">
               (04) — Scope &amp; investment calculator
             </p>
-            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
-              Price your
-              <br />
-              project.
+            <h2 data-inview className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
+              <SplitText lines={["Price your", "project."]} />
             </h2>
           </div>
           <p className="m-0 max-w-[420px] text-brand-slate text-[17px] leading-relaxed">

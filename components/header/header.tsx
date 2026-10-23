@@ -123,7 +123,7 @@ export default function Header() {
                                 handleMobileMenuClick();
                                 setIsContactModalOpen(true);
                             }}
-                            className="motion-btn inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white hover:bg-amber-400 text-brand-ink font-bold text-[15px] max-lg:w-full cursor-pointer"
+                            className="motion-btn motion-magnetic inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white hover:bg-amber-400 text-brand-ink font-bold text-[15px] max-lg:w-full cursor-pointer"
                         >
                             Say Hello! <span className="motion-arrow" aria-hidden="true">→</span>
                         </button>

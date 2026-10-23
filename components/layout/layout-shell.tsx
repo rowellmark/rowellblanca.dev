@@ -9,6 +9,7 @@ import ChatBubble from '@/components/ui/chat-bubble';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 import { CommandPalette } from '@/components/ui/command-palette';
 import { SmoothScroll } from '@/components/layout/smooth-scroll';
+import { MotionEffects } from '@/components/layout/motion-effects';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +24,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
   return (
     <>
       <SmoothScroll />
+      <MotionEffects />
       <ScrollProgress />
       <WelcomeLoading />
       <CommandPalette />

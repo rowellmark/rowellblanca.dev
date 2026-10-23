@@ -270,6 +270,7 @@ export const ProductCard = ({
                 y: -10,
                 scale: 1.03,
             }}
+            data-cursor="view"
             className="group/product h-56 w-[22rem] relative shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-800"
         >
             <Link

@@ -51,7 +51,7 @@ export function Hero() {
                     </span>
                 </div>
 
-                <h1 className="m-0 flex flex-col font-extrabold tracking-[-0.05em] leading-[0.92] text-[clamp(52px,9vw,148px)]">
+                <h1 className="motion-hero-exit m-0 flex flex-col font-extrabold tracking-[-0.05em] leading-[0.92] text-[clamp(52px,9vw,148px)]">
                     <span className="motion-fade motion-d1 block mb-7 font-mono font-medium tracking-[0.06em] leading-snug uppercase text-slate-400 text-[clamp(13px,1.1vw,15px)]">
                         Rowell Mark Blanca — Senior Full-Stack &amp; Next.js Engineer
                     </span>
@@ -74,13 +74,13 @@ export function Hero() {
                         <button
                             type="button"
                             onClick={() => setIsContactModalOpen(true)}
-                            className="motion-btn inline-flex items-center gap-2.5 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-base cursor-pointer"
+                            className="motion-btn motion-magnetic inline-flex items-center gap-2.5 min-h-[56px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-base cursor-pointer"
                         >
                             Book discovery call <span className="motion-arrow" aria-hidden="true">→</span>
                         </button>
                         <Link
                             href="#selected-work"
-                            className="motion-btn inline-flex items-center gap-2.5 min-h-[56px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold text-base"
+                            className="motion-btn motion-magnetic inline-flex items-center gap-2.5 min-h-[56px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold text-base"
                         >
                             See selected work
                         </Link>

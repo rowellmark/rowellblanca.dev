@@ -27,9 +27,11 @@ function StackRun({ hidden }: { hidden?: boolean }) {
 export function StackMarquee() {
     return (
         <section aria-label="Tech stack" className="motion-marquee overflow-hidden bg-amber-500 text-brand-ink py-6">
-            <div className="motion-marquee-track whitespace-nowrap font-extrabold tracking-[-0.03em] text-[clamp(24px,3vw,40px)]">
-                <StackRun />
-                <StackRun hidden />
+            <div className="motion-velocity-skew">
+                <div className="motion-marquee-track whitespace-nowrap font-extrabold tracking-[-0.03em] text-[clamp(24px,3vw,40px)]">
+                    <StackRun />
+                    <StackRun hidden />
+                </div>
             </div>
         </section>
     );

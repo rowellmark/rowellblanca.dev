@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { SplitText } from '@/components/ui/split-text';
 
 const VALUE_PROPS = [
     'Over 12 years of hands-on full-stack development experience',
@@ -21,8 +22,8 @@ export function LetsBuildCta() {
                 <span className="motion-reveal font-mono text-[13px] font-normal tracking-[0.08em] uppercase text-slate-400">
                     Have a project in mind?
                 </span>
-                <span className="motion-reveal text-white font-extrabold tracking-[-0.06em] leading-[0.86] text-[clamp(64px,13vw,220px)]">
-                    Let&rsquo;s build<span className="text-amber-500">.</span>
+                <span data-inview className="motion-scale-in block text-white font-extrabold tracking-[-0.06em] leading-[0.86] text-[clamp(64px,13vw,220px)]">
+                    <SplitText lines={['Let\u2019s build']} suffix={<span className="text-amber-500">.</span>} stagger={45} />
                 </span>
             </h2>
 
@@ -77,14 +78,14 @@ export function LetsBuildCta() {
                         <button
                             type="button"
                             onClick={() => setModal({ open: true, tab: 'inquiry' })}
-                            className="motion-btn w-full min-h-[60px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-base flex items-center justify-between gap-3 cursor-pointer"
+                            className="motion-btn motion-magnetic w-full min-h-[60px] px-7 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-base flex items-center justify-between gap-3 cursor-pointer"
                         >
                             Send a message or request a quote <span className="motion-arrow" aria-hidden="true">→</span>
                         </button>
                         <button
                             type="button"
                             onClick={() => setModal({ open: true, tab: 'call' })}
-                            className="motion-btn w-full min-h-[60px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold text-base flex items-center justify-between gap-3 cursor-pointer"
+                            className="motion-btn motion-magnetic w-full min-h-[60px] px-7 rounded-full border border-white/25 hover:border-white/60 text-white font-semibold text-base flex items-center justify-between gap-3 cursor-pointer"
                         >
                             Book a discovery call <span className="motion-arrow" aria-hidden="true">→</span>
                         </button>
