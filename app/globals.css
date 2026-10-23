@@ -105,3 +105,71 @@ body {
     display: none;
   }
 }
+/* ------------------------------------------------------------------
+   Motion system (Lenis-style redesign)
+   Ease: out-expo cubic-bezier(.16,1,.3,1). Only transform/opacity are
+   animated. Scroll-linked effects use CSS scroll timelines where
+   supported and simply render in their final state elsewhere.
+------------------------------------------------------------------- */
+.motion-mask { display: block; overflow: hidden; padding-bottom: 0.06em; }
+.motion-rise { display: block; animation: motion-rise 0.8s cubic-bezier(.16,1,.3,1) both; }
+.motion-fade { animation: motion-fade 0.8s cubic-bezier(.16,1,.3,1) both; }
+.motion-d1 { animation-delay: .05s; }
+.motion-d2 { animation-delay: .12s; }
+.motion-d3 { animation-delay: .19s; }
+.motion-d4 { animation-delay: .35s; }
+.motion-d5 { animation-delay: .5s; }
+@keyframes motion-rise { from { transform: translateY(45%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes motion-fade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.motion-marquee-track { display: flex; width: max-content; animation: motion-marquee 36s linear infinite; }
+.motion-marquee:hover .motion-marquee-track { animation-play-state: paused; }
+@keyframes motion-marquee { to { transform: translateX(-50%); } }
+
+.motion-cue { animation: motion-cue 2.4s cubic-bezier(.65,0,.35,1) infinite; transform-origin: top; }
+@keyframes motion-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.motion-pulse { animation: motion-pulse 2s ease-in-out infinite; }
+@keyframes motion-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.55); } 50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+
+.motion-btn { transition: transform .5s cubic-bezier(.16,1,.3,1), background-color .3s, color .3s, border-color .3s; }
+.motion-btn:hover { transform: translateY(-3px); }
+.motion-btn .motion-arrow { display: inline-block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+.motion-btn:hover .motion-arrow { transform: translateX(5px); }
+
+.motion-underline { position: relative; }
+.motion-underline::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: right; transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.motion-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+
+.motion-lift { transition: transform .6s cubic-bezier(.16,1,.3,1), box-shadow .6s; }
+.motion-lift:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -30px rgba(15,23,42,.35); }
+.motion-card .motion-shot { transition: transform 1.2s cubic-bezier(.16,1,.3,1); }
+.motion-card:hover .motion-shot { transform: scale(1.03); }
+
+@supports (animation-timeline: view()) {
+  .motion-reveal { animation: motion-reveal linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
+  .motion-lit { animation: motion-lit linear both; animation-timeline: view(); }
+  .motion-l1 { animation-range: cover 18% cover 30%; }
+  .motion-l2 { animation-range: cover 22% cover 34%; }
+  .motion-l3 { animation-range: cover 26% cover 38%; }
+  .motion-l4 { animation-range: cover 30% cover 42%; }
+  .motion-l5 { animation-range: cover 34% cover 46%; }
+  .motion-l6 { animation-range: cover 38% cover 50%; }
+  .motion-recede { animation: motion-recede linear both; animation-timeline: view(); animation-range: exit-crossing 0% exit-crossing 100%; }
+}
+@keyframes motion-reveal { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
+@keyframes motion-lit { from { opacity: .16; } to { opacity: 1; } }
+@keyframes motion-recede { to { transform: scale(.92); filter: brightness(.7); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-rise, .motion-fade, .motion-marquee-track, .motion-cue, .motion-pulse,
+  .motion-reveal, .motion-lit, .motion-recede { animation: none !important; }
+  .motion-btn, .motion-lift, .motion-underline::after, .motion-card .motion-shot { transition: none !important; }
+}

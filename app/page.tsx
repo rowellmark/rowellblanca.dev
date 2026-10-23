@@ -1,44 +1,44 @@
 "use client";
 
 import { Hero } from "@/components/homepage/hero";
+import { StackMarquee } from "@/components/homepage/stack-marquee";
 import { ShowCasePortfolios } from "@/components/homepage/showcase-portfolios";
-import { ArchitectureInspector } from "@/components/homepage/architecture-inspector";
-import { RefactorBenchmark } from "@/components/homepage/refactor-benchmark";
-import { FeaturedProject } from "@/components/homepage/featured-project";
-import { FlagshipWork } from "@/components/homepage/flagship-work";
-import { ProjectEstimator } from "@/components/homepage/project-estimator";
+import { ApproachStatement } from "@/components/homepage/approach-statement";
+import { SelectedWork } from "@/components/homepage/selected-work";
+import { ProofStrip } from "@/components/homepage/proof-strip";
 import { EngagementModels } from "@/components/homepage/engagement-models";
+import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { TestimonialsSection } from "@/components/homepage/testimonials";
 import ContactSection from "@/components/homepage/contact-section";
 
 export default function Home() {
   return (
     <>
-      {/* 1. Hero with Developer Telemetry & Timezone HUD */}
+      {/* 1. Hero: masked line reveal, live UK / US / AU clocks */}
       <Hero />
 
-      {/* 2. Unified Trust Banner & Interactive Portfolio Showcase */}
+      {/* 2. Infinite tech-stack marquee */}
+      <StackMarquee />
+
+      {/* 3. Interactive Portfolio Showcase (parallax rows + trust panel) */}
       <ShowCasePortfolios />
 
-      {/* 3. Interactive System Architecture & Request Flow Blueprint */}
-      <ArchitectureInspector />
+      {/* 4. Approach statement, lit phrase by phrase on scroll */}
+      <ApproachStatement />
 
-      {/* 4. Interactive Before & After Performance & Code Benchmark */}
-      <RefactorBenchmark />
+      {/* 5. Selected work: sticky stacking case-study cards */}
+      <SelectedWork />
 
-      {/* 5. In-Depth Case Study Spotlight (MacManus Finance) */}
-      <FeaturedProject />
+      {/* 6. Guarantees */}
+      <ProofStrip />
 
-      {/* 6. Top 5 Flagship Engineering Builds & View More */}
-      <FlagshipWork />
+      {/* 7. Engagement Models & Retainer Framework */}
+      <EngagementModels />
 
-      {/* 7. Interactive Project Scope & Budget Estimator */}
+      {/* 8. Interactive Project Scope & Budget Estimator */}
       <div id="project-estimator">
         <ProjectEstimator />
       </div>
-
-      {/* 8. Engagement Models & Retainer Framework */}
-      <EngagementModels />
 
       {/* 9. Client Reviews & Social Proof */}
       <TestimonialsSection />

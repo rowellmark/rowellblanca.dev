@@ -43,7 +43,7 @@ export function FooterBibleVerse() {
 
   return (
     <div className="bg-gradient-to-r from-indigo-950 via-[#0d1f3c] to-slate-900 border-b border-indigo-800/40">
-      <div className="container mx-auto px-6 max-w-6xl py-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className="mx-auto px-4 sm:px-6 lg:px-10 max-w-[1360px] py-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-2 shrink-0">
           <div className="h-7 w-7 rounded-lg bg-amber-500/20 border border-amber-400/30 flex items-center justify-center">
             <BookOpen className="h-4 w-4 text-amber-400" />

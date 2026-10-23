@@ -2,6 +2,11 @@
   overflow: visible;
 }
 
+// white monogram for dark backgrounds; the amber accent is unchanged
+.onDark {
+  --logo-ink: #ffffff;
+}
+
 .monogram {
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -28,7 +33,7 @@
   2% {
     stroke-dashoffset: 1550;
     fill: transparent;
-    stroke: #0b1a30;
+    stroke: var(--logo-ink, #0b1a30);
     stroke-width: 5.5;
     opacity: 0;
   }
@@ -41,17 +46,17 @@
     stroke-width: 5.5;
   }
   32.2% {
-    fill: #0b1a30;
+    fill: var(--logo-ink, #0b1a30);
     stroke-width: 2;
   }
   71.1% {
-    fill: #0b1a30;
+    fill: var(--logo-ink, #0b1a30);
     stroke-width: 2;
     opacity: 1;
   }
   84.4% {
     opacity: 0;
-    fill: #0b1a30;
+    fill: var(--logo-ink, #0b1a30);
     stroke-width: 2;
     stroke-dashoffset: 0;
   }
@@ -68,7 +73,7 @@
   17.8% {
     stroke-dashoffset: 390;
     fill: transparent;
-    stroke: #e4840e;
+    stroke: var(--logo-accent, #e4840e);
     stroke-width: 5.5;
     opacity: 0;
   }
@@ -81,17 +86,17 @@
     stroke-width: 5.5;
   }
   27.8% {
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
     stroke-width: 2;
   }
   71.1% {
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
     stroke-width: 2;
     opacity: 1;
   }
   84.4% {
     opacity: 0;
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
     stroke-width: 2;
     stroke-dashoffset: 0;
   }
@@ -115,21 +120,21 @@
   }
   30% {
     transform: scale(1.18);
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
   }
   34.4% {
     transform: scale(1);
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
   }
   71.1% {
     transform: scale(1);
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
     opacity: 1;
   }
   84.4% {
     opacity: 0;
     transform: scale(1);
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
   }
   100% {
     opacity: 0;
@@ -147,10 +152,10 @@
     opacity: 1;
   }
   .monogram {
-    fill: #0b1a30;
+    fill: var(--logo-ink, #0b1a30);
   }
   .accent,
   .dot {
-    fill: #e4840e;
+    fill: var(--logo-accent, #e4840e);
   }
 }

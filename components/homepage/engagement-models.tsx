@@ -1,8 +1,49 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Zap, Layers, RefreshCw, Wrench } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
+
+const MODELS = [
+  {
+    tag: "A — Project",
+    title: "Fixed-scope build",
+    service: "Fixed-Scope Project Sprint",
+    cta: "Scope your project",
+    featured: false,
+    points: [
+      "Fixed upfront pricing & clear delivery timeline",
+      "Full architecture design, UI integration & QA",
+      "98+ Core Web Vitals performance guarantee",
+      "30 days post-launch warranty & bug-free handover",
+    ],
+  },
+  {
+    tag: "B — Retainer",
+    title: "Fractional developer",
+    service: "Fractional Senior Engineer Retainer",
+    cta: "Hire fractional dev",
+    featured: true,
+    points: [
+      "Direct Slack / Teams access & daily standups",
+      "Full UK (GMT), US & Australian (AEST) timezone overlap",
+      "Continuous PR reviews, CI/CD, and fast shipping",
+      "No recruitment fees, payroll taxes, or agency bloat",
+    ],
+  },
+  {
+    tag: "C — Audit",
+    title: "Speed & security audit",
+    service: "Codebase Rescue & Speed Audit",
+    cta: "Request speed audit",
+    featured: false,
+    points: [
+      "Comprehensive Core Web Vitals bottleneck audit",
+      "Database query optimization & asset minification",
+      "Security patches & plugin bloat cleanup",
+      "Detailed before/after speed benchmarking report",
+    ],
+  },
+];
 
 export function EngagementModels() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,159 +55,63 @@ export function EngagementModels() {
   };
 
   return (
-    <section className="relative w-full py-16 sm:py-24 bg-white border-t border-slate-200/80 overflow-hidden font-sans">
-      <div className="container mx-auto px-6 max-w-6xl relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-900 text-xs font-black uppercase tracking-wider">
-            <Layers className="w-3.5 h-3.5 text-blue-600" />
-            <span>Working Models & Engagement</span>
+    <section id="services" className="px-4 sm:px-6 lg:px-10 pb-24 lg:pb-40">
+      <div className="mx-auto max-w-[1360px] flex flex-col gap-16">
+        <div className="motion-reveal flex flex-wrap items-end justify-between gap-8">
+          <div className="flex flex-col gap-5">
+            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(03) — Ways to work together</p>
+            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(44px,6.4vw,104px)]">
+              Pick your
+              <br />
+              engagement.
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-[#0b1a30] tracking-tight">
-            How We Can Work Together
-          </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
-            Transparent, flexible engagement structures tailored for funded startups, agencies, and UK, US & Australian (AU) businesses looking for direct senior engineering without agency overhead.
+          <p className="m-0 max-w-[420px] text-brand-slate text-[17px] leading-relaxed">
+            Fixed-scope builds, an embedded fractional engineer, or a focused speed audit. No recruitment fees, payroll
+            taxes or agency bloat.
           </p>
         </div>
 
-        {/* 3 Packages Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {/* Card 1: Fixed Scope Sprint */}
-          <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all flex flex-col justify-between shadow-xs">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/80 text-slate-800 text-[10px] font-black uppercase tracking-wider">
-                <Zap className="w-3 h-3 text-amber-600" /> Milestone-Based
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+          {MODELS.map((model) => (
+            <div
+              key={model.service}
+              className={`motion-lift motion-reveal rounded-[28px] p-9 flex flex-col gap-7 ${
+                model.featured ? "bg-brand-ink text-white" : "bg-white border border-brand-border text-brand-navy"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className={`font-mono text-[13px] ${model.featured ? "text-slate-400" : "text-brand-slate"}`}>{model.tag}</span>
+                {model.featured && (
+                  <span className="font-mono text-[11px] tracking-[0.08em] uppercase px-2.5 py-1.5 rounded-full bg-amber-500 text-brand-ink">
+                    Most popular
+                  </span>
+                )}
               </div>
-              <h3 className="text-xl font-black text-[#0b1a30]">
-                Fixed-Scope Project Sprint
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Best for ground-up MVP builds, custom web application development, or complete platform redesigns with well-defined specs.
-              </p>
-
-              <div className="pt-4 border-t border-slate-200/80 space-y-2.5 text-xs text-slate-700 font-bold">
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Fixed upfront pricing & clear delivery timeline</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Full architecture design, UI integration & QA</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>98+ Core Web Vitals performance guarantee</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>30 days post-launch warranty & bug-free handover</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8">
+              <h3 className="m-0 text-[32px] font-extrabold tracking-[-0.03em] leading-[1.05]">{model.title}</h3>
+              <ul className={`m-0 p-0 list-none flex flex-col gap-3.5 text-base leading-normal ${model.featured ? "text-slate-300" : "text-slate-700"}`}>
+                {model.points.map((point) => (
+                  <li key={point} className="flex gap-3">
+                    <span aria-hidden="true" className={model.featured ? "text-amber-500" : "text-brand-navy"}>—</span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
               <button
-                onClick={() => handleSelectPackage("Fixed-Scope Project Sprint")}
-                className="w-full py-3.5 px-5 rounded-2xl bg-[#0b1a30] hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                type="button"
+                onClick={() => handleSelectPackage(model.service)}
+                className={`motion-btn mt-auto inline-flex items-center justify-between min-h-[56px] px-6 rounded-full font-bold cursor-pointer ${
+                  model.featured
+                    ? "bg-amber-500 hover:bg-amber-400 text-brand-ink"
+                    : model.tag.startsWith("A")
+                      ? "bg-brand-navy hover:bg-brand-ink text-white"
+                      : "border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white"
+                }`}
               >
-                <span>Scope Your Project</span>
-                <ArrowRight className="w-4 h-4" />
+                {model.cta} <span className="motion-arrow" aria-hidden="true">→</span>
               </button>
             </div>
-          </div>
-
-          {/* Card 2: Fractional Senior Dev (Highlighted) */}
-          <div className="p-8 rounded-3xl bg-gradient-to-b from-[#0b1a30] to-slate-900 border-2 border-amber-400 text-white transition-all flex flex-col justify-between shadow-2xl relative">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-950 px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Most Popular for Agencies & Startups
-            </div>
-
-            <div className="space-y-4 pt-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[10px] font-black uppercase tracking-wider">
-                <RefreshCw className="w-3 h-3 text-amber-400" /> Dedicated Retainer
-              </div>
-              <h3 className="text-xl font-black text-white">
-                Fractional Senior Engineer
-              </h3>
-              <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                Dedicated 20–40+ hours per month for rapid feature iterations, ongoing technical leadership, and agency overflow with full UK, US & AU overlap.
-              </p>
-
-              <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-200 font-bold">
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>Direct Slack / Teams access & daily standups</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>Full UK (GMT), US & Australian (AEST) timezone overlap</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>Continuous PR reviews, CI/CD, and fast shipping</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>No recruitment fees, payroll taxes, or agency bloat</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8">
-              <button
-                onClick={() => handleSelectPackage("Fractional Senior Engineer Retainer")}
-                className="w-full py-4 px-5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl"
-              >
-                <span>Hire Fractional Dev</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Card 3: Codebase Rescue & Speed Audit */}
-          <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all flex flex-col justify-between shadow-xs">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/80 text-slate-800 text-[10px] font-black uppercase tracking-wider">
-                <Wrench className="w-3 h-3 text-blue-600" /> Fast Turnaround
-              </div>
-              <h3 className="text-xl font-black text-[#0b1a30]">
-                Codebase Rescue & Speed Audit
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                1–2 week intensive optimization for slow, legacy, or buggy Next.js/WordPress websites needing sub-second performance.
-              </p>
-
-              <div className="pt-4 border-t border-slate-200/80 space-y-2.5 text-xs text-slate-700 font-bold">
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Comprehensive Core Web Vitals bottleneck audit</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Database query optimization & asset minification</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Security patches & plugin bloat cleanup</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Detailed before/after speed benchmarking report</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8">
-              <button
-                onClick={() => handleSelectPackage("Codebase Rescue & Speed Audit")}
-                className="w-full py-3.5 px-5 rounded-2xl bg-[#0b1a30] hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
-              >
-                <span>Request Speed Audit</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 

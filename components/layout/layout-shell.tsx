@@ -8,6 +8,7 @@ import { WelcomeLoading } from '@/components/loading-intro/loading-screen';
 import ChatBubble from '@/components/ui/chat-bubble';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 import { CommandPalette } from '@/components/ui/command-palette';
+import { SmoothScroll } from '@/components/layout/smooth-scroll';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -21,6 +22,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
 
   return (
     <>
+      <SmoothScroll />
       <ScrollProgress />
       <WelcomeLoading />
       <CommandPalette />

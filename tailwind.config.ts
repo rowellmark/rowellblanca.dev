@@ -11,7 +11,13 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
       colors: {
+        'brand-ink': '#0B1020',
+        'brand-ink-2': '#141B2E',
+        'brand-cream': '#F5F1E8',
         'primary': '#1a191d',
         'primary-accent': '#0e0e0e',
         'text-accent': '#8C8F98',
