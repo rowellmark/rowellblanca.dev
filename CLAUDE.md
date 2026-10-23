@@ -30,7 +30,7 @@ See `.env.example` for the full list. Required locally:
 - `MAIL_FROM_EMAIL` (default `hello@rowellblanca.dev`) / `MAIL_NOREPLY_EMAIL` (default `noreply@rowellblanca.dev`) — sender addresses in `lib/mailer.ts`. Mail that expects a reply (admin replies, invoices) uses `MAIL_FROM_EMAIL`; automated mail (receipts, internal notifications) passes `noReply: true` and uses `MAIL_NOREPLY_EMAIL`. Public-facing contact email across the site is `hello@rowellblanca.dev`.
 - `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` — fallback form submission used by `components/ui/contactForm.tsx`.
 
-Firebase env vars (`utils/firebaseconfig.tsx`) are no longer read anywhere else in the app — the project detail page and all project listings now go through `/api/projects` (Prisma/NeonDB) instead of Firestore. Treat `utils/firebaseconfig.tsx` as legacy/unused rather than removing data from it without checking first.
+Firebase has been removed entirely (package and `utils/firebaseconfig.tsx`) — the project detail page and all project listings go through `/api/projects` (Prisma/NeonDB). (`app/api/admin/seed-firebase/route.ts` is a misnomer: it seeds NeonDB via Prisma, not Firebase.)
 
 ## Architecture
 
@@ -50,7 +50,6 @@ Firebase env vars (`utils/firebaseconfig.tsx`) are no longer read anywhere else 
 ### Data layer: Prisma/NeonDB replaced Firestore for projects
 - `prisma/schema.prisma` defines `User`, `Lead` (+ `LeadNote`), `Project`, `Testimonial`, `ContactMessage`. The Prisma client is generated to the non-standard path `lib/generated/client` (not `node_modules/.prisma`), imported via `lib/prisma.ts` — always import the client from `@/lib/prisma`, not directly from `@prisma/client`. `lib/generated/client` is gitignored; run `npx prisma generate` after cloning or after schema changes.
 - `app/api/projects/route.ts` is the single source of truth for project data on the public site now (`GET` supports `?permalink=`, `?category=`, `?featured=true`). If the DB is empty or unreachable it serves a hardcoded `FALLBACK_PROJECTS` array from the same file — keep that array in sync with `scripts/seed.js`'s `SEED_PROJECTS` if you add/change portfolio entries, since they're two independently-maintained copies of the same data.
-- `json/projects.json` is a leftover from the pre-Prisma static dataset and is no longer imported anywhere — don't assume it's live data.
 - The `spotlight` flag on `Project` is exclusive: creating/updating a project with `spotlight: true` runs a raw `UPDATE "Project" SET "spotlight" = false` first (see POST/PUT in `app/api/projects/route.ts`) to enforce "only one spotlighted project at a time."
 - `app/mywork/[projects]/page.tsx` (dynamic project detail) and the homepage showcase components (`components/homepage/featured-project.tsx`, `components/homepage/showcase-portfolios.tsx`, `components/ui/tabs.tsx`) all fetch `/api/projects` client-side rather than reading Firestore or JSON directly.
 
