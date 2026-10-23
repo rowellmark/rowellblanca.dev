@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 import { SplitText } from "@/components/ui/split-text";
 
-// Monthly price of the dedicated senior developer retainer (USD).
+// Starting monthly price of the dedicated senior developer retainer (USD).
 const MONTHLY_RETAINER_USD = 800;
-const MONTHLY_RETAINER_LABEL = `$${MONTHLY_RETAINER_USD} USD`;
+const MONTHLY_RETAINER_LABEL = `from $${MONTHLY_RETAINER_USD} USD`;
 
 interface ProjectTypeOption {
   id: string;
@@ -329,7 +329,7 @@ export function ProjectEstimator() {
 • Engagement Basis: ${retainerBillingMode === "monthly" ? `Monthly Dedicated Retainer (${MONTHLY_RETAINER_LABEL} / month)` : "Project-Based Scope (Custom Quote Request)"}
 • Selected Cadence: ${timelineLabel}
 • Recommended Stack: ${currentTypeConfig.recommendedStack.join(", ")}
-• Investment: ${retainerBillingMode === "monthly" ? `${MONTHLY_RETAINER_LABEL} / month` : "Custom Quote (Inquiry Based)"}
+• Investment: ${retainerBillingMode === "monthly" ? `From $${MONTHLY_RETAINER_USD} USD / month` : "Custom Quote (Inquiry Based)"}
 • Scope / Project Notes: ${contactNotes || "N/A"}`
       : `--- INTERACTIVE PROJECT ESTIMATOR SCOPE ---
 • Project Category: ${currentTypeConfig.title}
@@ -354,11 +354,11 @@ export function ProjectEstimator() {
               : "Project-Based Development (Custom Quote Request)"
             : currentTypeConfig.title,
           subject: isRetainer
-            ? `Retainer Inquiry: ${retainerBillingMode === "monthly" ? `Monthly ($${MONTHLY_RETAINER_USD}/mo)` : "Project Scope (Custom Quote)"}`
+            ? `Retainer Inquiry: ${retainerBillingMode === "monthly" ? `Monthly (from $${MONTHLY_RETAINER_USD}/mo)` : "Project Scope (Custom Quote)"}`
             : `Estimate Request: ${currentTypeConfig.title} ($${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()})`,
           budget: isRetainer
             ? retainerBillingMode === "monthly"
-              ? `${MONTHLY_RETAINER_LABEL} / month`
+              ? `From $${MONTHLY_RETAINER_USD} USD / month`
               : "Custom Quote (Project-Based)"
             : `$${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()} USD`,
           message: summaryDetails,
@@ -453,7 +453,7 @@ export function ProjectEstimator() {
                           {type.id === "fractional_retainer" ? "Rolling sprints" : `Est. ${type.baseWeeks}`}
                         </span>
                         <span className="font-medium">
-                          {type.id === "fractional_retainer" ? `${MONTHLY_RETAINER_LABEL} / mo` : `From $${type.basePriceUsd.toLocaleString()}`}
+                          {type.id === "fractional_retainer" ? `From $${MONTHLY_RETAINER_USD} / mo` : `From $${type.basePriceUsd.toLocaleString()}`}
                         </span>
                       </span>
                     </button>
@@ -476,7 +476,7 @@ export function ProjectEstimator() {
                   <span className="font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">Retainer engagement model</span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {([
-                      { id: "monthly", title: "Monthly basis", price: `${MONTHLY_RETAINER_LABEL} / mo`, desc: "Continuous sprint shipping, daily standups & dedicated weekly capacity." },
+                      { id: "monthly", title: "Monthly basis", price: `From $${MONTHLY_RETAINER_USD} / mo`, desc: "Continuous sprint shipping, daily standups & dedicated weekly capacity." },
                       { id: "project", title: "Project base", price: "Custom quote", desc: "Fixed scope deliverable with milestone review. Submit inquiry below." },
                     ] as const).map((mode) => {
                       const isSelected = retainerBillingMode === mode.id;
@@ -728,6 +728,7 @@ export function ProjectEstimator() {
                   {isRetainer ? (
                     retainerBillingMode === "monthly" ? (
                       <>
+                        <span className="block mb-2 font-mono text-xs font-normal tracking-[0.08em] uppercase text-amber-400">Starts at</span>
                         ${MONTHLY_RETAINER_USD} <span className="text-sm font-medium tracking-normal text-slate-400">USD / month</span>
                       </>
                     ) : (
@@ -807,7 +808,7 @@ export function ProjectEstimator() {
               <h4 className="m-0 text-base font-extrabold">
                 {isRetainer
                   ? retainerBillingMode === "monthly"
-                    ? `Lock in a dedicated retainer (${MONTHLY_RETAINER_LABEL} / mo)`
+                    ? `Lock in a dedicated retainer (from $${MONTHLY_RETAINER_USD} USD / mo)`
                     : "Submit your project scope for a custom quote"
                   : "Lock in your proposal & call"}
               </h4>
@@ -935,7 +936,7 @@ export function ProjectEstimator() {
                       <span>
                         {isRetainer
                           ? retainerBillingMode === "monthly"
-                            ? `Request $${MONTHLY_RETAINER_USD}/mo retainer onboarding`
+                            ? `Request retainer onboarding (from $${MONTHLY_RETAINER_USD}/mo)`
                             : "Submit project scope inquiry"
                           : "Get itemized proposal & scope"}
                       </span>
