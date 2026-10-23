@@ -46,7 +46,7 @@ function getImageSrc(imgSrc?: string | null) {
 
 export function WordPressPluginCard({ project, index = 0 }: { project: PortfolioProject; index?: number }) {
   return (
-    <div className="group relative rounded-2xl border border-indigo-950/40 bg-gradient-to-b from-[#0e1626] to-[#070d18] shadow-md hover:shadow-2xl hover:border-indigo-500/50 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col text-white">
+    <div data-cursor="view" className="group relative rounded-2xl border border-indigo-950/40 bg-gradient-to-b from-[#0e1626] to-[#070d18] shadow-md hover:shadow-2xl hover:border-indigo-500/50 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col text-white">
       {/* Top Accent Line */}
       <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 shrink-0" />
 
@@ -317,20 +317,11 @@ export function PortfolioCard({ project, index = 0 }: { project: PortfolioProjec
           setPreviewMode={setPreviewMode}
           onMaximize={() => setModalOpen(true)}
         >
-          {/* Preview area */}
-          <div className="relative">
+          {/* Preview area: links to the case study; the cursor follower shows "View" here */}
+          <Link href={`/mywork/${project.permalink}`} data-cursor="view" className="relative block" aria-label={`View ${project.sitename}`}>
             <ScreenshotPreview project={project} mobile={previewMode === 'mobile'} height="h-44" />
-
-            {/* Hover overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
-              <Link
-                href={`/mywork/${project.permalink}`}
-                className="px-4 py-2 rounded-full bg-brand-amber text-brand-navy text-xs font-extrabold shadow-lg flex items-center gap-1.5 hover:scale-105 transition-transform"
-              >
-                <ExternalLink className="h-3.5 w-3.5" /> View Project
-              </Link>
-            </div>
-          </div>
+            <span aria-hidden="true" className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
+          </Link>
         </BrowserChrome>
 
         {/* Card info */}

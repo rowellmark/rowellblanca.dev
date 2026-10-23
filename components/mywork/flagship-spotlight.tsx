@@ -159,6 +159,7 @@ export function FlagshipSpotlight() {
         {items.map((item) => (
           <div
             key={item.id}
+            data-cursor="view"
             className="group rounded-[28px] bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/60 transition-all duration-300 overflow-hidden flex flex-col justify-between"
           >
             <div>
