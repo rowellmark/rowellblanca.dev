@@ -3,6 +3,7 @@ import { AnimatedLogo } from "@/components/ui/animated-logo";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import { FooterBibleVerse } from "@/components/ui/footer-bible-verse";
 import { LetsBuildCta } from "@/components/footer/lets-build-cta";
+import { FloatingStack } from "@/components/ui/floating-stack";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -27,8 +28,13 @@ export default function Footer() {
 
     return (
         <footer className="bg-brand-ink text-slate-400">
-            {/* Site-wide closing call to action */}
-            <LetsBuildCta />
+            {/* Site-wide closing call to action, with tech-stack logos drifting behind it */}
+            <div className="relative overflow-hidden">
+                <FloatingStack layout="cta" />
+                <div className="relative z-10">
+                    <LetsBuildCta />
+                </div>
+            </div>
 
             {/* ✝ Daily Bible Verse — client component, fetches on mount */}
             <FooterBibleVerse />

@@ -28,7 +28,7 @@ const ORBITS: { size: number; duration: number; reverse?: boolean; icons: Simple
 ];
 
 // Dark brand marks (Next.js, Vercel, MySQL, PHP…) get lost on the dark sky; draw those white.
-function iconFill(hex: string) {
+export function iconFill(hex: string) {
     const n = parseInt(hex, 16);
     const lum = (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
     return lum < 0.5 ? "#FFFFFF" : `#${hex}`;

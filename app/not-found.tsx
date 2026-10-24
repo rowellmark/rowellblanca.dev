@@ -1,10 +1,14 @@
 import Link from 'next/link';
 import { FuzzyText } from '@/components/ui/fuzzy-text';
 import { Home, Compass } from 'lucide-react';
+import { FloatingStack } from '@/components/ui/floating-stack';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-[#0F172A] text-white flex flex-col items-center justify-center px-6 py-20 relative overflow-hidden text-center">
+      {/* Tech-stack logos drifting "lost in space" */}
+      <FloatingStack layout="lost" />
+
       {/* Background ambient glow */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-violet-500/10 blur-3xl pointer-events-none" />
