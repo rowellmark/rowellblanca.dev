@@ -1,32 +1,15 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { CaseStudiesClient } from './case-studies-client';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://www.rowellblanca.dev'),
-  title: 'Production Case Studies & Targeted Solutions | Rowell Mark Blanca',
+export const metadata: Metadata = pageMetadata({
+  path: "/case-studies",
+  title: "Case Studies: Web Apps & WordPress Builds",
   description:
-    'Explore production case studies, targeted SEO service landing pages, and technical engineering solutions built for UK and global enterprises.',
-  keywords: [
-    'Rowell Mark Blanca Case Studies',
-    'React Case Studies UK',
-    'WordPress Case Studies UK',
-    'FinTech Web App Architecture',
-    'Specialized Software Solutions',
-    'Senior Developer Portfolio',
-  ],
-  openGraph: {
-    type: 'website',
-    url: 'https://www.rowellblanca.dev/case-studies',
-    title: 'Production Case Studies & Targeted Solutions | Rowell Mark Blanca',
-    description:
-      'Explore production case studies, targeted SEO service landing pages, and technical engineering solutions.',
-    siteName: 'Rowell Mark Blanca Portfolio',
-  },
-  alternates: {
-    canonical: 'https://www.rowellblanca.dev/case-studies',
-  },
-};
+    "Case studies of production builds: FCA-regulated finance portals, SaaS platforms, luxury real estate sites and WordPress plugins, with stack and results.",
+  keywords: ["web development case studies", "Next.js case study", "WordPress case study", "finance portal development"],
+});
 
 const caseStudiesJsonLd = {
   '@context': 'https://schema.org',

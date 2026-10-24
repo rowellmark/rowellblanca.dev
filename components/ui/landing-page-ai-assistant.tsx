@@ -93,7 +93,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-black text-white">RowBot — AI Engineering & Marketing Co-Pilot</h3>
-              <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+              <span className="text-[11px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                 Live
               </span>
             </div>
@@ -120,7 +120,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
             className={`flex items-start gap-2.5 ${m.sender === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-black ${
+              className={`w-6.5 h-6.5 rounded-full flex items-center justify-center shrink-0 text-[11px] font-black ${
                 m.sender === 'user'
                   ? 'bg-blue-600 text-white'
                   : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
@@ -152,7 +152,7 @@ export function LandingPageAiAssistant({ pageTitle, targetKeyword, badgeText }: 
       {/* Quick Prompt Chips */}
       {messages.length < 3 && (
         <div className="space-y-2">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
             Suggested Questions:
           </span>
           <div className="flex flex-wrap gap-1.5">

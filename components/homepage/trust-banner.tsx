@@ -27,7 +27,7 @@ export function TrustBanner() {
               <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-amber-600" />
             </div>
             <span className="text-[11px] text-slate-500 font-medium my-1.5">UK Asset Finance Portal</span>
-            <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
               98/100 Core Web Vitals
             </span>
           </Link>
@@ -42,7 +42,7 @@ export function TrustBanner() {
               <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-amber-600" />
             </div>
             <span className="text-[11px] text-slate-500 font-medium my-1.5">SaaS & Multi-Tenant Engine</span>
-            <span className="text-[10px] font-extrabold text-blue-700 bg-blue-100/80 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] font-extrabold text-blue-700 bg-blue-100/80 px-2.5 py-0.5 rounded-full">
               Next.js & NeonDB
             </span>
           </Link>
@@ -54,7 +54,7 @@ export function TrustBanner() {
               <span>Full Timezone Overlap</span>
             </div>
             <span className="text-[11px] text-slate-500 font-medium my-1.5">UK (GMT), US (EST) & AU (AEST)</span>
-            <span className="text-[10px] font-extrabold text-indigo-700 bg-indigo-100/80 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] font-extrabold text-indigo-700 bg-indigo-100/80 px-2.5 py-0.5 rounded-full">
               Daily Standups & Slack
             </span>
           </div>
@@ -66,7 +66,7 @@ export function TrustBanner() {
               <span>Direct Senior Access</span>
             </div>
             <span className="text-[11px] text-slate-500 font-medium my-1.5">12+ Yrs Senior Engineering</span>
-            <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100/80 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] font-extrabold text-amber-800 bg-amber-100/80 px-2.5 py-0.5 rounded-full">
               Zero Junior Delegation
             </span>
           </div>

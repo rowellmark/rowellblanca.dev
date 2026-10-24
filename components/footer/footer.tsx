@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnimatedLogo } from "@/components/ui/animated-logo";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import { FooterBibleVerse } from "@/components/ui/footer-bible-verse";
+import { LetsBuildCta } from "@/components/footer/lets-build-cta";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -17,47 +18,52 @@ export default function Footer() {
         { href: '/mywork', label: 'My Work' },
         { href: '/case-studies', label: 'Case Studies' },
         { href: '/blog', label: 'Blog' },
+        { href: '/hire-uk-react-developer', label: 'Hire a Next.js developer' },
+        { href: '/hire-uk-wordpress-developer', label: 'Hire a WordPress developer' },
         { href: '/arcade', label: 'Arcade 🎮', highlight: true },
         { href: '/contact', label: 'Contact' },
         { href: '/privacy', label: 'Privacy' },
     ];
 
     return (
-        <footer className="bg-[#FAFAF7] border-t border-slate-200/80 text-brand-slate">
+        <footer className="bg-brand-ink text-slate-400">
+            {/* Site-wide closing call to action */}
+            <LetsBuildCta />
+
             {/* ✝ Daily Bible Verse — client component, fetches on mount */}
             <FooterBibleVerse />
 
             {/* Main Footer Container */}
-            <div className="container mx-auto px-6 max-w-6xl py-10 sm:py-12">
+            <div className="mx-auto px-4 sm:px-6 lg:px-10 max-w-[1360px] py-10 sm:py-12">
                 
                 {/* Top Row: Brand Info + Navigation */}
-                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 pb-8 border-b border-slate-200/80">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 pb-8 border-b border-white/10">
                     
                     {/* Brand Info */}
                     <div className="flex items-center gap-3.5 shrink-0">
                         <div className="relative h-10 w-10 shrink-0">
-                            <AnimatedLogo className="h-full w-full" title="Rowell Mark Blanca" />
+                            <AnimatedLogo className="h-full w-full" title="Rowell Mark Blanca" tone="dark" />
                         </div>
                         <div>
-                            <span className="font-extrabold text-slate-900 text-sm sm:text-base block tracking-tight">
+                            <span className="font-extrabold text-white text-sm sm:text-base block tracking-tight">
                                 Rowell Mark Blanca
                             </span>
-                            <span className="text-xs text-slate-500 font-medium block">
+                            <span className="text-xs text-slate-400 font-medium block">
                                 Full-Stack Software Engineer
                             </span>
                         </div>
                     </div>
 
                     {/* Navigation Links with generous breathing room and no cramped line wraps */}
-                    <nav className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-2.5 text-xs font-bold uppercase tracking-wider text-slate-600">
+                    <nav className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-0 lg:gap-y-2.5 text-sm font-medium text-slate-400">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`whitespace-nowrap transition-colors duration-200 ${
+                                className={`inline-flex items-center min-h-[40px] lg:min-h-0 whitespace-nowrap transition-colors duration-200 ${
                                     link.highlight
-                                        ? 'text-amber-600 hover:text-amber-500 font-black'
-                                        : 'hover:text-slate-900'
+                                        ? 'motion-underline text-amber-400 hover:text-amber-300 font-bold'
+                                        : 'motion-underline hover:text-white'
                                 }`}
                             >
                                 {link.label}
@@ -67,7 +73,7 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Row: Copyright + Social Media */}
-                <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
                     <p className="font-medium text-center sm:text-left">
                         © {currentYear} Rowell Mark Blanca. Built with Next.js &amp; Tailwind CSS.
                     </p>
@@ -81,7 +87,8 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title={title}
-                                className="h-8 w-8 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center text-slate-500 hover:text-amber-600 hover:border-amber-400 hover:shadow-xs transition-all duration-200"
+                                aria-label={title}
+                                className="h-11 w-11 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-slate-400 hover:text-amber-400 hover:border-amber-400/60 transition-all duration-200"
                             >
                                 <Icon size={16} />
                             </a>

@@ -35,7 +35,7 @@ export interface PortfolioProject {
 }
 
 
-import { resolveValidImageSrc } from '@/lib/image-utils';
+import { resolveValidImageSrc, canOptimizeImage } from '@/lib/image-utils';
 
 function getImageSrc(imgSrc?: string | null) {
   return resolveValidImageSrc(imgSrc);
@@ -46,7 +46,7 @@ function getImageSrc(imgSrc?: string | null) {
 
 export function WordPressPluginCard({ project, index = 0 }: { project: PortfolioProject; index?: number }) {
   return (
-    <div className="group relative rounded-2xl border border-indigo-950/40 bg-gradient-to-b from-[#0e1626] to-[#070d18] shadow-md hover:shadow-2xl hover:border-indigo-500/50 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col text-white">
+    <div data-cursor="view" className="group relative rounded-2xl border border-indigo-950/40 bg-gradient-to-b from-[#0e1626] to-[#070d18] shadow-md hover:shadow-2xl hover:border-indigo-500/50 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col text-white">
       {/* Top Accent Line */}
       <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 shrink-0" />
 
@@ -56,11 +56,11 @@ export function WordPressPluginCard({ project, index = 0 }: { project: Portfolio
           <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
           <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
-          <span className="text-[10px] font-mono text-slate-400 ml-2 truncate max-w-[150px]">
+          <span className="text-[11px] font-mono text-slate-400 ml-2 truncate max-w-[150px]">
             {project.url.replace('wp-content/plugins/', '') || 'plugin.php'}
           </span>
         </div>
-        <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-300 bg-indigo-500/20 border border-indigo-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+        <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-300 bg-indigo-500/20 border border-indigo-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
           <Package className="w-3 h-3 text-indigo-400" />
           WP Plugin
         </span>
@@ -111,7 +111,7 @@ export function WordPressPluginCard({ project, index = 0 }: { project: Portfolio
           {project.technologies?.map((tag) => (
             <span
               key={tag}
-              className="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-indigo-950/70 text-indigo-200 border border-indigo-800/60"
+              className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-indigo-950/70 text-indigo-200 border border-indigo-800/60"
             >
               {tag}
             </span>
@@ -120,7 +120,7 @@ export function WordPressPluginCard({ project, index = 0 }: { project: Portfolio
 
         <Link
           href={`/mywork/${project.permalink}`}
-          className="mt-auto pt-2 inline-flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-slate-900 text-white font-extrabold text-xs border border-indigo-500/40 hover:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 group/btn cursor-pointer"
+          className="motion-stretch mt-auto pt-2 inline-flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-slate-900 text-white font-extrabold text-xs border border-indigo-500/40 hover:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 group/btn cursor-pointer"
         >
           <span>Explore Plugin Architecture</span>
           <ArrowRight className="h-3.5 w-3.5 text-amber-400 group-hover/btn:translate-x-0.5 transition-transform" />
@@ -152,7 +152,7 @@ function BrowserChrome({
 }) {
   const iconSize = size === 'detail' ? 'h-3 w-3' : 'h-2.5 w-2.5';
   const dotSize = size === 'detail' ? 'h-2.5 w-2.5' : 'h-2 w-2';
-  const urlSize = size === 'detail' ? 'text-[10px]' : 'text-[8px]';
+  const urlSize = size === 'detail' ? 'text-[11px]' : 'text-[11px]';
 
   return (
     <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-[#1a191d]">
@@ -165,7 +165,7 @@ function BrowserChrome({
         {/* URL bar */}
         <div className={`flex-1 mx-2 h-5 rounded-full bg-[#2a2a2a] border border-white/10 flex items-center px-2 gap-1.5 overflow-hidden`}>
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
-          <span className={`${urlSize} font-mono text-white/40 truncate`}>{url || 'rowellblanca.dev'}</span>
+          <span className={`${urlSize} font-mono text-white/70 truncate`}>{url || 'rowellblanca.dev'}</span>
         </div>
 
         {/* Desktop / Mobile toggle */}
@@ -174,14 +174,14 @@ function BrowserChrome({
             <button
               onClick={() => setPreviewMode('desktop')}
               title="Desktop preview"
-              className={`p-0.5 rounded transition-all ${previewMode === 'desktop' ? 'bg-white/20 text-white' : 'text-white/30 hover:text-white/60'}`}
+              className={`grid place-items-center min-h-6 min-w-6 rounded transition-all ${previewMode === 'desktop' ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'}`}
             >
               <Monitor className={iconSize} />
             </button>
             <button
               onClick={() => setPreviewMode('mobile')}
               title="Mobile preview"
-              className={`p-0.5 rounded transition-all ${previewMode === 'mobile' ? 'bg-white/20 text-white' : 'text-white/30 hover:text-white/60'}`}
+              className={`grid place-items-center min-h-6 min-w-6 rounded transition-all ${previewMode === 'mobile' ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white'}`}
             >
               <Smartphone className={iconSize} />
             </button>
@@ -193,7 +193,7 @@ function BrowserChrome({
           <button
             onClick={onMaximize}
             title="Fullscreen preview"
-            className="ml-1 p-1 rounded text-white/30 hover:text-white hover:bg-white/10 transition-all"
+            className="ml-1 grid place-items-center min-h-6 min-w-6 rounded text-white/60 hover:text-white hover:bg-white/10 transition-all"
           >
             <Maximize2 className={iconSize} />
           </button>
@@ -225,7 +225,7 @@ function ScreenshotPreview({
           fill
           className="object-cover object-left-top"
           sizes="(max-width: 768px) 100vw, 640px"
-          unoptimized
+          unoptimized={!canOptimizeImage(getImageSrc(project.image || project.fullDesktopImage))}
         />
       </div>
     );
@@ -246,7 +246,7 @@ function ScreenshotPreview({
             fill
             className="object-cover object-left-top"
             sizes="90px"
-            unoptimized
+            unoptimized={!canOptimizeImage(mobileSrc)}
           />
         </div>
         {/* Notch */}
@@ -317,26 +317,17 @@ export function PortfolioCard({ project, index = 0 }: { project: PortfolioProjec
           setPreviewMode={setPreviewMode}
           onMaximize={() => setModalOpen(true)}
         >
-          {/* Preview area */}
-          <div className="relative">
+          {/* Preview area: links to the case study; the cursor follower shows "View" here */}
+          <Link href={`/mywork/${project.permalink}`} data-cursor="view" className="relative block" aria-label={`View ${project.sitename}`}>
             <ScreenshotPreview project={project} mobile={previewMode === 'mobile'} height="h-44" />
-
-            {/* Hover overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
-              <Link
-                href={`/mywork/${project.permalink}`}
-                className="px-4 py-2 rounded-full bg-brand-amber text-brand-navy text-xs font-extrabold shadow-lg flex items-center gap-1.5 hover:scale-105 transition-transform"
-              >
-                <ExternalLink className="h-3.5 w-3.5" /> View Project
-              </Link>
-            </div>
-          </div>
+            <span aria-hidden="true" className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
+          </Link>
         </BrowserChrome>
 
         {/* Card info */}
         <div className="p-5 flex flex-col flex-1">
           {project.technologies?.[0] && (
-            <span className={`text-[10px] font-extrabold uppercase tracking-wider ${accentText} mb-1.5`}>
+            <span className={`text-[11px] font-extrabold uppercase tracking-wider ${accentText} mb-1.5`}>
               {project.technologies[0]}
             </span>
           )}
@@ -365,13 +356,13 @@ export function PortfolioCard({ project, index = 0 }: { project: PortfolioProjec
             {project.technologies?.slice(1, 4).map((tag) => (
               <span
                 key={tag}
-                className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md border ${getTagStyle(tag)}`}
+                className={`text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${getTagStyle(tag)}`}
               >
                 {tag}
               </span>
             ))}
             {project.technologies && project.technologies.length > 4 && (
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">
                 +{project.technologies.length - 4}
               </span>
             )}
@@ -451,7 +442,7 @@ export function ProjectModal({ project, onClose }: { project: PortfolioProject; 
                   <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
                   <div className="flex-1 mx-3 h-6 rounded-full bg-[#2a2a2a] border border-white/10 flex items-center px-3 gap-1.5 overflow-hidden">
                     <div className="h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
-                    <span className="text-[10px] font-mono text-white/40 truncate">{project.url || 'rowellblanca.dev'}</span>
+                    <span className="text-[11px] font-mono text-white/40 truncate">{project.url || 'rowellblanca.dev'}</span>
                   </div>
                 </div>
                 <div className="relative" style={{ height: 'min(340px, 48vw)' }}>
@@ -461,7 +452,7 @@ export function ProjectModal({ project, onClose }: { project: PortfolioProject; 
                     fill
                     className="object-cover object-left-top"
                     sizes="680px"
-                    unoptimized
+                    unoptimized={!canOptimizeImage(desktopSrc)}
                   />
                 </div>
               </div>
@@ -481,7 +472,7 @@ export function ProjectModal({ project, onClose }: { project: PortfolioProject; 
             <div className="absolute inset-0 rounded-[36px] shadow-2xl border-4 border-[#333]" style={{ background: 'linear-gradient(160deg,#2d2d2d 0%,#1a1a1a 100%)' }} />
             <div className="absolute inset-2 rounded-[28px] overflow-hidden bg-black">
               <div className="bg-[#111] px-4 py-2 flex items-center justify-between">
-                <span className="text-[9px] text-white/60 font-mono">9:41</span>
+                <span className="text-[11px] text-white/60 font-mono">9:41</span>
                 <div className="flex gap-1">
                   <div className="h-1.5 w-4 rounded-full bg-white/40" />
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -494,7 +485,7 @@ export function ProjectModal({ project, onClose }: { project: PortfolioProject; 
                   fill
                   className="object-cover object-left-top"
                   sizes="220px"
-                  unoptimized
+                  unoptimized={!canOptimizeImage(mobileSrc)}
                 />
               </div>
             </div>
@@ -557,11 +548,11 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
           <span className="text-xs font-mono text-slate-400 ml-3 font-semibold">blanc-leads — WordPress CRM Plugin</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+          <span className="text-[11px] font-black uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
             v2.8.7 Production
           </span>
-          <span className="text-[10px] font-black uppercase tracking-wider text-indigo-300 bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 rounded-full">
+          <span className="text-[11px] font-black uppercase tracking-wider text-indigo-300 bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 rounded-full">
             WordPress Plugin
           </span>
         </div>
@@ -592,7 +583,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
         {activeTab === 'dashboard' && (
           <div className="space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-teal-400 mb-1">Dashboard Overview</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-teal-400 mb-1">Dashboard Overview</p>
               <h3 className="text-lg font-black text-white">Everything in one <span className="text-teal-400">view</span></h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">The All Leads dashboard gives you live stats, AI insights, searchable filtered lists, and direct CRM record access.</p>
             </div>
@@ -603,7 +594,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                 <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
                 <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                <span className="text-[10px] font-mono text-slate-500 ml-2">Website Leads — All Leads · blanc-leads</span>
+                <span className="text-[11px] font-mono text-slate-500 ml-2">Website Leads — All Leads · blanc-leads</span>
               </div>
               <div className="p-4 space-y-4">
                 {/* Stat Cards */}
@@ -616,7 +607,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                   ].map((s) => (
                     <div key={s.label} className="bg-white/4 border border-white/7 rounded-xl p-3 text-center">
                       <span className={`text-2xl font-black ${s.color} block`}>{s.val}</span>
-                      <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500 mt-1 block">{s.label}</span>
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mt-1 block">{s.label}</span>
                     </div>
                   ))}
                 </div>
@@ -626,7 +617,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                     <thead>
                       <tr className="border-b border-white/6">
                         {['Date', 'Name', 'Contact', 'Form', 'Status', 'Score'].map(h => (
-                          <th key={h} className="text-left py-2 px-2 text-[9px] font-bold uppercase tracking-wider text-slate-500">{h}</th>
+                          <th key={h} className="text-left py-2 px-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">{h}</th>
                         ))}
                       </tr>
                     </thead>
@@ -642,8 +633,8 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                           <td className="py-2 px-2 font-bold text-white">{row.name}</td>
                           <td className="py-2 px-2 text-slate-400">{row.contact}</td>
                           <td className="py-2 px-2 text-slate-400">{row.form}</td>
-                          <td className="py-2 px-2"><span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${row.statusColor}`}>{row.status}</span></td>
-                          <td className="py-2 px-2"><span className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ${row.scoreColor}`}>{row.score}</span></td>
+                          <td className="py-2 px-2"><span className={`px-2 py-0.5 rounded-full text-[11px] font-black uppercase ${row.statusColor}`}>{row.status}</span></td>
+                          <td className="py-2 px-2"><span className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black ${row.scoreColor}`}>{row.score}</span></td>
                         </tr>
                       ))}
                     </tbody>
@@ -654,7 +645,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
 
             {/* Kanban mini mock */}
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-teal-400 mb-3">Kanban Pipeline View</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-teal-400 mb-3">Kanban Pipeline View</p>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { col: 'New Lead (4)', leads: ['Priya Nair · Score 45', 'Leo Fontaine · Score 30'] },
@@ -662,11 +653,11 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                   { col: 'Proposal Sent (2)', leads: ['James Okafor · Score 91', 'Mike Chen · Score 77'] },
                 ].map((c) => (
                   <div key={c.col} className="bg-white/3 border border-white/6 rounded-xl p-3">
-                    <div className="text-[9px] font-black uppercase tracking-wider text-slate-500 mb-2 pb-1.5 border-b border-white/6">{c.col}</div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2 pb-1.5 border-b border-white/6">{c.col}</div>
                     {c.leads.map(l => (
                       <div key={l} className="bg-white/4 border border-white/7 rounded-lg p-2 mb-1.5 last:mb-0">
                         <div className="text-[11px] font-semibold text-white/85 truncate">{l.split(' · ')[0]}</div>
-                        <div className="text-[9px] text-slate-500">{l.split(' · ')[1]}</div>
+                        <div className="text-[11px] text-slate-500">{l.split(' · ')[1]}</div>
                       </div>
                     ))}
                   </div>
@@ -680,7 +671,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
         {activeTab === 'features' && (
           <div className="space-y-4">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-indigo-400 mb-1">Core Features</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-indigo-400 mb-1">Core Features</p>
               <h3 className="text-lg font-black text-white">Built for real <span className="text-indigo-400">sales workflows</span></h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">Every feature is purpose-built for managing website leads through their full lifecycle — from first capture to closed deal.</p>
             </div>
@@ -717,7 +708,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
         {activeTab === 'ai' && (
           <div className="space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-purple-400 mb-1">AI Nurturing Suite</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-purple-400 mb-1">AI Nurturing Suite</p>
               <h3 className="text-lg font-black text-white"><span className="text-purple-400">AI-powered</span> lead intelligence</h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">Connect any major AI provider to unlock summaries, scoring, email drafts, next actions, and full nurture plans — all without leaving WordPress.</p>
             </div>
@@ -735,12 +726,12 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                 <div key={a.name} className="bg-teal-500/7 border border-teal-500/20 rounded-xl p-3 space-y-1.5 hover:bg-teal-500/12 hover:scale-[1.02] transition-all">
                   <span className="text-xl block">{a.icon}</span>
                   <div className="text-xs font-black text-white">{a.name}</div>
-                  <div className="text-[10px] text-slate-400 leading-relaxed">{a.desc}</div>
+                  <div className="text-[11px] text-slate-400 leading-relaxed">{a.desc}</div>
                 </div>
               ))}
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-purple-400 mb-3">Supported AI Providers</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-purple-400 mb-3">Supported AI Providers</p>
               <div className="flex flex-wrap gap-2">
                 {[
                   { name: 'OpenAI — GPT-4o mini', local: false },
@@ -756,7 +747,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                   </div>
                 ))}
               </div>
-              <p className="text-[10px] text-slate-500 mt-2">Each provider maintains its own API key and model setting. Ollama requires no API key.</p>
+              <p className="text-[11px] text-slate-500 mt-2">Each provider maintains its own API key and model setting. Ollama requires no API key.</p>
             </div>
           </div>
         )}
@@ -765,7 +756,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
         {activeTab === 'integrations' && (
           <div className="space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1">Form Integrations</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-amber-400 mb-1">Form Integrations</p>
               <h3 className="text-lg font-black text-white">Works with your <span className="text-amber-400">existing forms</span></h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">Blanc Leads integrates silently in the background — no changes needed to existing forms. Just activate and capture.</p>
             </div>
@@ -795,7 +786,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                   <div className={`text-[11px] font-bold ${
                     (i as any).special?.includes('amber') ? 'text-amber-300' : (i as any).special?.includes('teal') ? 'text-teal-300' : 'text-white/80'
                   }`}>{i.name}</div>
-                  <div className="text-[9px] text-slate-500 mt-0.5">{i.type}</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">{i.type}</div>
                 </div>
               ))}
             </div>
@@ -807,7 +798,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
         {activeTab === 'changelog' && (
           <div className="space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-emerald-400 mb-1">🚀 What's New</p>
+              <p className="text-[11px] font-black uppercase tracking-wider text-emerald-400 mb-1">🚀 What's New</p>
               <h3 className="text-lg font-black text-white">Version <span className="text-emerald-400">2.8.7</span> Upgrades</h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">A full suite of new features, UI refinements, and bug fixes delivered in this release.</p>
             </div>
@@ -826,7 +817,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
               ].map((c, i) => (
                 <div key={i} className="relative mb-6 last:mb-0">
                   <div className="absolute -left-[26px] top-1.5 w-3 h-3 rounded-full bg-teal-500 border-2 border-[#091418] shadow-[0_0_0_3px_rgba(44,122,117,0.25)]" />
-                  <code className={`text-[10px] font-bold ${c.color} font-mono`}>{c.ver}</code>
+                  <code className={`text-[11px] font-bold ${c.color} font-mono`}>{c.ver}</code>
                   <h4 className="text-sm font-black text-white mt-0.5">{c.title}</h4>
                   <p className="text-[11px] text-slate-400 leading-relaxed mt-1">{c.desc}</p>
                 </div>
@@ -952,7 +943,7 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
                     : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
                 }`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-wider font-mono ${activeSlide === idx ? 'text-amber-300' : 'text-slate-500'}`}>
+                <span className={`text-[11px] font-black uppercase tracking-wider font-mono ${activeSlide === idx ? 'text-amber-300' : 'text-slate-500'}`}>
                   Screenshot {idx + 1}
                 </span>
                 <span className="text-xs font-extrabold truncate block">{s.tag}</span>
@@ -964,7 +955,7 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
           <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow-inner">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 font-mono inline-block mb-1">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 font-mono inline-block mb-1">
                   {screenshots[activeSlide].tag}
                 </span>
                 <h5 className="text-base sm:text-lg font-black text-white">{screenshots[activeSlide].title}</h5>
@@ -1001,8 +992,9 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
                 src={mainImageSrc}
                 alt={screenshots[activeSlide].title}
                 fill
+                sizes="(max-width: 768px) 100vw, 560px"
                 className="object-cover object-top opacity-30"
-                unoptimized
+                unoptimized={!canOptimizeImage(mainImageSrc)}
               />
               <div className="relative z-10 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -1032,25 +1024,25 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
           {project.permalink === 'blanc-login-customizer' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; Secret URL Rewriter</span>
+                <span className="text-[11px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; Secret URL Rewriter</span>
                 <p className="font-bold text-white text-xs">Custom Secret Login Slug</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Renames /wp-admin and /wp-login.php to custom secret URLs, blocking automated brute-force bot attacks.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; Split-Panel Builder</span>
+                <span className="text-[11px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; Split-Panel Builder</span>
                 <p className="font-bold text-white text-xs">Glassmorphic Dual Layout</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Renders modern dual-panel login screens with custom backgrounds, brand typography, and accent colors.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; Brand & Logo Editor</span>
+                <span className="text-[11px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; Brand & Logo Editor</span>
                 <p className="font-bold text-white text-xs">Live Admin Branding Customizer</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Live admin preview for logo uploads, custom form positioning, button styling, and copyright footers.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; Admin Security Gate</span>
+                <span className="text-[11px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; Admin Security Gate</span>
                 <p className="font-bold text-white text-xs">BuildForUser Core Authorization</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Integrates with BuildForUser core dashboard plugins for centralized plugin authorization and asset management.</p>
               </div>
@@ -1058,25 +1050,25 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
           ) : project.permalink === 'blanc-leads-plugin' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; Lead Capture</span>
+                <span className="text-[11px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; Lead Capture</span>
                 <p className="font-bold text-white text-xs">Form Hooks & Context Data</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Captures form submissions (Kadence, WPForms, Contact Form 7), logging referrer, UTM parameters, and user-agent.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; WordPress CRM</span>
+                <span className="text-[11px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; WordPress CRM</span>
                 <p className="font-bold text-white text-xs">Kanban & Task Management</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Manages lead records inside custom WP tables with Kanban stages, notes, tasks with due dates, and user assignment.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; Multi-AI Nurturing</span>
+                <span className="text-[11px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; Multi-AI Nurturing</span>
                 <p className="font-bold text-white text-xs">LLM Pipeline & Scoring</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Connects to OpenAI, Claude, Gemini, DeepSeek, OpenRouter, or local Ollama for summaries, 1-100 scoring, and email drafts.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; Safety First</span>
+                <span className="text-[11px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; Safety First</span>
                 <p className="font-bold text-white text-xs">Human-in-the-Loop Review</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">AI creates email drafts and suggestions, but emails are never sent automatically without human approval.</p>
               </div>
@@ -1084,25 +1076,25 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
           ) : project.permalink === 'blanc-chatbot-plugin' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; RAG Source Import</span>
+                <span className="text-[11px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; RAG Source Import</span>
                 <p className="font-bold text-white text-xs">WP Content & Document Indexing</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Imports published WP pages, posts, CPTs, FAQs, and uploaded text documents into a RAG knowledge index.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; Configurable LLM</span>
+                <span className="text-[11px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; Configurable LLM</span>
                 <p className="font-bold text-white text-xs">OpenAI & Ollama Backends</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Connects to OpenAI (GPT-4o) or local Ollama endpoints with custom system prompts and company brand personas.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; Frontend Widget</span>
+                <span className="text-[11px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; Frontend Widget</span>
                 <p className="font-bold text-white text-xs">Floating Widget & Shortcode</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Renders sitewide floating widget or inline [blanc_chatbox] shortcode with visitor details capture.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; Admin SPA</span>
+                <span className="text-[11px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; Admin SPA</span>
                 <p className="font-bold text-white text-xs">Conversation Storage & Alerts</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Full Admin SPA dashboard to review transcript summaries, manage FAQs, and trigger email alerts to site owners.</p>
               </div>
@@ -1110,25 +1102,25 @@ export function WordPressPluginDetailPreview({ project }: { project: PortfolioPr
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; Visual Editor</span>
+                <span className="text-[11px] font-extrabold uppercase text-cyan-400 block font-mono">Step 1 &bull; Visual Editor</span>
                 <p className="font-bold text-white text-xs">Gutenberg & Global Builder</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Configure JSON-LD schema blocks directly inside the WordPress editor and global settings dashboard.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; Graph Engine</span>
+                <span className="text-[11px] font-extrabold uppercase text-indigo-400 block font-mono">Step 2 &bull; Graph Engine</span>
                 <p className="font-bold text-white text-xs">SchemaGraphAssembler</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Modular PHP pipeline merges global and post schemas, deduplicating @id tags into a single valid @graph JSON-LD script.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; AJAX Preview</span>
+                <span className="text-[11px] font-extrabold uppercase text-purple-400 block font-mono">Step 3 &bull; AJAX Preview</span>
                 <p className="font-bold text-white text-xs">Instant Admin Preview</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">Generates real-time previews of JSON-LD script tags directly within the admin editor without page reloads.</p>
               </div>
 
               <div className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1">
-                <span className="text-[10px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; SEO Gate</span>
+                <span className="text-[11px] font-extrabold uppercase text-emerald-400 block font-mono">Step 4 &bull; SEO Gate</span>
                 <p className="font-bold text-white text-xs">Yoast & SEO Coordination</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">YoastSchemaGate coordinates output with Yoast SEO or All-in-One SEO to eliminate schema syntax conflicts.</p>
               </div>
@@ -1212,7 +1204,7 @@ export function ProjectGallery({ project }: { project: PortfolioProject }) {
           fill
           className="object-contain cursor-zoom-in"
           sizes="(max-width: 768px) 100vw, 800px"
-          unoptimized
+          unoptimized={!canOptimizeImage(getImageSrc(shots[activeSlide]))}
           onClick={() => setLightboxOpen(true)}
         />
 
@@ -1257,7 +1249,7 @@ export function ProjectGallery({ project }: { project: PortfolioProject }) {
                 fill
                 className="object-cover"
                 sizes="120px"
-                unoptimized
+                unoptimized={!canOptimizeImage(getImageSrc(src))}
               />
             </button>
           ))}
@@ -1283,7 +1275,7 @@ export function ProjectGallery({ project }: { project: PortfolioProject }) {
               alt={`${project.sitename} screenshot ${activeSlide + 1}`}
               fill
               className="object-contain"
-              unoptimized
+              unoptimized={!canOptimizeImage(getImageSrc(shots[activeSlide]))}
             />
             {shots.length > 1 && (
               <>
@@ -1391,7 +1383,7 @@ export function ProjectDetailPreview({ project }: { project: PortfolioProject })
                 height={2400}
                 className="w-full h-auto block object-top"
                 onLoad={checkScrollability}
-                unoptimized
+                unoptimized={!canOptimizeImage(desktopSrc)}
               />
             </div>
 
@@ -1420,7 +1412,7 @@ export function ProjectDetailPreview({ project }: { project: PortfolioProject })
                   width={300}
                   height={600}
                   className="w-full h-auto block object-top"
-                  unoptimized
+                  unoptimized={!canOptimizeImage(mobileSrc)}
                 />
               </div>
               <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-3.5 w-16 rounded-full bg-[#1c1c1e] z-10 pointer-events-none border border-black/40" />

@@ -87,16 +87,16 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
     <>
       <div className="sticky top-28 space-y-6">
         {/* Widget 1: Floating Contact Sidebar Card */}
-        <div className="bg-gradient-to-br from-[#0b1a30] to-indigo-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl space-y-6 relative overflow-hidden group">
+        <div className="bg-brand-ink text-white rounded-[28px] p-6 sm:p-8 space-y-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
           <div className="space-y-3 relative z-10">
-            <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-amber-500/20 border border-amber-400/30 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+            <span className="font-mono text-xs font-normal uppercase tracking-[0.08em] text-amber-400 inline-flex items-center gap-1.5">
               <Sparkles className="w-3 h-3 text-amber-400 fill-amber-400" />
               <span>Have a Project in Mind?</span>
             </span>
 
-            <h3 className="text-xl font-black text-white leading-tight">
+            <h3 className="text-xl font-extrabold text-white leading-tight">
               Build Your Custom Platform
             </h3>
 
@@ -123,7 +123,7 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
           <div className="pt-2 relative z-10 space-y-3">
             <button
               onClick={() => setIsContactOpen(true)}
-              className="w-full py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="motion-btn w-full min-h-[56px] px-6 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Book Discovery Call</span>
@@ -137,12 +137,12 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
 
         {/* Widget 2: Contextual Services Sidebar Widget */}
         {(serviceType === 'react' || serviceType === 'both') && (
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-[28px] p-6 space-y-4 shadow-sm">
             <div className="space-y-1 pb-2 border-b border-slate-100">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full inline-block">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full inline-block">
                 React & Next.js Services
               </span>
-              <h3 className="text-sm font-black text-[#0b1a30]">Engineering Capabilities</h3>
+              <h3 className="text-sm font-extrabold text-brand-navy">Engineering Capabilities</h3>
             </div>
 
             <div className="space-y-3">
@@ -154,7 +154,7 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#0b1a30] group-hover:text-amber-600 transition-colors">
+                      <h4 className="text-xs font-bold text-brand-navy group-hover:text-amber-600 transition-colors">
                         {s.title}
                       </h4>
                       <p className="text-[11px] text-slate-500 leading-snug font-medium">
@@ -169,12 +169,12 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
         )}
 
         {(serviceType === 'wordpress' || serviceType === 'both') && (
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-[28px] p-6 space-y-4 shadow-sm">
             <div className="space-y-1 pb-2 border-b border-slate-100">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-100 px-2.5 py-0.5 rounded-full inline-block">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-100 px-2.5 py-0.5 rounded-full inline-block">
                 WordPress Services
               </span>
-              <h3 className="text-sm font-black text-[#0b1a30]">WordPress Capabilities</h3>
+              <h3 className="text-sm font-extrabold text-brand-navy">WordPress Capabilities</h3>
             </div>
 
             <div className="space-y-3">
@@ -186,7 +186,7 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#0b1a30] group-hover:text-amber-600 transition-colors">
+                      <h4 className="text-xs font-bold text-brand-navy group-hover:text-amber-600 transition-colors">
                         {s.title}
                       </h4>
                       <p className="text-[11px] text-slate-500 leading-snug font-medium">
@@ -201,24 +201,24 @@ export function SharedSidebar({ defaultService, serviceType = 'both' }: SharedSi
         )}
 
         {/* Widget 3: Author Micro Profile Card */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-[28px] p-6 space-y-3 shadow-sm">
           <div className="flex items-center gap-3">
             {authorAvatar ? (
               <div className="w-12 h-12 rounded-full overflow-hidden relative border border-slate-200 shrink-0">
                 <Image src={authorAvatar} alt="Author" fill className="object-cover" />
               </div>
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center font-black text-slate-950 text-base shrink-0 shadow-xs">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center font-extrabold text-slate-950 text-base shrink-0 shadow-xs">
                 RB
               </div>
             )}
             <div>
-              <span className="font-extrabold text-[#0b1a30] text-sm block">Rowell Mark Blanca</span>
+              <span className="font-extrabold text-brand-navy text-sm block">Rowell Mark Blanca</span>
               <span className="text-[11px] text-slate-500 font-medium block">Senior Full-Stack Engineer</span>
             </div>
           </div>
 
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
+          <p className="text-sm text-brand-slate leading-relaxed">
             Senior Full-Stack Engineer & WordPress Architect with 12+ years of experience building high-performance platforms.
           </p>
         </div>

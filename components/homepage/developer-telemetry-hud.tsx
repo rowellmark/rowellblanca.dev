@@ -106,7 +106,7 @@ export function DeveloperTelemetryHud({
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700">
               Dev Telemetry HUD
             </span>
-            <span className="text-[10px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 font-bold">
+            <span className="text-[11px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 font-bold">
               LIVE
             </span>
           </div>
@@ -154,7 +154,7 @@ export function DeveloperTelemetryHud({
                 <div className="grid grid-cols-2 gap-2.5">
                   <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500">
                         System Availability
                       </span>
                       <Radio className="w-3 h-3 text-emerald-500 animate-pulse" />
@@ -162,14 +162,14 @@ export function DeveloperTelemetryHud({
                     <div className="text-sm font-black text-[#0b1a30] mt-1">
                       Available (Q2/Q3)
                     </div>
-                    <span className="text-[10px] text-slate-500 font-medium">
+                    <span className="text-[11px] text-slate-500 font-medium">
                       Direct Senior Contractor
                     </span>
                   </div>
 
                   <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500">
                         Local Time (UTC+8)
                       </span>
                       <Clock className="w-3 h-3 text-amber-500" />
@@ -177,7 +177,7 @@ export function DeveloperTelemetryHud({
                     <div className="text-sm font-mono font-black text-[#0b1a30] mt-1">
                       {currentTimeManila || '10:00:00 AM'}
                     </div>
-                    <span className="text-[10px] text-emerald-600 font-bold">
+                    <span className="text-[11px] text-emerald-600 font-bold">
                       Active Workstation
                     </span>
                   </div>
@@ -192,7 +192,7 @@ export function DeveloperTelemetryHud({
                         Global Client Overlap
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[11px] font-mono text-slate-400">
                       Tap city to inspect
                     </span>
                   </div>
@@ -213,7 +213,7 @@ export function DeveloperTelemetryHud({
                         >
                           <div className="flex items-center justify-between">
                             <span className="text-xs">{tz.flag}</span>
-                            <span className="text-[10px] font-mono font-bold text-amber-400">
+                            <span className="text-[11px] font-mono font-bold text-amber-400">
                               {cityTimes[tz.city] || '--:--'}
                             </span>
                           </div>
@@ -240,44 +240,44 @@ export function DeveloperTelemetryHud({
                 {/* Live Core Web Vitals & Code Specs Strip */}
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                    <span className="block text-[10px] font-mono uppercase tracking-wider text-amber-900 font-bold">
+                    <span className="block text-[11px] font-mono uppercase tracking-wider text-amber-900 font-bold">
                       Web Vitals
                     </span>
                     <span className="text-lg font-black text-amber-700 leading-tight">
                       99/100
                     </span>
-                    <span className="block text-[9px] text-amber-800/80 font-mono">
+                    <span className="block text-[11px] text-amber-800/80 font-mono">
                       Sub-160ms TTFB
                     </span>
                   </div>
 
                   <div className="p-2.5 rounded-2xl bg-indigo-50 border border-indigo-200/60">
-                    <span className="block text-[10px] font-mono uppercase tracking-wider text-indigo-900 font-bold">
+                    <span className="block text-[11px] font-mono uppercase tracking-wider text-indigo-900 font-bold">
                       TypeScript
                     </span>
                     <span className="text-lg font-black text-indigo-700 leading-tight">
                       Strict
                     </span>
-                    <span className="block text-[9px] text-indigo-800/80 font-mono">
+                    <span className="block text-[11px] text-indigo-800/80 font-mono">
                       100% Type-Safe
                     </span>
                   </div>
 
                   <div className="p-2.5 rounded-2xl bg-emerald-50 border border-emerald-200/60">
-                    <span className="block text-[10px] font-mono uppercase tracking-wider text-emerald-900 font-bold">
+                    <span className="block text-[11px] font-mono uppercase tracking-wider text-emerald-900 font-bold">
                       Experience
                     </span>
                     <span className="text-lg font-black text-emerald-700 leading-tight">
                       12+ Yrs
                     </span>
-                    <span className="block text-[9px] text-emerald-800/80 font-mono">
+                    <span className="block text-[11px] text-emerald-800/80 font-mono">
                       Production Dev
                     </span>
                   </div>
                 </div>
 
                 {/* Git & Architecture Specs Footer */}
-                <div className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-between text-[10px] font-mono text-slate-600">
+                <div className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-between text-[11px] font-mono text-slate-600">
                   <div className="flex items-center gap-1.5">
                     <Terminal className="w-3 h-3 text-slate-500" />
                     <span>Next.js 14 · NeonDB · PHP 8.2</span>
@@ -315,7 +315,7 @@ export function DeveloperTelemetryHud({
                         Senior Full-Stack & Next.js Engineer
                       </p>
                     </div>
-                    <span className="text-[10px] font-mono font-bold bg-amber-500 text-slate-950 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    <span className="text-[11px] font-mono font-bold bg-amber-500 text-slate-950 px-2 py-0.5 rounded-md flex items-center gap-1">
                       <ShieldCheck className="w-3 h-3" /> Top Rated
                     </span>
                   </div>
@@ -323,7 +323,7 @@ export function DeveloperTelemetryHud({
 
                 {/* Specialties Badges */}
                 <div className="space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500">
                     Core Specializations
                   </span>
                   <div className="flex flex-wrap gap-1.5">

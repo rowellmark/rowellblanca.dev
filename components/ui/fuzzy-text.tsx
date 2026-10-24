@@ -19,7 +19,7 @@ export function FuzzyText({
   children,
   fontSize = 42,
   fontWeight = 900,
-  fontFamily = 'Plus Jakarta Sans, sans-serif',
+  fontFamily,
   color = '#F59E0B',
   baseIntensity = 0.15,
   hoverIntensity = 0.4,
@@ -38,12 +38,14 @@ export function FuzzyText({
 
     let animationFrameId: number;
 
+    // Canvas can't read CSS variables; default to the body's resolved (next/font) family.
+    const family = fontFamily || getComputedStyle(document.body).fontFamily || 'sans-serif';
     const numericFontSize = typeof fontSize === 'number' ? fontSize : parseInt(fontSize, 10) || 42;
     const dpr = window.devicePixelRatio || 1;
     const paddingX = 12;
     const paddingY = 8;
     
-    ctx.font = `${fontWeight} ${numericFontSize}px ${fontFamily}`;
+    ctx.font = `${fontWeight} ${numericFontSize}px ${family}`;
     const textMetrics = ctx.measureText(children);
     const textWidth = Math.ceil(textMetrics.width);
     const textHeight = Math.ceil(numericFontSize * 1.15);
@@ -68,7 +70,7 @@ export function FuzzyText({
 
     if (offscreenCtx) {
       offscreenCtx.scale(dpr, dpr);
-      offscreenCtx.font = `${fontWeight} ${numericFontSize}px ${fontFamily}`;
+      offscreenCtx.font = `${fontWeight} ${numericFontSize}px ${family}`;
       offscreenCtx.fillStyle = color;
       offscreenCtx.textBaseline = 'middle';
       

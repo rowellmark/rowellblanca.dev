@@ -1,29 +1,15 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { BlogClient } from './blog-client';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://www.rowellblanca.dev'),
-  title: 'Technical Blog & Engineering Insights | Rowell Mark Blanca',
+export const metadata: Metadata = pageMetadata({
+  path: "/blog",
+  title: "Next.js & WordPress Development Blog",
   description:
-    'Deep dives into React, Next.js 14 App Router, Custom WordPress Architecture, FinTech case studies, and AI RAG Plugin engineering by Senior Full-Stack Engineer Rowell Mark Blanca.',
-  keywords: [
-    'Rowell Mark Blanca Blog',
-    'Next.js 14 Architecture',
-    'WordPress Developer Blog',
-    'Custom Gutenberg Engineering',
-    'FinTech Software Case Studies',
-    'AI RAG Plugin WordPress',
-  ],
-  openGraph: {
-    type: 'website',
-    url: 'https://www.rowellblanca.dev/blog',
-    title: 'Technical Blog & Engineering Insights | Rowell Mark Blanca',
-    description:
-      'Explore articles on full-stack web architecture, bespoke WordPress engines, and enterprise software engineering.',
-    siteName: 'Rowell Mark Blanca Portfolio',
-  },
-};
+    "Practical articles on Next.js performance, custom WordPress and Gutenberg development, AI chatbots and finance portals, drawn from real client projects.",
+  keywords: ["Next.js blog", "WordPress development blog", "Gutenberg blocks", "Core Web Vitals", "RAG chatbot WordPress"],
+});
 
 const blogJsonLd = {
   '@context': 'https://schema.org',

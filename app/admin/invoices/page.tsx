@@ -482,10 +482,10 @@ export default function AdminInvoicesPage() {
       
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#0b1a30] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-amber-500/40 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4">
+        <div className="fixed bottom-6 right-6 z-50 bg-zinc-950 text-white px-5 py-3.5 rounded-xl shadow-sm border border-amber-500/40 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4">
           <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
           <span className="text-xs font-bold">{toastMessage}</span>
-          <button onClick={() => setToastMessage(null)} className="text-slate-400 hover:text-white text-xs ml-2">✕</button>
+          <button onClick={() => setToastMessage(null)} className="text-zinc-400 hover:text-white text-xs ml-2">✕</button>
         </div>
       )}
 
@@ -493,15 +493,15 @@ export default function AdminInvoicesPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-black text-[#0b1a30] tracking-tight">
+            <h1 className="text-2xl font-semibold text-zinc-950 tracking-tight">
               Invoices & Auto-Send Center
             </h1>
-            <span className="text-[10px] font-black uppercase text-amber-700 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            <span className="text-[11px] font-semibold uppercase text-amber-700 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-amber-600" /> Multi-Job & Auto-Schedule
             </span>
           </div>
-          <p className="text-xs text-slate-500 font-medium mt-1">
-            Create multi-job client invoices with tagline <strong className="text-slate-700">&ldquo;Bring your ideas in to reality.&rdquo;</strong>, scheduled auto-delivery, and payment tracking.
+          <p className="text-xs text-zinc-500 font-medium mt-1">
+            Create multi-job client invoices with tagline <strong className="text-zinc-700">&ldquo;Bring your ideas in to reality.&rdquo;</strong>, scheduled auto-delivery, and payment tracking.
           </p>
         </div>
 
@@ -510,7 +510,7 @@ export default function AdminInvoicesPage() {
           <button
             onClick={handleProcessDueInvoices}
             disabled={isProcessingDue}
-            className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-extrabold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-300 text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             title="Scan and send any scheduled invoices that have reached their delivery date"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-blue-600 ${isProcessingDue ? 'animate-spin' : ''}`} />
@@ -519,7 +519,7 @@ export default function AdminInvoicesPage() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#0b1a30] to-[#1d63ed] text-white text-xs font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-zinc-950 text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create Invoice</span>
@@ -529,61 +529,61 @@ export default function AdminInvoicesPage() {
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-zinc-200 shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Invoiced</span>
             <DollarSign className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-black text-[#0b1a30]">
+          <div className="text-2xl font-semibold text-zinc-950">
             ${Number(stats.totalInvoiced || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </div>
-          <span className="text-[10px] text-slate-500 block font-medium">{stats.countTotal || 0} Total Invoices</span>
+          <span className="text-[11px] text-zinc-500 block font-medium">{stats.countTotal || 0} Total Invoices</span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-zinc-200 shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">Paid Invoices</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
           </div>
-          <div className="text-2xl font-black text-emerald-600">
+          <div className="text-2xl font-semibold text-emerald-600">
             ${Number(stats.totalPaid || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </div>
-          <span className="text-[10px] text-slate-500 block font-medium">{stats.countPaid || 0} Settled Invoices</span>
+          <span className="text-[11px] text-zinc-500 block font-medium">{stats.countPaid || 0} Settled Invoices</span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-zinc-200 shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">Scheduled Delivery</span>
             <Clock className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-2xl font-black text-amber-600">
+          <div className="text-2xl font-semibold text-amber-600">
             {stats.countScheduled || 0} Queued
           </div>
-          <span className="text-[10px] text-slate-500 block font-medium">Auto-dispatch at target date</span>
+          <span className="text-[11px] text-zinc-500 block font-medium">Auto-dispatch at target date</span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-zinc-200 shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">Sent / Pending</span>
             <Send className="w-4 h-4 text-blue-500" />
           </div>
-          <div className="text-2xl font-black text-[#1d63ed]">
+          <div className="text-2xl font-semibold text-zinc-900">
             ${Number(stats.totalPending || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </div>
-          <span className="text-[10px] text-slate-500 block font-medium">{stats.countSent || 0} Awaiting Payment</span>
+          <span className="text-[11px] text-zinc-500 block font-medium">{stats.countSent || 0} Awaiting Payment</span>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex items-center justify-between flex-wrap gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="flex items-center justify-between flex-wrap gap-3 bg-white p-3.5 rounded-xl border border-zinc-200 shadow-sm">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by invoice number, client name, email, or company..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-[#1d63ed] font-medium"
+            className="w-full pl-9 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200 font-medium"
           />
         </div>
 
@@ -592,10 +592,10 @@ export default function AdminInvoicesPage() {
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-[#0b1a30] text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-zinc-950 text-white shadow-sm'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
               }`}
             >
               {st === 'RECURRING' ? '🔄 RECURRING' : st}
@@ -605,11 +605,11 @@ export default function AdminInvoicesPage() {
       </div>
 
       {/* Invoices List Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+      <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-extrabold">
+              <tr className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
                 <th className="p-4">Invoice #</th>
                 <th className="p-4">Client & Jobs</th>
                 <th className="p-4">Delivery & Due Date</th>
@@ -618,23 +618,23 @@ export default function AdminInvoicesPage() {
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-medium">
+            <tbody className="divide-y divide-zinc-100 font-medium">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
+                  <td colSpan={6} className="p-8 text-center text-zinc-400">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-600" />
                     Loading invoices...
                   </td>
                 </tr>
               ) : invoices.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-12 text-center text-slate-400">
-                    <Receipt className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <p className="font-bold text-slate-600 text-sm">No Invoices Found</p>
-                    <p className="text-xs text-slate-400 mt-1">Create your first client invoice with auto-schedule delivery.</p>
+                  <td colSpan={6} className="p-12 text-center text-zinc-400">
+                    <Receipt className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+                    <p className="font-bold text-zinc-600 text-sm">No Invoices Found</p>
+                    <p className="text-xs text-zinc-400 mt-1">Create your first client invoice with auto-schedule delivery.</p>
                     <button
                       onClick={handleOpenCreateModal}
-                      className="mt-4 px-4 py-2 rounded-xl bg-[#1d63ed] text-white font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer"
+                      className="mt-4 px-4 py-2 rounded-xl bg-zinc-900 text-white font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" /> Create Invoice Now
                     </button>
@@ -648,26 +648,26 @@ export default function AdminInvoicesPage() {
                   const isSent = inv.status === 'SENT';
 
                   return (
-                    <tr key={inv.id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={inv.id} className="hover:bg-zinc-50 transition-colors">
                       {/* Invoice Number */}
                       <td className="p-4">
-                        <div className="font-mono font-black text-slate-900 text-sm">{inv.invoiceNumber}</div>
-                        <span className="text-[10px] text-slate-400 block font-mono">ID #{inv.id}</span>
+                        <div className="font-mono font-semibold text-zinc-900 text-sm">{inv.invoiceNumber}</div>
+                        <span className="text-[11px] text-zinc-400 block font-mono">ID #{inv.id}</span>
                       </td>
 
                       {/* Client & Jobs Summary */}
                       <td className="p-4">
-                        <div className="font-extrabold text-[#0b1a30] text-sm">{inv.clientName}</div>
-                        <div className="text-slate-500 font-mono text-[11px]">{inv.clientEmail}</div>
+                        <div className="font-semibold text-zinc-950 text-sm">{inv.clientName}</div>
+                        <div className="text-zinc-500 font-mono text-[11px]">{inv.clientEmail}</div>
                         {inv.clientCompany && (
-                          <span className="text-slate-400 text-[10px] block">{inv.clientCompany}</span>
+                          <span className="text-zinc-400 text-[11px] block">{inv.clientCompany}</span>
                         )}
                         <div className="mt-1 flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                          <span className="text-[11px] font-bold text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-md border border-zinc-200">
                             {inv.items?.length || 0} Job Item(s)
                           </span>
                           {inv.isRecurring && (
-                            <span className="text-[10px] font-black text-purple-900 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">
+                            <span className="text-[11px] font-semibold text-purple-900 bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">
                               🔄 {inv.recurringInterval === 'MONTHLY' ? 'Monthly' : inv.recurringInterval || 'Recurring'}
                             </span>
                           )}
@@ -683,24 +683,24 @@ export default function AdminInvoicesPage() {
                               <span>Auto-Send: {new Date(inv.scheduledSendDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                           ) : inv.sentAt ? (
-                            <div className="text-slate-500 text-[11px]">
-                              Sent: <strong className="text-slate-700">{formatDate(inv.sentAt)}</strong>
+                            <div className="text-zinc-500 text-[11px]">
+                              Sent: <strong className="text-zinc-700">{formatDate(inv.sentAt)}</strong>
                             </div>
                           ) : (
-                            <div className="text-slate-400 text-[11px]">Not scheduled yet</div>
+                            <div className="text-zinc-400 text-[11px]">Not scheduled yet</div>
                           )}
-                          <div className="text-slate-500 text-[11px]">
-                            Due: <strong className="text-slate-900">{formatDate(inv.dueDate)}</strong>
+                          <div className="text-zinc-500 text-[11px]">
+                            Due: <strong className="text-zinc-900">{formatDate(inv.dueDate)}</strong>
                           </div>
                         </div>
                       </td>
 
                       {/* Total Amount */}
                       <td className="p-4">
-                        <div className="font-black text-slate-900 text-sm">
+                        <div className="font-semibold text-zinc-900 text-sm">
                           {formatCurrency(inv.totalAmount, inv.currency)}
                         </div>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">{inv.currency}</span>
+                        <span className="text-[11px] font-bold text-zinc-400 uppercase">{inv.currency}</span>
                       </td>
 
                       {/* Status Selector */}
@@ -708,14 +708,14 @@ export default function AdminInvoicesPage() {
                         <select
                           value={inv.status}
                           onChange={(e) => handleUpdateStatus(inv.id, e.target.value)}
-                          className={`text-xs font-extrabold px-2.5 py-1 rounded-lg border cursor-pointer ${
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border cursor-pointer ${
                             isPaid
                               ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
                               : isScheduled
                               ? 'bg-amber-50 border-amber-300 text-amber-800'
                               : isSent
                               ? 'bg-blue-50 border-blue-300 text-blue-800'
-                              : 'bg-slate-100 border-slate-300 text-slate-700'
+                              : 'bg-zinc-100 border-zinc-300 text-zinc-700'
                           }`}
                         >
                           <option value="DRAFT">DRAFT</option>
@@ -742,7 +742,7 @@ export default function AdminInvoicesPage() {
                           {/* Preview Modal */}
                           <button
                             onClick={() => setPreviewInvoice(inv)}
-                            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                            className="p-1.5 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer"
                             title="Preview Invoice"
                           >
                             <Eye className="w-4 h-4" />
@@ -752,7 +752,7 @@ export default function AdminInvoicesPage() {
                           <Link
                             href={`/invoice/${inv.invoiceNumber}`}
                             target="_blank"
-                            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                            className="p-1.5 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg transition-colors"
                             title="View Public Printable Page"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -761,7 +761,7 @@ export default function AdminInvoicesPage() {
                           {/* Edit */}
                           <button
                             onClick={() => handleOpenEditModal(inv)}
-                            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                            className="p-1.5 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer"
                             title="Edit Invoice"
                           >
                             <Edit className="w-4 h-4" />
@@ -770,7 +770,7 @@ export default function AdminInvoicesPage() {
                           {/* Delete */}
                           <button
                             onClick={() => handleDeleteInvoice(inv.id, inv.invoiceNumber)}
-                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                            className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                             title="Delete Invoice"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -791,22 +791,22 @@ export default function AdminInvoicesPage() {
       {/* ───────────────────────────────────────────────────────────── */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-4xl w-full my-8 max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-xl max-w-4xl w-full my-8 max-h-[90vh] flex flex-col shadow-sm border border-zinc-200 overflow-hidden">
             
             {/* Modal Header */}
-            <div className="px-6 py-5 bg-[#0b1a30] text-white flex items-center justify-between shrink-0">
+            <div className="px-6 py-5 bg-zinc-950 text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-amber-500/20 border border-amber-400/30 rounded-xl text-amber-400">
                   <Receipt className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-black">{editingInvoiceId ? 'Edit Invoice' : 'Create New Client Invoice'}</h2>
-                  <p className="text-xs text-slate-300">Set multi-job billing, price, recipient, and auto-send schedule.</p>
+                  <h2 className="text-lg font-semibold">{editingInvoiceId ? 'Edit Invoice' : 'Create New Client Invoice'}</h2>
+                  <p className="text-xs text-zinc-300">Set multi-job billing, price, recipient, and auto-send schedule.</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800"
+                className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-zinc-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -816,17 +816,17 @@ export default function AdminInvoicesPage() {
             <form onSubmit={handleSubmitInvoice} className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
               
               {/* Quick Lead Autofill & Invoice Meta */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-[11px] font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
+                  <span className="text-[11px] font-semibold uppercase text-zinc-500 tracking-wider flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-blue-600" /> Client Information & CRM Autofill
                   </span>
                   {leads.length > 0 && (
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-slate-500">Quick Fill from CRM:</span>
+                      <span className="text-[11px] text-zinc-500">Quick Fill from CRM:</span>
                       <select
                         onChange={(e) => handleSelectLead(e.target.value)}
-                        className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 font-bold text-slate-800 cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-white border border-zinc-300 font-bold text-zinc-800 cursor-pointer"
                         defaultValue=""
                       >
                         <option value="" disabled>Select Lead...</option>
@@ -842,107 +842,107 @@ export default function AdminInvoicesPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Client Contact Name *</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Client Contact Name *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. John Doe"
                       value={formData.clientName}
                       onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-medium text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-medium text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Client Email (For Auto-Send) *</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Client Email (For Auto-Send) *</label>
                     <input
                       type="email"
                       required
                       placeholder="client@company.com"
                       value={formData.clientEmail}
                       onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-mono text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-mono text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Company / Organization</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Company / Organization</label>
                     <input
                       type="text"
                       placeholder="e.g. Acme Corp Ltd"
                       value={formData.clientCompany}
                       onChange={(e) => setFormData({ ...formData, clientCompany: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-medium text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-medium text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Client Phone</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Client Phone</label>
                     <input
                       type="text"
                       placeholder="+1 (555) 000-0000"
                       value={formData.clientPhone}
                       onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-medium text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-medium text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Client Billing Address</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Client Billing Address</label>
                     <input
                       type="text"
                       placeholder="Street, City, State, Country"
                       value={formData.clientAddress}
                       onChange={(e) => setFormData({ ...formData, clientAddress: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-medium text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-medium text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Invoice Numbers & Schedule Options */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-2xl bg-amber-50/50 border border-amber-200">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-amber-50/50 border border-amber-200">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Invoice Number</label>
+                  <label className="block text-[11px] font-bold text-zinc-700 mb-1">Invoice Number</label>
                   <input
                     type="text"
                     required
                     value={formData.invoiceNumber}
                     onChange={(e) => setFormData({ ...formData, invoiceNumber: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-mono font-bold text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-mono font-bold text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Issue Date</label>
+                  <label className="block text-[11px] font-bold text-zinc-700 mb-1">Issue Date</label>
                   <input
                     type="date"
                     required
                     value={formData.issueDate}
                     onChange={(e) => setFormData({ ...formData, issueDate: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-medium text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-medium text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Payment Due Date</label>
+                  <label className="block text-[11px] font-bold text-zinc-700 mb-1">Payment Due Date</label>
                   <input
                     type="date"
                     required
                     value={formData.dueDate}
                     onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-medium text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-medium text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                   />
                 </div>
 
                 {/* Auto Send & Recurring Schedule Control */}
                 <div className="sm:col-span-3 pt-2 border-t border-amber-200 space-y-2">
                   <div className="flex items-center justify-between flex-wrap gap-2">
-                    <span className="text-[11px] font-black uppercase text-amber-900 tracking-wider block">
+                    <span className="text-[11px] font-semibold uppercase text-amber-900 tracking-wider block">
                       ⚡ Auto-Send &amp; Recurring Schedule Timing
                     </span>
                     {formData.sendOption === 'recurring' && (
-                      <span className="text-[10px] font-black uppercase tracking-wider bg-purple-200 text-purple-900 px-2 py-0.5 rounded-md border border-purple-300">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider bg-purple-200 text-purple-900 px-2 py-0.5 rounded-md border border-purple-300">
                         🔄 Auto Monthly Recurring Active
                       </span>
                     )}
@@ -950,7 +950,7 @@ export default function AdminInvoicesPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
                     <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
-                      formData.sendOption === 'recurring' ? 'bg-purple-100 border-purple-400 text-purple-950 font-bold shadow-xs' : 'bg-white border-slate-200 text-slate-700'
+                      formData.sendOption === 'recurring' ? 'bg-purple-100 border-purple-400 text-purple-950 font-bold shadow-sm' : 'bg-white border-zinc-200 text-zinc-700'
                     }`}>
                       <input
                         type="radio"
@@ -963,7 +963,7 @@ export default function AdminInvoicesPage() {
                     </label>
 
                     <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
-                      formData.sendOption === 'schedule' ? 'bg-amber-100 border-amber-400 text-amber-950 font-bold' : 'bg-white border-slate-200 text-slate-700'
+                      formData.sendOption === 'schedule' ? 'bg-amber-100 border-amber-400 text-amber-950 font-bold' : 'bg-white border-zinc-200 text-zinc-700'
                     }`}>
                       <input
                         type="radio"
@@ -976,7 +976,7 @@ export default function AdminInvoicesPage() {
                     </label>
 
                     <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
-                      formData.sendOption === 'immediate' ? 'bg-blue-100 border-blue-400 text-blue-950 font-bold' : 'bg-white border-slate-200 text-slate-700'
+                      formData.sendOption === 'immediate' ? 'bg-blue-100 border-blue-400 text-blue-950 font-bold' : 'bg-white border-zinc-200 text-zinc-700'
                     }`}>
                       <input
                         type="radio"
@@ -989,7 +989,7 @@ export default function AdminInvoicesPage() {
                     </label>
 
                     <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer transition-all ${
-                      formData.sendOption === 'draft' ? 'bg-slate-200 border-slate-400 text-slate-900 font-bold' : 'bg-white border-slate-200 text-slate-700'
+                      formData.sendOption === 'draft' ? 'bg-zinc-200 border-zinc-400 text-zinc-900 font-bold' : 'bg-white border-zinc-200 text-zinc-700'
                     }`}>
                       <input
                         type="radio"
@@ -1024,7 +1024,7 @@ export default function AdminInvoicesPage() {
                             type="datetime-local"
                             value={formData.scheduledSendDate}
                             onChange={(e) => setFormData({ ...formData, scheduledSendDate: e.target.value })}
-                            className="px-2.5 py-1 rounded-lg bg-white border border-purple-300 font-mono font-bold text-xs text-slate-900 focus:outline-none focus:border-purple-500"
+                            className="px-2.5 py-1 rounded-lg bg-white border border-purple-300 font-mono font-bold text-xs text-zinc-900 focus:outline-none focus:border-purple-500"
                           />
                         </div>
                       </div>
@@ -1041,7 +1041,7 @@ export default function AdminInvoicesPage() {
                         type="datetime-local"
                         value={formData.scheduledSendDate}
                         onChange={(e) => setFormData({ ...formData, scheduledSendDate: e.target.value })}
-                        className="px-3 py-1.5 rounded-xl bg-white border border-amber-300 font-mono font-bold text-slate-900 focus:outline-none focus:border-amber-500"
+                        className="px-3 py-1.5 rounded-xl bg-white border border-amber-300 font-mono font-bold text-zinc-900 focus:outline-none focus:border-amber-500"
                       />
                     </div>
                   )}
@@ -1051,19 +1051,19 @@ export default function AdminInvoicesPage() {
               {/* Tagline & Currency */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold text-zinc-700 mb-1">
                     Invoice Tagline (Featured on Email & Web)
                   </label>
                   <input
                     type="text"
                     value={formData.tagline}
                     onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-900 focus:outline-none focus:border-[#1d63ed]"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-bold text-zinc-900 focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Currency</label>
+                  <label className="block text-[11px] font-bold text-zinc-700 mb-1">Currency</label>
                   <select
                     value={formData.currency}
                     onChange={(e) => {
@@ -1074,7 +1074,7 @@ export default function AdminInvoicesPage() {
                         taxRate: newCurr === 'PHP' && (formData.taxRate === 0 || formData.taxRate === undefined) ? 15 : formData.taxRate,
                       });
                     }}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-900 cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-zinc-300 font-bold text-zinc-900 cursor-pointer"
                   >
                     <option value="USD">USD ($)</option>
                     <option value="PHP">PHP (₱ - 15% PH Tax)</option>
@@ -1087,24 +1087,24 @@ export default function AdminInvoicesPage() {
               </div>
 
               {/* Multi-Job Line Items Builder */}
-              <div className="space-y-3 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <div className="space-y-3 p-4 rounded-xl bg-zinc-50 border border-zinc-200">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
-                    <span className="text-[11px] font-black uppercase text-[#0b1a30] tracking-wider flex items-center gap-1.5">
+                    <span className="text-[11px] font-semibold uppercase text-zinc-950 tracking-wider flex items-center gap-1.5">
                       <Layers className="w-3.5 h-3.5 text-blue-600" /> Multiple Jobs & Deliverable Breakdown ({formData.items.length})
                     </span>
-                    <p className="text-[11px] text-slate-500">Add individual jobs, milestones, and unit rates.</p>
+                    <p className="text-[11px] text-zinc-500">Add individual jobs, milestones, and unit rates.</p>
                   </div>
 
                   {/* Preset quick buttons */}
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] font-bold text-slate-400">Presets:</span>
+                    <span className="text-[11px] font-bold text-zinc-400">Presets:</span>
                     {JOB_PRESETS.slice(0, 3).map((preset) => (
                       <button
                         key={preset.title}
                         type="button"
                         onClick={() => handleAddPreset(preset)}
-                        className="px-2 py-1 rounded-lg bg-white hover:bg-slate-200 border border-slate-300 text-[10px] font-bold text-slate-700 cursor-pointer"
+                        className="px-2 py-1 rounded-lg bg-white hover:bg-zinc-200 border border-zinc-300 text-[11px] font-bold text-zinc-700 cursor-pointer"
                       >
                         + {preset.title.split(' ')[0]}
                       </button>
@@ -1117,14 +1117,14 @@ export default function AdminInvoicesPage() {
                     const lineTotal = Number(item.quantity || 0) * Number(item.unitPrice || 0);
 
                     return (
-                      <div key={idx} className="p-3 bg-white rounded-xl border border-slate-200 space-y-2 relative group shadow-xs">
+                      <div key={idx} className="p-3 bg-white rounded-xl border border-zinc-200 space-y-2 relative group shadow-sm">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-black uppercase text-slate-400">Job Item #{idx + 1}</span>
+                          <span className="text-[11px] font-semibold uppercase text-zinc-400">Job Item #{idx + 1}</span>
                           {formData.items.length > 1 && (
                             <button
                               type="button"
                               onClick={() => handleRemoveItem(idx)}
-                              className="text-slate-400 hover:text-red-500 text-xs font-bold"
+                              className="text-zinc-400 hover:text-red-500 text-xs font-bold"
                               title="Remove Job"
                             >
                               ✕ Remove
@@ -1140,7 +1140,7 @@ export default function AdminInvoicesPage() {
                               placeholder="Job Title / Service Description"
                               value={item.description}
                               onChange={(e) => handleItemChange(idx, 'description', e.target.value)}
-                              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 font-bold text-slate-900 text-xs"
+                              className="w-full px-3 py-1.5 rounded-lg border border-zinc-300 font-bold text-zinc-900 text-xs"
                             />
                           </div>
                           <div className="sm:col-span-2">
@@ -1152,7 +1152,7 @@ export default function AdminInvoicesPage() {
                               placeholder="Qty"
                               value={item.quantity}
                               onChange={(e) => handleItemChange(idx, 'quantity', e.target.value)}
-                              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 font-bold text-slate-900 text-xs text-center"
+                              className="w-full px-3 py-1.5 rounded-lg border border-zinc-300 font-bold text-zinc-900 text-xs text-center"
                             />
                           </div>
                           <div className="sm:col-span-2">
@@ -1164,10 +1164,10 @@ export default function AdminInvoicesPage() {
                               placeholder="Unit Price"
                               value={item.unitPrice}
                               onChange={(e) => handleItemChange(idx, 'unitPrice', e.target.value)}
-                              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 font-bold text-slate-900 text-xs text-right"
+                              className="w-full px-3 py-1.5 rounded-lg border border-zinc-300 font-bold text-zinc-900 text-xs text-right"
                             />
                           </div>
-                          <div className="sm:col-span-2 flex items-center justify-end font-black text-slate-900 text-xs pr-1">
+                          <div className="sm:col-span-2 flex items-center justify-end font-semibold text-zinc-900 text-xs pr-1">
                             ${lineTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                           </div>
                         </div>
@@ -1178,7 +1178,7 @@ export default function AdminInvoicesPage() {
                             placeholder="Optional deliverable scope notes, bullet points, or specifications"
                             value={item.details || ''}
                             onChange={(e) => handleItemChange(idx, 'details', e.target.value)}
-                            className="w-full px-3 py-1 rounded-lg border border-slate-200 text-slate-600 text-[11px]"
+                            className="w-full px-3 py-1 rounded-lg border border-zinc-200 text-zinc-600 text-[11px]"
                           />
                         </div>
                       </div>
@@ -1189,43 +1189,43 @@ export default function AdminInvoicesPage() {
                 <button
                   type="button"
                   onClick={handleAddItem}
-                  className="w-full py-2 rounded-xl bg-white hover:bg-slate-100 border border-dashed border-slate-300 text-blue-600 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full py-2 rounded-xl bg-white hover:bg-zinc-100 border border-dashed border-zinc-300 text-blue-600 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" /> Add Another Job Item
                 </button>
               </div>
 
               {/* Financial Calculations & Totals */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 rounded-xl bg-zinc-50 border border-zinc-200">
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Payment Instructions & Bank/Wise Details</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Payment Instructions & Bank/Wise Details</label>
                     <textarea
                       rows={3}
                       value={formData.paymentDetails}
                       onChange={(e) => setFormData({ ...formData, paymentDetails: e.target.value })}
-                      className="w-full p-2.5 rounded-xl bg-white border border-slate-300 font-mono text-[11px] text-slate-800"
+                      className="w-full p-2.5 rounded-xl bg-white border border-zinc-300 font-mono text-[11px] text-zinc-800"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Custom Notes for Client</label>
+                    <label className="block text-[11px] font-bold text-zinc-700 mb-1">Custom Notes for Client</label>
                     <input
                       type="text"
                       placeholder="e.g. Thanks for your partnership!"
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      className="w-full px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-slate-800"
+                      className="w-full px-3 py-1.5 rounded-xl bg-white border border-zinc-300 text-zinc-800"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2.5">
-                  <div className="flex justify-between items-center text-slate-600">
+                  <div className="flex justify-between items-center text-zinc-600">
                     <span>Subtotal:</span>
-                    <span className="font-bold text-slate-900">{formatCurrency(computedSubtotal, formData.currency)}</span>
+                    <span className="font-bold text-zinc-900">{formatCurrency(computedSubtotal, formData.currency)}</span>
                   </div>
 
-                  <div className="flex justify-between items-center text-slate-600">
+                  <div className="flex justify-between items-center text-zinc-600">
                     <span>Discount:</span>
                     <div className="flex items-center gap-1">
                       <input
@@ -1234,18 +1234,18 @@ export default function AdminInvoicesPage() {
                         step="0.01"
                         value={formData.discount}
                         onChange={(e) => setFormData({ ...formData, discount: Math.max(0, Number(e.target.value)) })}
-                        className="w-24 px-2 py-1 rounded-lg border border-slate-300 text-right font-bold text-slate-900"
+                        className="w-24 px-2 py-1 rounded-lg border border-zinc-300 text-right font-bold text-zinc-900"
                       />
-                      <span className="text-xs font-bold text-slate-500">{formData.currency}</span>
+                      <span className="text-xs font-bold text-zinc-500">{formData.currency}</span>
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex justify-between items-center text-slate-600">
+                    <div className="flex justify-between items-center text-zinc-600">
                       <div className="flex items-center gap-1.5">
                         <span>Tax Rate (%):</span>
                         {formData.currency === 'PHP' && (
-                          <span className="text-[10px] font-black uppercase text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">
+                          <span className="text-[11px] font-semibold uppercase text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">
                             PH 15%
                           </span>
                         )}
@@ -1257,22 +1257,22 @@ export default function AdminInvoicesPage() {
                           step="0.1"
                           value={formData.taxRate}
                           onChange={(e) => setFormData({ ...formData, taxRate: Math.max(0, Number(e.target.value)) })}
-                          className="w-20 px-2 py-1 rounded-lg border border-slate-300 text-right font-bold text-slate-900"
+                          className="w-20 px-2 py-1 rounded-lg border border-zinc-300 text-right font-bold text-zinc-900"
                         />
-                        <span className="text-xs font-bold text-slate-500">%</span>
+                        <span className="text-xs font-bold text-zinc-500">%</span>
                       </div>
                     </div>
 
                     {/* Quick Tax Rate Presets */}
                     <div className="flex items-center justify-end gap-1 pt-1">
-                      <span className="text-[10px] text-slate-400 font-bold">Presets:</span>
+                      <span className="text-[11px] text-zinc-400 font-bold">Presets:</span>
                       <button
                         type="button"
                         onClick={() => setFormData({ ...formData, taxRate: 15 })}
-                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                        className={`px-1.5 py-0.5 rounded text-[11px] font-bold border transition-colors cursor-pointer ${
                           formData.taxRate === 15
                             ? 'bg-amber-100 border-amber-400 text-amber-900'
-                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                            : 'bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100'
                         }`}
                         title="15% Reduced Philippines Tax Rate"
                       >
@@ -1281,10 +1281,10 @@ export default function AdminInvoicesPage() {
                       <button
                         type="button"
                         onClick={() => setFormData({ ...formData, taxRate: 12 })}
-                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                        className={`px-1.5 py-0.5 rounded text-[11px] font-bold border transition-colors cursor-pointer ${
                           formData.taxRate === 12
                             ? 'bg-blue-100 border-blue-400 text-blue-900'
-                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                            : 'bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100'
                         }`}
                       >
                         12% (VAT)
@@ -1292,10 +1292,10 @@ export default function AdminInvoicesPage() {
                       <button
                         type="button"
                         onClick={() => setFormData({ ...formData, taxRate: 0 })}
-                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                        className={`px-1.5 py-0.5 rounded text-[11px] font-bold border transition-colors cursor-pointer ${
                           formData.taxRate === 0
-                            ? 'bg-slate-200 border-slate-400 text-slate-900'
-                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                            ? 'bg-zinc-200 border-zinc-400 text-zinc-900'
+                            : 'bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100'
                         }`}
                       >
                         0% (None)
@@ -1303,9 +1303,9 @@ export default function AdminInvoicesPage() {
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center pt-3 border-t-2 border-slate-900 text-sm">
-                    <span className="font-black text-[#0b1a30] uppercase">Total Amount:</span>
-                    <span className="font-black text-[#1d63ed] text-lg">
+                  <div className="flex justify-between items-center pt-3 border-t-2 border-zinc-900 text-sm">
+                    <span className="font-semibold text-zinc-950 uppercase">Total Amount:</span>
+                    <span className="font-semibold text-zinc-900 text-lg">
                       {formatCurrency(computedTotal, formData.currency)}
                     </span>
                   </div>
@@ -1313,18 +1313,18 @@ export default function AdminInvoicesPage() {
               </div>
 
               {/* Modal Footer Submit */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-200">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 font-bold text-xs hover:bg-zinc-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-xl bg-[#1d63ed] hover:bg-blue-600 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
@@ -1350,9 +1350,9 @@ export default function AdminInvoicesPage() {
       {/* ───────────────────────────────────────────────────────────── */}
       {previewInvoice && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-3xl w-full my-8 max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-xl max-w-3xl w-full my-8 max-h-[90vh] flex flex-col shadow-sm border border-zinc-200 overflow-hidden">
             
-            <div className="px-6 py-4 bg-[#0b1a30] text-white flex items-center justify-between shrink-0">
+            <div className="px-6 py-4 bg-zinc-950 text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <Receipt className="w-5 h-5 text-amber-400" />
                 <span className="font-bold text-sm">Invoice #{previewInvoice.invoiceNumber} Preview</span>
@@ -1368,19 +1368,19 @@ export default function AdminInvoicesPage() {
                 </Link>
                 <button
                   onClick={() => setPreviewInvoice(null)}
-                  className="text-slate-400 hover:text-white p-1 rounded-lg"
+                  className="text-zinc-400 hover:text-white p-1 rounded-lg"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            <div className="p-8 overflow-y-auto space-y-6 text-xs bg-slate-50 flex-1">
-              <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <div className="p-8 overflow-y-auto space-y-6 text-xs bg-zinc-50 flex-1">
+              <div className="bg-white p-6 sm:p-8 rounded-xl border border-zinc-200 shadow-sm space-y-6">
                 
                 {/* Tagline Callout */}
                 <div className="flex items-center gap-3">
-                  <div className="relative h-10 w-10 shrink-0 rounded-2xl bg-[#0b1a30] p-1.5 flex items-center justify-center shadow-md">
+                  <div className="relative h-10 w-10 shrink-0 rounded-xl bg-zinc-950 p-1.5 flex items-center justify-center shadow-md">
                     <Image src={logo} alt="Rowell Blanca Logo" width={24} height={24} className="object-contain brightness-0 invert" priority />
                   </div>
                   <div className="p-2.5 px-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-bold text-xs">
@@ -1390,37 +1390,37 @@ export default function AdminInvoicesPage() {
 
                 <div className="flex justify-between items-start pt-1">
                   <div>
-                    <h2 className="text-xl font-black text-[#0b1a30]">Rowell Mark Blanca</h2>
-                    <p className="text-slate-500">Full-Stack Web Development & Engineering</p>
-                    <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] text-slate-600 mt-2 font-medium">
+                    <h2 className="text-xl font-semibold text-zinc-950">Rowell Mark Blanca</h2>
+                    <p className="text-zinc-500">Full-Stack Web Development & Engineering</p>
+                    <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] text-zinc-600 mt-2 font-medium">
                       <a href="tel:+639688900418" className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-bold">
                         <Phone className="w-3 h-3 text-amber-500" />
                         <span>+63 968 890 0418</span>
                       </a>
-                      <span className="text-slate-300">•</span>
-                      <a href="mailto:hello@rowellblanca.dev" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">
+                      <span className="text-zinc-300">•</span>
+                      <a href="mailto:hello@rowellblanca.dev" className="inline-flex items-center gap-1 text-zinc-600 hover:text-zinc-900">
                         <Mail className="w-3 h-3 text-blue-500" />
                         <span>hello@rowellblanca.dev</span>
                       </a>
-                      <span className="text-slate-300">•</span>
-                      <a href="https://rowellblanca.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900">
+                      <span className="text-zinc-300">•</span>
+                      <a href="https://rowellblanca.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-zinc-600 hover:text-zinc-900">
                         <Globe className="w-3 h-3 text-emerald-500" />
                         <span>rowellblanca.dev</span>
                       </a>
                     </div>
                   </div>
                   <div className="text-right font-mono">
-                    <span className="text-sm font-black text-slate-900 block">{previewInvoice.invoiceNumber}</span>
-                    <span className="text-slate-500 text-[11px]">Due: {formatDate(previewInvoice.dueDate)}</span>
+                    <span className="text-sm font-semibold text-zinc-900 block">{previewInvoice.invoiceNumber}</span>
+                    <span className="text-zinc-500 text-[11px]">Due: {formatDate(previewInvoice.dueDate)}</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-zinc-50 border border-zinc-100">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Billed To</span>
-                    <div className="font-bold text-slate-900">{previewInvoice.clientName}</div>
-                    <div className="text-slate-600 font-mono text-[11px]">{previewInvoice.clientEmail}</div>
-                    {previewInvoice.clientCompany && <div className="text-slate-500">{previewInvoice.clientCompany}</div>}
+                    <span className="text-[11px] uppercase font-bold text-zinc-400 block mb-1">Billed To</span>
+                    <div className="font-bold text-zinc-900">{previewInvoice.clientName}</div>
+                    <div className="text-zinc-600 font-mono text-[11px]">{previewInvoice.clientEmail}</div>
+                    {previewInvoice.clientCompany && <div className="text-zinc-500">{previewInvoice.clientCompany}</div>}
                   </div>
                   <div className="text-right space-y-1">
                     <div>Status: <strong className="uppercase">{previewInvoice.status}</strong></div>
@@ -1431,23 +1431,23 @@ export default function AdminInvoicesPage() {
                 {/* Items */}
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b text-slate-400 font-bold uppercase text-[10px]">
+                    <tr className="border-b text-zinc-400 font-bold uppercase text-[11px]">
                       <th className="pb-2">Job Description</th>
                       <th className="pb-2 text-center">Qty</th>
                       <th className="pb-2 text-right">Rate</th>
                       <th className="pb-2 text-right">Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
+                  <tbody className="divide-y divide-zinc-100 font-medium">
                     {previewInvoice.items.map((it, idx) => (
                       <tr key={idx}>
-                        <td className="py-2.5 font-bold text-slate-900">
+                        <td className="py-2.5 font-bold text-zinc-900">
                           {it.description}
-                          {it.details && <div className="text-[11px] text-slate-500 font-normal">{it.details}</div>}
+                          {it.details && <div className="text-[11px] text-zinc-500 font-normal">{it.details}</div>}
                         </td>
                         <td className="py-2.5 text-center">{it.quantity}</td>
                         <td className="py-2.5 text-right">{formatCurrency(it.unitPrice, previewInvoice.currency)}</td>
-                        <td className="py-2.5 text-right font-black text-slate-900">{formatCurrency(it.amount || it.quantity * it.unitPrice, previewInvoice.currency)}</td>
+                        <td className="py-2.5 text-right font-semibold text-zinc-900">{formatCurrency(it.amount || it.quantity * it.unitPrice, previewInvoice.currency)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1456,11 +1456,11 @@ export default function AdminInvoicesPage() {
                 {/* Totals */}
                 <div className="flex justify-end pt-3 border-t">
                   <div className="w-56 space-y-1">
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-zinc-600">
                       <span>Subtotal:</span>
-                      <span className="font-bold text-slate-900">{formatCurrency(previewInvoice.subtotal, previewInvoice.currency)}</span>
+                      <span className="font-bold text-zinc-900">{formatCurrency(previewInvoice.subtotal, previewInvoice.currency)}</span>
                     </div>
-                    <div className="flex justify-between pt-2 border-t text-sm font-black text-slate-900">
+                    <div className="flex justify-between pt-2 border-t text-sm font-semibold text-zinc-900">
                       <span>Total Due:</span>
                       <span className="text-blue-600">{formatCurrency(previewInvoice.totalAmount, previewInvoice.currency)}</span>
                     </div>
@@ -1470,10 +1470,10 @@ export default function AdminInvoicesPage() {
               </div>
             </div>
 
-            <div className="p-4 bg-white border-t border-slate-200 flex justify-end gap-2">
+            <div className="p-4 bg-white border-t border-zinc-200 flex justify-end gap-2">
               <button
                 onClick={() => setPreviewInvoice(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
+                className="px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold text-xs"
               >
                 Close Preview
               </button>

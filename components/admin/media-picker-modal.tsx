@@ -35,25 +35,25 @@ export default function MediaPickerModal({ open, onClose, onSelect }: MediaPicke
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-6">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+    <div className="fixed inset-0 z-[60] bg-zinc-900/60 backdrop-blur-xs flex items-center justify-center p-6">
+      <div className="bg-white border border-zinc-200 rounded-xl max-w-3xl w-full p-6 space-y-4 shadow-sm relative max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-black text-[#0b1a30]">Choose from Uploaded Photos</h3>
+          <h3 className="text-lg font-semibold text-zinc-950">Choose from Uploaded Photos</h3>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-500 hover:bg-slate-100"
+            className="p-2 rounded-xl text-zinc-500 hover:bg-zinc-100"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-16 text-slate-400">
+          <div className="flex items-center justify-center py-16 text-zinc-400">
             <Loader2 className="w-6 h-6 animate-spin" />
           </div>
         ) : blobs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-slate-400 gap-2">
+          <div className="flex flex-col items-center justify-center py-16 text-zinc-400 gap-2">
             <ImageOff className="w-6 h-6" />
             <p className="text-xs font-bold">No uploaded photos yet</p>
           </div>
@@ -67,7 +67,7 @@ export default function MediaPickerModal({ open, onClose, onSelect }: MediaPicke
                   onSelect(blob.url);
                   onClose();
                 }}
-                className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-50 hover:ring-2 hover:ring-[#1d63ed] transition-all"
+                className="relative aspect-square rounded-xl overflow-hidden border border-zinc-200 bg-zinc-50 hover:ring-2 hover:ring-zinc-900 transition-all"
                 title={blob.pathname}
               >
                 <Image

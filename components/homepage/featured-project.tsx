@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MessageSquare } from "lucide-react";
 import { ContactModal } from "../ui/contact-modal";
-import { resolveValidImageSrc } from "@/lib/image-utils";
+import { resolveValidImageSrc, canOptimizeImage } from "@/lib/image-utils";
 
 interface Project {
     id: number;
@@ -115,7 +115,7 @@ export function FeaturedProject() {
                         className="object-contain object-top"
                         onError={() => setProjectImgSrc('/no-image-placeholder.svg')}
                         draggable={false}
-                        unoptimized
+                        unoptimized={!canOptimizeImage(projectImgSrc)}
                     />
                 </Link>
             </ContainerScroll>

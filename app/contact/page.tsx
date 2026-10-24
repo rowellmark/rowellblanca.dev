@@ -1,28 +1,14 @@
 import { Metadata } from "next";
 import { ContactPageClient } from "./contact-page-client";
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-    metadataBase: new URL("https://www.rowellblanca.dev"),
-    title: "Contact & Hire Rowell Mark Blanca — Senior Full-Stack Engineer",
-    description: "Get in touch with Senior Full-Stack Software Engineer Rowell Mark Blanca for Next.js web applications, custom WordPress engineering, and dedicated developer retainers.",
-    keywords: [
-        "Contact Rowell Mark Blanca",
-        "Hire Next.js Developer",
-        "Hire WordPress Developer UK US AU",
-        "Senior Software Engineer Contact",
-        "Book Discovery Call",
-    ],
-    openGraph: {
-        type: "website",
-        url: "https://www.rowellblanca.dev/contact",
-        title: "Contact & Hire Rowell Mark Blanca — Senior Full-Stack Engineer",
-        description: "Get in touch for custom React, Next.js, and WordPress engineering projects.",
-        siteName: "Rowell Mark Blanca Portfolio",
-    },
-    alternates: {
-        canonical: "https://www.rowellblanca.dev/contact",
-    },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/contact",
+  title: "Contact — Hire a Next.js & WordPress Developer",
+  description:
+    "Book a free discovery call or send a project brief. Senior Next.js, React and WordPress developer for UK, US and Australian teams. Replies within 24h.",
+  keywords: ["hire Next.js developer", "hire WordPress developer", "freelance developer UK", "contact"],
+});
 
 const contactJsonLd = {
     "@context": "https://schema.org",

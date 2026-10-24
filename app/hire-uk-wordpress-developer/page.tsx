@@ -1,55 +1,15 @@
 import type { Metadata } from "next";
 import React from "react";
 import { UkWpLandingClient } from "./uk-wp-client";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.rowellblanca.dev"),
-  title: "Hire Senior WordPress Developer & Architect UK | Rowell Mark Blanca",
+export const metadata: Metadata = pageMetadata({
+  path: "/hire-uk-wordpress-developer",
+  title: "Hire a WordPress Developer in the UK",
   description:
-    "Senior WordPress Developer & Architect partnering with UK businesses, agencies, and e-commerce brands. Custom WordPress themes, plugins, Headless WP + Next.js, and Core Web Vitals tuning. Full GMT/BST overlap.",
-  keywords: [
-    "Hire WordPress Developer UK",
-    "WordPress Architect London",
-    "Custom WordPress Theme Developer UK",
-    "Headless WordPress Next.js UK",
-    "WooCommerce Developer UK",
-    "Freelance WordPress Engineer United Kingdom",
-    "Towerfire UK Client Developer",
-    "Macmanus UK Client Developer",
-  ],
-  authors: [{ name: "Rowell Mark Blanca", url: "https://www.rowellblanca.dev" }],
-  creator: "Rowell Mark Blanca",
-  openGraph: {
-    type: "website",
-    locale: "en_GB",
-    url: "https://www.rowellblanca.dev/hire-uk-wordpress-developer",
-    title: "Hire Senior WordPress Developer & Architect UK | Rowell Mark Blanca",
-    description:
-      "Senior WordPress Developer & Architect partnering with UK companies. Bespoke themes, plugins, Headless WP, and performance optimization. Proven UK client results with Towerfire & Macmanus.",
-    siteName: "Rowell Mark Blanca Portfolio",
-    images: [
-      {
-        url: "https://www.rowellblanca.dev/opengraph-image1.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Hire Senior WordPress Developer & Architect UK",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hire Senior WordPress Developer & Architect UK",
-    description:
-      "Senior WordPress Developer & Architect partnering with UK companies. Bespoke themes, plugins, Headless WP, and performance optimization.",
-    creator: "@itsmrrowrow",
-  },
-  alternates: {
-    canonical: "https://www.rowellblanca.dev/hire-uk-wordpress-developer",
-    languages: {
-      "en-GB": "https://www.rowellblanca.dev/hire-uk-wordpress-developer",
-    },
-  },
-};
+    "Senior WordPress developer for UK businesses and agencies: custom Gutenberg themes, plugins, WooCommerce and speed fixes. GMT/BST overlap and GBP billing.",
+  keywords: ["hire WordPress developer UK", "freelance WordPress developer UK", "custom Gutenberg development", "WordPress plugin developer UK", "WooCommerce developer UK"],
+});
 
 const jsonLd = {
   "@context": "https://schema.org",

@@ -2,12 +2,15 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { DynamicLandingPageClient } from './dynamic-landing-client';
+import { DEFAULT_OG_IMAGE, seoDescription, seoTitle } from '@/lib/seo';
 
 interface DynamicLandingPageProps {
   params: Promise<{
     slug: string;
   }>;
 }
+
+const STANDALONE_ROUTES = new Set(['hire-uk-react-developer', 'hire-uk-wordpress-developer']);
 
 async function getLandingPageData(slug: string) {
   try {
@@ -30,16 +33,20 @@ export async function generateMetadata(props: DynamicLandingPageProps): Promise<
   const description = page?.metaDescription || page?.heroSubtitle || 'Bespoke web development and software engineering.';
 
   return {
-    title,
-    description,
+    title: seoTitle(title),
+    description: seoDescription(description),
     openGraph: {
-      title,
-      description,
+      title: seoTitle(title).absolute,
+      description: seoDescription(description),
+      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: title }],
       type: 'website',
       url: `https://www.rowellblanca.dev/landing/${params.slug}`,
     },
     alternates: {
-      canonical: `https://www.rowellblanca.dev/landing/${params.slug}`,
+      // The built-in fallback pages mirror the standalone /hire-uk-* routes; credit those instead.
+      canonical: STANDALONE_ROUTES.has(params.slug)
+        ? `https://www.rowellblanca.dev/${params.slug}`
+        : `https://www.rowellblanca.dev/landing/${params.slug}`,
     },
   };
 }

@@ -40,3 +40,22 @@ export function resolveValidImageSrc(imgSrc?: string | null): string {
   }
   return '/no-image-placeholder.svg';
 }
+
+// Hosts allowed in next.config.js `images.remotePatterns`.
+const OPTIMIZABLE_HOST = /(^|\.)public\.blob\.vercel-storage\.com$|^images\.unsplash\.com$/;
+
+/**
+ * Whether next/image can resize/convert this source. Local raster files and
+ * allow-listed remote hosts can; SVGs, data URLs and unknown hosts must stay
+ * `unoptimized` (the optimizer would reject them).
+ */
+export function canOptimizeImage(src?: string | null): boolean {
+  if (!src) return false;
+  if (src.startsWith('data:') || /\.svg(\?|$)/i.test(src)) return false;
+  if (src.startsWith('/')) return !src.startsWith('//');
+  try {
+    return OPTIMIZABLE_HOST.test(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}

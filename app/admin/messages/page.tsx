@@ -176,26 +176,26 @@ export default function MessagesPage() {
   const unreadCount = messages.filter((m) => m.status === 'UNREAD').length;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 font-sans text-slate-800">
+    <div className="max-w-7xl mx-auto space-y-6 font-sans text-zinc-800">
       {/* Top Title & Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-[#0b1a30]">Inquiries & Live Chat CRM</h1>
+            <h1 className="text-2xl font-semibold text-zinc-950">Inquiries & Live Chat CRM</h1>
             {unreadCount > 0 && (
-              <span className="bg-blue-600 text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow-xs">
+              <span className="bg-blue-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full shadow-sm">
                 {unreadCount} Unread
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-500 font-medium mt-1">
+          <p className="text-xs text-zinc-500 font-medium mt-1">
             Manage live website chat inquiries, send interactive replies, and dispatch Mailtrap email alerts.
           </p>
         </div>
 
         <button
           onClick={() => fetchMessages(true)}
-          className="self-start md:self-auto flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition-all"
+          className="self-start md:self-auto flex items-center gap-1.5 px-3 py-1.5 bg-white border border-zinc-200 hover:border-zinc-300 rounded-xl text-xs font-bold text-zinc-700 shadow-sm hover:bg-zinc-50 transition-all"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh Inbox</span>
@@ -206,18 +206,18 @@ export default function MessagesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* LEFT COLUMN: Message List & Search (4 Cols) */}
-        <div className="lg:col-span-4 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs flex flex-col h-[calc(100vh-14rem)] min-h-[500px]">
+        <div className="lg:col-span-4 bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm flex flex-col h-[calc(100vh-14rem)] min-h-[500px]">
           
           {/* Search & Filter Header */}
-          <div className="p-3 border-b border-slate-100 bg-slate-50/50 space-y-2">
+          <div className="p-3 border-b border-zinc-100 bg-zinc-50/50 space-y-2">
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-zinc-400" />
               <input
                 type="text"
                 placeholder="Search sender, email, or content..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-slate-200 focus:border-blue-500 rounded-xl pl-9 pr-3 py-1.5 text-xs font-medium focus:outline-none transition-colors"
+                className="w-full bg-white border border-zinc-200 focus:border-blue-500 rounded-xl pl-9 pr-3 py-1.5 text-xs font-medium focus:outline-none transition-colors"
               />
             </div>
 
@@ -227,10 +227,10 @@ export default function MessagesPage() {
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`flex-1 text-[11px] font-extrabold py-1 px-2 rounded-lg transition-all text-center ${
+                  className={`flex-1 text-[11px] font-semibold py-1 px-2 rounded-lg transition-all text-center ${
                     filter === f
-                      ? 'bg-[#0b1a30] text-white shadow-xs'
-                      : 'text-slate-500 hover:bg-slate-200/60'
+                      ? 'bg-zinc-950 text-white shadow-sm'
+                      : 'text-zinc-500 hover:bg-zinc-200/60'
                   }`}
                 >
                   {f === 'ALL' ? `All (${messages.length})` : f === 'UNREAD' ? `Unread (${unreadCount})` : 'Replied'}
@@ -240,14 +240,14 @@ export default function MessagesPage() {
           </div>
 
           {/* List Scroll Area */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 scrollbar-thin">
+          <div className="flex-1 overflow-y-auto divide-y divide-zinc-100 scrollbar-thin">
             {loading ? (
-              <div className="p-8 text-center text-xs text-slate-400 flex flex-col items-center gap-2">
+              <div className="p-8 text-center text-xs text-zinc-400 flex flex-col items-center gap-2">
                 <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
                 <span>Loading inquiries...</span>
               </div>
             ) : filteredMessages.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-400">
+              <div className="p-8 text-center text-xs text-zinc-400">
                 No matching inquiries found.
               </div>
             ) : (
@@ -266,34 +266,34 @@ export default function MessagesPage() {
                       isSelected
                         ? 'bg-blue-50/80 border-l-4 border-blue-600'
                         : isUnread
-                        ? 'bg-white hover:bg-slate-50/80 font-bold'
-                        : 'bg-white hover:bg-slate-50/60 opacity-85'
+                        ? 'bg-white hover:bg-zinc-50/80 font-bold'
+                        : 'bg-white hover:bg-zinc-50/60 opacity-85'
                     }`}
                   >
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
-                        <span className={`text-xs font-black truncate ${isSelected ? 'text-blue-900' : 'text-[#0b1a30]'}`}>
+                        <span className={`text-xs font-semibold truncate ${isSelected ? 'text-blue-900' : 'text-zinc-950'}`}>
                           {msg.name}
                         </span>
                         {isUnread && (
                           <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0"></span>
                         )}
                         {msg.status === 'REPLIED' && (
-                          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 shrink-0">
+                          <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 shrink-0">
                             Replied
                           </span>
                         )}
                       </div>
 
-                      <p className="text-[11px] font-semibold text-slate-600 truncate">
+                      <p className="text-[11px] font-semibold text-zinc-600 truncate">
                         {msg.subject || 'Website Inquiry'}
                       </p>
 
-                      <p className="text-[11px] text-slate-500 truncate line-clamp-1">
+                      <p className="text-[11px] text-zinc-500 truncate line-clamp-1">
                         {msg.message}
                       </p>
 
-                      <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1 pt-0.5">
+                      <div className="text-[11px] text-zinc-400 font-mono flex items-center gap-1 pt-0.5">
                         <Clock className="w-3 h-3" />
                         {new Date(msg.sentAt).toLocaleDateString(undefined, {
                           month: 'short',
@@ -307,7 +307,7 @@ export default function MessagesPage() {
                     <button
                       onClick={(e) => handleDelete(msg.id, e)}
                       title="Delete Thread"
-                      className="p-1 text-slate-300 hover:text-red-500 transition-colors"
+                      className="p-1 text-zinc-300 hover:text-red-500 transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -319,14 +319,14 @@ export default function MessagesPage() {
         </div>
 
         {/* RIGHT COLUMN: Active Message Thread & Live Reply Composer (8 Cols) */}
-        <div className="lg:col-span-8 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs flex flex-col h-[calc(100vh-14rem)] min-h-[500px]">
+        <div className="lg:col-span-8 bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm flex flex-col h-[calc(100vh-14rem)] min-h-[500px]">
           {selectedMessage ? (
             <>
               {/* Thread Header */}
-              <div className="p-4 border-b border-slate-100 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
+              <div className="p-4 border-b border-zinc-100 bg-zinc-50/70 flex flex-wrap items-center justify-between gap-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-base font-black text-[#0b1a30]">{selectedMessage.name}</h2>
+                    <h2 className="text-base font-semibold text-zinc-950">{selectedMessage.name}</h2>
                     <a
                       href={`mailto:${selectedMessage.email}`}
                       className="text-xs font-medium text-blue-600 hover:underline flex items-center gap-1"
@@ -336,8 +336,8 @@ export default function MessagesPage() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  <p className="text-xs text-slate-500 font-semibold">
-                    Subject: <span className="text-slate-800">{selectedMessage.subject || 'Website Inquiry'}</span>
+                  <p className="text-xs text-zinc-500 font-semibold">
+                    Subject: <span className="text-zinc-800">{selectedMessage.subject || 'Website Inquiry'}</span>
                   </p>
                 </div>
 
@@ -345,7 +345,7 @@ export default function MessagesPage() {
                   <select
                     value={selectedMessage.status}
                     onChange={(e) => handleUpdateStatus(selectedMessage.id, e.target.value)}
-                    className="bg-white border border-slate-200 text-xs font-bold text-slate-700 rounded-xl px-2.5 py-1.5 focus:outline-none shadow-2xs"
+                    className="bg-white border border-zinc-200 text-xs font-bold text-zinc-700 rounded-xl px-2.5 py-1.5 focus:outline-none shadow-sm"
                   >
                     <option value="UNREAD">Mark UNREAD</option>
                     <option value="READ">Mark READ</option>
@@ -355,7 +355,7 @@ export default function MessagesPage() {
 
                   <button
                     onClick={() => handleDelete(selectedMessage.id)}
-                    className="p-1.5 bg-white border border-slate-200 text-slate-400 hover:text-red-600 rounded-xl hover:bg-red-50 transition-colors"
+                    className="p-1.5 bg-white border border-zinc-200 text-zinc-400 hover:text-red-600 rounded-xl hover:bg-red-50 transition-colors"
                     title="Delete Thread"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -364,25 +364,25 @@ export default function MessagesPage() {
               </div>
 
               {/* Chat Thread Scroll Container */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30 scrollbar-thin">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-50/30 scrollbar-thin">
                 
                 {/* Initial Visitor Message Card */}
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-xs shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-xs shrink-0">
                     {selectedMessage.name.charAt(0).toUpperCase()}
                   </div>
 
                   <div className="space-y-1 max-w-2xl flex-1">
-                    <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-4 shadow-2xs space-y-2">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <span className="text-xs font-extrabold text-[#0b1a30]">
+                    <div className="bg-white border border-zinc-200 rounded-xl rounded-tl-xs p-4 shadow-sm space-y-2">
+                      <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+                        <span className="text-xs font-semibold text-zinc-950">
                           {selectedMessage.name} &lt;{selectedMessage.email}&gt;
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono">
+                        <span className="text-[11px] text-zinc-400 font-mono">
                           {new Date(selectedMessage.sentAt).toLocaleString()}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-700 font-medium whitespace-pre-wrap leading-relaxed">
+                      <p className="text-xs text-zinc-700 font-medium whitespace-pre-wrap leading-relaxed">
                         {selectedMessage.message}
                       </p>
                     </div>
@@ -399,10 +399,10 @@ export default function MessagesPage() {
                         className={`flex items-start gap-3 ${isAdmin ? 'flex-row-reverse' : ''}`}
                       >
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${
                             isAdmin
-                              ? 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xs'
-                              : 'bg-slate-200 text-slate-700'
+                              ? 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-sm'
+                              : 'bg-zinc-200 text-zinc-700'
                           }`}
                         >
                           {isAdmin ? 'RB' : rep.senderName.charAt(0).toUpperCase()}
@@ -410,18 +410,18 @@ export default function MessagesPage() {
 
                         <div className="space-y-1 max-w-xl flex-1">
                           <div
-                            className={`p-4 rounded-2xl text-xs shadow-2xs space-y-1 ${
+                            className={`p-4 rounded-xl text-xs shadow-sm space-y-1 ${
                               isAdmin
-                                ? 'bg-[#0b1a30] text-white rounded-tr-xs border border-slate-800'
-                                : 'bg-white border border-slate-200 text-slate-800 rounded-tl-xs'
+                                ? 'bg-zinc-950 text-white rounded-tr-xs border border-zinc-800'
+                                : 'bg-white border border-zinc-200 text-zinc-800 rounded-tl-xs'
                             }`}
                           >
                             <div className="flex items-center justify-between border-b border-white/10 pb-1.5 mb-1">
-                              <span className={`font-bold flex items-center gap-1 ${isAdmin ? 'text-cyan-400' : 'text-slate-700'}`}>
+                              <span className={`font-bold flex items-center gap-1 ${isAdmin ? 'text-cyan-400' : 'text-zinc-700'}`}>
                                 {isAdmin && <Sparkles className="w-3 h-3" />}
                                 {rep.senderName} {isAdmin && '(You)'}
                               </span>
-                              <span className={`text-[10px] font-mono ${isAdmin ? 'text-slate-400' : 'text-slate-400'}`}>
+                              <span className={`text-[11px] font-mono ${isAdmin ? 'text-zinc-400' : 'text-zinc-400'}`}>
                                 {new Date(rep.createdAt).toLocaleString()}
                               </span>
                             </div>
@@ -437,10 +437,10 @@ export default function MessagesPage() {
               </div>
 
               {/* Live Reply Composer */}
-              <div className="p-4 border-t border-slate-200 bg-white space-y-3">
+              <div className="p-4 border-t border-zinc-200 bg-white space-y-3">
                 {/* Canned Quick Templates */}
                 <div className="space-y-1">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                  <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">
                     Quick Templates
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -449,7 +449,7 @@ export default function MessagesPage() {
                         key={idx}
                         type="button"
                         onClick={() => setReplyText(tmpl)}
-                        className="text-[11px] font-medium bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 rounded-lg px-2.5 py-1 transition-all text-left truncate max-w-xs"
+                        className="text-[11px] font-medium bg-zinc-100 hover:bg-blue-50 text-zinc-700 hover:text-blue-700 border border-zinc-200 rounded-lg px-2.5 py-1 transition-all text-left truncate max-w-xs"
                       >
                         Template {idx + 1}
                       </button>
@@ -464,16 +464,16 @@ export default function MessagesPage() {
                     placeholder={`Type your reply to ${selectedMessage.name}...`}
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none transition-colors resize-none font-medium"
+                    className="w-full bg-zinc-50 border border-zinc-200 focus:border-blue-600 focus:bg-white rounded-xl p-3 text-xs text-zinc-800 placeholder-zinc-400 focus:outline-none transition-colors resize-none font-medium"
                   />
 
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-600">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-zinc-600">
                       <input
                         type="checkbox"
                         checked={sendEmailNotification}
                         onChange={(e) => setSendEmailNotification(e.target.checked)}
-                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
                       />
                       <span>Dispatch email copy via Mailtrap to {selectedMessage.email}</span>
                     </label>
@@ -481,7 +481,7 @@ export default function MessagesPage() {
                     <button
                       type="submit"
                       disabled={sendingReply || !replyText.trim()}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all disabled:opacity-50"
+                      className="bg-blue-600 hover:bg-zinc-800 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all disabled:opacity-50"
                     >
                       {sendingReply ? (
                         <RefreshCw className="w-4 h-4 animate-spin" />
@@ -497,10 +497,10 @@ export default function MessagesPage() {
               </div>
             </>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-center text-slate-400 space-y-3">
-              <MessageSquare className="w-12 h-12 text-slate-300 stroke-[1.5]" />
-              <h3 className="text-sm font-bold text-slate-600">No Inquiry Selected</h3>
-              <p className="text-xs text-slate-400 max-w-sm">
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center text-zinc-400 space-y-3">
+              <MessageSquare className="w-12 h-12 text-zinc-300 stroke-[1.5]" />
+              <h3 className="text-sm font-bold text-zinc-600">No Inquiry Selected</h3>
+              <p className="text-xs text-zinc-400 max-w-sm">
                 Select an inquiry thread from the inbox on the left to view conversation details and send interactive replies.
               </p>
             </div>

@@ -2,12 +2,14 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Banner from '@/components/banner/banner';
 import { Shield, Lock, Eye, FileText, CheckCircle2, ArrowLeft, Mail, Database, Cookie, Globe2 } from 'lucide-react';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy & UK GDPR Compliance | Rowell Mark Blanca',
+export const metadata: Metadata = pageMetadata({
+  path: "/privacy",
+  title: "Privacy Policy & UK GDPR",
   description:
-    'Comprehensive Privacy Policy, UK GDPR & EU GDPR data protection standards, cookie policies, and data subjects rights for rowellblanca.dev.',
-};
+    "How rowellblanca.dev collects, uses and protects personal data under UK GDPR and EU GDPR, including cookies, analytics and your data subject rights.",
+});
 
 export default function PrivacyPolicyPage() {
   const lastUpdated = '30 July 2026';
@@ -33,9 +35,9 @@ export default function PrivacyPolicyPage() {
               <span className="text-xs font-black uppercase tracking-wider text-amber-900 bg-amber-100 px-3.5 py-1.5 rounded-full border border-amber-300 inline-block shadow-xs">
                 Effective Date: {lastUpdated}
               </span>
-              <h1 className="text-3xl sm:text-4xl font-black text-[#0b1a30] tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-black text-[#0b1a30] tracking-tight">
                 Privacy Policy & Data Protection Statement
-              </h1>
+              </h2>
               <p className="text-slate-500 font-medium text-xs sm:text-sm max-w-2xl">
                 Rowell Mark Blanca is committed to safeguarding your privacy in compliance with the UK General Data Protection Regulation (UK GDPR), Data Protection Act 2018, and EU GDPR.
               </p>

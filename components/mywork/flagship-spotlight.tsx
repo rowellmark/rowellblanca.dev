@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sparkles, Zap, ShieldCheck } from 'lucide-react';
-import { resolveValidImageSrc } from '@/lib/image-utils';
+import { ArrowRight, Zap, ShieldCheck } from 'lucide-react';
+import { resolveValidImageSrc, canOptimizeImage } from '@/lib/image-utils';
 import { FALLBACK_PROJECTS, FallbackProject } from '@/lib/fallback-projects';
 import { PortfolioProject } from '@/components/ui/portfolio-card';
+import { sortFlagship } from '@/lib/flagship';
 
 interface FlagshipItem {
   id: string;
@@ -94,10 +95,12 @@ function mapToSpotlightItem(p: PortfolioProject | FallbackProject): FlagshipItem
   };
 }
 
-export function FlagshipSpotlight() {
-  // Initialize with the top 2 flagship builds from fallback-projects
-  const initialItems = FALLBACK_PROJECTS.slice(0, 2).map(mapToSpotlightItem);
-  const [items, setItems] = useState<FlagshipItem[]>(initialItems);
+// `initialProjects` comes from the server (app/mywork/page.tsx) so the cards render
+// in the HTML and the client refresh below doesn't swap content and shift the layout.
+export function FlagshipSpotlight({ initialProjects }: { initialProjects?: any[] }) {
+  const [items, setItems] = useState<FlagshipItem[]>(() =>
+    (initialProjects?.length ? initialProjects : sortFlagship(FALLBACK_PROJECTS as any[])).slice(0, 2).map(mapToSpotlightItem)
+  );
 
   // Dynamically load from /api/projects (the exact same data source as MyWork)
   useEffect(() => {
@@ -108,14 +111,7 @@ export function FlagshipSpotlight() {
         if (data.success && Array.isArray(data.projects)) {
           const activeProjects = data.projects.filter((p: any) => p.active !== false);
 
-          // Prioritize spotlight project first, followed by projects marked as featured (flagship)
-          const sorted = [...activeProjects].sort((a: any, b: any) => {
-            if (a.spotlight && !b.spotlight) return -1;
-            if (!a.spotlight && b.spotlight) return 1;
-            if (a.featured && !b.featured) return -1;
-            if (!a.featured && b.featured) return 1;
-            return 0;
-          });
+          const sorted = sortFlagship<any>(activeProjects);
 
           if (sorted.length > 0) {
             setItems(sorted.slice(0, 2).map(mapToSpotlightItem));
@@ -134,10 +130,10 @@ export function FlagshipSpotlight() {
       {/* Eyebrow and Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 inline-flex items-center gap-1.5 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Flagship Deployments
+          <span className="font-mono text-[13px] uppercase tracking-[0.08em] text-brand-slate inline-flex items-center gap-2.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" /> Flagship deployments
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#0b1a30] tracking-tight mt-2">
+          <h2 className="text-[clamp(32px,4vw,56px)] font-extrabold tracking-[-0.04em] leading-[1] text-brand-navy tracking-tight mt-2">
             Selected Engineering Case Studies
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
@@ -147,7 +143,7 @@ export function FlagshipSpotlight() {
 
         <Link
           href="/case-studies"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-amber-600 transition-colors shrink-0"
+          className="inline-flex items-center gap-1.5 min-h-[40px] text-xs font-bold text-slate-700 hover:text-amber-600 transition-colors shrink-0"
         >
           <span>View Detailed Case Studies</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -159,7 +155,8 @@ export function FlagshipSpotlight() {
         {items.map((item) => (
           <div
             key={item.id}
-            className="group rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/60 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+            data-cursor="view"
+            className="group relative rounded-[28px] bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/60 transition-all duration-300 overflow-hidden flex flex-col justify-between"
           >
             <div>
               {/* Card Header Media & Badges */}
@@ -169,7 +166,7 @@ export function FlagshipSpotlight() {
                     src={item.image}
                     alt={item.title}
                     fill
-                    unoptimized
+                    unoptimized={!canOptimizeImage(item.image)}
                     className="object-cover object-top group-hover:scale-103 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                     sizes="(max-width: 1024px) 100vw, 600px"
                   />
@@ -187,7 +184,7 @@ export function FlagshipSpotlight() {
                   <span className="text-xs font-bold text-amber-400 font-mono">
                     {item.category}
                   </span>
-                  <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full backdrop-blur-md">
+                  <span className="text-[11px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full backdrop-blur-md">
                     Verified Build
                   </span>
                 </div>
@@ -196,7 +193,7 @@ export function FlagshipSpotlight() {
               {/* Card Content Body */}
               <div className="p-6 space-y-4">
                 <div>
-                  <h3 className="text-xl font-black text-[#0b1a30] group-hover:text-amber-600 transition-colors">
+                  <h3 className="text-xl font-extrabold text-brand-navy group-hover:text-amber-600 transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium mt-2 line-clamp-3">
@@ -208,10 +205,10 @@ export function FlagshipSpotlight() {
                 <div className="grid grid-cols-3 gap-2 py-2 border-y border-slate-100 text-center">
                   {item.metrics.map((m, idx) => (
                     <div key={idx} className="p-2 rounded-xl bg-slate-50 border border-slate-200/60">
-                      <span className="block text-[10px] font-mono text-slate-500 uppercase">
+                      <span className="block text-[11px] font-mono text-slate-500 uppercase">
                         {m.label}
                       </span>
-                      <span className="text-sm font-black text-[#0b1a30] font-mono">
+                      <span className="text-sm font-extrabold text-brand-navy font-mono">
                         {m.value}
                       </span>
                     </div>
@@ -223,7 +220,7 @@ export function FlagshipSpotlight() {
                   {item.stack.map((tech) => (
                     <span
                       key={tech}
-                      className="text-[10px] font-mono font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/70"
+                      className="text-[11px] font-mono font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/70"
                     >
                       {tech}
                     </span>
@@ -236,7 +233,7 @@ export function FlagshipSpotlight() {
             <div className="p-6 pt-0">
               <Link
                 href={item.link}
-                className="w-full py-3 rounded-xl bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md cursor-pointer"
+                className="motion-stretch w-full py-3 rounded-xl bg-slate-900 hover:bg-amber-500 text-white hover:text-slate-950 font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md cursor-pointer"
               >
                 <span>Read Architectural Case Study</span>
                 <ArrowRight className="w-3.5 h-3.5" />

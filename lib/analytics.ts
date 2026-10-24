@@ -43,7 +43,7 @@ export const trackDownloadCV = () => {
     action: 'file_download',
     category: 'Resource',
     label: 'Curriculum Vitae Download',
-    file_name: 'resume.pdf',
+    file_name: 'rowell-resume.pdf',
   });
 };
 

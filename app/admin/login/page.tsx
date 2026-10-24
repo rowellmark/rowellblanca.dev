@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import logo from '@/assets/images/logo.png';
-import Image from 'next/image';
-import { Lock, Mail, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
+import { AnimatedLogo } from '@/components/ui/animated-logo';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/admin/ui';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -41,91 +41,104 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1a30] text-white flex flex-col justify-center items-center px-6 py-16 relative overflow-hidden font-sans">
-
-      {/* Ambient background mesh glow */}
-      <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/3 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
-
-      <div className="w-full max-w-md bg-slate-900/90 backdrop-blur-xl border border-slate-800 p-8 sm:p-10 rounded-3xl shadow-2xl space-y-8 relative z-10">
-
-        {/* Just Logo Header */}
-        <div className="flex justify-center pt-2">
-          <div className="relative h-14 w-14">
-            <Image
-              src={logo}
-              alt="Rowell Blanca Logo"
-              fill
-              sizes="56px"
-              className="object-contain brightness-0 invert"
-              priority
-            />
-          </div>
+    <div className="min-h-screen grid lg:grid-cols-2 bg-zinc-50 font-sans">
+      {/* Brand panel */}
+      <aside className="relative hidden lg:flex flex-col justify-between bg-brand-ink text-white p-12 overflow-hidden">
+        <div className="flex items-center gap-3">
+          <AnimatedLogo className="h-10 w-10" title="Rowell Mark Blanca" tone="dark" />
+          <span className="flex flex-col leading-none gap-1">
+            <span className="font-extrabold">Rowell Blanca</span>
+            <span className="text-xs font-medium text-slate-400">Portfolio CRM</span>
+          </span>
         </div>
-
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
-          {error && (
-            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center">
-              {error}
-            </div>
-          )}
-
-          {/* Email Input */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">Email Address</label>
-            <div className="relative">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email Address"
-                required
-                className="w-full pl-10 pr-4 py-3.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 text-sm font-medium focus:outline-none focus:border-[#1d63ed] transition-all"
-              />
-              <Mail className="h-4 w-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            </div>
-          </div>
-
-          {/* Password Input */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">Password</label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                required
-                className="w-full pl-10 pr-12 py-3.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 text-sm font-medium focus:outline-none focus:border-[#1d63ed] transition-all"
-              />
-              <Lock className="h-4 w-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 rounded-xl bg-[#1d63ed] hover:bg-blue-600 text-white font-extrabold text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 mt-2"
-          >
-            {loading ? 'Authenticating...' : 'Sign In'}
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </form>
-
-        <div className="pt-2 flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-medium">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> PBKDF2 Password Hashing & JWT Session
+        <div className="flex flex-col gap-6 max-w-[520px]">
+          <p className="m-0 font-extrabold tracking-[-0.045em] leading-[0.95] text-[clamp(40px,4.4vw,64px)]">
+            Leads, projects &amp; invoices<span className="text-amber-500">.</span>
+          </p>
+          <p className="m-0 text-slate-300 text-lg leading-relaxed">
+            One back office for the pipeline behind rowellblanca.dev — CRM leads, client projects, testimonials, blog and billing.
+          </p>
         </div>
+        <p className="m-0 font-mono text-xs text-slate-500">© {new Date().getFullYear()} Rowell Mark Blanca</p>
+      </aside>
 
-      </div>
+      {/* Sign-in */}
+      <main className="flex items-center justify-center px-4 py-16 sm:px-8">
+        <div className="w-full max-w-[400px] flex flex-col gap-6">
+          <div className="flex lg:hidden items-center justify-center">
+            <AnimatedLogo className="h-12 w-12" title="Rowell Mark Blanca" />
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Sign in</CardTitle>
+              <CardDescription>Enter your admin email and password to continue.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleLogin} className="flex flex-col gap-5">
+                {error && (
+                  <div role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
+                    {error}
+                  </div>
+                )}
+
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="admin-email">Email</Label>
+                  <Input
+                    id="admin-email"
+                    type="email"
+                    autoComplete="username"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@rowellblanca.dev"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="admin-password">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="admin-password"
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••••••"
+                      required
+                      className="pr-11"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <Button type="submit" size="lg" disabled={loading} className="w-full mt-1">
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Signing in…
+                    </>
+                  ) : (
+                    <>
+                      Sign in <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <p className="m-0 flex items-center justify-center gap-1.5 text-xs text-zinc-500">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> httpOnly session cookie · PBKDF2 password hashing
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

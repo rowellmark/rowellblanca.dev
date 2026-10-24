@@ -5,12 +5,13 @@ import styles from "./animated-logo.module.scss";
 interface AnimatedLogoProps {
     className?: string;
     title?: string;
+    tone?: "light" | "dark";
 }
 
-export function AnimatedLogo({ className, title = "Rowell Blanca" }: AnimatedLogoProps) {
+export function AnimatedLogo({ className, title = "Rowell Blanca", tone = "light" }: AnimatedLogoProps) {
     return (
         <svg
-            className={`${styles.mark} ${className ?? ""}`}
+            className={`${styles.mark} ${tone === "dark" ? styles.onDark : ""} ${className ?? ""}`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="60 87 260 260"
             role="img"

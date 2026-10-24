@@ -5,7 +5,7 @@
 body {
   color: #0F172A;
   background: #FAFAF7;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.5;
 }
@@ -105,3 +105,214 @@ body {
     display: none;
   }
 }
+/* ------------------------------------------------------------------
+   Motion system (Lenis-style redesign)
+   Ease: out-expo cubic-bezier(.16,1,.3,1). Only transform/opacity are
+   animated. Scroll-linked effects use CSS scroll timelines where
+   supported and simply render in their final state elsewhere.
+------------------------------------------------------------------- */
+.motion-mask { display: block; overflow: hidden; padding-bottom: 0.06em; }
+.motion-rise { display: block; animation: motion-rise 0.8s cubic-bezier(.16,1,.3,1) both; }
+.motion-fade { animation: motion-fade 0.8s cubic-bezier(.16,1,.3,1) both; }
+.motion-d1 { animation-delay: .05s; }
+.motion-d2 { animation-delay: .12s; }
+.motion-d3 { animation-delay: .19s; }
+.motion-d4 { animation-delay: .35s; }
+.motion-d5 { animation-delay: .5s; }
+@keyframes motion-rise { from { transform: translateY(45%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes motion-fade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.motion-marquee-track { display: flex; width: max-content; animation: motion-marquee 36s linear infinite; }
+.motion-marquee:hover .motion-marquee-track { animation-play-state: paused; }
+@keyframes motion-marquee { to { transform: translateX(-50%); } }
+
+/* Hero project reel: columns of screenshots drifting in opposite directions */
+.motion-reel-up, .motion-reel-down { animation: motion-reel 48s linear infinite; }
+.motion-reel-down { animation-direction: reverse; }
+.motion-reel:hover .motion-reel-up, .motion-reel:hover .motion-reel-down { animation-play-state: paused; }
+@keyframes motion-reel { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+.motion-float { animation: motion-float 6s ease-in-out infinite; }
+@keyframes motion-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+
+/* Hero tech galaxy: orbits spin via `rotate`, icons counter-spin to stay upright */
+.motion-orbit { animation: motion-orbit 40s linear infinite; }
+.motion-orbit-reverse { animation-direction: reverse; }
+.motion-galaxy:hover .motion-orbit { animation-play-state: paused; }
+@keyframes motion-orbit { to { rotate: 360deg; } }
+.motion-twinkle { animation: motion-twinkle 4.2s ease-in-out infinite; }
+@keyframes motion-twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .8; } }
+
+.motion-cue { animation: motion-cue 2.4s cubic-bezier(.65,0,.35,1) infinite; transform-origin: top; }
+@keyframes motion-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.motion-pulse { animation: motion-pulse 2s ease-in-out infinite; }
+@keyframes motion-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.55); } 50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+
+.motion-btn { transition: transform .5s cubic-bezier(.16,1,.3,1), background-color .3s, color .3s, border-color .3s; }
+.motion-btn:hover { transform: translateY(-3px); }
+.motion-btn .motion-arrow { display: inline-block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+.motion-btn:hover .motion-arrow { transform: translateX(5px); }
+
+.motion-underline { position: relative; }
+.motion-underline::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: right; transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.motion-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+
+.motion-lift { transition: transform .6s cubic-bezier(.16,1,.3,1), box-shadow .6s; }
+.motion-lift:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -30px rgba(15,23,42,.35); }
+.motion-card .motion-shot { transition: transform 1.2s cubic-bezier(.16,1,.3,1); }
+.motion-card:hover .motion-shot { transform: scale(1.03); }
+
+@supports (animation-timeline: view()) {
+  .motion-reveal { animation: motion-reveal linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
+  .motion-lit { animation: motion-lit linear both; animation-timeline: view(); }
+  .motion-l1 { animation-range: cover 18% cover 30%; }
+  .motion-l2 { animation-range: cover 22% cover 34%; }
+  .motion-l3 { animation-range: cover 26% cover 38%; }
+  .motion-l4 { animation-range: cover 30% cover 42%; }
+  .motion-l5 { animation-range: cover 34% cover 46%; }
+  .motion-l6 { animation-range: cover 38% cover 50%; }
+  .motion-recede { animation: motion-recede linear both; animation-timeline: view(); animation-range: exit-crossing 0% exit-crossing 100%; }
+}
+@supports (animation-timeline: scroll()) {
+  .motion-scroll-progress { animation: motion-scroll-progress linear both; animation-timeline: scroll(root); }
+}
+@keyframes motion-scroll-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes motion-reveal { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
+@keyframes motion-lit { from { opacity: .16; } to { opacity: 1; } }
+@keyframes motion-recede { to { transform: scale(.92); filter: brightness(.7); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-rise, .motion-fade, .motion-marquee-track, .motion-cue, .motion-pulse,
+  .motion-reel-up, .motion-reel-down, .motion-float, .motion-orbit, .motion-twinkle,
+  .motion-reveal, .motion-lit, .motion-recede { animation: none !important; }
+  .motion-btn, .motion-lift, .motion-underline::after, .motion-card .motion-shot { transition: none !important; }
+}
+
+/* Testimonial autoplay progress segment (duration matches the 5.5s slider interval) */
+.motion-progress-fill { transform: scaleX(0); transform-origin: left; animation: motion-progress-fill 5.5s linear forwards; }
+.motion-progress-paused .motion-progress-fill { animation-play-state: paused; }
+@keyframes motion-progress-fill { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .motion-progress-fill { animation: none; transform: scaleX(1); } }
+
+/* ------------------------------------------------------------------
+   Motion layer 2: split-text reveals, magnetic buttons, cursor
+   follower, velocity skew, hero exit and screenshot parallax.
+------------------------------------------------------------------- */
+/* Split text: hidden start state only when JS motion is available (html.js-motion). */
+.motion-split-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.motion-split-word { display: inline-block; white-space: nowrap; }
+.motion-split-char { display: inline-block; will-change: transform; }
+.js-motion [data-inview] .motion-split-char { transform: translateY(105%); }
+.js-motion [data-inview].is-inview .motion-split-char { animation: motion-char-rise 0.9s cubic-bezier(.16,1,.3,1) both; }
+@keyframes motion-char-rise { from { transform: translateY(105%); } to { transform: none; } }
+
+/* Magnetic: JS sets the `translate` property; this eases it in and out. */
+.motion-magnetic { transition: translate .6s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), background-color .3s, color .3s, border-color .3s; }
+
+/* Cursor follower (desktop, fine pointer only; JS positions it). */
+.motion-cursor {
+  position: fixed; top: 0; left: 0; z-index: 10000; pointer-events: none;
+  width: 0; height: 0; opacity: 0; transition: opacity .3s;
+}
+.motion-cursor.is-visible { opacity: 1; }
+.motion-cursor-dot {
+  position: absolute; left: -5px; top: -5px; width: 10px; height: 10px; border-radius: 999px;
+  background: #F59E0B; transition: transform .45s cubic-bezier(.16,1,.3,1), background-color .3s;
+}
+.motion-cursor-label {
+  position: absolute; left: 0; top: 0; transform: translate(-50%, -50%) scale(.4); opacity: 0;
+  font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #0B1020;
+  transition: transform .45s cubic-bezier(.16,1,.3,1), opacity .3s;
+}
+.motion-cursor.is-view .motion-cursor-dot { transform: scale(8); }
+.motion-cursor.is-view .motion-cursor-label { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+@media (pointer: coarse) { .motion-cursor { display: none; } }
+
+/* Velocity skew (Lenis writes --scroll-velocity, -1..1). */
+.motion-velocity-skew { transform: skewX(calc(var(--scroll-velocity, 0) * -12deg)); transition: transform .5s cubic-bezier(.16,1,.3,1); }
+
+@supports (animation-timeline: view()) {
+  /* Hero headline drifts up and fades as the hero scrolls away. */
+  .motion-hero-exit { animation: motion-hero-exit linear both; animation-timeline: view(); animation-range: exit 0% exit 80%; }
+  /* Screenshot parallax inside its frame (independent translate/scale so hover zoom still composes). */
+  .motion-parallax { scale: 1.12; animation: motion-parallax linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  /* Giant footer word scales up into place. */
+  .motion-scale-in { animation: motion-scale-in linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; transform-origin: left bottom; }
+}
+@keyframes motion-hero-exit { to { translate: 0 -12%; opacity: .15; } }
+@keyframes motion-parallax { from { translate: 0 -6%; } to { translate: 0 6%; } }
+@keyframes motion-scale-in { from { scale: .82; } to { scale: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-split-char, .motion-hero-exit, .motion-parallax, .motion-scale-in { animation: none !important; }
+  .motion-velocity-skew { transform: none !important; }
+  .motion-cursor { display: none; }
+}
+
+/* Plugins showcase: SERP title pixel-width meter fills to 512/600px on view */
+.motion-meter { width: 85.3%; transform-origin: left; }
+@supports (animation-timeline: view()) {
+  .motion-meter { animation: motion-meter linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; }
+}
+@keyframes motion-meter { from { transform: scaleX(0.1); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .motion-meter { animation: none; } }
+
+/* Case-study deep-dive HTML (admin-authored), set in the site's editorial type */
+.case-study-content { color: #334155; font-size: 17px; line-height: 1.75; }
+.case-study-content > * + * { margin-top: 1.1em; }
+.case-study-content h2 { margin-top: 1.8em; font-size: clamp(26px, 2.6vw, 38px); font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; color: #0F172A; }
+.case-study-content h3 { margin-top: 1.5em; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; color: #0F172A; }
+.case-study-content h2:first-child, .case-study-content h3:first-child { margin-top: 0; }
+.case-study-content ul, .case-study-content ol { padding-left: 1.25em; }
+.case-study-content ul { list-style: disc; }
+.case-study-content ol { list-style: decimal; }
+.case-study-content li + li { margin-top: 0.4em; }
+.case-study-content li::marker { color: #F59E0B; }
+.case-study-content a { color: #0F172A; font-weight: 600; text-decoration: underline; text-decoration-color: #F59E0B; text-underline-offset: 3px; }
+.case-study-content a:hover { color: #B45309; }
+.case-study-content strong { color: #0F172A; }
+.case-study-content blockquote { border-left: 3px solid #F59E0B; padding: 0.25em 0 0.25em 1.25em; font-size: 1.15em; font-weight: 600; color: #0F172A; }
+.case-study-content code { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.9em; background: #F1F5F9; padding: 0.1em 0.35em; border-radius: 6px; }
+.case-study-content pre { background: #0B1020; color: #E2E8F0; padding: 1.25em; border-radius: 16px; overflow-x: auto; }
+.case-study-content pre code { background: none; padding: 0; }
+.case-study-content img { border-radius: 18px; border: 1px solid #E2E8F0; }
+
+/* Long-form reading (blog articles, case-study write-ups): larger body copy, lede, anchors clear the fixed header */
+.article-prose { font-size: clamp(17px, 0.55vw + 15px, 19px); line-height: 1.8; }
+.article-prose.has-lede > p:first-child, .article-prose > p.lede { font-size: 1.14em; line-height: 1.65; color: #0F172A; }
+.article-prose > * + * { margin-top: 1.25em; }
+.article-prose h2, .article-prose h3 { scroll-margin-top: 110px; }
+.article-prose h2 { margin-top: 2.1em; padding-top: 0.2em; }
+.article-prose h4 { margin-top: 1.6em; font-size: 0.78em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; font-family: var(--font-mono), ui-monospace, monospace; }
+.article-prose h4 + * { margin-top: 0.6em; }
+.article-prose hr { border: 0; border-top: 1px solid #E2E8F0; margin: 2.5em 0; }
+.article-prose li { padding-left: 0.2em; }
+.article-prose pre { font-size: 0.82em; line-height: 1.65; }
+
+/* Stretched link: the card's primary link covers the whole card, so everywhere
+   the "View" cursor appears is clickable. Card roots must be positioned, and the
+   link itself must never be transformed (no motion-btn / motion-magnetic): a
+   transform makes it the ::after's containing block and the overlay collapses.
+   For animated buttons use a separate absolute overlay link instead. */
+.motion-stretch::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+
+/* RowBot dock & panel: sit above the safe area, and above the cookie sheet on phones
+   (the cookie banner publishes --cookie-offset while it is open). */
+.rowbot-dock { bottom: calc(1rem + env(safe-area-inset-bottom)); transition: bottom .5s cubic-bezier(.16,1,.3,1); }
+.rowbot-panel { bottom: calc(5.5rem + env(safe-area-inset-bottom)); height: min(640px, calc(100dvh - 8rem)); }
+@media (max-width: 639px) {
+  .rowbot-dock { bottom: calc(1rem + env(safe-area-inset-bottom) + var(--cookie-offset, 0px)); }
+  .rowbot-panel { bottom: calc(5.5rem + env(safe-area-inset-bottom) + var(--cookie-offset, 0px)); height: min(640px, calc(100dvh - 7rem - var(--cookie-offset, 0px))); }
+}
+@media (min-width: 640px) { .rowbot-dock { bottom: 1.5rem; } .rowbot-panel { bottom: 6rem; } }
+/* One floating prompt at a time: hide the RowBot teaser while the cookie banner asks for consent. */
+html[data-cookie-open] .rowbot-dock .group { display: none; }
+/* Mobile menu open: floating widgets step aside */
+html[data-menu-open] .rowbot-dock, html[data-menu-open] .rowbot-panel, html[data-menu-open] [aria-label="Cookie preferences"] { visibility: hidden; }

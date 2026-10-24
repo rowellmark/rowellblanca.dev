@@ -223,11 +223,11 @@ export default function LandingPagesManagerPage() {
     <div className="max-w-7xl mx-auto space-y-6 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-[#0b1a30] flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-zinc-950 flex items-center gap-2">
             <Globe className="h-6 w-6 text-brand-amber" />
             Dynamic Landing Pages ({landingPages.length})
           </h1>
-          <p className="text-xs text-slate-500 font-medium mt-1">
+          <p className="text-xs text-zinc-500 font-medium mt-1">
             Create, edit, and assign targeted SEO landing pages with custom hero headlines, projects, and testimonials.
           </p>
         </div>
@@ -254,18 +254,18 @@ export default function LandingPagesManagerPage() {
             });
             setShowModal(true);
           }}
-          className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-[#1d63ed] hover:bg-blue-600 text-white font-black text-xs shadow-md transition-all cursor-pointer"
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs shadow-md transition-all cursor-pointer"
         >
           <Plus className="h-4 w-4" /> Create New Landing Page
         </button>
       </div>
 
       {/* Landing Pages Table */}
-      <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+      <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-extrabold">
+              <tr className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
                 <th className="p-4">Route URL & Badge</th>
                 <th className="p-4">Hero Headline & Target Keyword</th>
                 <th className="p-4">Assigned Content</th>
@@ -273,21 +273,21 @@ export default function LandingPagesManagerPage() {
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+            <tbody className="divide-y divide-zinc-100 text-zinc-700 font-medium">
               {landingPages.map((page) => {
                 const isUkRoute = page.slug.startsWith('hire-');
                 const path = isUkRoute ? `/${page.slug}` : `/landing/${page.slug}`;
 
                 return (
-                  <tr key={page.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={page.id} className="hover:bg-zinc-50/70 transition-colors">
                     <td className="p-4 space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-indigo-700 font-extrabold bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200 text-xs">
+                        <span className="font-mono text-indigo-700 font-semibold bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200 text-xs">
                           {path}
                         </span>
                         <button
                           onClick={() => copyPageLink(page.slug)}
-                          className="p-1 text-slate-400 hover:text-slate-700"
+                          className="p-1 text-zinc-400 hover:text-zinc-700"
                           title="Copy Full Page URL"
                         >
                           {copiedSlug === page.slug ? (
@@ -300,33 +300,33 @@ export default function LandingPagesManagerPage() {
                           href={path}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1 text-slate-400 hover:text-slate-700"
+                          className="p-1 text-zinc-400 hover:text-zinc-700"
                           title="Open Page Preview"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
                       </div>
                       {page.badgeText && (
-                        <p className="text-[10px] font-bold text-slate-500 truncate max-w-[200px]">
+                        <p className="text-[11px] font-bold text-zinc-500 truncate max-w-[200px]">
                           {page.badgeText}
                         </p>
                       )}
                     </td>
                     <td className="p-4">
-                      <span className="font-black text-[#0b1a30] block text-sm">{page.heroTitle}</span>
+                      <span className="font-semibold text-zinc-950 block text-sm">{page.heroTitle}</span>
                       {page.targetKeyword && (
-                        <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded inline-block mt-1">
+                        <span className="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded inline-block mt-1">
                           🎯 {page.targetKeyword}
                         </span>
                       )}
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-3 text-slate-600 font-bold text-xs">
-                        <span className="flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-lg">
+                      <div className="flex items-center gap-3 text-zinc-600 font-bold text-xs">
+                        <span className="flex items-center gap-1 bg-zinc-100 px-2.5 py-1 rounded-lg">
                           <FolderKanban className="w-3.5 h-3.5 text-indigo-600" />
                           {page.projectIds?.length || 0} Projects
                         </span>
-                        <span className="flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-lg">
+                        <span className="flex items-center gap-1 bg-zinc-100 px-2.5 py-1 rounded-lg">
                           <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
                           {page.testimonialIds?.length || 0} Reviews
                         </span>
@@ -336,7 +336,7 @@ export default function LandingPagesManagerPage() {
                       <button
                         type="button"
                         onClick={() => togglePageActive(page)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-extrabold text-[11px] border cursor-pointer transition-all ${
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold text-[11px] border cursor-pointer transition-all ${
                           page.active
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
                             : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
@@ -369,14 +369,14 @@ export default function LandingPagesManagerPage() {
                           });
                           setShowModal(true);
                         }}
-                        className="p-2 rounded-lg text-slate-500 hover:text-[#1d63ed] hover:bg-slate-100 transition-colors"
+                        className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
                         title="Edit Landing Page"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(page.id)}
-                        className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        className="p-2 rounded-lg text-zinc-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                         title="Delete Landing Page"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -392,15 +392,15 @@ export default function LandingPagesManagerPage() {
 
       {/* Modal Builder Form */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto !mt-0">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[92vh] flex flex-col my-6">
+        <div className="fixed inset-0 z-50 bg-zinc-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto !mt-0">
+          <div className="bg-white border border-zinc-200 rounded-xl max-w-4xl w-full p-6 sm:p-8 space-y-6 shadow-sm relative max-h-[92vh] flex flex-col my-6">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
               <div>
-                <h3 className="text-xl font-black text-[#0b1a30]">
+                <h3 className="text-xl font-semibold text-zinc-950">
                   {editingItem ? `Edit Landing Page: /${editingItem.slug}` : 'Create Dynamic Landing Page'}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium">
+                <p className="text-xs text-zinc-500 font-medium">
                   Configure custom hero copy, SEO metadata, and assigned projects & testimonials.
                 </p>
               </div>
@@ -408,14 +408,14 @@ export default function LandingPagesManagerPage() {
                 <button
                   type="button"
                   onClick={() => setShowGeminiModal(true)}
-                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-md hover:scale-105 transition-all cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-zinc-950 text-xs font-semibold flex items-center gap-1.5 shadow-md hover:scale-105 transition-all cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4" /> ✨ Gemini AI Assistant
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="p-2 rounded-xl text-slate-400 hover:bg-slate-100"
+                  className="p-2 rounded-xl text-zinc-400 hover:bg-zinc-100"
                 >
                   ✕
                 </button>
@@ -423,14 +423,14 @@ export default function LandingPagesManagerPage() {
             </div>
 
             {/* Modal Navigation Tabs */}
-            <div className="flex border-b border-slate-200 gap-1 overflow-x-auto">
+            <div className="flex border-b border-zinc-200 gap-1 overflow-x-auto">
               <button
                 type="button"
                 onClick={() => setActiveTab('hero')}
-                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'hero'
-                    ? 'border-[#1d63ed] text-[#1d63ed]'
-                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                    ? 'border-zinc-900 text-zinc-900'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-900'
                 }`}
               >
                 <Layers className="w-4 h-4" /> 1. Hero & Branding
@@ -438,10 +438,10 @@ export default function LandingPagesManagerPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab('seo')}
-                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'seo'
-                    ? 'border-[#1d63ed] text-[#1d63ed]'
-                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                    ? 'border-zinc-900 text-zinc-900'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-900'
                 }`}
               >
                 <FileText className="w-4 h-4" /> 2. SEO & Keywords
@@ -449,10 +449,10 @@ export default function LandingPagesManagerPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab('projects')}
-                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'projects'
-                    ? 'border-[#1d63ed] text-[#1d63ed]'
-                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                    ? 'border-zinc-900 text-zinc-900'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-900'
                 }`}
               >
                 <FolderKanban className="w-4 h-4" /> 3. Selected Projects ({form.projectIds.length})
@@ -460,10 +460,10 @@ export default function LandingPagesManagerPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab('testimonials')}
-                className={`px-4 py-2.5 text-xs font-extrabold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
+                className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all cursor-pointer ${
                   activeTab === 'testimonials'
-                    ? 'border-[#1d63ed] text-[#1d63ed]'
-                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                    ? 'border-zinc-900 text-zinc-900'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-900'
                 }`}
               >
                 <Star className="w-4 h-4" /> 4. Selected Testimonials ({form.testimonialIds.length})
@@ -476,77 +476,77 @@ export default function LandingPagesManagerPage() {
               {activeTab === 'hero' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Route Slug / URL Path *</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Route Slug / URL Path *</label>
                     <input
                       type="text"
                       value={form.slug}
                       onChange={(e) => handleSlugChange(e.target.value)}
                       required
                       placeholder="e.g. hire-uk-react-developer"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-mono font-bold"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-mono font-bold"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-[11px] text-zinc-400 mt-1">
                       URL will be accessible at: <code className="text-indigo-600 font-mono">/hire-[slug]</code> or <code className="text-indigo-600 font-mono">/landing/[slug]</code>
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Hero Flag / Pill Badge</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Hero Flag / Pill Badge</label>
                     <input
                       type="text"
                       value={form.badgeText}
                       onChange={(e) => setForm({ ...form, badgeText: e.target.value })}
                       placeholder="e.g. 🇬🇧 UK Business & Agency Engineering Partner"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Hero Main Title (H1) *</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Hero Main Title (H1) *</label>
                     <input
                       type="text"
                       value={form.heroTitle}
                       onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
                       required
                       placeholder="e.g. Hire Senior React & Next.js Developer for UK Businesses"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-extrabold text-sm"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-semibold text-sm"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Hero Subtitle Paragraph *</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Hero Subtitle Paragraph *</label>
                     <textarea
                       rows={3}
                       value={form.heroSubtitle}
                       onChange={(e) => setForm({ ...form, heroSubtitle: e.target.value })}
                       required
                       placeholder="e.g. Partner with a senior full-stack software engineer building enterprise platforms like the Macmanus Asset Finance Portal..."
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 leading-relaxed"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 leading-relaxed"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Primary CTA Button Label</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Primary CTA Button Label</label>
                     <input
                       type="text"
                       value={form.heroCtaText}
                       onChange={(e) => setForm({ ...form, heroCtaText: e.target.value })}
                       placeholder="e.g. Book UK Discovery Call"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-bold"
                     />
                   </div>
 
-                  <div className="pt-4 border-t border-slate-200 space-y-4">
-                    <h4 className="font-extrabold text-[#0b1a30] text-xs uppercase tracking-wider">
+                  <div className="pt-4 border-t border-zinc-200 space-y-4">
+                    <h4 className="font-semibold text-zinc-950 text-xs uppercase tracking-wider">
                       Services Grid & Pitch Section Settings
                     </h4>
 
                     <div>
-                      <label className="block text-slate-700 font-extrabold mb-1">Services Section Type</label>
+                      <label className="block text-zinc-700 font-semibold mb-1">Services Section Type</label>
                       <select
                         value={form.serviceSectionType || 'wordpress'}
                         onChange={(e) => setForm({ ...form, serviceSectionType: e.target.value })}
-                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-extrabold text-xs"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-semibold text-xs"
                       >
                         <option value="wordpress">WordPress Services (Themes, Plugins, Headless, Core Web Vitals)</option>
                         <option value="react">React & Next.js Services (Next.js 14, TypeScript, APIs, AI Engines)</option>
@@ -555,24 +555,24 @@ export default function LandingPagesManagerPage() {
                     </div>
 
                     <div>
-                      <label className="block text-slate-700 font-extrabold mb-1">CTA Pitch Section Title</label>
+                      <label className="block text-zinc-700 font-semibold mb-1">CTA Pitch Section Title</label>
                       <input
                         type="text"
                         value={form.ctaTitle}
                         onChange={(e) => setForm({ ...form, ctaTitle: e.target.value })}
                         placeholder="e.g. Need a Custom WordPress Architect for Your UK Business?"
-                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-extrabold text-xs"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-semibold text-xs"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-slate-700 font-extrabold mb-1">CTA Pitch Subtitle</label>
+                      <label className="block text-zinc-700 font-semibold mb-1">CTA Pitch Subtitle</label>
                       <textarea
                         rows={2}
                         value={form.ctaSubtitle}
                         onChange={(e) => setForm({ ...form, ctaSubtitle: e.target.value })}
                         placeholder="Let's discuss your project requirement..."
-                        className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 text-xs"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 text-xs"
                       />
                     </div>
                   </div>
@@ -583,35 +583,35 @@ export default function LandingPagesManagerPage() {
               {activeTab === 'seo' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Target Keyword Focus</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Target Keyword Focus</label>
                     <input
                       type="text"
                       value={form.targetKeyword}
                       onChange={(e) => setForm({ ...form, targetKeyword: e.target.value })}
                       placeholder="e.g. React Developer UK"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-bold"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Meta Title Tag (&lt;title&gt;)</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Meta Title Tag (&lt;title&gt;)</label>
                     <input
                       type="text"
                       value={form.metaTitle}
                       onChange={(e) => setForm({ ...form, metaTitle: e.target.value })}
                       placeholder="e.g. Hire Senior React & Next.js Developer UK | Rowell Mark Blanca"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 font-bold"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-extrabold mb-1">Meta Description Tag</label>
+                    <label className="block text-zinc-700 font-semibold mb-1">Meta Description Tag</label>
                     <textarea
                       rows={3}
                       value={form.metaDescription}
                       onChange={(e) => setForm({ ...form, metaDescription: e.target.value })}
                       placeholder="e.g. Senior React & Next.js developer for UK businesses and web agencies. Full GMT/BST timezone overlap..."
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900"
                     />
                   </div>
                 </div>
@@ -621,10 +621,10 @@ export default function LandingPagesManagerPage() {
               {activeTab === 'projects' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <p className="font-extrabold text-slate-800">
+                    <p className="font-semibold text-zinc-800">
                       Select which project screenshot cards render on this landing page:
                     </p>
-                    <span className="text-xs font-mono font-extrabold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">
+                    <span className="text-xs font-mono font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">
                       {form.projectIds.length} Selected
                     </span>
                   </div>
@@ -636,23 +636,23 @@ export default function LandingPagesManagerPage() {
                         <div
                           key={proj.id}
                           onClick={() => toggleProjectId(proj.id)}
-                          className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                          className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                             selected
-                              ? 'bg-indigo-50/80 border-indigo-400 shadow-xs'
-                              : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+                              ? 'bg-indigo-50/80 border-indigo-400 shadow-sm'
+                              : 'bg-zinc-50 border-zinc-200 hover:border-zinc-300'
                           }`}
                         >
                           <div className="space-y-0.5">
-                            <span className="font-black text-[#0b1a30] text-xs block">{proj.sitename}</span>
+                            <span className="font-semibold text-zinc-950 text-xs block">{proj.sitename}</span>
                             {proj.category && (
-                              <span className="text-[10px] font-bold text-slate-500">{proj.category}</span>
+                              <span className="text-[11px] font-bold text-zinc-500">{proj.category}</span>
                             )}
                           </div>
                           <input
                             type="checkbox"
                             checked={selected}
                             onChange={() => {}}
-                            className="h-4 w-4 rounded text-[#1d63ed]"
+                            className="h-4 w-4 rounded text-zinc-900"
                           />
                         </div>
                       );
@@ -665,10 +665,10 @@ export default function LandingPagesManagerPage() {
               {activeTab === 'testimonials' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <p className="font-extrabold text-slate-800">
+                    <p className="font-semibold text-zinc-800">
                       Select which client review testimonials render on this landing page:
                     </p>
-                    <span className="text-xs font-mono font-extrabold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+                    <span className="text-xs font-mono font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
                       {form.testimonialIds.length} Selected
                     </span>
                   </div>
@@ -680,15 +680,15 @@ export default function LandingPagesManagerPage() {
                         <div
                           key={t.id}
                           onClick={() => toggleTestimonialId(t.id)}
-                          className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                          className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                             selected
-                              ? 'bg-amber-50/80 border-amber-400 shadow-xs'
-                              : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+                              ? 'bg-amber-50/80 border-amber-400 shadow-sm'
+                              : 'bg-zinc-50 border-zinc-200 hover:border-zinc-300'
                           }`}
                         >
                           <div className="space-y-0.5">
-                            <span className="font-black text-[#0b1a30] text-xs block">{t.name}</span>
-                            <span className="text-[10px] font-bold text-slate-500 block truncate max-w-[200px]">
+                            <span className="font-semibold text-zinc-950 text-xs block">{t.name}</span>
+                            <span className="text-[11px] font-bold text-zinc-500 block truncate max-w-[200px]">
                               {t.company || t.quote}
                             </span>
                           </div>
@@ -706,13 +706,13 @@ export default function LandingPagesManagerPage() {
               )}
 
               {/* Footer Save */}
-              <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800">
+              <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+                <label className="flex items-center gap-2 cursor-pointer font-bold text-zinc-800">
                   <input
                     type="checkbox"
                     checked={form.active}
                     onChange={(e) => setForm({ ...form, active: e.target.checked })}
-                    className="h-4 w-4 rounded text-[#1d63ed]"
+                    className="h-4 w-4 rounded text-zinc-900"
                   />
                   <span>Active & Published</span>
                 </label>
@@ -721,13 +721,13 @@ export default function LandingPagesManagerPage() {
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold"
+                    className="px-5 py-2.5 rounded-xl bg-zinc-100 text-zinc-700 font-bold"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-[#1d63ed] text-white font-extrabold shadow-md hover:bg-blue-600 transition-all"
+                    className="px-6 py-2.5 rounded-xl bg-zinc-900 text-white font-semibold shadow-md hover:bg-zinc-800 transition-all"
                   >
                     Save Landing Page
                   </button>

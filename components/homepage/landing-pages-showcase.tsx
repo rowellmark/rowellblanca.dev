@@ -73,7 +73,7 @@ export function LandingPagesShowcase() {
                     <Globe className="h-5 w-5" />
                   </div>
                   {page.badgeText && (
-                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full inline-block">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full inline-block">
                       {page.badgeText}
                     </span>
                   )}

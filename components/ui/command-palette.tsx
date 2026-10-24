@@ -32,9 +32,9 @@ interface CommandItem {
   action: () => void;
 }
 
-export function CommandPalette() {
+export function CommandPalette({ defaultOpen = false }: { defaultOpen?: boolean }) {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -322,7 +322,7 @@ export function CommandPalette() {
                   placeholder="Type a command, project name, or stack..."
                   className="w-full bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
                 />
-                <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono text-slate-500 bg-white border border-slate-300 rounded shadow-2xs">
+                <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono text-slate-500 bg-white border border-slate-300 rounded shadow-2xs">
                   ESC
                 </kbd>
               </div>
@@ -364,7 +364,7 @@ export function CommandPalette() {
                                 </span>
                                 {cmd.badge && (
                                   <span
-                                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold uppercase tracking-wider ${
+                                    className={`text-[11px] font-mono px-1.5 py-0.2 rounded font-bold uppercase tracking-wider ${
                                       isSelected
                                         ? 'bg-slate-950 text-white'
                                         : 'bg-slate-100 text-slate-600 border border-slate-200'
@@ -387,11 +387,11 @@ export function CommandPalette() {
                           </div>
 
                           <div className="flex items-center gap-2 shrink-0">
-                            <span className={`text-[10px] font-mono uppercase tracking-wider ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-400'}`}>
+                            <span className={`text-[11px] font-mono uppercase tracking-wider ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-400'}`}>
                               {cmd.category}
                             </span>
                             {isSelected && (
-                              <kbd className="hidden sm:inline-flex px-1.5 py-0.5 text-[10px] font-mono bg-slate-950 text-white rounded">
+                              <kbd className="hidden sm:inline-flex px-1.5 py-0.5 text-[11px] font-mono bg-slate-950 text-white rounded">
                                 ↵
                               </kbd>
                             )}
@@ -407,12 +407,12 @@ export function CommandPalette() {
               <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 text-[11px] font-mono text-slate-500 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1 py-0.5 bg-white border border-slate-300 rounded text-[10px]">↑</kbd>
-                    <kbd className="px-1 py-0.5 bg-white border border-slate-300 rounded text-[10px]">↓</kbd>
+                    <kbd className="px-1 py-0.5 bg-white border border-slate-300 rounded text-[11px]">↑</kbd>
+                    <kbd className="px-1 py-0.5 bg-white border border-slate-300 rounded text-[11px]">↓</kbd>
                     <span>Navigate</span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1 py-0.5 bg-white border border-slate-300 rounded text-[10px]">↵</kbd>
+                    <kbd className="px-1 py-0.5 bg-white border border-slate-300 rounded text-[11px]">↵</kbd>
                     <span>Execute</span>
                   </span>
                 </div>
