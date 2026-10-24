@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { TechGalaxy } from "@/components/homepage/tech-galaxy";
 
 const CLOCKS = [
     { label: "London", timeZone: "Europe/London" },
@@ -96,7 +97,14 @@ export function Hero() {
 
     return (
         <section className="relative bg-brand-ink text-white px-4 sm:px-6 lg:px-10 overflow-hidden">
-            <div className="mx-auto max-w-[1360px] min-h-[min(920px,100svh)] flex flex-col lg:justify-end gap-10 lg:gap-12 pt-32 lg:pt-40 pb-12 lg:pb-16">
+            {/* Backdrop: the tech-stack galaxy, large and faint, slowly orbiting behind everything */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+                <TechGalaxy
+                    decorative
+                    className="!absolute left-full top-[14%] w-[620px] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-25 sm:left-[85%] sm:top-[30%] sm:w-[900px] sm:opacity-30 lg:left-[60%] lg:top-1/2 lg:w-[1320px] lg:opacity-50 [mask-image:radial-gradient(closest-side,black_55%,transparent)]"
+                />
+            </div>
+            <div className="relative z-10 mx-auto max-w-[1360px] min-h-[min(920px,100svh)] flex flex-col lg:justify-end gap-10 lg:gap-12 pt-32 lg:pt-40 pb-12 lg:pb-16">
                 <div className="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-12 items-stretch">
                     <div className="flex flex-col justify-end gap-10 min-w-0">
                         <div className="motion-fade motion-d1 flex flex-wrap items-center gap-3">

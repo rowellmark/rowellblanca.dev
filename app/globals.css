@@ -139,6 +139,17 @@ body {
 .motion-orbit-reverse { animation-direction: reverse; }
 .motion-galaxy:hover .motion-orbit { animation-play-state: paused; }
 @keyframes motion-orbit { to { rotate: 360deg; } }
+/* Floating tech-stack logos (FloatingStack): slow drift loop + gather-in on scroll */
+.motion-drift { animation: motion-drift 12s ease-in-out infinite; will-change: transform; }
+@keyframes motion-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(10px, -14px, 0) rotate(4deg); }
+  66% { transform: translate3d(-8px, 8px, 0) rotate(-3deg); }
+}
+@supports (animation-timeline: view()) {
+  .motion-gather { animation: motion-gather linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; }
+}
+@keyframes motion-gather { from { translate: var(--gx) var(--gy); scale: .6; opacity: 0; } to { translate: 0 0; scale: 1; opacity: 1; } }
 .motion-twinkle { animation: motion-twinkle 4.2s ease-in-out infinite; }
 @keyframes motion-twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .8; } }
 
@@ -190,7 +201,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .motion-rise, .motion-fade, .motion-marquee-track, .motion-cue, .motion-pulse,
-  .motion-reel-up, .motion-reel-down, .motion-float, .motion-orbit, .motion-twinkle,
+  .motion-reel-up, .motion-reel-down, .motion-float, .motion-orbit, .motion-twinkle, .motion-drift, .motion-gather,
   .motion-reveal, .motion-lit, .motion-recede { animation: none !important; }
   .motion-btn, .motion-lift, .motion-underline::after, .motion-card .motion-shot { transition: none !important; }
 }
