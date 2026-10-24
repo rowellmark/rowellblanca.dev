@@ -101,7 +101,7 @@ export function Hero() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
                 <TechGalaxy
                     decorative
-                    className="!absolute left-1/2 top-[38%] w-[760px] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-40 lg:left-[60%] lg:top-1/2 lg:w-[1320px] lg:opacity-50 [mask-image:radial-gradient(closest-side,black_55%,transparent)]"
+                    className="!absolute left-full top-[14%] w-[620px] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-25 sm:left-[85%] sm:top-[30%] sm:w-[900px] sm:opacity-30 lg:left-[60%] lg:top-1/2 lg:w-[1320px] lg:opacity-50 [mask-image:radial-gradient(closest-side,black_55%,transparent)]"
                 />
             </div>
             <div className="relative z-10 mx-auto max-w-[1360px] min-h-[min(920px,100svh)] flex flex-col lg:justify-end gap-10 lg:gap-12 pt-32 lg:pt-40 pb-12 lg:pb-16">
