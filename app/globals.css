@@ -314,3 +314,5 @@ body {
 @media (min-width: 640px) { .rowbot-dock { bottom: 1.5rem; } .rowbot-panel { bottom: 6rem; } }
 /* One floating prompt at a time: hide the RowBot teaser while the cookie banner asks for consent. */
 html[data-cookie-open] .rowbot-dock .group { display: none; }
+/* Mobile menu open: floating widgets step aside */
+html[data-menu-open] .rowbot-dock, html[data-menu-open] .rowbot-panel, html[data-menu-open] [aria-label="Cookie preferences"] { visibility: hidden; }
