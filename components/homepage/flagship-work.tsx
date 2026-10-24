@@ -34,7 +34,7 @@ function mapProjectToFlagship(p: PortfolioProject | FallbackProject): FlagshipDi
   const region = isUK ? 'UK 🇬🇧' : isUS ? 'US 🇺🇸' : 'Global 🌐';
 
   // Extract or formulate high-impact metrics
-  let metricBadge = 'Production Shipped & Tested';
+  let metricBadge = 'Live in production & tested';
   if (p.permalink === 'macmanus-portal') {
     metricBadge = '98/100 Core Web Vitals · 140ms TTFB';
   } else if (p.permalink === 'buildforuser') {
@@ -184,7 +184,7 @@ export function FlagshipWork() {
                       {project.category}
                     </span>
                     <span className="text-[11px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full backdrop-blur-md">
-                      Production Shipped
+                      Live in production
                     </span>
                   </div>
                 </div>

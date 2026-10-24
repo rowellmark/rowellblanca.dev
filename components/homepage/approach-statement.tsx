@@ -1,6 +1,6 @@
 const LINES = [
     { text: "I design the architecture first,", cls: "motion-l1" },
-    { text: "ship clean, typed code second,", cls: "motion-l2" },
+    { text: "write clean, typed code second,", cls: "motion-l2" },
     { text: "and obsess over the milliseconds", cls: "motion-l3" },
     { text: "your users never notice —", cls: "motion-l4" },
     { text: "because they never", cls: "motion-l5 text-brand-slate" },

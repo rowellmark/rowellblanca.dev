@@ -195,7 +195,7 @@ export function CommandPalette({ defaultOpen = false }: { defaultOpen?: boolean 
     {
       id: 'all-projects',
       category: 'Case Studies',
-      title: 'Browse Full Portfolio Directory (50+ Shipped)',
+      title: 'Browse Full Portfolio Directory (50+ Projects)',
       subtitle: 'Explore active web applications and WordPress builds',
       icon: Briefcase,
       action: () => {

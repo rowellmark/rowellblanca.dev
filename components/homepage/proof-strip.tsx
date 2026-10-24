@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 const PROOF = [
     { value: 98, suffix: "+", label: "Core Web Vitals performance guarantee" },
-    { value: 50, suffix: "+", label: "Projects shipped across WordPress & Next.js" },
+    { value: 50, suffix: "+", label: "Projects delivered across WordPress & Next.js" },
     { value: 30, suffix: "d", label: "Post-launch warranty & bug-free handover" },
     { value: 3, suffix: " TZ", label: "UK (GMT), US & Australian (AEST) overlap" },
 ];

@@ -38,7 +38,7 @@ function mapToSpotlightItem(p: PortfolioProject | FallbackProject): FlagshipItem
   let metrics = [
     { label: 'Core Vitals', value: '98 / 100' },
     { label: 'Architecture', value: 'Edge CDN' },
-    { label: 'Status', value: 'Shipped' },
+    { label: 'Status', value: 'Live' },
   ];
 
   if (p.permalink === 'macmanus-portal') {

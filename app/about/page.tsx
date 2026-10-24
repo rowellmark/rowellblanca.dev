@@ -189,7 +189,7 @@ export default function AboutPage() {
                             <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(36px,5vw,80px)]">Skills & ecosystem.</h2>
                             <p className="m-0 max-w-[480px] text-brand-slate text-[17px] leading-relaxed">
                                 The tools I reach for every day — from React and Next.js on the front end to PostgreSQL, Prisma and
-                                WordPress behind it, shipped on Vercel.
+                                WordPress behind it, deployed on Vercel.
                             </p>
                         </div>
                         <div className="motion-reveal rounded-[28px] bg-brand-ink p-6 sm:p-10 overflow-hidden">
