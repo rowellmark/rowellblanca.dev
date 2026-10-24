@@ -40,16 +40,23 @@ const STARS = [
     [27, 90, 1], [49, 96, 1], [70, 88, 2], [91, 76, 1], [97, 55, 2], [79, 22, 1], [17, 33, 1], [58, 80, 1],
 ];
 
-/** Rotating "galaxy" of the tech stack: logo core, three counter-rotating orbits of brand marks. */
-export function TechGalaxy({ className = "" }: { className?: string }) {
+/**
+ * Rotating "galaxy" of the tech stack: logo core, three counter-rotating orbits of brand marks.
+ * `decorative` renders it as a hidden-from-assistive-tech backdrop (homepage hero) with no hover effects.
+ */
+export function TechGalaxy({ className = "", decorative = false }: { className?: string; decorative?: boolean }) {
     const all = ORBITS.flatMap((o) => o.icons.map((i) => i.title));
     return (
-        <figure className={`motion-galaxy relative m-0 aspect-square w-full ${className}`}>
-            <figcaption className="sr-only">Tech stack: {all.join(", ")}</figcaption>
+        <figure
+            aria-hidden={decorative || undefined}
+            className={`relative m-0 aspect-square w-full ${decorative ? "pointer-events-none select-none" : "motion-galaxy"} ${className}`}
+        >
+            {!decorative && <figcaption className="sr-only">Tech stack: {all.join(", ")}</figcaption>}
 
             {/* Nebula glow + stars */}
-            <div aria-hidden="true" className="absolute inset-[12%] rounded-full bg-amber-500/20 blur-[80px]" />
-            <div aria-hidden="true" className="absolute inset-[30%] rounded-full bg-indigo-500/20 blur-[60px]" />
+            {/* Gradients rather than blur() filters: same glow, no per-frame filter cost behind the orbits */}
+            <div aria-hidden="true" className="absolute inset-[4%] rounded-full bg-[radial-gradient(closest-side,rgba(245,158,11,0.22),transparent)]" />
+            <div aria-hidden="true" className="absolute inset-[24%] rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.2),transparent)]" />
             {STARS.map(([x, y, s], i) => (
                 <span
                     key={i}
@@ -63,7 +70,7 @@ export function TechGalaxy({ className = "" }: { className?: string }) {
                 <div
                     key={o}
                     aria-hidden="true"
-                    className={`motion-orbit absolute rounded-full border border-white/10 ${orbit.reverse ? "motion-orbit-reverse" : ""}`}
+                    className={`motion-orbit absolute rounded-full border border-white/10 [will-change:rotate] ${orbit.reverse ? "motion-orbit-reverse" : ""}`}
                     style={{
                         width: `${orbit.size}%`,
                         height: `${orbit.size}%`,
@@ -83,7 +90,9 @@ export function TechGalaxy({ className = "" }: { className?: string }) {
                                 {/* Counter-rotates at the same speed so each mark stays upright. */}
                                 <span
                                     title={icon.title}
-                                    className={`motion-orbit ${orbit.reverse ? "" : "motion-orbit-reverse"} grid place-items-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-brand-ink-2/90 backdrop-blur border border-white/10 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.9)] transition-[border-color,scale] duration-500 hover:border-amber-400/70 hover:scale-110`}
+                                    className={`motion-orbit ${orbit.reverse ? "" : "motion-orbit-reverse"} [will-change:rotate] grid place-items-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-brand-ink-2 border border-white/10 ${
+                                        decorative ? "" : "shadow-[0_10px_30px_-10px_rgba(0,0,0,0.9)] transition-[border-color,scale] duration-500 hover:border-amber-400/70 hover:scale-110"
+                                    }`}
                                     style={{ animationDuration: `${orbit.duration}s` }}
                                 >
                                     <svg viewBox="0 0 24 24" className="h-[50%] w-[50%]" fill={iconFill(icon.hex)}>
@@ -96,10 +105,10 @@ export function TechGalaxy({ className = "" }: { className?: string }) {
                 </div>
             ))}
 
-            {/* Core */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center h-[22%] w-[22%] rounded-full bg-brand-ink border border-white/15 shadow-[0_0_0_10px_rgba(245,158,11,0.06),0_0_80px_10px_rgba(245,158,11,0.25)]">
+            {/* Core (omitted as a backdrop, where it would peek out from behind the page content) */}
+            {!decorative && <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center h-[22%] w-[22%] rounded-full bg-brand-ink border border-white/15 shadow-[0_0_0_10px_rgba(245,158,11,0.06),0_0_80px_10px_rgba(245,158,11,0.25)]">
                 <AnimatedLogo className="h-[58%] w-[58%]" title="Rowell Mark Blanca" tone="dark" />
-            </div>
+            </div>}
         </figure>
     );
 }
