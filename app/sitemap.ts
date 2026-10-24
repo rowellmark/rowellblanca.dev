@@ -16,16 +16,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/mywork',
     '/case-studies',
     '/plugins/buildforuser-seo',
+    '/arcade',
+    '/privacy',
     '/blog',
     '/contact',
-    '/review',
     '/hire-uk-react-developer',
     '/hire-uk-wordpress-developer',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.9,
+    priority: route === '' ? 1.0 : route === '/privacy' ? 0.3 : route === '/arcade' ? 0.5 : 0.9,
   }));
 
   // 2. Automatically query all active projects created via Admin Dashboard
@@ -83,7 +84,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn('Sitemap live blog posts DB fetch fallback (using initial blog posts):', error);
   }
 
-  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
+  // 4. Admin-created landing pages (the hire-uk-* fallbacks are already listed as standalone routes)
+  let landingRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const pages = await prisma.landingPage.findMany({ where: { active: true }, select: { slug: true, updatedAt: true } });
+    landingRoutes = pages
+      .filter((p) => !['hire-uk-react-developer', 'hire-uk-wordpress-developer'].includes(p.slug))
+      .map((p) => ({
+        url: `${baseUrl}/landing/${p.slug}`,
+        lastModified: p.updatedAt,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }));
+  } catch (error) {
+    console.warn('Sitemap landing pages DB fetch skipped:', error);
+  }
+
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes, ...landingRoutes];
 }
 
 

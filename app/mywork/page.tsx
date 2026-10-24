@@ -7,11 +7,15 @@ import { MyWork } from "@/components/homepage/my-work";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { PageHero } from "@/components/ui/page-hero";
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-    title: "My Work & Engineering Portfolio — Rowell Mark Blanca",
-    description: "Explore 50+ production full-stack builds, Next.js web apps, serverless PostgreSQL architectures, and custom WordPress engines by Rowell Mark Blanca.",
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/mywork",
+  title: "Portfolio: Next.js & WordPress Projects",
+  description:
+    "Client builds by Rowell Mark Blanca: Next.js web apps, FCA-regulated finance portals, custom WordPress sites and plugins, with live links and case studies.",
+  keywords: ["Next.js portfolio", "WordPress developer portfolio", "web developer portfolio UK", "case studies"],
+});
 
 // Re-render at most hourly so admin project edits show up without a redeploy.
 export const revalidate = 3600;

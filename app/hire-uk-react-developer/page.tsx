@@ -1,56 +1,15 @@
 import type { Metadata } from "next";
 import React from "react";
 import { UkLandingClient } from "./uk-landing-client";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.rowellblanca.dev"),
-  title: "Hire Senior React, Next.js & WordPress Developer UK | Rowell Mark Blanca",
+export const metadata: Metadata = pageMetadata({
+  path: "/hire-uk-react-developer",
+  title: "Hire a React & Next.js Developer in the UK",
   description:
-    "Senior Full-Stack Engineer & WordPress Architect partnering with UK businesses & tech agencies. Proven results with UK clients like Towerfire and Macmanus. Full GMT/BST timezone overlap & GBP billing options.",
-  keywords: [
-    "Hire React Developer UK",
-    "Next.js Engineer London",
-    "WordPress Developer UK",
-    "WordPress Architect UK",
-    "Towerfire UK Client Developer",
-    "Macmanus UK Client Developer",
-    "Offshore React Engineer United Kingdom",
-    "Headless CMS Developer UK",
-    "Full-Stack Web Developer London",
-  ],
-  authors: [{ name: "Rowell Mark Blanca", url: "https://www.rowellblanca.dev" }],
-  creator: "Rowell Mark Blanca",
-  openGraph: {
-    type: "website",
-    locale: "en_GB",
-    url: "https://www.rowellblanca.dev/hire-uk-react-developer",
-    title: "Hire Senior React, Next.js & WordPress Developer UK | Rowell Mark Blanca",
-    description:
-      "Senior Full-Stack Engineer & WordPress Architect partnering with UK businesses & agencies. Proven client results with Towerfire & Macmanus.",
-    siteName: "Rowell Mark Blanca Portfolio",
-    images: [
-      {
-        url: "https://www.rowellblanca.dev/opengraph-image1.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Hire Senior React, Next.js & WordPress Developer UK",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hire Senior React, Next.js & WordPress Developer UK",
-    description:
-      "Senior Full-Stack Engineer & WordPress Architect partnering with UK businesses & agencies. Proven client results with Towerfire & Macmanus.",
-    creator: "@itsmrrowrow",
-  },
-  alternates: {
-    canonical: "https://www.rowellblanca.dev/hire-uk-react-developer",
-    languages: {
-      "en-GB": "https://www.rowellblanca.dev/hire-uk-react-developer",
-    },
-  },
-};
+    "Senior React and Next.js developer for UK businesses and agencies: web apps, SaaS portals and headless builds, with GMT/BST overlap and GBP billing.",
+  keywords: ["hire React developer UK", "hire Next.js developer UK", "freelance React developer UK", "Next.js developer London", "headless CMS developer UK"],
+});
 
 const jsonLd = {
   "@context": "https://schema.org",

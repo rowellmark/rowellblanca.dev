@@ -18,6 +18,8 @@ export default function Footer() {
         { href: '/mywork', label: 'My Work' },
         { href: '/case-studies', label: 'Case Studies' },
         { href: '/blog', label: 'Blog' },
+        { href: '/hire-uk-react-developer', label: 'Hire a Next.js developer' },
+        { href: '/hire-uk-wordpress-developer', label: 'Hire a WordPress developer' },
         { href: '/arcade', label: 'Arcade 🎮', highlight: true },
         { href: '/contact', label: 'Contact' },
         { href: '/privacy', label: 'Privacy' },

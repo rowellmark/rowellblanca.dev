@@ -9,11 +9,15 @@ import WorkHistory from "@/components/homepage/work-history";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-    title: "About Rowell Mark Blanca — Senior Full-Stack Software Engineer",
-    description: "Learn more about Rowell Mark Blanca — Senior Full-Stack Engineer with 12+ years experience in React, Next.js, TypeScript, and custom WordPress architecture for UK, US & Australian clients.",
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
+  title: "About Rowell Mark Blanca — Senior Full-Stack Developer",
+  description:
+    "12+ years building React, Next.js and custom WordPress platforms for UK, US and Australian businesses. Background, skills, tech stack and career history.",
+  keywords: ["Rowell Mark Blanca", "senior full-stack developer", "Next.js developer", "WordPress developer", "freelance web developer"],
+});
 
 export default function AboutPage() {
     const socialMedia = [

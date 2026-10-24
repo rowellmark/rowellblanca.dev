@@ -37,3 +37,19 @@ export const getBlogPost = cache(async (slug: string) => {
   const rest = pool.filter((p) => p.slug !== slug && !sameCategory.includes(p));
   return { post, related: [...sameCategory, ...rest].slice(0, 3) };
 });
+
+// Shorter search-result titles (Google shows ~60 characters) for existing posts,
+// keyed by slug. The on-page headline keeps the full post title. Posts without an
+// entry fall back to their title.
+const SEO_TITLES: Record<string, string> = {
+  'custom-wordpress-vs-nextjs-14-uk-enterprises': 'WordPress vs Next.js: Choosing the Right Stack (UK Guide)',
+  'high-performance-webgl-canvas-game-engines-react': 'WebGL & Canvas Game Engines in React: A Practical Guide',
+  'engineering-fca-regulated-asset-finance-portal-macmanus': 'Building an FCA-Regulated Asset Finance Portal',
+  'building-custom-rag-ai-chatbots-wordpress-nextjs': 'Building RAG AI Chatbots for WordPress & Next.js',
+  'optimizing-nextjs-14-server-components-core-web-vitals': 'Next.js Server Components & Core Web Vitals Guide',
+  'architecting-custom-gutenberg-blocks-gaming-portals': 'Custom Gutenberg Blocks for Gaming & E-Sports Sites',
+};
+
+export function blogSeoTitle(post: Pick<BlogPostRecord, 'slug' | 'title'>) {
+  return SEO_TITLES[post.slug] || post.title;
+}

@@ -3,12 +3,14 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getBlogPost } from '@/lib/blog';
+import { blogSeoTitle, getBlogPost } from '@/lib/blog';
+import { DEFAULT_OG_IMAGE, seoDescription, seoTitle } from '@/lib/seo';
 import { INITIAL_BLOG_POSTS } from '@/lib/initial-blog-data';
 import { renderMarkdown, readingTime } from '@/lib/markdown';
 import { canOptimizeImage, resolveValidImageSrc } from '@/lib/image-utils';
 import { ArticleToc } from '@/components/article/article-toc';
 import { AuthorCard, ShareButtons } from '@/components/article/article-extras';
+import { ServiceLinks, relatedServices } from '@/components/article/service-links';
 
 const BASE_URL = 'https://www.rowellblanca.dev';
 
@@ -38,27 +40,31 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   }
 
   const published = formatDate(post.publishedAt);
+  const title = seoTitle(blogSeoTitle(post));
+  const description = seoDescription(post.excerpt || `${post.title}: an engineering article by Rowell Mark Blanca.`);
   return {
     metadataBase: new URL(BASE_URL),
-    title: `${post.title} | Rowell Mark Blanca`,
-    description: post.excerpt || `${post.title} - Software Engineering article by Rowell Mark Blanca.`,
+    title,
+    description,
     keywords: post.tags?.length ? post.tags : ['Rowell Mark Blanca', 'Software Engineering', 'React', 'WordPress'],
     authors: [{ name: post.author || 'Rowell Mark Blanca', url: BASE_URL }],
     creator: 'Rowell Mark Blanca',
     openGraph: {
       type: 'article',
       url: `${BASE_URL}/blog/${post.slug}`,
-      title: post.title,
-      description: post.excerpt || undefined,
+      title: title.absolute,
+      description,
       siteName: 'Rowell Mark Blanca Portfolio',
       publishedTime: published?.toISOString(),
       authors: [post.author || 'Rowell Mark Blanca'],
       tags: post.tags || [],
+      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt || undefined,
+      title: title.absolute,
+      description,
+      images: [DEFAULT_OG_IMAGE],
       creator: '@itsmrrowrow',
     },
     alternates: { canonical: `${BASE_URL}/blog/${post.slug}` },
@@ -90,7 +96,7 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
         headline: post.title,
         description: post.excerpt || post.title,
         articleBody: post.content,
-        image: hasCover ? (cover.startsWith('http') ? cover : `${BASE_URL}${cover}`) : `${BASE_URL}/opengraph-image1.jpg`,
+        image: hasCover ? (cover.startsWith('http') ? cover : `${BASE_URL}${cover}`) : `${BASE_URL}/og-default.jpg`,
         datePublished: published?.toISOString(),
         dateModified: updated?.toISOString(),
         author: { '@type': 'Person', name: post.author || 'Rowell Mark Blanca', url: BASE_URL },
@@ -208,6 +214,8 @@ export default async function ArticlePage(props: { params: Promise<{ slug: strin
               <p className="m-0 font-semibold text-brand-navy">Found this useful? Share it.</p>
               <ShareButtons title={post.title} url={url} />
             </div>
+
+            <ServiceLinks services={relatedServices(`${post.title} ${category} ${(post.tags || []).join(' ')}`)} />
 
             <AuthorCard service={`Inquiry regarding ${post.title}`} />
           </article>

@@ -3,32 +3,29 @@ import React from 'react';
 import Link from 'next/link';
 import { Bot, Code2, CornerDownRight, FileSpreadsheet, Gauge, Layers, Search, ShieldCheck, Target, Zap } from 'lucide-react';
 import { PageHero } from '@/components/ui/page-hero';
+import { pageMetadata } from '@/lib/seo';
 import { SplitText } from '@/components/ui/split-text';
 import { SeoScreenshotTour } from '@/components/plugins/seo-screenshot-tour';
 import { SerpTestBench } from '@/components/plugins/serp-test-bench';
 import { PluginInquiryButton } from '@/components/plugins/plugin-inquiry-button';
 
 const PAGE_URL = 'https://www.rowellblanca.dev/plugins/buildforuser-seo';
-const TITLE = 'BuildForUser SEO — WordPress SEO Plugin | Rowell Mark Blanca';
+const TITLE = 'BuildForUser SEO: WordPress SEO Plugin';
 const DESCRIPTION =
-    'An all-in-one WordPress SEO plugin with live SERP previews, a Canvas pixel-width meter, multi-keyword audits, XML sitemaps, 301 redirects and llms.txt for AI search — every feature unlocked.';
+    'WordPress SEO plugin with live SERP previews, a pixel-width title meter, multi-keyword audits, XML sitemaps, 301 redirects and llms.txt. No paywalls.';
 
-export const metadata: Metadata = {
-    metadataBase: new URL('https://www.rowellblanca.dev'),
+export const metadata: Metadata = pageMetadata({
+    path: '/plugins/buildforuser-seo',
     title: TITLE,
     description: DESCRIPTION,
-    keywords: [
-        'BuildForUser SEO',
+    keywords: ['BuildForUser SEO',
         'WordPress SEO plugin',
         'SERP preview plugin',
         'llms.txt WordPress',
         'XML sitemap plugin',
         'WordPress 301 redirects',
-        'Yoast alternative',
-    ],
-    openGraph: { type: 'website', url: PAGE_URL, title: TITLE, description: DESCRIPTION, siteName: 'Rowell Mark Blanca Portfolio' },
-    alternates: { canonical: PAGE_URL },
-};
+        'Yoast alternative'],
+});
 
 const MODULES = [
     { Icon: Search, title: 'Multi-platform SERP & social previews', desc: 'See the page as it will look on Google desktop, Google mobile, Facebook OpenGraph and Twitter / X cards, live as you type.' },

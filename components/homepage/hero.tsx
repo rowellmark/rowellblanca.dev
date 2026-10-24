@@ -96,7 +96,7 @@ export function Hero() {
 
     return (
         <section className="relative bg-brand-ink text-white px-4 sm:px-6 lg:px-10 overflow-hidden">
-            <div className="mx-auto max-w-[1360px] min-h-[min(920px,100svh)] flex flex-col justify-end gap-10 lg:gap-12 pt-32 lg:pt-40 pb-12 lg:pb-16">
+            <div className="mx-auto max-w-[1360px] min-h-[min(920px,100svh)] flex flex-col lg:justify-end gap-10 lg:gap-12 pt-32 lg:pt-40 pb-12 lg:pb-16">
                 <div className="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-12 items-stretch">
                     <div className="flex flex-col justify-end gap-10 min-w-0">
                         <div className="motion-fade motion-d1 flex flex-wrap items-center gap-3">
@@ -111,8 +111,8 @@ export function Hero() {
 
                         <h1 className="motion-hero-exit m-0 flex flex-col font-extrabold tracking-[-0.05em] leading-[0.92] text-[clamp(52px,7.4vw,124px)]">
                             <span className="motion-fade motion-d1 block mb-7 font-mono font-medium tracking-[0.06em] leading-snug uppercase text-slate-400 text-[clamp(13px,1.1vw,15px)]">
-                                Rowell Mark Blanca — Senior Full-Stack &amp; Next.js Engineer
-                            </span>
+                                Rowell Mark Blanca — Freelance Next.js &amp; WordPress Developer
+                            </span>{" "}
                             <span className="motion-mask"><span className="motion-rise motion-d1">Engineering</span></span>
                             <span className="motion-mask">
                                 <span className="motion-rise motion-d2">

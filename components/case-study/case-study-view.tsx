@@ -12,6 +12,7 @@ import { TestimonialsSection } from '@/components/homepage/testimonials';
 import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
 import { ArticleToc } from '@/components/article/article-toc';
 import { AuthorCard, ShareButtons } from '@/components/article/article-extras';
+import { ServiceLinks, relatedServices } from '@/components/article/service-links';
 
 /** Split stored plain text into paragraphs (blank-line separated). */
 function paragraphs(text?: string) {
@@ -317,6 +318,8 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
               <p className="m-0 font-semibold text-brand-navy">Know someone planning a similar build? Share it.</p>
               <ShareButtons title={`${project.sitename} — case study`} url={pageUrl} />
             </div>
+
+            <ServiceLinks services={relatedServices(`${project.sitename} ${project.category || ''} ${(project.technologies || []).join(' ')}`)} />
 
             <AuthorCard avatar={authorAvatar || undefined} service={`Similar build to ${project.sitename}`} />
           </article>
