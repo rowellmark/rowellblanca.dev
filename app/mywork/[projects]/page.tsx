@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
 import { generateCaseStudyMetadata, generateCaseStudyJsonLd } from '@/lib/seo';
 import CaseStudyView from '@/components/case-study/case-study-view';
@@ -7,11 +8,21 @@ import { PortfolioProject } from '@/components/ui/portfolio-card';
 
 import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
 
+// Refresh at most every minute so admin edits show up without a redeploy.
+export const revalidate = 60;
+
+// Pre-build the bundled projects; other permalinks render on first visit, then cache.
+export function generateStaticParams() {
+  return FALLBACK_PROJECTS.map((p) => ({ projects: p.permalink }));
+}
+
 interface PageProps {
   params: Promise<{ projects: string }>;
 }
 
-async function getProject(permalink: string): Promise<PortfolioProject | null> {
+// One lookup per request, shared by generateMetadata and the page. Reads NeonDB
+// directly (the /api/projects route reads the same table), then the bundled fallback.
+const getProject = cache(async (permalink: string): Promise<PortfolioProject | null> => {
   try {
     const dbProject = await prisma.project.findUnique({
       where: { permalink },
@@ -23,24 +34,9 @@ async function getProject(permalink: string): Promise<PortfolioProject | null> {
     console.warn('Prisma lookup failed in case study route:', error);
   }
 
-  // Fallback API or null check
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rowellblanca.dev';
-    const res = await fetch(`${baseUrl}/api/projects?permalink=${permalink}`, {
-      next: { revalidate: 60 },
-    });
-    const data = await res.json();
-    if (data.success && data.project) return data.project;
-  } catch (e) {}
-
-  // Local fallback project match if DB and API fetch fail
   const fallback = FALLBACK_PROJECTS.find((p) => p.permalink === permalink);
-  if (fallback) {
-    return fallback as any;
-  }
-
-  return null;
-}
+  return (fallback as any) || null;
+});
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;

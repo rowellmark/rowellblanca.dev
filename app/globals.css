@@ -284,6 +284,18 @@ body {
 .case-study-content pre code { background: none; padding: 0; }
 .case-study-content img { border-radius: 18px; border: 1px solid #E2E8F0; }
 
+/* Long-form reading (blog articles, case-study write-ups): larger body copy, lede, anchors clear the fixed header */
+.article-prose { font-size: clamp(17px, 0.55vw + 15px, 19px); line-height: 1.8; }
+.article-prose.has-lede > p:first-child, .article-prose > p.lede { font-size: 1.14em; line-height: 1.65; color: #0F172A; }
+.article-prose > * + * { margin-top: 1.25em; }
+.article-prose h2, .article-prose h3 { scroll-margin-top: 110px; }
+.article-prose h2 { margin-top: 2.1em; padding-top: 0.2em; }
+.article-prose h4 { margin-top: 1.6em; font-size: 0.78em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; font-family: var(--font-mono), ui-monospace, monospace; }
+.article-prose h4 + * { margin-top: 0.6em; }
+.article-prose hr { border: 0; border-top: 1px solid #E2E8F0; margin: 2.5em 0; }
+.article-prose li { padding-left: 0.2em; }
+.article-prose pre { font-size: 0.82em; line-height: 1.65; }
+
 /* Stretched link: the card's primary link covers the whole card, so everywhere
    the "View" cursor appears is clickable. Card roots must be positioned, and the
    link itself must never be transformed (no motion-btn / motion-magnetic): a

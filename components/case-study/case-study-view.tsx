@@ -2,27 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   ExternalLink,
   Sparkles,
 } from 'lucide-react';
-import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram } from '@tabler/icons-react';
 import { ProjectDetailPreview, ProjectGallery, PortfolioProject } from '@/components/ui/portfolio-card';
-import { ContactModal } from '@/components/ui/contact-modal';
 import { BlogAiAssistant } from '@/components/ui/blog-ai-assistant';
 import { TestimonialsSection } from '@/components/homepage/testimonials';
-import { ProjectEstimator } from '@/components/homepage/project-estimator';
-import { EngagementModels } from '@/components/homepage/engagement-models';
 import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
-import { resolveValidImageSrc } from '@/lib/image-utils';
+import { ArticleToc } from '@/components/article/article-toc';
+import { AuthorCard, ShareButtons } from '@/components/article/article-extras';
 
-const SOCIAL_LINKS = [
-  { label: 'GitHub', href: 'https://github.com/rowellmark', Icon: IconBrandGithub },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/rowell-blanca/', Icon: IconBrandLinkedin },
-  { label: 'Facebook', href: 'https://www.facebook.com/itsmrrowrow', Icon: IconBrandFacebook },
-  { label: 'Instagram', href: 'https://www.instagram.com/its.mr.row/', Icon: IconBrandInstagram },
-];
+/** Split stored plain text into paragraphs (blank-line separated). */
+function paragraphs(text?: string) {
+  return (text || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+}
 
 interface Testimonial {
   id?: number;
@@ -36,7 +30,6 @@ interface Testimonial {
 }
 
 export default function CaseStudyView({ project }: { project: PortfolioProject }) {
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [authorAvatar, setAuthorAvatar] = useState<string>('');
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [allProjects, setAllProjects] = useState<PortfolioProject[]>([]);
@@ -106,26 +99,15 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
 
   const liveHref = cleanUrl ? (cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`) : null;
 
-  const breakdown = [
-    {
-      title: project.challenge ? 'The challenge' : 'Architecture & scope',
-      body:
-        project.challenge ||
-        `Engineered with ${project.technologies?.slice(0, 3).join(', ') || 'React & Next.js'} adhering to strict modular component architecture and sub-second rendering pipelines.`,
-    },
-    {
-      title: project.solution ? 'Architectural solution' : 'Performance & UX',
-      body:
-        project.solution ||
-        'Optimized for zero layout shift, smooth responsive typography, and tactile scroll-driven interaction states tested across mobile and desktop.',
-    },
-    {
-      title: project.results ? 'Production impact' : 'Production standards',
-      body:
-        project.results ||
-        'Fully responsive production deployment with streamlined bundle size, fast Time to Interactive, and modern aesthetic polish.',
-    },
-  ];
+  // Only real write-up sections; the overview always comes from the description.
+  const sections = [
+    { title: 'The challenge', body: project.challenge },
+    { title: 'The solution', body: project.solution },
+    { title: 'The impact', body: project.results },
+  ].filter((section): section is { title: string; body: string } => Boolean(section.body?.trim()));
+
+  const pageUrl = `https://www.rowellblanca.dev/mywork/${project.permalink}`;
+  const [intro, ...overview] = paragraphs(project.description);
 
   const specs = [
     { label: 'Client', value: project.client || 'Direct client build' },
@@ -161,9 +143,9 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
                 <span className="motion-rise motion-d1">{project.sitename}</span>
               </span>
             </h1>
-            {project.description && (
-              <p className="motion-fade motion-d4 m-0 max-w-[720px] text-[17px] sm:text-lg leading-relaxed text-slate-300 whitespace-pre-line line-clamp-6">
-                {project.description.split('\n\n')[0]}
+            {intro && (
+              <p className="motion-fade motion-d4 m-0 max-w-[760px] text-[17px] sm:text-xl leading-relaxed text-slate-300">
+                {intro}
               </p>
             )}
           </div>
@@ -215,55 +197,104 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
         </div>
       </div>
 
-      {/* ─── 3. BREAKDOWN ─── */}
-      <section className="px-4 sm:px-6 lg:px-10 pt-24 lg:pt-36">
-        <div className="mx-auto max-w-[1360px] flex flex-col gap-12">
-          <div className="motion-reveal flex flex-col gap-5">
-            <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(01) — Engineering scope</p>
-            <h2 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-[clamp(36px,5vw,80px)]">
-              {project.challenge || project.solution || project.results ? 'The case study, in brief.' : 'Core engineering highlights.'}
-            </h2>
-          </div>
-          <ol className="m-0 p-0 list-none grid grid-cols-1 md:grid-cols-3 border-t border-brand-border">
-            {breakdown.map((item, i) => (
-              <li key={item.title} className={`motion-reveal flex flex-col gap-4 py-10 md:pr-10 ${i > 0 ? 'md:pl-10 md:border-l border-brand-border border-t md:border-t-0' : ''}`}>
-                <span className="font-mono text-sm text-amber-700">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="m-0 text-2xl font-extrabold tracking-[-0.03em]">{item.title}</h3>
-                <p className="m-0 text-brand-slate leading-relaxed whitespace-pre-line">{item.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      {/* ─── 3. ARTICLE: reading column + sticky rail ─── */}
+      <div className="px-4 sm:px-6 lg:px-10 pt-16 lg:pt-28 pb-24 lg:pb-32">
+        <div className="mx-auto max-w-[1360px] grid gap-10 lg:grid-cols-[240px_minmax(0,720px)] lg:justify-center lg:gap-20">
+          <aside className="hidden lg:block">
+            <div className="sticky top-28 flex flex-col gap-10">
+              <ArticleToc scope="#case-study-article" />
+              <dl className="m-0 flex flex-col border-t border-brand-border">
+                {[...specs, { label: 'Category', value: project.category || 'Web platform' }].map((spec) => (
+                  <div key={spec.label} className="flex flex-col gap-0.5 py-3 border-b border-brand-border">
+                    <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-brand-slate">{spec.label}</dt>
+                    <dd className="m-0 text-[15px] font-semibold text-brand-navy">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              {liveHref && (
+                <a href={liveHref} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 font-mono text-sm text-brand-navy break-all">
+                  <span className="motion-underline">{cleanUrl}</span>
+                  <ExternalLink className="w-4 h-4 shrink-0 text-amber-600" aria-hidden="true" />
+                </a>
+              )}
+              <div className="flex flex-col gap-3">
+                <p className="m-0 font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">Share</p>
+                <ShareButtons title={`${project.sitename} — case study`} url={pageUrl} />
+              </div>
+            </div>
+          </aside>
 
-      {/* ─── 4. DEEP-DIVE + STICKY SIDEBAR ─── */}
-      <section className="px-4 sm:px-6 lg:px-10 py-20 lg:py-28">
-        <div className="mx-auto max-w-[1360px] grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-          <div className="lg:col-span-8 flex flex-col gap-10">
-            <article className="motion-reveal rounded-[28px] bg-white border border-brand-border p-7 sm:p-12 flex flex-col gap-6">
-              <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">(02) — Deep-dive</p>
-              {project.content ? (
-                <div className="case-study-content" dangerouslySetInnerHTML={{ __html: project.content }} />
-              ) : (
+          <article id="case-study-article" className="min-w-0 flex flex-col gap-12">
+            <div className="lg:hidden">
+              <ArticleToc scope="#case-study-article" variant="inline" />
+            </div>
+
+            <div className="case-study-content article-prose">
+              {/* The hero already shows the first paragraph of the description. */}
+              {overview.length > 0 && <h2>Overview</h2>}
+              {overview.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+              {/* No written-up sections yet: summarise the facts we do have. */}
+              {overview.length === 0 && sections.length === 0 && !project.content && (
                 <>
-                  <h2 className="m-0 text-[clamp(28px,3vw,44px)] font-extrabold tracking-[-0.04em] leading-tight">About this architecture</h2>
-                  <p className="m-0 text-lg text-brand-slate leading-relaxed whitespace-pre-line">{project.description}</p>
+                  <h2>At a glance</h2>
+                  <ul>
+                    <li>
+                      <strong>Category:</strong> {project.category || 'Web platform'}
+                    </li>
+                    <li>
+                      <strong>Role:</strong> {project.role || 'Senior Full-Stack Engineer'} — architecture, build and launch
+                    </li>
+                    {project.technologies?.length ? (
+                      <li>
+                        <strong>Stack:</strong> {project.technologies.join(', ')}
+                      </li>
+                    ) : null}
+                    <li>
+                      <strong>Region:</strong> {region}
+                    </li>
+                    {liveHref && !isPlugin && (
+                      <li>
+                        <strong>Live:</strong>{' '}
+                        <a href={liveHref} target="_blank" rel="noopener noreferrer">
+                          {cleanUrl}
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                  <p>
+                    Want the details? Ask RowBot below how it was built — caching, data model, integrations and
+                    performance budgets.
+                  </p>
                 </>
               )}
-            </article>
+              {sections.map((section) => (
+                <React.Fragment key={section.title}>
+                  <h2>{section.title}</h2>
+                  {paragraphs(section.body).map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
+
+            {project.content && (
+              <div className="case-study-content article-prose" dangerouslySetInnerHTML={{ __html: project.content }} />
+            )}
 
             {/* Screenshot Gallery */}
             <ProjectGallery project={project} />
 
             {/* Interactive AI Architecture Co-Pilot */}
-            <div className="motion-reveal rounded-[28px] bg-white border border-brand-border p-7 sm:p-10 flex flex-col gap-5">
+            <div className="rounded-[28px] bg-white border border-brand-border p-6 sm:p-9 flex flex-col gap-5">
               <div className="flex flex-col gap-3">
                 <span className="inline-flex items-center gap-2.5 font-mono text-[13px] uppercase tracking-[0.08em] text-brand-slate">
                   <Sparkles className="w-4 h-4 text-amber-600" aria-hidden="true" /> Interactive co-pilot
                 </span>
-                <h3 className="m-0 text-[clamp(24px,2.4vw,32px)] font-extrabold tracking-[-0.03em] leading-tight">
+                <h2 className="m-0 text-[clamp(24px,2.4vw,32px)] font-extrabold tracking-[-0.03em] leading-tight">
                   Ask about this build&apos;s architecture
-                </h3>
+                </h2>
                 <p className="m-0 text-brand-slate leading-relaxed">
                   Query RowBot about latency budgets, caching strategies, database schema, and custom WordPress/Next.js
                   implementations.
@@ -281,78 +312,16 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
                 className="my-0 border-0 p-0 shadow-none bg-transparent"
               />
             </div>
-          </div>
 
-          {/* Sidebar */}
-          <aside className="lg:col-span-4 lg:sticky lg:top-28 flex flex-col gap-5">
-            <div className="rounded-[28px] bg-brand-ink text-white p-7 sm:p-8 flex flex-col gap-6">
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-mono text-xs uppercase tracking-[0.08em] text-slate-400">Architecture specs</span>
-                <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-emerald-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" /> Shipped
-                </span>
-              </div>
-              <dl className="m-0 flex flex-col border-t border-white/10">
-                {[...specs, { label: 'Category', value: project.category || 'Web platform' }].map((spec) => (
-                  <div key={spec.label} className="flex items-baseline justify-between gap-4 py-3 border-b border-white/10 text-sm">
-                    <dt className="text-slate-400">{spec.label}</dt>
-                    <dd className="m-0 font-semibold text-right">{spec.value}</dd>
-                  </div>
-                ))}
-              </dl>
-              {liveHref && (
-                <a href={liveHref} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between gap-3 font-mono text-sm text-amber-400 break-all">
-                  <span className="motion-underline">{cleanUrl}</span>
-                  <ExternalLink className="w-4 h-4 shrink-0" aria-hidden="true" />
-                </a>
-              )}
-              <div className="flex flex-col gap-3 pt-6 border-t border-white/10">
-                <h4 className="m-0 text-xl font-extrabold tracking-[-0.02em]">Need a similar platform?</h4>
-                <p className="m-0 text-sm text-slate-300 leading-relaxed">
-                  Skip agency overhead and partner directly with a senior full-stack engineer.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setIsContactModalOpen(true)}
-                  className="motion-btn motion-magnetic mt-2 w-full min-h-[56px] px-6 rounded-full bg-amber-500 hover:bg-amber-400 text-brand-ink font-bold flex items-center justify-between gap-3 cursor-pointer"
-                >
-                  Schedule a discovery call <span className="motion-arrow" aria-hidden="true">→</span>
-                </button>
-                <a href="mailto:hello@rowellblanca.dev" className="motion-underline self-start text-sm text-slate-300 hover:text-white">
-                  hello@rowellblanca.dev
-                </a>
-              </div>
+            <div className="flex flex-wrap items-center justify-between gap-4 border-y border-brand-border py-6">
+              <p className="m-0 font-semibold text-brand-navy">Know someone planning a similar build? Share it.</p>
+              <ShareButtons title={`${project.sitename} — case study`} url={pageUrl} />
             </div>
 
-            {/* Author */}
-            <div className="rounded-[28px] bg-white border border-brand-border p-6 flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full overflow-hidden relative bg-slate-100 shrink-0">
-                  <Image src={authorAvatar || '/rowellbanner.png'} alt="Rowell Mark Blanca" fill unoptimized className="object-cover object-top" />
-                </div>
-                <div>
-                  <p className="m-0 font-extrabold">Rowell Mark Blanca</p>
-                  <p className="m-0 text-sm text-brand-slate">Senior Full-Stack &amp; Next.js Engineer</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="h-11 w-11 rounded-full border border-brand-border hover:border-brand-navy text-brand-slate hover:text-brand-navy flex items-center justify-center transition-colors"
-                  >
-                    <Icon size={16} />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </aside>
+            <AuthorCard avatar={authorAvatar || undefined} service={`Similar build to ${project.sitename}`} />
+          </article>
         </div>
-      </section>
+      </div>
 
       {/* ─── 5. TESTIMONIALS ─── */}
       {testimonials.length > 0 && (
@@ -387,14 +356,6 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
         </Link>
       )}
 
-      {/* ─── 7. PROJECT ESTIMATOR & ENGAGEMENT FRAMEWORK ─── */}
-      <div id="project-estimator" className="pt-24 lg:pt-32">
-        <ProjectEstimator />
-      </div>
-
-      <EngagementModels />
-
-      <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
     </div>
   );
 }
