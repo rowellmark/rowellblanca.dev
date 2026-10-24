@@ -46,7 +46,7 @@ export default function Home() {
       {/* 10. Client Reviews & Social Proof */}
       <TestimonialsSection
         badge="(06) — Client feedback & proof"
-        title="Trusted by the people who ship with me."
+        title="Trusted by the teams I build with."
       />
     </>
   );

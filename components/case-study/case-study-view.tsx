@@ -113,7 +113,7 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
   const specs = [
     { label: 'Client', value: project.client || 'Direct client build' },
     { label: 'Role', value: project.role || 'Senior Full-Stack Engineer' },
-    { label: 'Timeline', value: project.duration || 'Sprint shipped' },
+    { label: 'Timeline', value: project.duration || 'Delivered in sprints' },
     { label: 'Region', value: region },
   ];
 
@@ -136,7 +136,7 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
               {isPlugin ? 'WordPress plugin' : 'Case study'}
               {project.category ? ` · ${project.category}` : ''}
               <span className="inline-flex items-center gap-2 text-emerald-400">
-                · <span className="motion-pulse h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" /> Shipped to production
+                · <span className="motion-pulse h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" /> Live in production
               </span>
             </span>
             <h1 className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-[clamp(40px,6.4vw,104px)]">
@@ -333,7 +333,7 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
           dark={true}
           badge="Verified stakeholder proof"
           title="Client endorsements & proven results"
-          subtitle="What founders, CEOs, and agency partners say about shipping high-concurrency platforms with Rowell."
+          subtitle="What founders, CEOs, and agency partners say about building high-concurrency platforms with Rowell."
         />
       )}
 

@@ -27,7 +27,7 @@ const MODELS = [
     points: [
       "Direct Slack / Teams access & daily standups",
       "Full UK (GMT), US & Australian (AEST) timezone overlap",
-      "Continuous PR reviews, CI/CD, and fast shipping",
+      "Continuous PR reviews, CI/CD, and fast releases",
       "No recruitment fees, payroll taxes, or agency bloat",
     ],
   },

@@ -35,7 +35,7 @@ function useClocks() {
     return times;
 }
 
-// Cropped hero thumbnails (public/images/hero) of shipped client sites.
+// Cropped hero thumbnails (public/images/hero) of launched client sites.
 const REEL = [
     ["macmanusfd", "MacManus Funeral Director Finance"],
     ["joy-homes", "Joy Baresel — Engel & Völkers"],
@@ -123,7 +123,7 @@ export function Hero() {
                         </h1>
                     </div>
 
-                    {/* Visual: live wall of shipped work + floating proof cards */}
+                    {/* Visual: live wall of launched work + floating proof cards */}
                     <div className="motion-fade motion-d3 relative hidden lg:block">
                         <ProjectReel />
                         <div className="motion-float absolute left-[-28px] bottom-10 flex items-center gap-3 rounded-full bg-brand-ink/85 backdrop-blur-xl border border-white/10 py-2 pl-2 pr-5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]">
@@ -137,7 +137,7 @@ export function Hero() {
                             href="/plugins/buildforuser-seo"
                             className="motion-float group absolute right-6 top-8 flex flex-col gap-1 rounded-2xl bg-white text-brand-ink py-3.5 px-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] [animation-delay:-3s]"
                         >
-                            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-brand-slate">Now shipping</span>
+                            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-brand-slate">Just launched</span>
                             <span className="font-extrabold text-sm">
                                 BuildForUser SEO <span className="text-amber-600">v1.0</span>{" "}
                                 <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1" aria-hidden="true">→</span>

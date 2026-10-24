@@ -224,7 +224,7 @@ export const HeroParallax = ({
                     <dl className="m-0 grid grid-cols-2 lg:grid-cols-4 gap-y-6">
                         {[
                             { value: "12+ yrs", label: "In production", tone: "text-white" },
-                            { value: "50+", label: "Apps shipped", tone: "text-white" },
+                            { value: "50+", label: "Apps launched", tone: "text-white" },
                             { value: "<1s", label: "Web Vitals", tone: "text-amber-400" },
                             { value: "100%", label: "Top rated", tone: "text-emerald-400" },
                         ].map((stat, i) => (

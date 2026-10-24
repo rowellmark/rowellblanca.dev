@@ -33,7 +33,7 @@ const PROJECT_TYPES: ProjectTypeOption[] = [
   {
     id: "fractional_retainer",
     title: "Dedicated Senior Dev Retainer",
-    desc: "Continuous sprint shipping, daily standups, codebase maintenance, and feature iteration sprints.",
+    desc: "Continuous weekly releases, daily standups, codebase maintenance, and feature iteration sprints.",
     baseWeeks: "Monthly Ongoing",
     basePriceUsd: MONTHLY_RETAINER_USD,
     recommendedStack: ["React 19 / Next.js", "WordPress Gutenberg", "TypeScript / Node", "Prisma / SQL"],
@@ -476,7 +476,7 @@ export function ProjectEstimator() {
                   <span className="font-mono text-xs uppercase tracking-[0.08em] text-brand-slate">Retainer engagement model</span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {([
-                      { id: "monthly", title: "Monthly basis", price: `From $${MONTHLY_RETAINER_USD} / mo`, desc: "Continuous sprint shipping, daily standups & dedicated weekly capacity." },
+                      { id: "monthly", title: "Monthly basis", price: `From $${MONTHLY_RETAINER_USD} / mo`, desc: "Continuous weekly releases, daily standups & dedicated weekly capacity." },
                       { id: "project", title: "Project base", price: "Custom quote", desc: "Fixed scope deliverable with milestone review. Submit inquiry below." },
                     ] as const).map((mode) => {
                       const isSelected = retainerBillingMode === mode.id;
