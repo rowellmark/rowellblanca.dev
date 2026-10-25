@@ -146,9 +146,9 @@ export default function AboutPage() {
                         </div>
                         <dl className="m-0 grid grid-cols-2 border-t border-brand-border">
                             {stats.map(({ label, value }, i) => (
-                                <div key={label} className={`motion-reveal flex flex-col-reverse gap-2 py-7 border-b border-brand-border ${i % 2 === 1 ? 'pl-6 border-l' : 'pr-6'}`}>
+                                <div key={label} className={`motion-reveal min-w-0 flex flex-col-reverse gap-2 py-7 border-b border-brand-border ${i % 2 === 1 ? 'pl-6 border-l' : 'pr-6'}`}>
                                     <dt className="text-brand-slate">{label}</dt>
-                                    <dd className="m-0 font-extrabold tracking-[-0.05em] leading-none text-brand-navy text-[clamp(36px,4vw,64px)]">{value}</dd>
+                                    <dd className="m-0 font-extrabold tracking-[-0.05em] leading-none text-brand-navy text-[clamp(28px,7.5vw,64px)] lg:text-[clamp(36px,4vw,64px)]">{value}</dd>
                                 </div>
                             ))}
                         </dl>

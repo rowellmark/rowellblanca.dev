@@ -111,7 +111,11 @@ body {
    animated. Scroll-linked effects use CSS scroll timelines where
    supported and simply render in their final state elsewhere.
 ------------------------------------------------------------------- */
-.motion-mask { display: block; overflow: hidden; padding-bottom: 0.06em; }
+/* Line masks clip their text for the rise-in reveal. With display-tight line-heights (0.86-0.95),
+   descenders (g, j, p, q, y) hang below the line box and tight tracking lets the last glyph
+   overhang the right edge, so the mask gets extra room below and at the sides and pulls the
+   surrounding layout back by the same amount (net spacing unchanged). */
+.motion-mask { display: block; overflow: hidden; padding: 0 0.08em 0.24em; margin: 0 -0.08em -0.18em; }
 .motion-rise { display: block; animation: motion-rise 0.8s cubic-bezier(.16,1,.3,1) both; }
 .motion-fade { animation: motion-fade 0.8s cubic-bezier(.16,1,.3,1) both; }
 .motion-d1 { animation-delay: .05s; }
@@ -217,12 +221,12 @@ body {
    follower, velocity skew, hero exit and screenshot parallax.
 ------------------------------------------------------------------- */
 /* Split text: hidden start state only when JS motion is available (html.js-motion). */
-.motion-split-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.motion-split-line { display: block; overflow: hidden; padding: 0 0.08em 0.24em; margin: 0 -0.08em -0.24em; }
 .motion-split-word { display: inline-block; white-space: nowrap; }
 .motion-split-char { display: inline-block; will-change: transform; }
-.js-motion [data-inview] .motion-split-char { transform: translateY(105%); }
+.js-motion [data-inview] .motion-split-char { transform: translateY(135%); }
 .js-motion [data-inview].is-inview .motion-split-char { animation: motion-char-rise 0.9s cubic-bezier(.16,1,.3,1) both; }
-@keyframes motion-char-rise { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes motion-char-rise { from { transform: translateY(135%); } to { transform: none; } }
 
 /* Magnetic: JS sets the `translate` property; this eases it in and out. */
 .motion-magnetic { transition: translate .6s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), background-color .3s, color .3s, border-color .3s; }
