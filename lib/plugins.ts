@@ -90,6 +90,12 @@ export const STANDALONE_PLUGINS: PluginEntry[] = [
   },
 ];
 
+/** Names of the plugins with curated cards, for CTAs that list them without loading projects. */
+export const PLUGIN_NAMES = [
+  ...STANDALONE_PLUGINS.map((p) => p.name),
+  ...Object.values(PLUGIN_META).map((m) => m.name as string),
+];
+
 export function isPluginProject(p: Pick<PortfolioProject, 'url' | 'permalink' | 'technologies'>) {
   return (
     Boolean(p.url?.startsWith('wp-content')) ||
