@@ -26,9 +26,9 @@ FULL TECHNICAL SKILLS & ARCHITECTURE MATRIX:
 
 ROWELL'S COMPLETE PROJECT PORTFOLIO (Knowledge Bank):
 1. BuildForUser Platform (SaaS): Operational SaaS dashboard for managing client sites at scale — automated WP & React deployments, centralized client management & integrated billing.
-2. Blanc Leads (WP Plugin): Bespoke WordPress CRM & Multi-AI Nurturing plugin with form lead capture hooks, native Kanban pipeline, AI lead scoring (1-100), and AI nurture email drafts.
-3. Blanc Chatbot (WP Plugin): WordPress Chatbot & RAG Knowledge Base plugin importing WP posts/pages into searchable vector indices, public floating chat widget, shortcode embedding ([blanc_chatbox]), and React admin SPA transcript viewer.
-4. Blanc Schema LD Generator (WP Plugin): Visual JSON-LD Schema builder plugin featuring live admin AJAX preview and Yoast-compatible SchemaGraphAssembler PHP pipeline.
+2. BuildForUser Leads (WP Plugin): Bespoke WordPress CRM & Multi-AI Nurturing plugin with form lead capture hooks, native Kanban pipeline, AI lead scoring (1-100), and AI nurture email drafts.
+3. BuildForUser Chatbot (WP Plugin): WordPress Chatbot & RAG Knowledge Base plugin importing WP posts/pages into searchable vector indices, public floating chat widget, shortcode embedding ([blanc_chatbox]), and React admin SPA transcript viewer.
+4. BuildForUser Schema LD Generator (WP Plugin): Visual JSON-LD Schema builder plugin featuring live admin AJAX preview and Yoast-compatible SchemaGraphAssembler PHP pipeline.
 5. BuildForUser Login Customizer (WP Plugin): WP login screen customizer featuring branded split-panel UI and custom login URL renaming (/admin-access) to mitigate brute-force security threats.
 6. MacManus Asset Finance Ecosystem (UK Client): FCA-regulated commercial finance portals (Main Brokerage, Partner Portal, Supplier Portal, Accountant Portal) with multi-step CRM lead pipelines, funder product directories, and automated document routing.
 7. Tower Fire (UK Client): Custom zero-bloat WordPress Gutenberg build replacing Elementor, cutting page load time by 75% and driving 35% more inbound inquiries.
@@ -58,7 +58,7 @@ const FALLBACK_INTENTS: { keywords: string[]; reply: string }[] = [
     reply: `Rowell engineers high-performance web applications and custom platforms designed for maximum speed and lead conversion:
 
 • **BuildForUser SaaS**: Automated site management & deployment platform for React and WordPress sites.
-• **Custom WordPress Architecture**: Blanc Leads (AI CRM & Nurturing), Blanc Chatbot (RAG Knowledge Bot), Blanc Schema LD (JSON-LD SEO Engine), and Login Customizer.
+• **Custom WordPress Architecture**: BuildForUser Leads (AI CRM & Nurturing), BuildForUser Chatbot (RAG Knowledge Bot), BuildForUser Schema LD (JSON-LD SEO Engine), and Login Customizer.
 • **E-Commerce & Portals**: High-converting Next.js storefronts, FCA-regulated financial portals, and luxury real estate platforms.
 • **Core Engineering Stack**: Next.js 14, React 19, TypeScript, Node.js, and Prisma/NeonDB Serverless PostgreSQL.
 

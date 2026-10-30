@@ -9,7 +9,7 @@ import { EngagementModels } from "@/components/homepage/engagement-models";
 import { PageHero } from "@/components/ui/page-hero";
 import { pageMetadata } from '@/lib/seo';
 import Link from "next/link";
-import { STACKS } from "@/lib/stacks";
+import { STACKS, stackHref } from "@/lib/stacks";
 import { StackIcon } from "@/components/work/stack-icon";
 import { heroChipClass } from "@/components/ui/page-hero";
 
@@ -47,7 +47,7 @@ export default async function MyWorkPage() {
                 <nav aria-label="Browse by tech stack" className="flex flex-wrap items-center gap-3">
                     <span className="font-mono text-xs uppercase tracking-[0.08em] text-slate-400 mr-2">Browse by stack</span>
                     {STACKS.map((s) => (
-                        <Link key={s.slug} href={`/work/${s.slug}`} className={`${heroChipClass(false)} inline-flex items-center gap-2`}>
+                        <Link key={s.slug} href={stackHref(s)} className={`${heroChipClass(false)} inline-flex items-center gap-2`}>
                             <StackIcon icon={s.icon} className="h-4 w-4" />
                             {s.name}
                         </Link>

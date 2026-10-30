@@ -14,7 +14,7 @@ import { ArticleToc } from '@/components/article/article-toc';
 import { AuthorCard, ShareButtons } from '@/components/article/article-extras';
 import { ServiceLinks, relatedServices } from '@/components/article/service-links';
 import { DeviceShowcase } from '@/components/work/device-showcase';
-import { stackForTech } from '@/lib/stacks';
+import { stackForTech, stackHref } from '@/lib/stacks';
 
 /** Split stored plain text into paragraphs (blank-line separated). */
 function paragraphs(text?: string) {
@@ -170,7 +170,7 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
                   return (
                     <li key={tech}>
                       {hub ? (
-                        <Link href={`/work/${hub.slug}`} title={`More ${hub.name} work`} className={`${chip} inline-block hover:border-amber-400 hover:text-white transition-colors`}>
+                        <Link href={stackHref(hub)} title={`More ${hub.name} work`} className={`${chip} inline-block hover:border-amber-400 hover:text-white transition-colors`}>
                           {tech}
                         </Link>
                       ) : (

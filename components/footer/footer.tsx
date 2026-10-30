@@ -18,6 +18,7 @@ export default function Footer() {
         { href: '/about', label: 'About' },
         { href: '/mywork', label: 'My Work' },
         { href: '/case-studies', label: 'Case Studies' },
+        { href: '/plugins', label: 'Plugins' },
         { href: '/blog', label: 'Blog' },
         { href: '/hire-uk-react-developer', label: 'Hire a Next.js developer' },
         { href: '/hire-uk-wordpress-developer', label: 'Hire a WordPress developer' },

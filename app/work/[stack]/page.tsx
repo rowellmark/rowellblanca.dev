@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { PageHero } from '@/components/ui/page-hero';
 import { PortfolioCard } from '@/components/ui/portfolio-card';
 import { ServiceLinks } from '@/components/article/service-links';
@@ -8,14 +8,14 @@ import { StackIcon } from '@/components/work/stack-icon';
 import { getActiveProjects, hasWriteUp } from '@/lib/projects';
 import { getPublishedPosts } from '@/lib/blog';
 import { readingTime } from '@/lib/markdown';
-import { STACKS, getStack, projectsForStack } from '@/lib/stacks';
+import { STACKS, getStack, projectsForStack, stackHref } from '@/lib/stacks';
 import { SITE_URL, pageMetadata } from '@/lib/seo';
 
 // Project lists come from the admin; refresh hourly without a redeploy.
 export const revalidate = 3600;
 
 export function generateStaticParams() {
-  return STACKS.map((s) => ({ stack: s.slug }));
+  return STACKS.filter((s) => !s.href).map((s) => ({ stack: s.slug }));
 }
 
 export async function generateMetadata(props: { params: Promise<{ stack: string }> }): Promise<Metadata> {
@@ -34,6 +34,7 @@ export default async function StackPage(props: { params: Promise<{ stack: string
   const { stack: slug } = await props.params;
   const stack = getStack(slug);
   if (!stack) notFound();
+  if (stack.href) permanentRedirect(stack.href);
 
   const [projects, posts] = await Promise.all([getActiveProjects(), getPublishedPosts()]);
   const matches = projectsForStack(stack, projects);
@@ -185,7 +186,7 @@ export default async function StackPage(props: { params: Promise<{ stack: string
               {otherStacks.map((s) => (
                 <li key={s.slug}>
                   <Link
-                    href={`/work/${s.slug}`}
+                    href={stackHref(s)}
                     className="motion-btn inline-flex items-center gap-2.5 min-h-[48px] px-5 rounded-full border border-brand-border bg-white text-brand-navy font-semibold hover:border-brand-navy"
                   >
                     <StackIcon icon={s.icon} className="h-4 w-4" />

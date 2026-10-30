@@ -3,6 +3,8 @@ import type { PortfolioProject } from '@/components/ui/portfolio-card';
 export interface StackDef {
   slug: string;
   name: string;
+  /** Where the hub lives when it isn't /work/<slug> (plugins have their own catalogue). */
+  href?: string;
   /** simple-icons export name, rendered by StackIcon. */
   icon: 'nextjs' | 'wordpress' | 'typescript' | 'postgresql' | 'php' | 'ai';
   /** Matched against each project's technologies. */
@@ -63,6 +65,7 @@ export const STACKS: StackDef[] = [
   {
     slug: 'wordpress-plugins',
     name: 'WordPress Plugins',
+    href: '/plugins',
     icon: 'wordpress',
     match: /plugin/i,
     articles: /plugin|wordpress/i,
@@ -152,6 +155,10 @@ export const STACKS: StackDef[] = [
     ],
   },
 ];
+
+export function stackHref(stack: StackDef) {
+  return stack.href || `/work/${stack.slug}`;
+}
 
 export function getStack(slug: string) {
   return STACKS.find((s) => s.slug === slug) || null;

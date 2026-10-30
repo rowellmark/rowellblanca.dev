@@ -25,7 +25,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/hire-uk-wordpress-developer',
     '/work',
     '/results',
-    ...STACKS.map((s) => `/work/${s.slug}`),
+    '/plugins',
+    ...STACKS.filter((s) => !s.href).map((s) => `/work/${s.slug}`),
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),

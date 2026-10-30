@@ -521,7 +521,7 @@ export function ProjectModal({ project, onClose }: { project: PortfolioProject; 
   );
 }
 
-// ─── Blanc Leads Interactive Presentation ────────────────────────────────────
+// ─── BuildForUser Leads Interactive Presentation ────────────────────────────────────
 
 function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'features' | 'ai' | 'integrations' | 'changelog'>('dashboard');
@@ -545,7 +545,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
           <div className="w-3 h-3 rounded-full bg-rose-500" />
           <div className="w-3 h-3 rounded-full bg-amber-400" />
           <div className="w-3 h-3 rounded-full bg-emerald-400" />
-          <span className="text-xs font-mono text-slate-400 ml-3 font-semibold">blanc-leads — WordPress CRM Plugin</span>
+          <span className="text-xs font-mono text-slate-400 ml-3 font-semibold">buildforuser-leads — WordPress CRM Plugin</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-black uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
@@ -594,7 +594,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                 <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
                 <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                <span className="text-[11px] font-mono text-slate-500 ml-2">Website Leads — All Leads · blanc-leads</span>
+                <span className="text-[11px] font-mono text-slate-500 ml-2">Website Leads — All Leads · buildforuser-leads</span>
               </div>
               <div className="p-4 space-y-4">
                 {/* Stat Cards */}
@@ -758,7 +758,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
             <div>
               <p className="text-[11px] font-black uppercase tracking-wider text-amber-400 mb-1">Form Integrations</p>
               <h3 className="text-lg font-black text-white">Works with your <span className="text-amber-400">existing forms</span></h3>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Blanc Leads integrates silently in the background — no changes needed to existing forms. Just activate and capture.</p>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">BuildForUser Leads integrates silently in the background — no changes needed to existing forms. Just activate and capture.</p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {[
@@ -774,8 +774,8 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
                 { icon: '🤖', name: 'Google Gemini', type: 'AI Provider' },
                 { icon: '🤖', name: 'DeepSeek', type: 'AI Provider' },
                 { icon: '🦙', name: 'Ollama / Llama', type: 'Local AI' },
-                { icon: '🤖', name: 'Blanc Chatbot', type: 'CRM Upgrade', special: 'border-amber-500/35 bg-amber-500/6 text-amber-300' },
-                { icon: '🚀', name: 'Blanc Campaigns', type: 'CRM Upgrade', special: 'border-teal-500/35 bg-teal-500/6 text-teal-300' },
+                { icon: '🤖', name: 'BuildForUser Chatbot', type: 'CRM Upgrade', special: 'border-amber-500/35 bg-amber-500/6 text-amber-300' },
+                { icon: '🚀', name: 'BuildForUser Campaigns', type: 'CRM Upgrade', special: 'border-teal-500/35 bg-teal-500/6 text-teal-300' },
               ].map((i) => (
                 <div key={i.name} className={`border rounded-xl p-3 text-center transition-all hover:-translate-y-0.5 ${
                   (i as any).special
@@ -806,12 +806,12 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
             <div className="relative pl-6">
               <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-500 to-teal-500/10 rounded" />
               {[
-                { ver: 'v2.8.7', title: 'Blanc Leads Campaign Addon', desc: 'A standalone addon plugin that turns your CRM into a full email marketing platform with newsletter composer, segment filtering, AI copywriter, and campaign history log.', color: 'text-amber-400' },
-                { ver: 'v2.8.7', title: 'Mobile App QR Connect', desc: 'Pair the Blanc CRM mobile companion app by scanning a one-time QR code with 5-minute signed auth token via WordPress transients.', color: 'text-teal-400' },
+                { ver: 'v2.8.7', title: 'BuildForUser Leads Campaign Addon', desc: 'A standalone addon plugin that turns your CRM into a full email marketing platform with newsletter composer, segment filtering, AI copywriter, and campaign history log.', color: 'text-amber-400' },
+                { ver: 'v2.8.7', title: 'Mobile App QR Connect', desc: 'Pair the BuildForUser CRM mobile companion app by scanning a one-time QR code with 5-minute signed auth token via WordPress transients.', color: 'text-teal-400' },
                 { ver: 'v2.8.7', title: 'Mobile Panel Visibility Control', desc: 'Full admin control over when the mobile connect card is shown, with VISIBLE/HIDDEN status badges and an animated green dot indicator.', color: 'text-yellow-400' },
                 { ver: 'v2.8.7', title: 'Premium Stat Cards UI Overhaul', desc: 'Dashboard summary cards received a visual upgrade with color-coded top borders, emoji icon tiles, and conditional color highlighting.', color: 'text-indigo-400' },
                 { ver: 'v2.8.7', title: '🐛 Generic POST Capturer Fix', desc: 'Fixed WordPress Application Password generation being captured as leads. Added URL-based block for /wp-json/ requests and 25+ WordPress internal POST key signatures.', color: 'text-rose-400' },
-                { ver: 'v2.8.6', title: 'Chatbot CRM Integration', desc: 'Blanc Chatbot integration syncing chat transcripts directly into Lead CRM timelines. Auto-capture visitor name, email, phone before chat begins.', color: 'text-teal-400' },
+                { ver: 'v2.8.6', title: 'Chatbot CRM Integration', desc: 'BuildForUser Chatbot integration syncing chat transcripts directly into Lead CRM timelines. Auto-capture visitor name, email, phone before chat begins.', color: 'text-teal-400' },
                 { ver: 'v2.8.5', title: 'Upsell Banner Redesign', desc: 'Addon promotion banners redesigned from heavy dark cards to modern glassmorphic light panels with gradient pill CTA buttons and hover lift animations.', color: 'text-amber-400' },
                 { ver: 'v2.8.0', title: 'CSV Export & Security Hardening', desc: 'Export current filtered lead list to CSV with all CRM fields. All queries use $wpdb->prepare() with placeholders. Sensitive field auto-redaction (passwords, CVV, PINs).', color: 'text-emerald-400' },
               ].map((c, i) => (
@@ -836,7 +836,7 @@ function BlancLeadsPresentation({ project }: { project: PortfolioProject }) {
 export function WordPressPluginDetailPreview({ project }: { project: PortfolioProject }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // Blanc Leads gets the full interactive presentation
+  // BuildForUser Leads gets the full interactive presentation
   if (project.permalink === 'blanc-leads-plugin') {
     return <BlancLeadsPresentation project={project} />;
   }

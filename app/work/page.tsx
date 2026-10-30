@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { PageHero } from '@/components/ui/page-hero';
 import { StackIcon } from '@/components/work/stack-icon';
 import { getActiveProjects } from '@/lib/projects';
-import { STACKS, projectsForStack } from '@/lib/stacks';
+import { STACKS, projectsForStack, stackHref } from '@/lib/stacks';
 import { pageMetadata } from '@/lib/seo';
 
 export const revalidate = 3600;
@@ -34,7 +34,7 @@ export default async function WorkByStackPage() {
           {hubs.map(({ stack, matches }) => (
             <li key={stack.slug} className="motion-reveal">
               <Link
-                href={`/work/${stack.slug}`}
+                href={stackHref(stack)}
                 className="motion-lift group h-full rounded-[28px] bg-white border border-brand-border p-7 flex flex-col gap-5"
               >
                 <span className="flex items-center justify-between gap-4">

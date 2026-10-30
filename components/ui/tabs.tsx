@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { PortfolioCard, PortfolioProject } from '@/components/ui/portfolio-card';
+import { PluginCard } from '@/components/plugins/plugin-card';
+import { STANDALONE_PLUGINS, pluginFromProject } from '@/lib/plugins';
 import { Globe, Package, Sparkles, Code2, Search, X, Filter } from 'lucide-react';
 
 interface TabProps {
@@ -95,6 +98,9 @@ export function Tab({ nav }: TabProps) {
 
     const webProjects = filteredProjects.filter((p) => !isPlugin(p));
     const pluginProjects = filteredProjects.filter((p) => isPlugin(p));
+    // The standalone SEO plugin has no project row; show it whenever plugins are in scope and no search is narrowing.
+    const showStandalone = !searchQuery.trim() && ['All', 'Wordpress', 'Wordpress Plugins'].includes(activeTab);
+    const pluginCards = [...(showStandalone ? STANDALONE_PLUGINS : []), ...pluginProjects.map(pluginFromProject)];
 
     return (
         <div className="space-y-8">
@@ -238,45 +244,36 @@ export function Tab({ nav }: TabProps) {
                         </div>
                     )}
 
-                    {/* SECTION 2: WORDPRESS PLUGINS & CUSTOM EXTENSIONS */}
-                    {pluginProjects.length > 0 && (
-                        <div className="bg-gradient-to-b from-[#0b1426] via-[#09101f] to-[#050914] rounded-[28px] p-6 sm:p-10 border border-indigo-900/60 shadow-2xl space-y-6 text-white relative overflow-hidden">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5 relative z-10">
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-0.5 rounded-full flex items-center gap-1">
-                                            <Code2 className="w-3 h-3 text-cyan-400" />
-                                            Developer Extensions
-                                        </span>
-                                        <Sparkles className="w-4 h-4 text-amber-400" />
-                                    </div>
-                                    <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                                        WordPress Plugins & PHP Architectures ({pluginProjects.length})
+                    {/* SECTION 2: WORDPRESS PLUGINS (same cards as the homepage and /plugins) */}
+                    {pluginCards.length > 0 && (
+                        <section aria-labelledby="mywork-plugins" className="flex flex-col gap-8 pt-6">
+                            <div className="flex flex-wrap items-end justify-between gap-6">
+                                <div className="flex flex-col gap-3">
+                                    <p className="m-0 font-mono text-[13px] tracking-[0.08em] uppercase text-brand-slate">WordPress plugins</p>
+                                    <h3 id="mywork-plugins" className="m-0 font-extrabold tracking-[-0.05em] leading-[0.95] text-brand-navy text-[clamp(32px,4vw,56px)]">
+                                        Plugins I build & maintain.
                                     </h3>
-                                    <p className="text-xs text-slate-300 font-medium max-w-2xl leading-relaxed">
-                                        Bespoke PHP plugins, custom Gutenberg block suites, and REST API connectors.
-                                    </p>
                                 </div>
-
-                                <div className="flex items-center gap-2 text-xs font-mono text-slate-400 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl shrink-0">
-                                    <Package className="w-3.5 h-3.5 text-indigo-400" />
-                                    <span>PSR-4 OOP PHP &bull; Zero Bloat</span>
-                                </div>
+                                <Link href="/plugins" className="motion-underline font-semibold text-brand-navy inline-flex items-center min-h-[44px]">
+                                    All plugins →
+                                </Link>
                             </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                                {pluginProjects.map((project, i) => (
-                                    <motion.div
-                                        key={project.permalink || i}
-                                        initial={{ opacity: 0, y: 15 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.4) }}
-                                    >
-                                        <PortfolioCard project={project} index={i} />
-                                    </motion.div>
+                            <ul className="m-0 p-0 list-none grid grid-cols-1 lg:grid-cols-2 gap-5">
+                                {pluginCards.slice(0, 4).map((plugin) => (
+                                    <li key={plugin.key}>
+                                        <PluginCard plugin={plugin} compact />
+                                    </li>
                                 ))}
-                            </div>
-                        </div>
+                            </ul>
+                            {pluginCards.length > 4 && (
+                                <Link
+                                    href="/plugins"
+                                    className="motion-btn self-center inline-flex items-center gap-3 min-h-[56px] px-7 rounded-full bg-brand-ink text-white font-semibold hover:bg-brand-ink-2"
+                                >
+                                    See all {pluginCards.length} plugins <span aria-hidden="true">→</span>
+                                </Link>
+                            )}
+                        </section>
                     )}
                 </div>
             )}

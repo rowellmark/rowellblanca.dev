@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CAREER, CAREER_NOW } from '@/lib/career';
 import { HEADLINE_FIGURES } from '@/lib/impact';
-import { stackForTech } from '@/lib/stacks';
+import { stackForTech, stackHref } from '@/lib/stacks';
 
 /**
  * Career history as a vertical timeline: a rail that fills as you scroll, one stop per role
@@ -66,7 +66,7 @@ export function CareerTimeline() {
                     return (
                       <li key={tech}>
                         {hub ? (
-                          <Link href={`/work/${hub.slug}`} className={`${chip} hover:border-amber-500 hover:text-amber-700 transition-colors`}>
+                          <Link href={stackHref(hub)} className={`${chip} hover:border-amber-500 hover:text-amber-700 transition-colors`}>
                             {tech}
                           </Link>
                         ) : (
