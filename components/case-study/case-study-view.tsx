@@ -13,6 +13,8 @@ import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
 import { ArticleToc } from '@/components/article/article-toc';
 import { AuthorCard, ShareButtons } from '@/components/article/article-extras';
 import { ServiceLinks, relatedServices } from '@/components/article/service-links';
+import { DeviceShowcase } from '@/components/work/device-showcase';
+import { stackForTech } from '@/lib/stacks';
 
 /** Split stored plain text into paragraphs (blank-line separated). */
 function paragraphs(text?: string) {
@@ -162,11 +164,21 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
             </dl>
             <div className="flex flex-wrap items-center justify-between gap-6">
               <ul className="m-0 p-0 list-none flex flex-wrap gap-2" aria-label="Tech stack">
-                {project.technologies?.map((tech) => (
-                  <li key={tech} className="font-mono text-xs px-3 py-1.5 rounded-full border border-white/15 text-slate-200">
-                    {tech}
-                  </li>
-                ))}
+                {project.technologies?.map((tech) => {
+                  const hub = stackForTech(tech);
+                  const chip = 'font-mono text-xs px-3 py-1.5 rounded-full border border-white/15 text-slate-200';
+                  return (
+                    <li key={tech}>
+                      {hub ? (
+                        <Link href={`/work/${hub.slug}`} title={`More ${hub.name} work`} className={`${chip} inline-block hover:border-amber-400 hover:text-white transition-colors`}>
+                          {tech}
+                        </Link>
+                      ) : (
+                        <span className={`${chip} inline-block`}>{tech}</span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
               <div className="flex flex-wrap gap-3">
                 <Link
@@ -194,7 +206,7 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
       {/* ─── 2. INTERACTIVE PREVIEW (overlaps the hero) ─── */}
       <div className="px-4 sm:px-6 lg:px-10 -mt-24 lg:-mt-28 relative z-20">
         <div className="motion-reveal mx-auto max-w-[1360px] rounded-[28px] overflow-hidden bg-white border border-brand-border shadow-[0_40px_120px_-40px_rgba(11,16,32,0.6)]">
-          <ProjectDetailPreview project={project} />
+          {isPlugin ? <ProjectDetailPreview project={project} /> : <DeviceShowcase project={project} />}
         </div>
       </div>
 

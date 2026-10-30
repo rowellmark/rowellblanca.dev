@@ -8,6 +8,10 @@ import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { PageHero } from "@/components/ui/page-hero";
 import { pageMetadata } from '@/lib/seo';
+import Link from "next/link";
+import { STACKS } from "@/lib/stacks";
+import { StackIcon } from "@/components/work/stack-icon";
+import { heroChipClass } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = pageMetadata({
   path: "/mywork",
@@ -39,7 +43,20 @@ export default async function MyWorkPage() {
                 titleLines={["Selected work", "& client builds."]}
                 accentLine={1}
                 lead="Explore 50+ production full-stack builds, Next.js web apps, serverless PostgreSQL architectures, and custom WordPress engines."
-            />
+            >
+                <nav aria-label="Browse by tech stack" className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-xs uppercase tracking-[0.08em] text-slate-400 mr-2">Browse by stack</span>
+                    {STACKS.map((s) => (
+                        <Link key={s.slug} href={`/work/${s.slug}`} className={`${heroChipClass(false)} inline-flex items-center gap-2`}>
+                            <StackIcon icon={s.icon} className="h-4 w-4" />
+                            {s.name}
+                        </Link>
+                    ))}
+                    <Link href="/results" className="motion-underline ml-auto font-semibold text-amber-400 inline-flex items-center min-h-[44px]">
+                        See the results →
+                    </Link>
+                </nav>
+            </PageHero>
 
             <div className="px-4 sm:px-6 lg:px-10 pt-20 lg:pt-28">
                 <div className="mx-auto max-w-[1360px]">

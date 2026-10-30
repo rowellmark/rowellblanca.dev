@@ -53,3 +53,14 @@ const SEO_TITLES: Record<string, string> = {
 export function blogSeoTitle(post: Pick<BlogPostRecord, 'slug' | 'title'>) {
   return SEO_TITLES[post.slug] || post.title;
 }
+
+/** Published posts, newest first (NeonDB, else the bundled posts). Cached per request. */
+export const getPublishedPosts = cache(async (): Promise<BlogPostRecord[]> => {
+  try {
+    const rows = await (prisma as any).blogPost.findMany({ where: { published: true }, orderBy: { publishedAt: 'desc' } });
+    if (rows.length) return rows;
+  } catch {
+    // DB unreachable: use the bundled posts below.
+  }
+  return (INITIAL_BLOG_POSTS as BlogPostRecord[]).filter((p: any) => p.published !== false);
+});
