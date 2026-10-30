@@ -145,7 +145,7 @@ export const FALLBACK_PROJECTS: FallbackProject[] = [
   },
   {
     id: 10,
-    sitename: 'Blanc Leads — WordPress CRM & Multi-AI Nurturing Plugin',
+    sitename: 'BuildForUser Leads — WordPress CRM & Multi-AI Nurturing Plugin',
     permalink: 'blanc-leads-plugin',
     url: 'wp-content/plugins/buildforuser-leads',
     image: 'buildforuser.png',
@@ -158,7 +158,7 @@ export const FALLBACK_PROJECTS: FallbackProject[] = [
   },
   {
     id: 11,
-    sitename: 'Blanc Schema LD Generator — WordPress SEO Plugin',
+    sitename: 'BuildForUser Schema LD Generator — WordPress SEO Plugin',
     permalink: 'blanc-schema-ld-generator',
     url: 'wp-content/plugins/buildforuser-schema-ld-generator',
     image: 'towerfire.png',
@@ -171,7 +171,7 @@ export const FALLBACK_PROJECTS: FallbackProject[] = [
   },
   {
     id: 12,
-    sitename: 'Blanc Chatbot — WordPress AI Widget & RAG Knowledge Base Plugin',
+    sitename: 'BuildForUser Chatbot — WordPress AI Widget & RAG Knowledge Base Plugin',
     permalink: 'blanc-chatbot-plugin',
     url: 'wp-content/plugins/buildforuser-chatbox',
     image: 'buildforuser.png',

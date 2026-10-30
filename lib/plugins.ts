@@ -22,7 +22,7 @@ export interface PluginEntry {
  */
 const PLUGIN_META: Record<string, Partial<PluginEntry>> = {
   'buildforuser-leads': {
-    name: 'Blanc Leads',
+    name: 'BuildForUser Leads',
     tagline: 'A CRM inside WordPress: captures form leads into a Kanban pipeline and drafts AI follow-ups for you to approve.',
     category: 'CRM',
     preview: 'kanban',
@@ -34,7 +34,7 @@ const PLUGIN_META: Record<string, Partial<PluginEntry>> = {
     ],
   },
   'buildforuser-chatbox': {
-    name: 'Blanc Chatbot',
+    name: 'BuildForUser Chatbot',
     tagline: 'An AI chat widget that answers from your own pages, posts and documents with a RAG knowledge base.',
     category: 'AI',
     preview: 'chat',
@@ -46,7 +46,7 @@ const PLUGIN_META: Record<string, Partial<PluginEntry>> = {
     ],
   },
   'buildforuser-schema-ld-generator': {
-    name: 'Blanc Schema LD',
+    name: 'BuildForUser Schema LD',
     tagline: 'A visual JSON-LD builder that merges site-wide and per-post schema into one valid graph.',
     category: 'SEO',
     preview: 'schema',

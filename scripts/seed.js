@@ -86,7 +86,7 @@ const SEED_PROJECTS = [
     featured: true,
   },
   {
-    sitename: 'Blanc Leads — WordPress CRM & Multi-AI Nurturing Plugin',
+    sitename: 'BuildForUser Leads — WordPress CRM & Multi-AI Nurturing Plugin',
     permalink: 'blanc-leads-plugin',
     url: 'wp-content/plugins/buildforuser-leads',
     image: '',
@@ -95,7 +95,7 @@ const SEED_PROJECTS = [
     featured: true,
   },
   {
-    sitename: 'Blanc Schema LD Generator — WordPress SEO Plugin',
+    sitename: 'BuildForUser Schema LD Generator — WordPress SEO Plugin',
     permalink: 'blanc-schema-ld-generator',
     url: 'wp-content/plugins/buildforuser-schema-ld-generator',
     image: '',
@@ -104,7 +104,7 @@ const SEED_PROJECTS = [
     featured: true,
   },
   {
-    sitename: 'Blanc Chatbot — WordPress AI Widget & RAG Knowledge Base Plugin',
+    sitename: 'BuildForUser Chatbot — WordPress AI Widget & RAG Knowledge Base Plugin',
     permalink: 'blanc-chatbot-plugin',
     url: 'wp-content/plugins/buildforuser-chatbox',
     image: '',
@@ -113,11 +113,11 @@ const SEED_PROJECTS = [
     featured: true,
   },
   {
-    sitename: 'Blanc Login Customizer — WordPress Admin & Security Plugin',
+    sitename: 'BuildForUser Login Customizer — WordPress Admin & Security Plugin',
     permalink: 'blanc-login-customizer',
     url: 'wp-content/plugins/buildforuser-login-customizer',
     image: '',
-    description: 'Bespoke WordPress Admin & Login Security plugin featuring a premium split-panel custom login interface, brand logo integration, and security slug rewriting (renaming /wp-admin login URL to protect against brute-force attacks).\n\nHOW IT WORKS:\n1. Custom Login URL Rewriter: Renames default /wp-admin and /wp-login.php URLs to custom secret slugs, blocking unauthorized automated brute-force bots.\n2. Split-Panel Interface Builder: Renders modern glassmorphism or dual-tone split login layouts with custom brand backgrounds, typography, and accent colors.\n3. Brand & Logo Customizer: Live admin preview for logo uploads, custom form positioning, button styling, and copyright footers.\n4. Admin Security & WP Dashboard Gate: Integrates seamlessly with BuildForUser / Blanc core dashboard plugins for centralized plugin authorization.',
+    description: 'Bespoke WordPress Admin & Login Security plugin featuring a premium split-panel custom login interface, brand logo integration, and security slug rewriting (renaming /wp-admin login URL to protect against brute-force attacks).\n\nHOW IT WORKS:\n1. Custom Login URL Rewriter: Renames default /wp-admin and /wp-login.php URLs to custom secret slugs, blocking unauthorized automated brute-force bots.\n2. Split-Panel Interface Builder: Renders modern glassmorphism or dual-tone split login layouts with custom brand backgrounds, typography, and accent colors.\n3. Brand & Logo Customizer: Live admin preview for logo uploads, custom form positioning, button styling, and copyright footers.\n4. Admin Security & WP Dashboard Gate: Integrates seamlessly with BuildForUser / BuildForUser core dashboard plugins for centralized plugin authorization.',
     technologies: ['Wordpress Plugins', 'PHP', 'Security', 'Vite', 'React', 'JavaScript'],
     featured: true,
   },

@@ -93,7 +93,7 @@ Commercial finance brokers handle asset finance, invoice funding, VAT loans, and
     title: 'Building Custom RAG AI Chatbots & Nurturing Plugins for WordPress and Next.js',
     slug: 'building-custom-rag-ai-chatbots-wordpress-nextjs',
     excerpt: 'A technical deep-dive into creating vector knowledge indexes, multi-provider LLM integrations (Gemini, OpenAI, Claude), and human-in-the-loop lead nurturing.',
-    content: `Integrating Artificial Intelligence directly into customer touchpoints has shifted from a novelty to a core competitive requirement. In recent plugin projects like **Blanc Chatbot** and **Blanc Leads**, I engineered bespoke AI RAG (Retrieval-Augmented Generation) systems that bridge knowledge bases directly into interactive widgets.
+    content: `Integrating Artificial Intelligence directly into customer touchpoints has shifted from a novelty to a core competitive requirement. In recent plugin projects like **BuildForUser Chatbot** and **BuildForUser Leads**, I engineered bespoke AI RAG (Retrieval-Augmented Generation) systems that bridge knowledge bases directly into interactive widgets.
 
 ### Core RAG Plugin Architecture
 

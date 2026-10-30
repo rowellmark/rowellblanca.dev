@@ -55,7 +55,7 @@ export function LoginPreview() {
     );
 }
 
-/** Mini chat widget echoing Blanc Chatbot answering from the site's own content. */
+/** Mini chat widget echoing BuildForUser Chatbot answering from the site's own content. */
 export function ChatPreview() {
     return (
         <div aria-hidden="true" className="rounded-2xl bg-white text-slate-800 p-5 flex flex-col gap-3 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
@@ -73,7 +73,7 @@ export function ChatPreview() {
     );
 }
 
-/** Mini Kanban board echoing Blanc Leads' pipeline with an AI score. */
+/** Mini Kanban board echoing BuildForUser Leads' pipeline with an AI score. */
 export function KanbanPreview() {
     const cols = [
         { name: 'New', cards: [['Acme Ltd', 82], ['J. Patel', 64]] },
@@ -100,7 +100,7 @@ export function KanbanPreview() {
     );
 }
 
-/** Mini JSON-LD output echoing Blanc Schema LD's assembled @graph. */
+/** Mini JSON-LD output echoing BuildForUser Schema LD's assembled @graph. */
 export function SchemaPreview() {
     return (
         <pre aria-hidden="true" className="m-0 rounded-2xl bg-[#0d1117] border border-white/10 p-5 font-mono text-[12px] leading-relaxed text-slate-300 overflow-hidden shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
