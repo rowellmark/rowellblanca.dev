@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { invoiceAccessToken } from './auth';
 
 type ResendConfig = {
   provider: 'resend';
@@ -500,7 +501,7 @@ export async function sendInvoiceEmail(params: SendInvoiceEmailParams) {
     paymentTerms,
     paymentDetails,
     items,
-    invoiceUrl = `https://rowellblanca.dev/invoice/${invoiceNumber}`,
+    invoiceUrl = `https://www.rowellblanca.dev/invoice/${encodeURIComponent(invoiceNumber)}?t=${invoiceAccessToken(invoiceNumber)}`,
   } = params;
 
   const formatDate = (d: Date | string) => {

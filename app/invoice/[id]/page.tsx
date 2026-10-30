@@ -72,7 +72,8 @@ export default function ClientInvoiceViewPage() {
     const fetchInvoice = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/invoices/${invoiceId}`);
+        const token = new URLSearchParams(window.location.search).get('t');
+        const res = await fetch(`/api/invoices/${encodeURIComponent(invoiceId)}${token ? `?t=${encodeURIComponent(token)}` : ''}`);
         const data = await res.json();
         if (data.success && data.invoice) {
           setInvoice(data.invoice);

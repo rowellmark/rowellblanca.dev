@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAISettings, generateAIResponse } from '@/lib/ai-provider';
+import { checkRateLimit, getClientIp } from '@/lib/anti-spam';
 
 interface AIRequestPayload {
   action: 'generate_card' | 'boss_banter' | 'race_announcer' | 'audit_summary';
@@ -50,6 +51,11 @@ const FALLBACK_CARDS = [
 
 export async function POST(req: NextRequest) {
   try {
+    // AI opponent moves cost credits: cap a single player at 30 calls a minute.
+    const limit = checkRateLimit(`ai-master:${getClientIp(req)}`, 30, 60 * 1000);
+    if (!limit.allowed) {
+      return NextResponse.json({ success: false, error: 'Too many requests. Please slow down.' }, { status: 429 });
+    }
     const body: AIRequestPayload = await req.json();
     const { action, prompt, gameState } = body;
 
