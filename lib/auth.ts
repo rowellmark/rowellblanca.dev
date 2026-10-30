@@ -36,11 +36,12 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 /**
- * Admin login. Order:
- * 1. ADMIN_EMAIL + ADMIN_PASSWORD from the environment (Vercel) — the recovery path, works
- *    even if the database row is missing or holds an old password.
- * 2. A `User` row in NeonDB (PBKDF2 hash).
- * There is no hardcoded fallback, and leaked passwords are always refused.
+ * Admin login:
+ * - Production (live and Vercel previews): a `User` row in NeonDB only.
+ * - Local development: ADMIN_EMAIL + ADMIN_PASSWORD from `.env.local` also work, so you can
+ *   sign in without a database. They are ignored in production builds.
+ * There are no hardcoded credentials, and leaked passwords are always refused. To create or
+ * reset the live login, run `npm run admin:password -- you@example.com` against the live DB.
  */
 export async function authenticateAdminUser(emailInput: string, passwordInput: string): Promise<{ success: boolean; user?: any; message?: string }> {
   try {
@@ -51,13 +52,14 @@ export async function authenticateAdminUser(emailInput: string, passwordInput: s
     if (LEAKED_PASSWORDS.has(password)) {
       return {
         success: false,
-        message: 'This password is no longer accepted. Set ADMIN_EMAIL and ADMIN_PASSWORD in Vercel to sign in.',
+        message: 'This password is no longer accepted. Reset your login with: npm run admin:password -- you@example.com',
       };
     }
 
     const envEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
     const envPassword = process.env.ADMIN_PASSWORD;
-    if (envEmail && envPassword && cleanEmail === envEmail && safeEqual(password, envPassword)) {
+    const allowEnvLogin = process.env.NODE_ENV !== 'production';
+    if (allowEnvLogin && envEmail && envPassword && cleanEmail === envEmail && safeEqual(password, envPassword)) {
       return { success: true, user: { id: 0, email: envEmail, name: 'Rowell Mark Blanca', role: 'ADMIN' } };
     }
 

@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "eslint .",
     "seed": "node scripts/seed.js",
+    "admin:password": "node scripts/set-admin-password.js",
     "seed:reset": "node scripts/seed.js --reset",
     "seed:reset:projects": "node scripts/seed.js --reset=projects",
     "seed:reset:testimonials": "node scripts/seed.js --reset=testimonials",
