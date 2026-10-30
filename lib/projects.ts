@@ -17,13 +17,7 @@ export const getActiveProjects = cache(async (): Promise<PortfolioProject[]> => 
   return FALLBACK_PROJECTS as unknown as PortfolioProject[];
 });
 
-export function isPluginProject(p: Pick<PortfolioProject, 'url' | 'permalink' | 'technologies'>) {
-  return (
-    Boolean(p.url?.startsWith('wp-content')) ||
-    Boolean(p.permalink?.includes('plugin')) ||
-    Boolean(p.technologies?.some((t) => t.toLowerCase().includes('plugin')))
-  );
-}
+export { isPluginProject } from '@/lib/plugins';
 
 /** Has a written case study (challenge / solution / results) rather than just a listing. */
 export function hasWriteUp(p: Pick<PortfolioProject, 'challenge' | 'solution' | 'results'>) {

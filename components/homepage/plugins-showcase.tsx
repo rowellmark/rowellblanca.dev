@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { SplitText } from "@/components/ui/split-text";
+import { LoginPreview, SerpPreview } from "@/components/plugins/plugin-previews";
 
 const SEO_FEATURES = [
     "Live Google, Facebook & X previews with a 600px title pixel-width meter",
@@ -59,61 +60,6 @@ function FeatureList({ items }: { items: string[] }) {
     );
 }
 
-/** Mini SERP preview echoing the plugin's live snippet editor and pixel meter. */
-function SerpPreview() {
-    return (
-        <div aria-hidden="true" className="rounded-2xl bg-white text-[#202124] p-5 flex flex-col gap-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
-            <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-slate-500">
-                <span className="px-2 py-0.5 rounded-full bg-slate-900 text-white">Google</span>
-                <span>Desktop preview</span>
-            </div>
-            <div className="flex flex-col gap-1">
-                <span className="text-xs text-[#4d5156]">yourdomain.com › services › web-development</span>
-                <span className="text-lg leading-snug text-[#1a0dab]">Custom Web Development for UK Businesses | Your Brand</span>
-                <span className="text-sm leading-snug text-[#4d5156]">
-                    Fast, accessible websites engineered for Core Web Vitals. Book a free discovery call and get a
-                    transparent quote in 24 hours.
-                </span>
-            </div>
-            <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between font-mono text-[11px] text-slate-500">
-                    <span>Title width</span>
-                    <span>512 / 600px</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                    <div className="motion-meter h-full rounded-full bg-emerald-500" />
-                </div>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-                {["Title", "Slug", "Meta", "Intro", "H2"].map((pill) => (
-                    <span key={pill} className="font-mono text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-                        ✓ {pill}
-                    </span>
-                ))}
-            </div>
-        </div>
-    );
-}
-
-/** Mini split-panel login screen echoing the Login Customizer UI. */
-function LoginPreview() {
-    return (
-        <div aria-hidden="true" className="rounded-2xl overflow-hidden grid grid-cols-5 min-h-[248px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
-            <div className="col-span-2 bg-amber-500 text-brand-ink p-5 flex flex-col justify-between">
-                <span className="h-8 w-8 rounded-lg bg-brand-ink text-amber-500 grid place-items-center font-extrabold">B</span>
-                <span className="font-extrabold leading-tight text-lg">Welcome back to your studio.</span>
-            </div>
-            <div className="col-span-3 bg-white p-5 flex flex-col justify-center gap-3">
-                <span className="font-mono text-[11px] text-slate-500">yourdomain.com/admin-access</span>
-                <span className="h-9 rounded-lg border border-slate-200 bg-slate-50" />
-                <span className="h-9 rounded-lg border border-slate-200 bg-slate-50" />
-                <span className="h-9 rounded-lg bg-brand-ink" />
-                <span className="font-mono text-[11px] text-rose-600">/wp-login.php → 404</span>
-            </div>
-        </div>
-    );
-}
-
 export function PluginsShowcase() {
     const loginHref = useLoginCustomizerHref();
 
@@ -127,10 +73,15 @@ export function PluginsShowcase() {
                             <SplitText lines={["Plugins I", "build & maintain."]} />
                         </h2>
                     </div>
-                    <p className="m-0 max-w-[420px] text-brand-slate text-[17px] leading-relaxed">
-                        Hand-coded WordPress plugins from the BuildForUser suite — fast, dependency-light, and with every
-                        feature unlocked.
-                    </p>
+                    <div className="flex flex-col items-start gap-4 max-w-[420px]">
+                        <p className="m-0 text-brand-slate text-[17px] leading-relaxed">
+                            Hand-coded WordPress plugins from the BuildForUser suite — fast, dependency-light, and with every
+                            feature unlocked.
+                        </p>
+                        <Link href="/plugins" className="motion-underline font-semibold text-brand-navy inline-flex items-center min-h-[44px]">
+                            Browse all plugins →
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">

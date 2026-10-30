@@ -77,5 +77,5 @@ export const CAREER: CareerRole[] = [
 export const CAREER_NOW = [
   { label: 'BuildForUser', note: 'SaaS for managing client sites at scale', permalink: 'buildforuser' },
   { label: 'MacManus portals', note: 'FCA-regulated asset finance platform', permalink: 'macmanus-portal' },
-  { label: 'Blanc plugins', note: 'AI chatbot, lead CRM and schema plugins', href: '/work/wordpress-plugins' },
+  { label: 'Blanc plugins', note: 'AI chatbot, lead CRM and schema plugins', href: '/plugins' },
 ];
