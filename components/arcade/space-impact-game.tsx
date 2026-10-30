@@ -17,6 +17,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { createFrameStepper, getAudioContext, prepareCanvas } from './engine';
 
 interface Star {
   x: number;
@@ -99,9 +100,8 @@ export function SpaceImpactGame() {
     (type: 'laser' | 'missile' | 'hit' | 'explosion' | 'bomb' | 'powerup' | 'win') => {
       if (!soundEnabled || typeof window === 'undefined') return;
       try {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
+        const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
@@ -360,18 +360,20 @@ export function SpaceImpactGame() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = prepareCanvas(canvas, 660, 370);
     if (!ctx) return;
 
     let isRunning = true;
+
+    const stepper = createFrameStepper();
 
     const loop = () => {
       if (!isRunning) return;
 
       const state = stateRef.current;
       const { player, keys } = state;
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = 660;
+      const height = 370;
 
       // 1. Player Movement (WASD / Arrows or AI Auto-Pilot)
       const speed = 4.5;
@@ -823,15 +825,14 @@ export function SpaceImpactGame() {
         ctx.fill();
       });
 
-      state.animationId = requestAnimationFrame(loop);
+      state.animationId = stepper.request(loop);
     };
 
-    stateRef.current.animationId = requestAnimationFrame(loop);
-    const animId = stateRef.current.animationId;
+    stateRef.current.animationId = stepper.request(loop);
 
     return () => {
       isRunning = false;
-      cancelAnimationFrame(animId);
+      stepper.cancel();
     };
   }, [isPlaying, highScore, playSound, p1AutoPilot, firePlayerLaser]);
 

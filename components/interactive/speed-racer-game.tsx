@@ -18,6 +18,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { createFrameStepper, drawRaceCar, getAudioContext, prepareCanvas, throttle } from '@/components/arcade/engine';
 
 interface Obstacle {
   x: number;
@@ -51,9 +52,8 @@ export function SpeedRacerGame() {
     (type: 'boost' | 'hit' | 'start' | 'over' | 'turbo') => {
       if (!soundEnabled || typeof window === 'undefined') return;
       try {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
+        const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
@@ -126,10 +126,10 @@ export function SpeedRacerGame() {
     playerWidth: 44,
     playerHeight: 52,
     speed: 5,
+    vx: 0,
+    scroll: 0,
     obstacles: [] as Obstacle[],
     particles: [] as { x: number; y: number; vx: number; vy: number; life: number; color: string }[],
-    roadLines: [] as number[],
-    stars: [] as { x: number; y: number; size: number; speed: number }[],
     keys: { left: false, right: false, space: false },
     score: 0,
     health: 100,
@@ -150,8 +150,8 @@ export function SpeedRacerGame() {
     setTurboActive(false);
 
     const canvas = canvasRef.current;
-    const width = canvas ? canvas.width : 400;
-    const height = canvas ? canvas.height : 460;
+    const width = 388;
+    const height = 460;
 
     gameStateRef.current = {
       playerX: width / 2 - 22,
@@ -160,15 +160,10 @@ export function SpeedRacerGame() {
       playerWidth: 44,
       playerHeight: 54,
       speed: 2.6,
+      vx: 0,
+      scroll: 0,
       obstacles: [],
       particles: [],
-      roadLines: [0, 80, 160, 240, 320, 400],
-      stars: Array.from({ length: 40 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 2 + 1,
-        speed: Math.random() * 2 + 0.5,
-      })),
       keys: { left: false, right: false, space: false },
       score: 0,
       health: 100,
@@ -222,10 +217,13 @@ export function SpeedRacerGame() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = prepareCanvas(canvas, 388, 460);
     if (!ctx) return;
 
     let isRunning = true;
+
+    const stepper = createFrameStepper();
+    const hud = throttle(10);
 
     const OBSTACLE_TYPES: Array<Omit<Obstacle, 'x' | 'y' | 'width' | 'height' | 'speed'>> = [
       { label: '5MB PNG', type: 'obstacle', color: '#dc2626', icon: '⚠️', points: -20 },
@@ -243,56 +241,40 @@ export function SpeedRacerGame() {
       if (!isRunning) return;
 
       const state = gameStateRef.current;
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = 388;
+      const height = 460;
 
       // 1. Clear background
       ctx.fillStyle = '#070d18';
       ctx.fillRect(0, 0, width, height);
 
-      // Cyber grid & stars
-      ctx.fillStyle = '#ffffff';
-      state.stars.forEach((star) => {
-        star.y += star.speed * (state.turboTimer > 0 ? 1.6 : 1);
-        if (star.y > height) star.y = 0;
-        ctx.globalAlpha = 0.5;
-        ctx.fillRect(star.x, star.y, star.size, star.size);
-      });
-      ctx.globalAlpha = 1;
-
-      // Road background (Perspective Cyber Highway)
+      // Road: grass verges, red/white kerbs, asphalt grain and lane dashes, all scrolling together
       const roadLeft = 35;
       const roadRight = width - 35;
       const roadWidth = roadRight - roadLeft;
-
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(roadLeft, 0, roadWidth, height);
-
-      // Road Border Neon Glows
-      ctx.strokeStyle = state.turboTimer > 0 ? '#f59e0b' : '#38bdf8';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(roadLeft, 0);
-      ctx.lineTo(roadLeft, height);
-      ctx.moveTo(roadRight, 0);
-      ctx.lineTo(roadRight, height);
-      ctx.stroke();
-
-      // Dashed lane lines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([20, 20]);
-      state.roadLines.forEach((y, i) => {
-        state.roadLines[i] = (y + state.speed * (state.turboTimer > 0 ? 1.4 : 1)) % height;
-        ctx.beginPath();
-        ctx.moveTo(width / 2, state.roadLines[i]);
-        ctx.lineTo(width / 2, state.roadLines[i] + 20);
-        ctx.stroke();
-      });
-      ctx.setLineDash([]);
+      state.scroll += state.speed * (state.turboTimer > 0 ? 1.4 : 1) * 1.6;
+      const strip = 4;
+      for (let y = 0; y < height; y += strip) {
+        const d = state.scroll - y;
+        ctx.fillStyle = Math.floor(d / 90) % 2 === 0 ? '#1d5c34' : '#216a3b';
+        ctx.fillRect(0, y, width, strip);
+        ctx.fillStyle = ['#2b2f36', '#2d3138', '#292d33', '#2c3037'][Math.abs(Math.floor(d / 7)) % 4];
+        ctx.fillRect(roadLeft, y, roadWidth, strip);
+        ctx.fillStyle = Math.floor(d / 26) % 2 === 0 ? '#dc2626' : '#f1f5f9';
+        ctx.fillRect(roadLeft - 8, y, 8, strip);
+        ctx.fillRect(roadRight, y, 8, strip);
+        ctx.fillStyle = 'rgba(241,245,249,0.7)';
+        ctx.fillRect(roadLeft + 4, y, 2, strip);
+        ctx.fillRect(roadRight - 6, y, 2, strip);
+        if (Math.floor(d / 40) % 2 === 0) {
+          ctx.fillStyle = state.turboTimer > 0 ? 'rgba(251,191,36,0.8)' : 'rgba(241,245,249,0.55)';
+          ctx.fillRect(width / 2 - 1.5, y, 3, strip);
+        }
+      }
 
       // 2. Handle Player Movement (Manual or AI Auto-Pilot)
       const moveSpeed = 8.5;
+      const startX = state.playerX;
       if (aiAutoPilot) {
         // AI Radar: Look ahead for nearest obstacle or boost
         const nearest = state.obstacles
@@ -314,9 +296,12 @@ export function SpeedRacerGame() {
           }
         }
       } else {
-        if (state.keys.left) state.playerX -= moveSpeed;
-        if (state.keys.right) state.playerX += moveSpeed;
+        // Steering with momentum: input builds sideways speed, grip bleeds it off
+        const steer = (state.keys.right ? 1 : 0) - (state.keys.left ? 1 : 0);
+        state.vx = state.vx * 0.8 + steer * 1.7;
+        state.playerX += state.vx;
       }
+      if (aiAutoPilot) state.vx = state.playerX - startX;
 
       // Constrain player inside road
       state.playerX = Math.max(roadLeft + 5, Math.min(roadRight - state.playerWidth - 5, state.playerX));
@@ -446,35 +431,11 @@ export function SpeedRacerGame() {
       const pw = state.playerWidth;
       const ph = state.playerHeight;
 
-      // Rocket Thruster Flames
-      const flameHeight = 12 + Math.random() * (state.turboTimer > 0 ? 25 : 12);
-      ctx.fillStyle = state.turboTimer > 0 ? '#f59e0b' : '#38bdf8';
-      ctx.beginPath();
-      ctx.moveTo(px + pw * 0.3, py + ph);
-      ctx.lineTo(px + pw * 0.5, py + ph + flameHeight);
-      ctx.lineTo(px + pw * 0.7, py + ph);
-      ctx.closePath();
-      ctx.fill();
-
-      // Ship Body
-      ctx.fillStyle = state.turboTimer > 0 ? '#f59e0b' : '#1e293b';
-      ctx.strokeStyle = state.turboTimer > 0 ? '#fbbf24' : '#38bdf8';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(px + pw * 0.5, py); // Nose
-      ctx.lineTo(px + pw, py + ph * 0.8); // Right Wing
-      ctx.lineTo(px + pw * 0.8, py + ph); // Right Bottom
-      ctx.lineTo(px + pw * 0.2, py + ph); // Left Bottom
-      ctx.lineTo(px, py + ph * 0.8); // Left Wing
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      // Cockpit Glow
-      ctx.fillStyle = state.turboTimer > 0 ? '#ffffff' : '#38bdf8';
-      ctx.beginPath();
-      ctx.ellipse(px + pw * 0.5, py + ph * 0.45, 6, 12, 0, 0, Math.PI * 2);
-      ctx.fill();
+      drawRaceCar(ctx, px + (pw - 36) / 2, py, 36, ph, {
+        color: state.turboTimer > 0 ? '#f59e0b' : '#0ea5e9',
+        boosting: state.turboTimer > 0,
+        steer: Math.max(-0.3, Math.min(0.3, state.vx * 0.04)),
+      });
 
       // Shield Ring if Turbo
       if (state.turboTimer > 0) {
@@ -493,14 +454,19 @@ export function SpeedRacerGame() {
       state.score += 1;
       state.speed = 2.6 + Math.min(2.4, Math.floor(state.distance / 600) * 0.4);
 
-      setScore(state.score);
-      setDistance(Math.floor(state.distance / 10));
-      setWebVitalsHealth(state.health);
-      setCombo(state.combo);
+      hud(() => {
+        setScore(state.score);
+        setDistance(Math.floor(state.distance / 10));
+        setWebVitalsHealth(state.health);
+        setCombo(state.combo);
+      });
 
       // Check Game Over
       if (state.health <= 0) {
         isRunning = false;
+        setScore(state.score);
+        setDistance(Math.floor(state.distance / 10));
+        setWebVitalsHealth(0);
         setIsPlaying(false);
         setIsGameOver(true);
         playSound('over');
@@ -514,14 +480,14 @@ export function SpeedRacerGame() {
         return;
       }
 
-      state.animationId = requestAnimationFrame(loop);
+      state.animationId = stepper.request(loop);
     };
 
-    gameStateRef.current.animationId = requestAnimationFrame(loop);
+    gameStateRef.current.animationId = stepper.request(loop);
 
     return () => {
       isRunning = false;
-      cancelAnimationFrame(gameStateRef.current.animationId);
+      stepper.cancel();
     };
   }, [isPlaying, highScore, playSound, aiAutoPilot]);
 
