@@ -23,6 +23,7 @@ export default function Header() {
     const navs = [
         { name: 'About', link: '/about' },
         { name: 'My Work', link: '/mywork' },
+        { name: 'Plugins', link: '/plugins' },
         { name: 'Case Studies', link: '/case-studies' },
         { name: 'Blog', link: '/blog' },
         { name: 'Arcade 🎮', link: '/arcade' },
@@ -81,10 +82,10 @@ export default function Header() {
                             <AnimatedLogo className="h-full w-full" title="Rowell Mark Blanca" tone="dark" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-extrabold text-white text-base tracking-tight leading-none">
+                            <span className="whitespace-nowrap font-extrabold text-white text-base tracking-tight leading-none">
                                 Rowell Blanca
                             </span>
-                            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-1">
+                            <span className="whitespace-nowrap text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-1">
                                 Software Engineer
                             </span>
                         </div>
@@ -126,13 +127,13 @@ export default function Header() {
                     </div>
 
                     {/* Desktop Nav */}
-                    <nav aria-label="Main" className="hidden lg:flex items-center gap-6">
-                        <ul className="flex items-center gap-6">
+                    <nav aria-label="Main" className="hidden lg:flex items-center gap-4 xl:gap-6">
+                        <ul className="flex items-center gap-4 xl:gap-6">
                             {navs.map((nav, index) => (
                                 <li key={index}>
                                     <Link
                                         href={nav.link}
-                                        className="motion-underline text-[15px] font-medium text-slate-300 hover:text-white transition-colors"
+                                        className="motion-underline whitespace-nowrap text-[15px] font-medium text-slate-300 hover:text-white transition-colors"
                                     >
                                         {nav.name}
                                     </Link>
@@ -146,7 +147,7 @@ export default function Header() {
                             className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.14] border border-white/15 hover:border-white/30 text-slate-300 font-mono text-xs transition-all cursor-pointer"
                             title="Open Command Palette (⌘K)"
                         >
-                            <span className="text-xs text-slate-400">Search</span>
+                            <span className="hidden xl:inline text-xs text-slate-400">Search</span>
                             <kbd className="px-1.5 py-0.5 text-[11px] bg-white/10 border border-white/20 rounded text-white">
                                 ⌘K
                             </kbd>
@@ -154,7 +155,7 @@ export default function Header() {
 
                         <button
                             onClick={() => setIsContactModalOpen(true)}
-                            className="motion-btn motion-magnetic inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white hover:bg-amber-400 text-brand-ink font-bold text-[15px] cursor-pointer"
+                            className="motion-btn motion-magnetic inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white hover:bg-amber-400 text-brand-ink font-bold text-[15px] whitespace-nowrap cursor-pointer"
                         >
                             Say Hello! <span className="motion-arrow" aria-hidden="true">→</span>
                         </button>

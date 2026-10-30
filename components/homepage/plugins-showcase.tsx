@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { SplitText } from "@/components/ui/split-text";
 import { LoginPreview, SerpPreview } from "@/components/plugins/plugin-previews";
+import { PluginsCta } from "@/components/plugins/plugins-cta";
 
 const SEO_FEATURES = [
     "Live Google, Facebook & X previews with a 600px title pixel-width meter",
@@ -136,6 +137,8 @@ export function PluginsShowcase() {
                         </Link>
                     </article>
                 </div>
+
+                <PluginsCta />
             </div>
 
         </section>

@@ -193,6 +193,17 @@ export function CommandPalette({ defaultOpen = false }: { defaultOpen?: boolean 
       },
     },
     {
+      id: 'all-plugins',
+      category: 'Case Studies',
+      title: 'WordPress Plugins I Build & Maintain',
+      subtitle: 'BuildForUser SEO, Leads, Chatbot, Schema LD & Login Customizer',
+      icon: ArrowRight,
+      action: () => {
+        setIsOpen(false);
+        router.push('/plugins');
+      },
+    },
+    {
       id: 'all-projects',
       category: 'Case Studies',
       title: 'Browse Full Portfolio Directory (50+ Projects)',

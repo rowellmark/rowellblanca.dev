@@ -12,6 +12,7 @@ import Link from "next/link";
 import { STACKS, stackHref } from "@/lib/stacks";
 import { StackIcon } from "@/components/work/stack-icon";
 import { heroChipClass } from "@/components/ui/page-hero";
+import { PluginsCta } from "@/components/plugins/plugins-cta";
 
 export const metadata: Metadata = pageMetadata({
   path: "/mywork",
@@ -62,6 +63,9 @@ export default async function MyWorkPage() {
                 <div className="mx-auto max-w-[1360px]">
                     {/* Flagship Case Studies Spotlight */}
                     <FlagshipSpotlight initialProjects={flagship} />
+
+                    {/* Plugins I build & maintain */}
+                    <PluginsCta className="mt-16 lg:mt-24" />
                 </div>
             </div>
 
