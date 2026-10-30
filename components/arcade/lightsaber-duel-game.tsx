@@ -18,6 +18,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { createFrameStepper, getAudioContext, prepareCanvas } from './engine';
 
 type DuelMode = 'ai' | 'local';
 type AiRank = 'apprentice' | 'knight' | 'master';
@@ -118,9 +119,8 @@ export function LightsaberDuelGame() {
     (type: 'ignite' | 'swing' | 'clash' | 'parry' | 'force' | 'hit' | 'win') => {
       if (!soundEnabled || typeof window === 'undefined') return;
       try {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
+        const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
@@ -350,7 +350,7 @@ export function LightsaberDuelGame() {
     setClashCount(0);
 
     const canvas = canvasRef.current;
-    const width = canvas ? canvas.width : 680;
+    const width = 660;
     const floorY = 270;
 
     gameStateRef.current.p1 = {
@@ -463,10 +463,12 @@ export function LightsaberDuelGame() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = prepareCanvas(canvas, 660, 360);
     if (!ctx) return;
 
     let isRunning = true;
+
+    const stepper = createFrameStepper();
     const gravity = 0.6;
     const floorY = 270;
 
@@ -475,8 +477,8 @@ export function LightsaberDuelGame() {
 
       const state = gameStateRef.current;
       const { p1, p2, keys } = state;
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = 660;
+      const height = 360;
 
       // 1. Clear background & Cyber Temple Arena
       ctx.fillStyle = '#060a12';
@@ -863,15 +865,14 @@ export function LightsaberDuelGame() {
         return;
       }
 
-      state.animationId = requestAnimationFrame(loop);
+      state.animationId = stepper.request(loop);
     };
 
-    gameStateRef.current.animationId = requestAnimationFrame(loop);
-    const animId = gameStateRef.current.animationId;
+    gameStateRef.current.animationId = stepper.request(loop);
 
     return () => {
       isRunning = false;
-      cancelAnimationFrame(animId);
+      stepper.cancel();
     };
   }, [isPlaying, gameMode, aiRank, playSound, p1AutoPilot, triggerP1Slash, triggerP1Parry, triggerP1Force, triggerP2Slash, triggerP2Parry, triggerP2Force]);
 

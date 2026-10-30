@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { getAudioContext } from './engine';
 
 type DuelMode = 'ai' | 'local' | 'room';
 
@@ -175,9 +176,8 @@ export function CodeDuelGame() {
   // Audio synthesizer
   const playSound = useCallback((type: 'attack' | 'shield' | 'buff' | 'win') => {
     try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
+      const ctx = getAudioContext();
+      if (!ctx) return;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);

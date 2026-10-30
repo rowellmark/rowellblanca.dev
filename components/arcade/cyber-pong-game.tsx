@@ -18,6 +18,7 @@ import {
   Radio,
 } from 'lucide-react';
 import { ContactModal } from '@/components/ui/contact-modal';
+import { createFrameStepper, getAudioContext, prepareCanvas } from './engine';
 
 type GameMode = 'ai' | 'local' | 'room';
 type AiDifficulty = 'easy' | 'medium' | 'hard';
@@ -31,6 +32,22 @@ interface Ball {
   speed: number;
   color: string;
   isMulti?: boolean;
+  spin?: number; // Topspin/backspin from a moving paddle; curves the ball (Magnus effect)
+  trail?: { x: number; y: number }[];
+}
+
+const MAX_BALL_SPEED = 12.5;
+const MAX_BOUNCE_ANGLE = (55 * Math.PI) / 180;
+
+/** Where will the ball cross x = targetX? Follows wall bounces, ignores spin (as a human would). */
+function predictBallY(ball: Ball, targetX: number, height: number) {
+  if (ball.vx === 0) return ball.y;
+  const t = (targetX - ball.x) / ball.vx;
+  if (t < 0) return ball.y;
+  const span = height - ball.radius * 2;
+  let y = ball.y - ball.radius + ball.vy * t;
+  y = ((y % (2 * span)) + 2 * span) % (2 * span);
+  return (y > span ? 2 * span - y : y) + ball.radius;
 }
 
 interface PowerUp {
@@ -66,9 +83,8 @@ export function CyberPongGame() {
     (type: 'paddle' | 'wall' | 'score' | 'powerup' | 'win') => {
       if (!soundEnabled || typeof window === 'undefined') return;
       try {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
+        const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
@@ -161,6 +177,12 @@ export function CyberPongGame() {
     paddleWidth: 12,
     p1Speed: 6,
     p2Speed: 6,
+    p1Vel: 0,
+    p2Vel: 0,
+    p1Flash: 0,
+    p2Flash: 0,
+    shake: 0,
+    aiError: 0,
     balls: [] as Ball[],
     powerUps: [] as PowerUp[],
     particles: [] as { x: number; y: number; vx: number; vy: number; life: number; color: string }[],
@@ -181,8 +203,8 @@ export function CyberPongGame() {
     setRallyCount(0);
 
     const canvas = canvasRef.current;
-    const width = canvas ? canvas.width : 640;
-    const height = canvas ? canvas.height : 400;
+    const width = 620;
+    const height = 370;
 
     gameStateRef.current = {
       p1Y: height / 2 - 40,
@@ -192,6 +214,12 @@ export function CyberPongGame() {
       paddleWidth: 12,
       p1Speed: 6,
       p2Speed: 6,
+      p1Vel: 0,
+      p2Vel: 0,
+      p1Flash: 0,
+      p2Flash: 0,
+      shake: 0,
+      aiError: 0,
       balls: [
         {
           x: width / 2,
@@ -244,14 +272,16 @@ export function CyberPongGame() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = prepareCanvas(canvas, 620, 370);
     if (!ctx) return;
 
     let isRunning = true;
 
+    const stepper = createFrameStepper();
+
     const resetBall = (direction: 1 | -1) => {
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = 620;
+      const height = 370;
       gameStateRef.current.balls = [
         {
           x: width / 2,
@@ -271,12 +301,18 @@ export function CyberPongGame() {
       if (!isRunning) return;
 
       const state = gameStateRef.current;
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = 620;
+      const height = 370;
 
-      // 1. Clear background
+      // 1. Clear background (with a brief camera shake after hard hits)
       ctx.fillStyle = '#060a12';
       ctx.fillRect(0, 0, width, height);
+      ctx.save();
+      if (state.shake > 0) {
+        ctx.translate((Math.random() - 0.5) * state.shake, (Math.random() - 0.5) * state.shake);
+        state.shake *= 0.8;
+        if (state.shake < 0.3) state.shake = 0;
+      }
 
       // Cyber Grid Center Net
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
@@ -294,44 +330,45 @@ export function CyberPongGame() {
       ctx.arc(width / 2, height / 2, 48, 0, Math.PI * 2);
       ctx.stroke();
 
-      // 2. Handle Player 1 Movement (Manual or AI Auto-Pilot)
-      if (p1AutoPilot) {
-        const targetBall = state.balls[0];
-        if (targetBall && targetBall.vx < 0) {
-          const p1Center = state.p1Y + state.p1Height / 2;
-          const p1Speed = 4.8;
-          if (targetBall.y < p1Center - 8) {
-            state.p1Y -= p1Speed;
-          } else if (targetBall.y > p1Center + 8) {
-            state.p1Y += p1Speed;
-          }
-        }
-      } else {
-        if (state.keys.w) state.p1Y -= state.p1Speed;
-        if (state.keys.s) state.p1Y += state.p1Speed;
-      }
-      state.p1Y = Math.max(10, Math.min(height - state.p1Height - 10, state.p1Y));
+      // 2-3. Paddles have momentum: input accelerates, friction settles them.
+      // The AI reads the ball's path (bounces included) and aims with a per-rally error.
+      const movePaddle = (side: 'p1' | 'p2', dir: number) => {
+        const velKey = side === 'p1' ? 'p1Vel' : 'p2Vel';
+        const yKey = side === 'p1' ? 'p1Y' : 'p2Y';
+        const hKey = side === 'p1' ? 'p1Height' : 'p2Height';
+        state[velKey] = Math.max(-7, Math.min(7, state[velKey] * 0.78 + dir * 1.55));
+        state[yKey] += state[velKey];
+        const clamped = Math.max(10, Math.min(height - state[hKey] - 10, state[yKey]));
+        if (clamped !== state[yKey]) state[velKey] = 0;
+        state[yKey] = clamped;
+      };
+      const aiDir = (side: 'p1' | 'p2', maxSpeedFactor: number, deadZone: number) => {
+        const isLeft = side === 'p1';
+        const paddleY = isLeft ? state.p1Y : state.p2Y;
+        const h = isLeft ? state.p1Height : state.p2Height;
+        const incoming = state.balls
+          .filter((b) => (isLeft ? b.vx < 0 : b.vx > 0))
+          .sort((a, b) => Math.abs(a.x - (isLeft ? 25 : width - 25)) - Math.abs(b.x - (isLeft ? 25 : width - 25)))[0];
+        const target = incoming
+          ? predictBallY(incoming, isLeft ? 25 + state.paddleWidth : width - 25 - state.paddleWidth, height) + state.aiError * (isLeft ? 0.3 : 1)
+          : height / 2;
+        const diff = target - (paddleY + h / 2);
+        if (Math.abs(diff) < deadZone) return 0;
+        return Math.max(-1, Math.min(1, diff / 40)) * maxSpeedFactor;
+      };
 
-      // 3. Handle Player 2 / AI Movement
-      if (gameMode === 'local') {
-        if (state.keys.up) state.p2Y -= state.p2Speed;
-        if (state.keys.down) state.p2Y += state.p2Speed;
+      if (p1AutoPilot) movePaddle('p1', aiDir('p1', 0.9, 6));
+      else if (gameMode !== 'room' || isHost) movePaddle('p1', (state.keys.s ? 1 : 0) - (state.keys.w ? 1 : 0));
+
+      if (gameMode === 'room' && !isHost) {
+        // The guest plays the right paddle with W/S; its position is broadcast below
+        movePaddle('p2', (state.keys.s ? 1 : 0) - (state.keys.w ? 1 : 0));
+      } else if (gameMode === 'local') {
+        movePaddle('p2', (state.keys.down ? 1 : 0) - (state.keys.up ? 1 : 0));
       } else if (gameMode === 'ai') {
-        // AI Tracking with natural delay based on difficulty
-        const targetBall = state.balls[0];
-        if (targetBall && targetBall.vx > 0) {
-          const aiCenter = state.p2Y + state.p2Height / 2;
-          const aiSpeed = aiDifficulty === 'hard' ? 5.2 : aiDifficulty === 'medium' ? 4.0 : 2.8;
-          const errorMargin = aiDifficulty === 'hard' ? 6 : aiDifficulty === 'medium' ? 14 : 28;
-
-          if (targetBall.y < aiCenter - errorMargin) {
-            state.p2Y -= aiSpeed;
-          } else if (targetBall.y > aiCenter + errorMargin) {
-            state.p2Y += aiSpeed;
-          }
-        }
+        const reach = aiDifficulty === 'hard' ? 0.95 : aiDifficulty === 'medium' ? 0.72 : 0.5;
+        movePaddle('p2', aiDir('p2', reach, aiDifficulty === 'hard' ? 4 : 10));
       }
-      state.p2Y = Math.max(10, Math.min(height - state.p2Height - 10, state.p2Y));
 
       // Broadcast paddle position if in room
       if (gameMode === 'room' && broadcastChannelRef.current) {
@@ -384,12 +421,19 @@ export function CyberPongGame() {
       // 5. Update & Render Balls
       for (let i = state.balls.length - 1; i >= 0; i--) {
         const ball = state.balls[i];
+        // Spin bends the flight path and slowly wears off
+        const spin = ball.spin || 0;
+        ball.vy += spin * 0.12;
+        ball.spin = spin * 0.985;
         ball.x += ball.vx;
         ball.y += ball.vy;
+        ball.trail = [...(ball.trail || []), { x: ball.x, y: ball.y }].slice(-10);
 
-        // Top / Bottom Wall Collision
+        // Top / Bottom Wall Collision (pushed back inside so it can't stick in the wall)
         if (ball.y - ball.radius < 0 || ball.y + ball.radius > height) {
-          ball.vy *= -1;
+          ball.y = ball.y - ball.radius < 0 ? ball.radius : height - ball.radius;
+          ball.vy = -ball.vy * 0.96;
+          ball.spin = -(ball.spin || 0) * 0.5;
           playSound('wall');
         }
 
@@ -429,19 +473,27 @@ export function CyberPongGame() {
         if (
           ball.x - ball.radius <= p1X + state.paddleWidth &&
           ball.x + ball.radius >= p1X &&
-          ball.y >= state.p1Y &&
-          ball.y <= state.p1Y + state.p1Height &&
+          ball.y + ball.radius >= state.p1Y &&
+          ball.y - ball.radius <= state.p1Y + state.p1Height &&
           ball.vx < 0
         ) {
-          const hitOffset = (ball.y - (state.p1Y + state.p1Height / 2)) / (state.p1Height / 2);
-          ball.vx = Math.abs(ball.vx) * 1.06;
-          ball.vy = hitOffset * 4.8;
+          // Where it lands on the paddle sets the angle; paddle movement adds spin
+          const hitOffset = Math.max(-1, Math.min(1, (ball.y - (state.p1Y + state.p1Height / 2)) / (state.p1Height / 2)));
+          const angle = hitOffset * MAX_BOUNCE_ANGLE;
+          const speed = Math.min(MAX_BALL_SPEED, Math.hypot(ball.vx, ball.vy) * 1.05 + 0.15);
+          ball.vx = 1 * Math.cos(angle) * speed;
+          ball.vy = Math.sin(angle) * speed + state.p1Vel * 0.3;
+          ball.spin = state.p1Vel * 0.06;
+          ball.x = p1X + state.paddleWidth + ball.radius;
+          state.p1Flash = 10;
+          if (speed > 9) state.shake = 5;
+          state.aiError = (Math.random() - 0.5) * (aiDifficulty === 'hard' ? 18 : aiDifficulty === 'medium' ? 46 : 80);
           state.rally++;
           setRallyCount(state.rally);
           playSound('paddle');
 
           // Sparkle Particles
-          for (let p = 0; p < 8; p++) {
+          for (let p = 0; p < 6 + Math.round(speed); p++) {
             state.particles.push({
               x: p1X + state.paddleWidth,
               y: ball.y,
@@ -458,19 +510,27 @@ export function CyberPongGame() {
         if (
           ball.x + ball.radius >= p2X &&
           ball.x - ball.radius <= p2X + state.paddleWidth &&
-          ball.y >= state.p2Y &&
-          ball.y <= state.p2Y + state.p2Height &&
+          ball.y + ball.radius >= state.p2Y &&
+          ball.y - ball.radius <= state.p2Y + state.p2Height &&
           ball.vx > 0
         ) {
-          const hitOffset = (ball.y - (state.p2Y + state.p2Height / 2)) / (state.p2Height / 2);
-          ball.vx = -Math.abs(ball.vx) * 1.06;
-          ball.vy = hitOffset * 4.8;
+          // Where it lands on the paddle sets the angle; paddle movement adds spin
+          const hitOffset = Math.max(-1, Math.min(1, (ball.y - (state.p2Y + state.p2Height / 2)) / (state.p2Height / 2)));
+          const angle = hitOffset * MAX_BOUNCE_ANGLE;
+          const speed = Math.min(MAX_BALL_SPEED, Math.hypot(ball.vx, ball.vy) * 1.05 + 0.15);
+          ball.vx = -1 * Math.cos(angle) * speed;
+          ball.vy = Math.sin(angle) * speed + state.p2Vel * 0.3;
+          ball.spin = state.p2Vel * 0.06;
+          ball.x = p2X - ball.radius;
+          state.p2Flash = 10;
+          if (speed > 9) state.shake = 5;
+          state.aiError = (Math.random() - 0.5) * (aiDifficulty === 'hard' ? 18 : aiDifficulty === 'medium' ? 46 : 80);
           state.rally++;
           setRallyCount(state.rally);
           playSound('paddle');
 
           // Sparkle Particles
-          for (let p = 0; p < 8; p++) {
+          for (let p = 0; p < 6 + Math.round(speed); p++) {
             state.particles.push({
               x: p2X,
               y: ball.y,
@@ -492,6 +552,7 @@ export function CyberPongGame() {
             setIsPlaying(false);
             setIsGameOver(true);
             playSound('win');
+            ctx.restore();
             return;
           }
           resetBall(-1);
@@ -508,13 +569,23 @@ export function CyberPongGame() {
             setIsPlaying(false);
             setIsGameOver(true);
             playSound('win');
+            ctx.restore();
             return;
           }
           resetBall(1);
           break;
         }
 
-        // Render Ball
+        // Motion trail, then the ball
+        ball.trail?.forEach((t, ti, arr) => {
+          const k = (ti + 1) / arr.length;
+          ctx.fillStyle = ball.color;
+          ctx.globalAlpha = k * 0.35;
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, ball.radius * (0.4 + 0.6 * k), 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
         ctx.fillStyle = ball.color;
         ctx.shadowColor = ball.color;
         ctx.shadowBlur = 10;
@@ -537,30 +608,33 @@ export function CyberPongGame() {
 
       // 7. Render Paddles
       // Player 1 Paddle (Left - Cyan/Sky)
-      ctx.fillStyle = '#38bdf8';
+      ctx.fillStyle = state.p1Flash > 0 ? '#e0f2fe' : '#38bdf8';
       ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 12 + state.p1Flash * 2;
       ctx.beginPath();
       ctx.roundRect(25, state.p1Y, state.paddleWidth, state.p1Height, 6);
       ctx.fill();
 
       // Player 2 Paddle (Right - Amber/Gold)
-      ctx.fillStyle = '#f59e0b';
+      ctx.fillStyle = state.p2Flash > 0 ? '#fef3c7' : '#f59e0b';
       ctx.shadowColor = '#f59e0b';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 12 + state.p2Flash * 2;
       ctx.beginPath();
       ctx.roundRect(width - 25 - state.paddleWidth, state.p2Y, state.paddleWidth, state.p2Height, 6);
       ctx.fill();
       ctx.shadowBlur = 0;
+      ctx.restore();
+      if (state.p1Flash > 0) state.p1Flash--;
+      if (state.p2Flash > 0) state.p2Flash--;
 
-      state.animationId = requestAnimationFrame(loop);
+      state.animationId = stepper.request(loop);
     };
 
-    gameStateRef.current.animationId = requestAnimationFrame(loop);
+    gameStateRef.current.animationId = stepper.request(loop);
 
     return () => {
       isRunning = false;
-      cancelAnimationFrame(gameStateRef.current.animationId);
+      stepper.cancel();
     };
   }, [isPlaying, gameMode, aiDifficulty, playSound, isHost, p1AutoPilot]);
 
