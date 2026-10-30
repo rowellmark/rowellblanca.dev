@@ -212,7 +212,7 @@ export default function CaseStudyView({ project }: { project: PortfolioProject }
                   </div>
                 ))}
               </dl>
-              {liveHref && (
+              {liveHref && !isPlugin && (
                 <a href={liveHref} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 font-mono text-sm text-brand-navy break-all">
                   <span className="motion-underline">{cleanUrl}</span>
                   <ExternalLink className="w-4 h-4 shrink-0 text-amber-600" aria-hidden="true" />

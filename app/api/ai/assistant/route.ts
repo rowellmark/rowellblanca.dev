@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { generateAIResponse, getAISettings } from '@/lib/ai-provider';
 import { prisma } from '@/lib/prisma';
+import { checkRateLimit, getClientIp } from '@/lib/anti-spam';
 
 const SYSTEM_KNOWLEDGE = `You are RowBot — Rowell Mark Blanca's AI Engineering & Strategic Marketing Co-Pilot on rowellblanca.dev.
 You act as a world-class Senior Full-Stack Engineer, Web Architect, and Technical Marketing Strategist representing Rowell Mark Blanca (Senior Engineer with 8+ years experience).
@@ -136,6 +137,11 @@ async function getInteractiveFallbackReply(question: string): Promise<string> {
 
 export async function POST(request: Request) {
   try {
+    // Each call costs AI credits: cap a single visitor at 20 messages a minute.
+    const limit = checkRateLimit(`ai-assistant:${getClientIp(request)}`, 20, 60 * 1000);
+    if (!limit.allowed) {
+      return NextResponse.json({ success: false, error: 'Too many messages. Please wait a moment and try again.' }, { status: 429 });
+    }
     const body = await request.json();
     const { message, messages, context, sessionId } = body;
 

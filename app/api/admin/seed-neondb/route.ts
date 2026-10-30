@@ -4,8 +4,10 @@ import { isAdminAuthenticated } from '@/lib/auth';
 import { hashPassword } from '@/lib/crypto';
 import { INITIAL_BLOG_POSTS } from '@/lib/initial-blog-data';
 
-const SEED_ADMIN_EMAIL = 'admin@rowellblanca.dev';
-const SEED_ADMIN_PASSWORD = 'RowellAdmin2026!';
+// The admin user is only (re)seeded from ADMIN_EMAIL / ADMIN_PASSWORD in the environment;
+// no password is hardcoded here (the repository is public).
+const SEED_ADMIN_EMAIL = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+const SEED_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const SEED_PROJECTS = [
   {
@@ -97,22 +99,21 @@ export async function POST() {
   }
 
   try {
-    // 1. Seed Admin User
-    const hashedPassword = hashPassword(SEED_ADMIN_PASSWORD);
-    const adminUser = await prisma.user.upsert({
+    // 1. Seed Admin User (only when the environment provides credentials)
+    const adminUser = SEED_ADMIN_EMAIL && SEED_ADMIN_PASSWORD ? await prisma.user.upsert({
       where: { email: SEED_ADMIN_EMAIL },
       update: {
-        passwordHash: hashedPassword,
+        passwordHash: hashPassword(SEED_ADMIN_PASSWORD),
         name: 'Rowell Mark Blanca',
         role: 'ADMIN',
       },
       create: {
         email: SEED_ADMIN_EMAIL,
-        passwordHash: hashedPassword,
+        passwordHash: hashPassword(SEED_ADMIN_PASSWORD),
         name: 'Rowell Mark Blanca',
         role: 'ADMIN',
       },
-    });
+    }) : null;
 
     // 2. Seed Portfolio Projects
     let importedCount = 0;
@@ -183,7 +184,7 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       message: `Successfully seeded Admin Account (${SEED_ADMIN_EMAIL}), ${importedCount} projects, and ${seededPostsCount} blog articles into NeonDB (PostgreSQL)!`,
-      adminUser: { id: adminUser.id, email: adminUser.email, name: adminUser.name },
+      adminUser: adminUser ? { id: adminUser.id, email: adminUser.email, name: adminUser.name } : null,
       importedCount,
       seededPostsCount,
       projects: importedProjects,

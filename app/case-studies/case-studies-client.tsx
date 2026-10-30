@@ -39,6 +39,10 @@ interface ProjectItem {
   featured?: boolean;
 }
 
+// The built-in hire pages live at their own top-level routes; other landing pages under /landing.
+const STANDALONE_LANDING = new Set(['hire-uk-react-developer', 'hire-uk-wordpress-developer']);
+const landingHref = (slug: string) => (STANDALONE_LANDING.has(slug) ? `/${slug}` : `/landing/${slug}`);
+
 export function CaseStudiesClient() {
   const [landingPages, setLandingPages] = useState<LandingPageItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
@@ -257,7 +261,7 @@ export function CaseStudiesClient() {
                         </div>
 
                         <h3 className="text-lg font-extrabold text-brand-navy group-hover:text-amber-600 transition-colors leading-snug line-clamp-2">
-                          <Link href={`/landing/${lp.slug}`}>{lp.heroTitle}</Link>
+                          <Link href={landingHref(lp.slug)}>{lp.heroTitle}</Link>
                         </h3>
 
                         <p className="text-sm text-brand-slate leading-relaxed line-clamp-3">
@@ -270,7 +274,7 @@ export function CaseStudiesClient() {
                           /landing/{lp.slug}
                         </span>
                         <Link
-                          href={`/landing/${lp.slug}`}
+                          href={landingHref(lp.slug)}
                           className="inline-flex items-center gap-1 min-h-[40px] text-xs font-extrabold text-brand-navy group-hover:text-amber-700 transition-colors"
                         >
                           <span>Explore Solution</span>
