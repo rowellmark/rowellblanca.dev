@@ -5,7 +5,7 @@ import { CVDownloadButton } from "@/components/ui/cv-download-button";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandFacebook, IconBrandInstagram, IconCode, IconCpu, IconRocket, IconShieldCheck } from "@tabler/icons-react";
 import { PageHero } from "@/components/ui/page-hero";
 import { TechGalaxy } from "@/components/homepage/tech-galaxy";
-import WorkHistory from "@/components/homepage/work-history";
+import { CareerTimeline } from "@/components/about/career-timeline";
 import { ProjectEstimator } from "@/components/homepage/project-estimator";
 import { EngagementModels } from "@/components/homepage/engagement-models";
 import { SpeedRacerGame } from "@/components/interactive/speed-racer-game";
@@ -215,8 +215,8 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Verified Career & Work History */}
-            <WorkHistory />
+            {/* Career timeline */}
+            <CareerTimeline />
 
             {/* Interactive Scope & Architecture Estimator */}
             <div id="project-estimator" className="border-t border-brand-border pt-24 lg:pt-32">

@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 import { INITIAL_BLOG_POSTS } from '@/lib/initial-blog-data';
 import { FALLBACK_PROJECTS } from '@/lib/fallback-projects';
+import { STACKS } from '@/lib/stacks';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -22,6 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/contact',
     '/hire-uk-react-developer',
     '/hire-uk-wordpress-developer',
+    '/work',
+    '/results',
+    ...STACKS.map((s) => `/work/${s.slug}`),
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
